@@ -1,0 +1,47 @@
+# Git
+.git
+.gitignore
+
+# Python
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.venv
+venv
+env
+
+# Node
+frontend/node_modules
+frontend/dist
+node_modules
+
+# Data (mounted as volume)
+data/chroma_db
+data/captures
+*.db
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# Tests / docs / dev tools
+.pytest_cache
+tests/__pycache__
+dev/
+
+# Secrets — never bake a local .env into the image (Dockerfile does COPY . .)
+.env
+.env.*
+!.env.example
+data/publishers/*.key
+
+# Render scripts
+scripts/render_api.sh
+
+# Misc
+.dockerignore
+Dockerfile
+docker-compose.yml

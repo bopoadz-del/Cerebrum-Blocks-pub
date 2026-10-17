@@ -1,0 +1,85 @@
+{
+  "acceptance": [
+    {
+      "check": "unknown enterprise system is refused, never a fabricated record set",
+      "id": "unknown_system",
+      "status": "refused"
+    },
+    {
+      "check": "unconfigured live URL is refused, never a garbage HTTP dial",
+      "id": "live_unconfigured",
+      "status": "refused"
+    },
+    {
+      "check": "aconex/procore/bim asset source rows are refused",
+      "id": "bim_source_out_of_scope",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Hospitality enterprise connectors ported from <private-repo> connectors/base.py + connectors/{opera,micros,maximo,grms,gaming_cms,loyalty_lms}.py + hotelops/event_bus.py (real): connect->fetch->normalise->emit with automatic fixture-vs-live switching, typed HotelEvent topics on an in-process bus, maximo aconex/procore/bim out-of-scope refusal, donor GRMS room-map evidence branch. Live mode is httpx and fails closed when the base URL is unconfigured; fixtures vendored from the donor fixtures/ directory.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "7ae6320a42cf1b8c78335dac8d8b63ab9d37a74709d21ef090378820927e1eec",
+    "block.py": "9e9a711086e68109aa4d0fc3884caf6d310d08f8cd8889c27e23e6a9260fcf89"
+  },
+  "id": "hospitality_connectors",
+  "inputs": [
+    {
+      "description": "ingest | fetch | connect | normalise | bus | systems",
+      "name": "action",
+      "options": [
+        "ingest",
+        "fetch",
+        "connect",
+        "normalise",
+        "bus",
+        "systems"
+      ],
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 3,
+  "name": "hospitality_connectors",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Capability result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": true
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "5B3Ze2zR3Ek54C2kwdwvf1Ngzrfp/Cs2eqlf/zsyITNFef8RRscAsRt68VfLnXP8GlU9Vtp0DFCgSZnaqLcLCg==",
+  "tags": [
+    "connector",
+    "hotel",
+    "pms",
+    "pos",
+    "cmms",
+    "event-bus",
+    "hotelops"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

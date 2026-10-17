@@ -1,0 +1,54 @@
+{
+  "carrier": "Simulated Mutual",
+  "feed_id": "sample-bordereaux-2026-01",
+  "rows": [
+    {
+      "policy_no": "POL-1001",
+      "producer_code": "brk-ny-01",
+      "LOB": "property",
+      "period": "2026-01",
+      "premium": "120000",
+      "channel": "broker",
+      "commission": "14400",
+      "expiring_premium": "100000",
+      "renewal_premium": "120000",
+      "renewed": true
+    },
+    {
+      "policy_number": "POL-1002",
+      "producer": "mga-ca-09",
+      "line_of_business": "cyber",
+      "month": "01/2026",
+      "gwp": "85000",
+      "distribution_channel": "mga",
+      "commission_amount": "12750",
+      "expiring_premium": "90000",
+      "renewal_premium": "85000",
+      "renewed": true
+    },
+    {
+      "policy_no": "POL-1003",
+      "producer_code": "direct-01",
+      "LOB": "auto",
+      "period": "2026-02-01",
+      "premium": "45000",
+      "channel": "direct",
+      "commission": "0",
+      "renewed": false
+    },
+    {
+      "policy_no": "",
+      "producer_code": "brk-tx-02",
+      "LOB": "property",
+      "period": "2026-13",
+      "premium": "not-a-number",
+      "channel": "broker"
+    }
+  ],
+  "provenance": {
+    "kind": "contributor_unverified",
+    "recorded_on": "2026-08-29",
+    "reference": "The_Fork-published bundle orphan; no checkable source recovered",
+    "parked": true
+  }
+}

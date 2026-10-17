@@ -1,0 +1,10 @@
+{
+  "name": "json_audit_export",
+  "version": "0.1.0",
+  "sha256": "b724437da0d1039699c6af02bc72944b6582a2772b15decd648a02fbe1fdc2b6",
+  "dependencies": [],
+  "provenance": "factory",
+  "acceptance_test": "tests/test_json_audit_export.py",
+  "tier": "premium",
+  "note": "Premium-only; not available in the freemium tier."
+}

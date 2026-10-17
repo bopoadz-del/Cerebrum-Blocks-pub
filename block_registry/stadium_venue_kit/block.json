@@ -1,0 +1,302 @@
+{
+  "acceptance": [
+    {
+      "check": "INV-SV-ARCHETYPE (qualifier at H3, severity refuse): safety-critical figure missing {missing} \u2014 the same number means a different thing in a fixed championship venue and a touring event",
+      "id": "inv_sv_archetype",
+      "status": "refused"
+    },
+    {
+      "check": "INV-SV-QUAL-CONFIG (qualifier at H3, severity refuse): safety-critical figure missing {missing} \u2014 a football configuration is not a concert configuration",
+      "id": "inv_sv_qual_config",
+      "status": "refused"
+    },
+    {
+      "check": "INV-SV-QUAL-EVENT-STATE (qualifier at H3, severity refuse): safety-critical figure missing {missing} \u2014 event day and non-event day are different rulesets",
+      "id": "inv_sv_qual_event_state",
+      "status": "refused"
+    },
+    {
+      "check": "INV-SV-QUAL-PITCH (qualifier at H3, severity refuse): pitch figure missing {missing} \u2014 a hardness reading without its standard and grid cannot be compared to a limit",
+      "id": "inv_sv_qual_pitch",
+      "status": "refused"
+    },
+    {
+      "check": "INV-SV-QUAL-LUX (qualifier at H3, severity refuse): lux figure missing {missing} \u2014 broadcast lighting is contractual to a competition class",
+      "id": "inv_sv_qual_lux",
+      "status": "refused"
+    },
+    {
+      "check": "INV-SV-QUAL-BARRIER (qualifier at H3, severity refuse): barrier load missing {missing} \u2014 a barrier figure without the crowd density it was assessed for is not a limit",
+      "id": "inv_sv_qual_barrier",
+      "status": "refused"
+    },
+    {
+      "check": "INV-SV-QUAL-RIGGING (qualifier at H3, severity refuse): rigging load missing {missing} \u2014 a rigging figure belongs to ONE point",
+      "id": "inv_sv_qual_rigging",
+      "status": "refused"
+    },
+    {
+      "check": "INV-SV-QUAL-EGRESS (qualifier at H3, severity refuse): egress figure missing {missing}",
+      "id": "inv_sv_qual_egress",
+      "status": "refused"
+    },
+    {
+      "check": "INV-SV-QUAL-CAPACITY (qualifier at H3, severity refuse): capacity figure missing {missing} \u2014 capacity is not a seat count",
+      "id": "inv_sv_qual_capacity",
+      "status": "refused"
+    },
+    {
+      "check": "INV-SV-QUAL-STEWARD (qualifier at H3, severity refuse): steward ratio missing {missing}",
+      "id": "inv_sv_qual_steward",
+      "status": "refused"
+    },
+    {
+      "check": "INV-SV-AUTH-PITCH (authority at H1, severity refuse): pitch figure not sourced to a current pitch report",
+      "id": "inv_sv_auth_pitch",
+      "status": "refused"
+    },
+    {
+      "check": "INV-SV-AUTH-LUX (authority at H1, severity refuse): lux figure not sourced to a measurement \u2014 a lamp spec sheet is a design intent, not a measured lux",
+      "id": "inv_sv_auth_lux",
+      "status": "refused"
+    },
+    {
+      "check": "INV-SV-AUTH-RIGGING (authority at H1, severity refuse): rigging or roof load not per-point certified",
+      "id": "inv_sv_auth_rigging",
+      "status": "refused"
+    },
+    {
+      "check": "INV-SV-AUTH-CAPACITY (authority at H1, severity refuse): capacity or stewarding figure not sourced to the safety certificate",
+      "id": "inv_sv_auth_capacity",
+      "status": "refused"
+    },
+    {
+      "check": "INV-SV-AUTH-GOVERNING-BODY (authority at H1, severity refuse): competition requirement cited from last year's regulations or the wrong competition's",
+      "id": "inv_sv_auth_governing_body",
+      "status": "refused"
+    },
+    {
+      "check": "INV-SV-BAND-PITCH-HARDNESS (band at H3, severity refuse): pitch hardness is a band \u2014 one side of it is not a conservative answer, it is an unusable one",
+      "id": "inv_sv_band_pitch_hardness",
+      "status": "refused"
+    },
+    {
+      "check": "INV-SV-BAND-PITCH-MOISTURE (band at H3, severity refuse): pitch moisture is a band",
+      "id": "inv_sv_band_pitch_moisture",
+      "status": "refused"
+    },
+    {
+      "check": "INV-SV-BAND-LUX-UNIFORMITY (band at H3, severity refuse): lux uniformity is a band",
+      "id": "inv_sv_band_lux_uniformity",
+      "status": "refused"
+    },
+    {
+      "check": "INV-SV-UNIT-PITCH-HARDNESS (unit_discipline at H2, severity refuse): pitch hardness unit ambiguous \u2014 g and Gmax are read off different instruments and HIC is a different measure entirely",
+      "id": "inv_sv_unit_pitch_hardness",
+      "status": "refused"
+    },
+    {
+      "check": "INV-SV-UNIT-LUX (unit_discipline at H2, severity refuse): lux unit ambiguous \u2014 footcandles are not lux and candela is not an illuminance at all",
+      "id": "inv_sv_unit_lux",
+      "status": "refused"
+    },
+    {
+      "check": "INV-SV-UNIT-RIGGING (unit_discipline at H2, severity refuse): rigging load unit ambiguous",
+      "id": "inv_sv_unit_rigging",
+      "status": "refused"
+    },
+    {
+      "check": "INV-SV-PROV-CONFIG (provenance at H3, severity refuse): figure carried across a configuration or event boundary: {value}",
+      "id": "inv_sv_prov_config",
+      "status": "refused"
+    },
+    {
+      "check": "INV-SV-PROV-VENUE (provenance at H3, severity refuse): figure carried from another venue or tour stop: {value}",
+      "id": "inv_sv_prov_venue",
+      "status": "refused"
+    },
+    {
+      "check": "INV-SV-PROV-PHASE (provenance at H3, severity refuse): figure carried across an operational or renovation phase: {value}",
+      "id": "inv_sv_prov_phase",
+      "status": "refused"
+    },
+    {
+      "check": "INV-SV-PROV-ARCHETYPE (provenance at H3, severity refuse): figure carried across archetype: {value}",
+      "id": "inv_sv_prov_archetype",
+      "status": "refused"
+    },
+    {
+      "check": "INV-SV-PROV-POINT (provenance at H3, severity refuse): rigging figure carried from another point or interpolated between certifications: {value}",
+      "id": "inv_sv_prov_point",
+      "status": "refused"
+    },
+    {
+      "check": "INV-SV-CUR-PITCH (currency at H3, severity refuse): pitch figure stale \u2014 the pitch changed after the reading: {value}",
+      "id": "inv_sv_cur_pitch",
+      "status": "refused"
+    },
+    {
+      "check": "INV-SV-CUR-GROW-IN (currency at H3, severity refuse): surface grow-in state stale: {value}",
+      "id": "inv_sv_cur_grow_in",
+      "status": "refused"
+    },
+    {
+      "check": "INV-SV-CUR-LUX (currency at H3, severity refuse): lux figure stale \u2014 lamps or ballasts changed after the measurement: {value}",
+      "id": "inv_sv_cur_lux",
+      "status": "refused"
+    },
+    {
+      "check": "INV-SV-CUR-RIGGING (currency at H3, severity refuse): rigging point certification stale: {value}",
+      "id": "inv_sv_cur_rigging",
+      "status": "refused"
+    },
+    {
+      "check": "INV-SV-CUR-STRUCTURAL (currency at H3, severity refuse): structural capacity stale \u2014 the assessment was revised or the overlay changed: {value}",
+      "id": "inv_sv_cur_structural",
+      "status": "refused"
+    },
+    {
+      "check": "INV-SV-CUR-CAPACITY (currency at H3, severity refuse): capacity stale \u2014 the configuration or certificate changed: {value}",
+      "id": "inv_sv_cur_capacity",
+      "status": "refused"
+    },
+    {
+      "check": "INV-SV-CUR-STEWARD (currency at H3, severity refuse): steward ratio does not match the count actually deployed: {value}",
+      "id": "inv_sv_cur_steward",
+      "status": "refused"
+    },
+    {
+      "check": "INV-SV-CUR-TURNSTILE (currency at H3, severity refuse): turnstile throughput stale \u2014 a turnstile is out: {value}",
+      "id": "inv_sv_cur_turnstile",
+      "status": "refused"
+    },
+    {
+      "check": "INV-SV-CUR-CCTV (currency at H3, severity refuse): CCTV coverage stale \u2014 a camera or recorder is out: {value}",
+      "id": "inv_sv_cur_cctv",
+      "status": "refused"
+    },
+    {
+      "check": "INV-SV-CUR-EGRESS (currency at H3, severity refuse): egress figure stale \u2014 the layout or seating configuration changed: {value}",
+      "id": "inv_sv_cur_egress",
+      "status": "refused"
+    },
+    {
+      "check": "INV-SV-CUR-TOURING-STOP (currency at H3, severity refuse): figure from a previous tour stop: {value}",
+      "id": "inv_sv_cur_touring_stop",
+      "status": "refused"
+    },
+    {
+      "check": "INV-SV-DERIV-EXIT-STATE (derivation at H3, severity refuse): exit door or gate operational state unknown \u2014 an egress capacity assumes every exit opens",
+      "id": "inv_sv_deriv_exit_state",
+      "status": "refused"
+    },
+    {
+      "check": "INV-SV-DERIV-TECH-OVERRIDE (derivation at H3, severity refuse): operational technology override state unknown \u2014 a figure that assumes the system is in automatic is not a figure while it may be overridden",
+      "id": "inv_sv_deriv_tech_override",
+      "status": "refused"
+    },
+    {
+      "check": "INV-SV-DERIV-TOURING-HOST (derivation at H3, severity refuse): touring figure without the host venue's cooperation state \u2014 a guest does not know the building",
+      "id": "inv_sv_deriv_touring_host",
+      "status": "refused"
+    },
+    {
+      "check": "INV-SV-DERIV-SURFACE-CONVERSION (derivation at H3, severity refuse): surface figure cannot be asserted mid-conversion or without the tenant schedule",
+      "id": "inv_sv_deriv_surface_conversion",
+      "status": "refused"
+    },
+    {
+      "check": "INV-SV-DERIV-EMERGENCY-COMM (derivation at H3, severity refuse): PA or scoreboard state unknown \u2014 these are emergency communication assets, not amenities",
+      "id": "inv_sv_deriv_emergency_comm",
+      "status": "refused"
+    },
+    {
+      "check": "INV-SV-SCOPE-OPERATIONAL (scope at H0, severity refuse): this is an operational decision with a named owner \u2014 refer to {authority}",
+      "id": "inv_sv_scope_operational",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Declarative stadium venue reasoning kit on the shared reasoning layer. 43 invariants declared in app/blocks/stadium_venue/invariants.yaml across the kinds the portable spec defines (grounding, qualifier, unit_discipline, authority, provenance, currency, scope, derivation, band) and the five hooks (H0 pre-retrieval, H1 ranking, H2 tool-time, H3 answer-time, H4 export-time). Vocabulary in app/blocks/stadium_venue/manifest.yaml. Scope refusals classify BEFORE retrieval. Fail closed: a kit that does not parse is DISABLED and refuses every statement rather than passing them through with no invariants. NO INTERVIEW HAS RUN, so every declared figure value is null and the block refuses rather than inventing one (app/blocks/stadium_venue/KNOWN_GAPS.md). Measured by tests/blocks/test_reasoning_kits.py.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "1bbe4375eff554ed0763855ee8f79dd8eeae6e122d64742386429023d41778eb",
+    "block.py": "97ed0ffdd6ef246e7ca53e141931cf0b10d003bfdd2df63cef45b2a7cb5fe5b3"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/stadium_venue_kit:latest",
+    "type": "docker"
+  },
+  "id": "stadium_venue_kit",
+  "inputs": [
+    {
+      "description": "the operator question, classified at H0 BEFORE any retrieval",
+      "name": "question",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "description": "figures to gate: quantity, value, unit, origin, source_id, source_class, revision, qualifiers, claim_class, derivations, conditions, steps, bounds, asked_about, span, text",
+      "name": "figures",
+      "required": false,
+      "type": "array"
+    },
+    {
+      "description": "state records by provider name, each {as_of: <epoch>}; an absent provider yields UNKNOWN, never a design-basis fallback",
+      "name": "state",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "description": "events that have happened, matched against the kit's staleness_triggers",
+      "name": "events",
+      "required": false,
+      "type": "array"
+    },
+    {
+      "description": "subset of H0..H4 to run; all five by default, because a partial sweep is a silent coverage gap",
+      "name": "hooks",
+      "required": false,
+      "type": "array"
+    }
+  ],
+  "layer": 3,
+  "name": "stadium_venue_kit",
+  "never": [],
+  "outputs": [
+    {
+      "description": "pass | annotated | flagged | refused, with findings, blocked_reason, hooks_run, retrieval_permitted, interview_status, unfilled_figures, unmeasured_invariants, ships and kit_disabled",
+      "name": "verdict",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "aIvbjZMDgzu2X3et589AMxzIHg+w+QgPfyakGgKvb5TeUFkgkLu26FEKQn3zlWfAo9QyoDr05NbwHlFYiVucDQ==",
+  "tags": [
+    "gate",
+    "kit",
+    "reasoning",
+    "stadium"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

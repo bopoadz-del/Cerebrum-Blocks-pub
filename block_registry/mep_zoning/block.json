@@ -1,0 +1,75 @@
+{
+  "acceptance": [
+    {
+      "check": "plan_zones without an elements list fails loud",
+      "id": "missing_elements_failed",
+      "status": "failed"
+    },
+    {
+      "check": "buffer_gids/neighbours_of without their plan dicts fail loud",
+      "id": "missing_plan_fields_failed",
+      "status": "failed"
+    },
+    {
+      "check": "an unknown action fails loud with the known-action list",
+      "id": "unknown_action_failed",
+      "status": "failed"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "real: MEP coordination zoning ported from <private-repo> app/agents/zoning.py (plan_zones / buffer_gids / neighbours_of) with zone_key ported from the vendored mep_coordination kit vendor/mep_coordination/ifc_loader.py. Deterministic adjacent-cell merging under an element ceiling, dedicated riser/shaft and corridor zones, bbox buffers and buffer-owner neighbour maps. Elements are JSON dicts.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "3bdd06dc72874a8ad72b4b564764614ea0cae889c001204cc2a6d4fd192cda51",
+    "block.py": "a058d70193bdf74fbd98c50c74e92d37691ded7ef22137dd36a804b8947bcfef"
+  },
+  "id": "mep_zoning",
+  "inputs": [
+    {
+      "description": "action + elements/plan dicts",
+      "name": "input",
+      "type": "json"
+    }
+  ],
+  "layer": 3,
+  "name": "mep_zoning",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Capability result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "GxDotyXWh3BfjHSNP39ysyEpBEQ4U0bZykc5RZzAwHaUOaeJWc2EQhFFvhF9ykFchBFfHqvKAxz5Mm+ZWTYrBA==",
+  "tags": [
+    "bim",
+    "mep",
+    "zoning",
+    "coordination",
+    "construction",
+    "bim-manager"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

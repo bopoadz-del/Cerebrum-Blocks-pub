@@ -1,0 +1,119 @@
+{
+  "acceptance": [
+    {
+      "check": "errors on an unknown or missing action",
+      "id": "unknown_action",
+      "status": "failed"
+    },
+    {
+      "check": "refuses or errors when a required input is absent",
+      "id": "missing_required_input",
+      "status": "failed"
+    },
+    {
+      "check": "control-delete mutation turns the block's tests red",
+      "id": "control_delete",
+      "status": "failed"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Deterministic geolocation tracking: sequence-numbered position updates, haversine distance traveled, circular geofence enter/exit events, and ETA estimates from caller-supplied distance and speed.",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "28d55dc958da0dca3784516edc308760beae73a21306cae794782500c4474320",
+    "block.py": "65e44d38d2aea5dd559bc85f5680f4624703ec3b42908169b7839c9cd24561d2"
+  },
+  "execution": {
+    "entrypoint": "block.py",
+    "image": "ghcr.io/cerebrum-blocks/geolocation_tracking:latest",
+    "type": "python"
+  },
+  "id": "geolocation_tracking",
+  "inputs": [
+    {
+      "description": "JSON payload for the selected operation",
+      "name": "input",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "default": "update_position",
+      "description": "Tracking operation",
+      "name": "operation",
+      "options": [
+        "update_position",
+        "last_position",
+        "distance_traveled",
+        "define_zone",
+        "zone_check",
+        "eta"
+      ],
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 3,
+  "name": "Geolocation Tracking",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Tracking operation result (position update with geofence events, last position, distance, zone definition/check, ETA)",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [
+      "math",
+      "typing"
+    ],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "YK76G+bmhvejvJw2fyxwLZ5NSX9Gr1Tcd5FlsyhDYPiamveVQu36HjkQPWVUB15y8AA2ZQaSyUwqCU5CcNE/CA==",
+  "tags": [
+    "domain",
+    "marketplace",
+    "dispatch",
+    "geo",
+    "tracking",
+    "deterministic"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "JSON payload for the selected operation",
+      "name": "input",
+      "widget": "json"
+    },
+    {
+      "label": "Operation",
+      "name": "operation",
+      "options": [
+        "update_position",
+        "last_position",
+        "distance_traveled",
+        "define_zone",
+        "zone_check",
+        "eta"
+      ],
+      "widget": "select"
+    }
+  ],
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

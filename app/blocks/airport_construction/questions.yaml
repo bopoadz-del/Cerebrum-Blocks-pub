@@ -1,0 +1,397 @@
+# GENERATED from docs/kit_questions/airport_construction.md by scripts/import_kit_questions.py — do not hand-edit.
+# Edit the markdown sheet and re-run. The sheet is the record of what the domain
+# owner actually asked for; this file is only its machine-readable form.
+#
+# gate: true  -> [GATE]. The platform refuses anything needing it until answered.
+# gate: false -> [GAP].  Experience worth having; does not block.
+# gate: null  -> the sheet marked neither. Treated as GATING, because a question
+#                whose class cannot be read must block rather than pass.
+#
+# There is deliberately NO answer slot in this file. Answers are per-platform and
+# per-client; this kit is a signed Store block shared by every customer.
+kit: airport_construction
+source_document: docs/kit_questions/airport_construction.md
+title: 'Airport & Aviation Construction — Questions I Cannot Answer'
+answer_format:
+  - 'value'
+  - 'unit'
+  - 'runway / taxiway / asset'
+  - 'category'
+  - 'source document'
+  - 'revision'
+  - 'date'
+sections:
+  '1':
+    title: 'The cost of a work window'
+  '2':
+    title: 'Airfield-specific rates'
+  '3':
+    title: 'Airfield engineering'
+  '4':
+    title: 'Phasing and possession planning'
+  '5':
+    title: 'Evidence standard'
+  '6':
+    title: 'Never-estimate'
+  '7':
+    title: 'May-estimate'
+  '8':
+    title: 'Refusals'
+  '9':
+    title: 'Precedence'
+  '10':
+    title: 'Unit-confusion history'
+  '11':
+    title: 'FOD, access and airside discipline'
+  '12':
+    title: 'Incidents'
+  '13':
+    title: 'The five questions'
+questions:
+  - id: '1.1'
+    section: '1'
+    gate: true
+    text: >-
+      Your window economics — available night window, effective working time within it,
+      mobilisation per shift, demobilisation/clear-and-inspect, airside labour premium,
+      night shift premium, escort/marshal, airside vehicle permit, standby plant charged —
+      per airport.
+  - id: '1.2'
+    section: '1'
+    gate: true
+    text: >-
+      Your effective-work-to-window ratio and what consumes the difference on your
+      airfield.
+  - id: '1.3'
+    section: '1'
+    gate: true
+    text: >-
+      What triggers an aborted shift on your sites — weather, late aircraft, operational
+      change — and what each costs you.
+  - id: '1.4'
+    section: '1'
+    gate: true
+    text: >-
+      How a runway or taxiway closure is priced by your airport, and who bears it.
+  - id: '1.5'
+    section: '1'
+    gate: true
+    text: >-
+      What it costs the airline side when a runway or taxiway is out — your number, or the
+      operator's stated figure.
+  - id: '2.1'
+    section: '2'
+    gate: true
+    text: >-
+      Your rates per item — rigid pavement (PQC), flexible pavement, grooving, marking new
+      and removal, AGL inset light, AGL elevated light, primary cable, CCR, ducting and
+      pits, airfield drainage, fuel hydrant pit, blast pad/fence, frangible
+      mounting/coupling, temporary threshold marking, temporary lighting, FOD
+      sweeping/inspection, rapid-set premium — as you price them on your projects.
+  - id: '2.2'
+    section: '2'
+    gate: true
+    text: >-
+      Which items must be rapid-set or fast-cure on your works because of the window, and
+      the premium.
+  - id: '2.3'
+    section: '2'
+    gate: true
+    text: >-
+      Your airside materials with long lead times that govern your programme.
+  - id: '3.1'
+    section: '3'
+    gate: true
+    covers: [acr, pcn]
+    text: >-
+      For each calculation — PCN, ACN/ACR-PCR, rigid thickness design, flexible thickness
+      design, overlay design, subgrade/CBR, HWD/FWD evaluation, longitudinal/transverse
+      grades, surface texture/friction, airside drainage, AGL circuit loading and CCR
+      sizing, photometric compliance, jet blast velocity and exclusion distance, declared
+      distances, temporary displaced threshold geometry — your inputs, the standard each
+      follows on your airport, and who owns it.
+  - id: '3.2'
+    section: '3'
+    gate: true
+    text: >-
+      Which pavement design method governs on your projects (FAA, ICAO, national, client)
+      and where they conflict on your airport.
+  - id: '3.3'
+    section: '3'
+    gate: true
+    text: >-
+      For declared distances, who calculates and who approves a temporary reduction, and
+      your lead time.
+  - id: '3.4'
+    section: '3'
+    gate: true
+    text: >-
+      Your maximum permissible unserviceable AGL lights before operational restriction
+      applies.
+  - id: '4.1'
+    section: '4'
+    gate: true
+    text: >-
+      Your priority order when planning a phase.
+  - id: '4.2'
+    section: '4'
+    gate: true
+    text: >-
+      What makes each option impossible on your airport — full runway closure, partial
+      closure/displaced threshold, taxiway closure, working adjacent to an open runway,
+      working within a safety area, crane lift over/near movement area, NAVAID shutdown,
+      stand or apron closure.
+  - id: '4.3'
+    section: '4'
+    gate: true
+    covers: [declared_distance]
+    text: >-
+      Your notification lead times — NOTAM issue, AIP/AIRAC cycle, crane permit/obstacle
+      notification, NAVAID shutdown request, declared distance change, temporary threshold,
+      airline notification — and who is notified for each.
+  - id: '4.4'
+    section: '4'
+    gate: true
+    text: >-
+      Your authority matrix — enter a safety area, close a runway, shut down a NAVAID,
+      erect crane inside OLS, deviate from approved phasing, hand a surface back to
+      operations, continue past window end.
+  - id: '5.1'
+    section: '5'
+    gate: true
+    covers: [acr, ols_geometry, pcn]
+    text: >-
+      Per figure class — declared distances, OLS geometry, NAVAID critical areas, safety
+      area dimensions, pavement strength (PCN/ACR), AGL requirements, phasing constraints,
+      frangibility requirements — what your airport accepts as proof, and what it rejects
+      even if it states the number.
+  - id: '5.2'
+    section: '5'
+    gate: true
+    covers: [phasing_plan]
+    text: >-
+      Minimum acceptable citation per source type on your airport — ICAO/FAA standard,
+      national regulation, aerodrome manual, design drawing, approved phasing plan,
+      survey/safeguarding assessment, manufacturer's data. State whether "Annex 14" is
+      acceptable or if Volume + Table + aerodrome code is required.
+  - id: '5.3'
+    section: '5'
+    gate: true
+    covers: [declared_distance, pcn]
+    text: >-
+      Mandatory qualifiers your airport requires — declared distance (runway designator,
+      direction, effective date, temporary or permanent), OLS limit (surface name, runway
+      code, reference point, datum), safety area dimension (runway category, aerodrome
+      reference code), PCN (pavement type, subgrade category, tyre pressure category,
+      evaluation method).
+  - id: '5.4'
+    section: '5'
+    gate: true
+    text: >-
+      Your derivation rules — interpolating between table values, unit conversions, reading
+      off graphs, scaling from drawings, summing components, applying standard formulas,
+      carrying figures from a similar runway or airport — allowed or not on your projects.
+  - id: '5.4.1'
+    section: '5'
+    gate: true
+    text: >-
+      Confirm the never rules — carrying figures from a similar runway or airport, and any
+      other derivation you forbid.
+  - id: '5.5'
+    section: '5'
+    gate: true
+    covers: [phasing_plan]
+    text: >-
+      Your staleness rules per figure — declared distances, safeguarding assessment,
+      pavement evaluation, survey data, approved phasing plan, NOTAM-affected figures —
+      valid for how long, stale immediately on what.
+  - id: '5.5.1'
+    section: '5'
+    gate: true
+    text: >-
+      How your airport knows a document is current — revision field, date, approval stamp,
+      register — or whether it depends on a person knowing.
+  - id: '5.5.2'
+    section: '5'
+    gate: true
+    text: >-
+      Confirm the currency rule — refuse or warn when currency cannot be verified.
+  - id: '5.6'
+    section: '5'
+    gate: true
+    text: >-
+      Your conflict rule — when two acceptable sources disagree, does the system answer
+      with the higher-authority source, answer with both and flag, or refuse and report?
+      Does it change by figure class? Which classes must always refuse?
+  - id: '5.6.2'
+    section: '5'
+    gate: false
+    text: >-
+      A real conflict of this kind on your airport — the two sources, what happened.
+  - id: '5.7'
+    section: '5'
+    gate: false
+    text: >-
+      Partial-evidence disclosure wording per situation, and which figures must never be
+      offered as estimates — confirmed against your Section 6 list.
+  - id: '6.1'
+    section: '6'
+    gate: true
+    covers: [ils_critical_area, ols_penetration_height]
+    text: >-
+      Which figures your airport treats as absolute — OLS penetration height at a location,
+      ILS critical area boundary, RSA/ROFA limits, TSA/TOFA limits, declared distances
+      after temporary change, temporary displaced threshold geometry, maximum crane height
+      and radius inside OLS, frangibility requirements, jet blast exclusion distances,
+      wingtip and taxi clearances, pavement bearing strength for a given aircraft, AGL
+      unserviceability limits, FOD-critical zones, ARFF access route widths and response
+      times — with the authoritative source for each on your airport.
+  - id: '6.2'
+    section: '6'
+    gate: false
+    text: >-
+      Which of the above have caught you out, and how.
+  - id: '7.1'
+    section: '7'
+    gate: false
+    text: >-
+      Figures you accept as estimates — expected phase duration, indicative cost per m² of
+      pavement, and any others — and the exact wording you want attached.
+  - id: '8.1'
+    section: '8'
+    gate: true
+    text: >-
+      Your list of questions the system must refuse outright — can we put the crane here,
+      is it safe to work with the runway open, can we hand this back tonight, will this
+      affect the ILS, and any others specific to your airport — and what the system should
+      say instead.
+  - id: '9.1'
+    section: '9'
+    gate: true
+    text: >-
+      Your ranking, highest first — ICAO Annex 14, national aviation regulation
+      (GACA/CAA/FAA), aerodrome certificate and manual, airport safeguarding policy,
+      approved CSPP, airport operations instruction, contract specification, design
+      drawings, method statement, site instruction.
+  - id: '9.2'
+    section: '9'
+    gate: true
+    text: >-
+      When contract specification and aerodrome standard disagree on your projects — which
+      governs, and has this happened.
+  - id: '9.3'
+    section: '9'
+    gate: true
+    text: >-
+      When ICAO Annex 14 and a national or FAA standard differ on a dimension — which
+      applies at your airports.
+  - id: '9.4'
+    section: '9'
+    gate: true
+    covers: [phasing_plan]
+    text: >-
+      How someone on site knows the phasing plan is the approved current version, and what
+      happens when a superseded one is worked to.
+  - id: '9.5'
+    section: '9'
+    gate: true
+    text: >-
+      Which figures are runway-specific or airport-specific on your portfolio and never
+      carried between projects.
+  - id: '9.6'
+    section: '9'
+    gate: true
+    text: >-
+      Which figures change with runway category (non-instrument, non-precision, CAT
+      I/II/III) on your airport.
+  - id: '10.1'
+    section: '10'
+    gate: false
+    text: >-
+      Where a metres-versus-feet error has occurred or nearly occurred on your projects.
+  - id: '10.2'
+    section: '10'
+    gate: false
+    text: >-
+      Where a local grid versus WGS-84 discrepancy has caused a problem on yours.
+  - id: '10.3'
+    section: '10'
+    gate: false
+    text: >-
+      Where a true-versus-magnetic bearing confusion has caused one on yours.
+  - id: '11.1'
+    section: '11'
+    gate: true
+    text: >-
+      Your FOD control requirements — sweeping frequency, inspection before handback,
+      material containment, tool control — as practised on your sites.
+  - id: '11.2'
+    section: '11'
+    gate: true
+    text: >-
+      Your airside access rules — permits, escorts, vehicle marking and lighting, radio
+      requirements, driving competence.
+  - id: '11.3'
+    section: '11'
+    gate: true
+    text: >-
+      Your handback inspection — who performs it, and what defects prevent handback.
+  - id: '11.4'
+    section: '11'
+    gate: true
+    text: >-
+      What happens when a runway incursion by a construction vehicle occurs on your airport
+      — immediate action and reporting route.
+  - id: '11.5'
+    section: '11'
+    gate: true
+    text: >-
+      Your wildlife hazard considerations created by the works — standing water, exposed
+      ground, waste, lighting — as your airport addresses them.
+  - id: '12.1'
+    section: '12'
+    gate: false
+    text: >-
+      A figure taken from the wrong source or a superseded revision.
+  - id: '12.2'
+    section: '12'
+    gate: false
+    text: >-
+      An obstacle, stockpile or plant left inside a protected surface or area.
+  - id: '12.3'
+    section: '12'
+    gate: false
+    text: >-
+      A NAVAID affected by works that were not assessed for it.
+  - id: '12.4'
+    section: '12'
+    gate: false
+    text: >-
+      A NOTAM that was wrong, late, or described the wrong thing.
+  - id: '12.5'
+    section: '12'
+    gate: false
+    text: >-
+      A handback that should not have been accepted.
+  - id: '12.6'
+    section: '12'
+    gate: false
+    covers: [declared_distance]
+    text: >-
+      A declared distance or threshold change that was communicated incorrectly.
+  - id: '12.7'
+    section: '12'
+    gate: false
+    text: >-
+      A near-miss between construction traffic and aircraft.
+  - id: '12.8'
+    section: '12'
+    gate: false
+    text: >-
+      What an engineer new to airside works most commonly gets wrong in their first six
+      months.
+  - id: '13.1'
+    section: '13'
+    gate: false
+    text: >-
+      Five things you'd ask a system per shift and trust completely.

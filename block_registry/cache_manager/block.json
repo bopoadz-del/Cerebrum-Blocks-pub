@@ -1,0 +1,126 @@
+{
+  "acceptance": [
+    {
+      "check": "errors on an unknown or missing action",
+      "id": "unknown_action",
+      "status": "failed"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Redis wrapper with get/set/delete/stats actions",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "326f534fdf0e128e974b3a3348ea1d467a3cf879b8258558aedc49047890059a",
+    "block.py": "95fbc979227cc91b5be38265f135511319515da4dada01234eefb75cd6765497"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/cache_manager:latest",
+    "type": "docker"
+  },
+  "id": "cache_manager",
+  "inputs": [
+    {
+      "description": "{\"action\": \"get\", \"key\": \"my-key\"}",
+      "name": "input",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "default": 3600,
+      "description": "Configuration parameter: default_ttl",
+      "name": "default_ttl",
+      "required": false,
+      "type": "number"
+    },
+    {
+      "default": 10000,
+      "description": "Configuration parameter: max_local_entries",
+      "name": "max_local_entries",
+      "required": false,
+      "type": "number"
+    },
+    {
+      "default": null,
+      "description": "Configuration parameter: redis_url",
+      "name": "redis_url",
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 0,
+  "name": "Cache Manager",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Cached Value",
+      "name": "value",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "env",
+      "scope": "process"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    },
+    {
+      "kind": "memory",
+      "scope": "cache"
+    }
+  ],
+  "requires": [],
+  "signature": "WQQdC8aCZMZmFuyklQrwqxgMUgXqWRecu0X1VVBYuo2LGv0kQ3/etl6IsHTlxFCm7TkJvhdRxSgj0OmE0qRFDw==",
+  "tags": [
+    "infrastructure",
+    "cache",
+    "redis"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "{\"action\": \"get\", \"key\": \"my-key\"}",
+      "name": "input",
+      "widget": "json"
+    },
+    {
+      "label": "Default Ttl",
+      "name": "default_ttl",
+      "widget": "number"
+    },
+    {
+      "label": "Max Local Entries",
+      "name": "max_local_entries",
+      "widget": "number"
+    },
+    {
+      "label": "Redis Url",
+      "name": "redis_url",
+      "widget": "text"
+    }
+  ],
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    },
+    {
+      "kind": "memory",
+      "scope": "cache"
+    }
+  ]
+}

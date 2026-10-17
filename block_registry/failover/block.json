@@ -1,0 +1,115 @@
+{
+  "acceptance": [],
+  "author": "Cerebrum Team",
+  "description": "",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "daf5bf9b7479c8b69593028bb3cc7773bbec1c62536b0b76ca9587de473d05f1",
+    "block.py": "0e1ed9703f0911770e20ece81ddb921ac8e6451035faf09d745b421feeb95905"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/failover:latest",
+    "type": "docker"
+  },
+  "id": "failover",
+  "inputs": [
+    {
+      "description": "Structured input payload",
+      "name": "input",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "default": 5,
+      "description": "Configuration parameter: circuit_breaker_threshold",
+      "name": "circuit_breaker_threshold",
+      "required": false,
+      "type": "number"
+    },
+    {
+      "default": 60,
+      "description": "Configuration parameter: recovery_timeout",
+      "name": "recovery_timeout",
+      "required": false,
+      "type": "number"
+    },
+    {
+      "default": 30,
+      "description": "Configuration parameter: health_check_interval",
+      "name": "health_check_interval",
+      "required": false,
+      "type": "number"
+    }
+  ],
+  "layer": 2,
+  "name": "Failover",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Failover result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    },
+    {
+      "kind": "llm",
+      "scope": "provider"
+    }
+  ],
+  "requires": [
+    "config",
+    "monitoring"
+  ],
+  "signature": "LQPWwozQlHE1aO1jvBn3MLoXudx54YGH8YEAY9X8d9dZ1MzPaNDPbmPXTnGNycKHcEbO/Zmhr1S514rHDdjaCg==",
+  "tags": [
+    "resilience",
+    "failover",
+    "core"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "Structured input payload",
+      "name": "input",
+      "widget": "json"
+    },
+    {
+      "label": "Circuit Breaker Threshold",
+      "name": "circuit_breaker_threshold",
+      "widget": "number"
+    },
+    {
+      "label": "Recovery Timeout",
+      "name": "recovery_timeout",
+      "widget": "number"
+    },
+    {
+      "label": "Health Check Interval",
+      "name": "health_check_interval",
+      "widget": "number"
+    }
+  ],
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

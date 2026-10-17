@@ -1,0 +1,159 @@
+{
+  "acceptance": [
+    {
+      "check": "refuses or errors when a required input is absent",
+      "id": "missing_required_input",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Extract text from PDF files with typed output",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "5bf230b56586d263f5f875a852f9cf0849ef6685760eb9fb998ac12d6de7413c",
+    "block.py": "d05c40cd290741db3e4774e0175023dec0459daac874aa7adf9710805fe7ea3f"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/pdf_v2:latest",
+    "type": "docker"
+  },
+  "id": "pdf_v2",
+  "inputs": [
+    {
+      "description": "Upload PDF...",
+      "name": "input",
+      "required": false,
+      "type": "file"
+    },
+    {
+      "default": true,
+      "description": "Configuration parameter: extract_tables",
+      "name": "extract_tables",
+      "required": false,
+      "type": "boolean"
+    },
+    {
+      "default": 100,
+      "description": "Configuration parameter: max_pages",
+      "name": "max_pages",
+      "required": false,
+      "type": "number"
+    },
+    {
+      "default": 20000,
+      "description": "Configuration parameter: text_limit",
+      "name": "text_limit",
+      "required": false,
+      "type": "number"
+    },
+    {
+      "default": 200,
+      "description": "Configuration parameter: ocr_fallback_min_chars",
+      "name": "ocr_fallback_min_chars",
+      "required": false,
+      "type": "number"
+    }
+  ],
+  "layer": 3,
+  "name": "Pdf V2",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Text",
+      "name": "text",
+      "type": "text"
+    },
+    {
+      "description": "Pages",
+      "name": "pages",
+      "type": "number"
+    },
+    {
+      "description": "Source",
+      "name": "source",
+      "type": "string"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "file",
+      "scope": "local.read"
+    },
+    {
+      "kind": "file",
+      "scope": "input_document"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    },
+    {
+      "kind": "network",
+      "scope": "http.outbound"
+    }
+  ],
+  "requires": [
+    "ocr"
+  ],
+  "signature": "uRRWnrigNL8ctVUXcFROq+joUnJbWO3A87HgL9B+1ikwBzdGCJdDcJUKdPPp4Q7UJnfsmXnRwFnjvipQoDfuAw==",
+  "tags": [
+    "domain",
+    "documents",
+    "pdf",
+    "v2"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "Upload PDF...",
+      "name": "input",
+      "widget": "file"
+    },
+    {
+      "label": "Extract Tables",
+      "name": "extract_tables",
+      "widget": "toggle"
+    },
+    {
+      "label": "Max Pages",
+      "name": "max_pages",
+      "widget": "number"
+    },
+    {
+      "label": "Text Limit",
+      "name": "text_limit",
+      "widget": "number"
+    },
+    {
+      "label": "Ocr Fallback Min Chars",
+      "name": "ocr_fallback_min_chars",
+      "widget": "number"
+    }
+  ],
+  "version": "2.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    },
+    {
+      "kind": "file",
+      "scope": "local.write"
+    },
+    {
+      "kind": "file",
+      "scope": "temp"
+    }
+  ]
+}

@@ -1,0 +1,226 @@
+{
+  "manifest": {
+    "domain_id": "equipment_maintenance",
+    "version": "1.0.0",
+    "name": "Equipment Maintenance (neutral proof domain)",
+    "description": "Neutral sample domain pack proving the Reasoning Kernel is domain-independent. Risk = likelihood x consequence on 1-5 scales (RCM practice, IEC 60300-3-11-informed), condition matrix, service-interval rule, work-order workflow with approval-gated closure. Deliberately NOT finance/construction/retail/insurance/investment.",
+    "certification": "domain_approved",
+    "effective_date": "2026-09-17",
+    "review_date": "2027-09-17",
+    "donor_repo": "neutral-sample (authored for kernel proof platform)",
+    "donor_commit": "n/a"
+  },
+  "ontology": {
+    "equipment_class": "pump | compressor | conveyor | hvac | crane | unknown",
+    "condition": "good | fair | poor | critical",
+    "risk_band": "low | medium | high | critical",
+    "work_order_state": "draft | scheduled | in_progress | completed | closed | cancelled",
+    "roles": "requester | technician | supervisor | maintenance_manager"
+  },
+  "entities": {
+    "inspection": {"fields": ["equipment_id", "condition", "likelihood", "consequence", "hours_since_service", "service_interval_hours", "equipment_class", "tenant_id"]},
+    "work_order": {"fields": ["id", "state", "risk_score", "risk_band", "priority", "tenant_id"]}
+  },
+  "permissions": {
+    "submit_inspection": ["requester", "supervisor", "maintenance_manager"],
+    "schedule_work_order": ["supervisor"],
+    "start_work_order": ["technician"],
+    "complete_work_order": ["technician"],
+    "close_work_order": ["supervisor", "maintenance_manager"],
+    "cancel_work_order": ["requester", "supervisor"]
+  },
+  "evidence_policy": {
+    "schedule": ["schedule_note"],
+    "start": ["start_time"],
+    "complete": ["completion_note"],
+    "close": ["closure_note", "approval_token"]
+  },
+  "authority_sources": {
+    "risk_score": "Standard RCM practice, IEC 60300-3-11-informed risk matrix (neutral transcription).",
+    "service_interval": "Manufacturer service-interval convention for the neutral sample.",
+    "condition_matrix": "Neutral 2x2 banding of the 1-5 risk matrix.",
+    "work_order_workflow": "Neutral maintenance work-order lifecycle authored for the proof platform."
+  },
+  "refusal_policy": {
+    "unknown_equipment_class": "refuse inspection: unsupported equipment class",
+    "unsupported_condition": "refuse inspection: unsupported condition value",
+    "out_of_scale": "refuse risk score: likelihood/consequence must be 1-5"
+  },
+  "formulas": [
+    {
+      "formula_id": "equipment_maintenance.risk_score",
+      "name": "risk_score",
+      "domain": "equipment_maintenance",
+      "version": "1.0.0",
+      "description": "Inspection risk = likelihood x consequence, each an integer 1-5; result 1-25.",
+      "expression": "likelihood * consequence",
+      "inputs": [
+        {"name": "likelihood", "type": "integer", "min": 1, "max": 5},
+        {"name": "consequence", "type": "integer", "min": 1, "max": 5}
+      ],
+      "output": {"type": "number", "units": "risk_points"},
+      "units": {"likelihood": "scale_1_5", "consequence": "scale_1_5", "output": "risk_points"},
+      "precision": 0,
+      "rounding": "half_even",
+      "preconditions": ["likelihood ge 1", "likelihood le 5", "consequence ge 1", "consequence le 5"],
+      "edge_cases": ["1x1 = 1 (minimum)", "5x5 = 25 (maximum)", "2x3 = 6", "4x4 = 16"],
+      "unsupported_conditions": ["non-integer inputs", "inputs outside 1-5"],
+      "authority_source": "Standard RCM practice, IEC 60300-3-11-informed risk matrix (neutral transcription).",
+      "effective_date": "2026-09-17",
+      "review_date": "2027-09-17",
+      "implementation": "neutral_app.platform:risk_score",
+      "verification_oracle": "tests in neutral_platform/tests/test_oracles.py — known answers 1, 25, 6, 16; boundary refusals 0 and 6.",
+      "certification": "domain_approved",
+      "provenance": {"donor_repo": "neutral-sample", "donor_commit": "n/a", "donor_path": "domain_packs/equipment_maintenance/pack.json", "donor_symbol": "risk_score", "note": "authored for the neutral proof platform; oracle-verified"}
+    },
+    {
+      "formula_id": "equipment_maintenance.service_overdue",
+      "name": "service_overdue",
+      "domain": "equipment_maintenance",
+      "version": "1.0.0",
+      "description": "True when running hours since last service meet or exceed the service interval.",
+      "expression": "hours_since_service >= service_interval_hours",
+      "inputs": [
+        {"name": "hours_since_service", "type": "number", "min": 0},
+        {"name": "service_interval_hours", "type": "number", "min": 1}
+      ],
+      "output": {"type": "boolean"},
+      "units": {"hours_since_service": "hours", "service_interval_hours": "hours"},
+      "precision": null,
+      "rounding": "half_even",
+      "preconditions": ["hours_since_service ge 0", "service_interval_hours gt 0"],
+      "edge_cases": ["equal hours -> True (due now)", "one hour short -> False"],
+      "unsupported_conditions": ["negative hours", "zero or negative interval"],
+      "authority_source": "Manufacturer service-interval convention for the neutral sample.",
+      "effective_date": "2026-09-17",
+      "review_date": "2027-09-17",
+      "implementation": "neutral_app.platform:service_overdue",
+      "verification_oracle": "tests in neutral_platform/tests/test_oracles.py — 520 vs 500 True; 499 vs 500 False.",
+      "certification": "domain_approved",
+      "provenance": {"donor_repo": "neutral-sample", "donor_commit": "n/a", "donor_path": "domain_packs/equipment_maintenance/pack.json", "donor_symbol": "service_overdue", "note": "authored for the neutral proof platform; oracle-verified"}
+    }
+  ],
+  "rules": [
+    {
+      "rule_id": "R-EQ-RISK-CRITICAL",
+      "version": "1.0.0",
+      "conditions": [{"field": "risk_score", "op": "ge", "value": 15}],
+      "decision": {"action": "create_work_order", "priority": "immediate", "message": "critical risk: an immediate work order is required", "outcome": "create immediate work order"},
+      "severity": "critical",
+      "precedence": 100,
+      "authority_source": "Standard RCM practice (neutral transcription).",
+      "evidence_requirements": ["inspection_record"],
+      "refusal_behavior": "warn",
+      "certification": "domain_approved",
+      "provenance": {"donor_repo": "neutral-sample", "donor_commit": "n/a", "donor_path": "domain_packs/equipment_maintenance/pack.json", "donor_symbol": "R-EQ-RISK-CRITICAL", "note": "authored for the neutral proof platform"}
+    },
+    {
+      "rule_id": "R-EQ-SERVICE-DUE",
+      "version": "1.0.0",
+      "conditions": [{"field": "service_overdue", "op": "eq", "value": true}],
+      "decision": {"action": "schedule_service", "message": "service interval reached: schedule maintenance", "outcome": "schedule service"},
+      "severity": "warning",
+      "precedence": 50,
+      "authority_source": "Manufacturer service-interval convention for the neutral sample.",
+      "evidence_requirements": ["hours_since_service"],
+      "refusal_behavior": "warn",
+      "certification": "domain_approved",
+      "provenance": {"donor_repo": "neutral-sample", "donor_commit": "n/a", "donor_path": "domain_packs/equipment_maintenance/pack.json", "donor_symbol": "R-EQ-SERVICE-DUE", "note": "authored for the neutral proof platform"}
+    },
+    {
+      "rule_id": "R-EQ-UNSUPPORTED-CLASS",
+      "version": "1.0.0",
+      "conditions": [{"field": "equipment_class", "op": "eq", "value": "unknown"}],
+      "decision": {"action": "refuse_inspection", "message": "unsupported equipment class: inspection refused"},
+      "severity": "critical",
+      "precedence": 200,
+      "authority_source": "Neutral sample refusal policy.",
+      "evidence_requirements": [],
+      "refusal_behavior": "refuse",
+      "certification": "domain_approved",
+      "provenance": {"donor_repo": "neutral-sample", "donor_commit": "n/a", "donor_path": "domain_packs/equipment_maintenance/pack.json", "donor_symbol": "R-EQ-UNSUPPORTED-CLASS", "note": "authored for the neutral proof platform"}
+    },
+    {
+      "rule_id": "R-EQ-UNSUPPORTED-CONDITION",
+      "version": "1.0.0",
+      "conditions": [{"field": "condition", "op": "not_in", "value": ["good", "fair", "poor", "critical"]}],
+      "decision": {"action": "refuse_inspection", "message": "unsupported condition value: inspection refused"},
+      "severity": "critical",
+      "precedence": 200,
+      "authority_source": "Neutral sample refusal policy.",
+      "evidence_requirements": [],
+      "refusal_behavior": "refuse",
+      "certification": "domain_approved",
+      "provenance": {"donor_repo": "neutral-sample", "donor_commit": "n/a", "donor_path": "domain_packs/equipment_maintenance/pack.json", "donor_symbol": "R-EQ-UNSUPPORTED-CONDITION", "note": "authored for the neutral proof platform"}
+    }
+  ],
+  "decision_tables": [
+    {
+      "table_id": "equipment_maintenance.condition_matrix",
+      "version": "1.0.0",
+      "inputs": ["likelihood_band", "consequence_band"],
+      "rows": [
+        {"when": {"likelihood_band": "high", "consequence_band": "high"}, "then": {"band": "critical", "action": "immediate_work_order"}},
+        {"when": {"likelihood_band": "high", "consequence_band": "low"}, "then": {"band": "high", "action": "work_order_this_week"}},
+        {"when": {"likelihood_band": "low", "consequence_band": "high"}, "then": {"band": "high", "action": "work_order_this_week"}},
+        {"when": {"likelihood_band": "low", "consequence_band": "low"}, "then": {"band": "medium", "action": "schedule_in_window"}}
+      ],
+      "default_outcome": {"band": "low", "action": "routine_monitoring"},
+      "authority_source": "Neutral 2x2 banding of the 1-5 risk matrix.",
+      "certification": "domain_approved",
+      "provenance": {"donor_repo": "neutral-sample", "donor_commit": "n/a", "donor_path": "domain_packs/equipment_maintenance/pack.json", "donor_symbol": "condition_matrix", "note": "authored for the neutral proof platform"}
+    }
+  ],
+  "workflows": [
+    {
+      "workflow_id": "equipment_maintenance.work_order",
+      "version": "1.0.0",
+      "states": ["draft", "scheduled", "in_progress", "completed", "closed", "cancelled"],
+      "initial_state": "draft",
+      "terminal_states": ["closed", "cancelled"],
+      "transitions": [
+        {"from": "draft", "to": "scheduled", "permitted_actors": ["supervisor"], "evidence_required": ["schedule_note"]},
+        {"from": "scheduled", "to": "in_progress", "permitted_actors": ["technician"], "evidence_required": ["start_time"]},
+        {"from": "in_progress", "to": "completed", "permitted_actors": ["technician"], "evidence_required": ["completion_note"]},
+        {"from": "completed", "to": "closed", "permitted_actors": ["supervisor", "maintenance_manager"], "approval_required": true, "evidence_required": ["closure_note"]},
+        {"from": "draft", "to": "cancelled", "permitted_actors": ["requester", "supervisor"], "guards": ["risk_band ne critical"]}
+      ],
+      "permitted_actors": {},
+      "guards": {"cancelled": ["risk_band ne critical"]},
+      "evidence_required": {"scheduled": ["schedule_note"], "in_progress": ["start_time"], "completed": ["completion_note"], "closed": ["closure_note"]},
+      "approval_required": {"closed": true},
+      "immutable_states": ["closed", "cancelled"],
+      "reopening_rules": {"closed": {"to": "draft", "permitted_actors": ["supervisor"], "evidence_required": ["reopen_justification"], "mechanism": "new work-order instance referencing the closed one"}},
+      "certification": "domain_approved",
+      "provenance": {"donor_repo": "neutral-sample", "donor_commit": "n/a", "donor_path": "domain_packs/equipment_maintenance/pack.json", "donor_symbol": "work_order", "note": "authored for the neutral proof platform"}
+    }
+  ],
+  "approvals": [
+    {
+      "action": "close_work_order",
+      "version": "1.0.0",
+      "risk_tier": "medium",
+      "requester_roles": ["requester", "supervisor", "maintenance_manager"],
+      "approver_roles": ["supervisor", "maintenance_manager"],
+      "minimum_approvals": 1,
+      "thresholds": {"medium": 8, "high": 15},
+      "self_approval": "prohibited",
+      "segregation_of_duties": [["u_alice", "u_bob"]],
+      "payload_binding": "required",
+      "expiry_seconds": 3600,
+      "replay_prevention": "required",
+      "emergency_override": {"role": "maintenance_manager", "justification_required": true},
+      "evidence": ["closure_note", "completion_note"],
+      "audit_required": true,
+      "certification": "domain_approved",
+      "provenance": {"donor_repo": "neutral-sample", "donor_commit": "n/a", "donor_path": "domain_packs/equipment_maintenance/pack.json", "donor_symbol": "close_work_order", "note": "authored for the neutral proof platform; SoD pair u_alice/u_bob is the demo pairing"}
+    }
+  ],
+  "actions": {},
+  "verification_oracles": {
+    "risk_score": {"known_answers": [{"inputs": {"likelihood": 1, "consequence": 1}, "expect": "1"}, {"inputs": {"likelihood": 5, "consequence": 5}, "expect": "25"}, {"inputs": {"likelihood": 2, "consequence": 3}, "expect": "6"}, {"inputs": {"likelihood": 4, "consequence": 4}, "expect": "16"}], "boundary_refusals": [{"likelihood": 0, "consequence": 3}, {"likelihood": 6, "consequence": 3}]},
+    "service_overdue": {"known_answers": [{"inputs": {"hours_since_service": 520, "service_interval_hours": 500}, "expect": true}, {"inputs": {"hours_since_service": 499, "service_interval_hours": 500}, "expect": false}]}
+  },
+  "fixtures": {},
+  "tests": {"neutral_platform/tests": ["test_e2e_flow.py", "test_oracles.py"]}
+}

@@ -1,0 +1,163 @@
+{
+  "acceptance": [
+    {
+      "check": "refuses or errors when a required input is absent",
+      "id": "missing_required_input",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Extract text from images using OCR with preprocessing",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "b09af77dabb2032269077f23961d3d2a11b11bbed5ceb49c5b2f61993d96746a",
+    "block.py": "f9523a9cbc08836667717f68953909e9609e18ae67f3cd8aafe1e38cce0798b7"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/ocr:latest",
+    "type": "docker"
+  },
+  "id": "ocr",
+  "inputs": [
+    {
+      "description": "Upload image to extract text...",
+      "name": "input",
+      "required": false,
+      "type": "file"
+    },
+    {
+      "default": [
+        "en"
+      ],
+      "description": "Configuration parameter: languages",
+      "name": "languages",
+      "required": false,
+      "type": "array"
+    },
+    {
+      "default": true,
+      "description": "Configuration parameter: preprocess",
+      "name": "preprocess",
+      "required": false,
+      "type": "boolean"
+    },
+    {
+      "default": true,
+      "description": "Configuration parameter: deskew",
+      "name": "deskew",
+      "required": false,
+      "type": "boolean"
+    },
+    {
+      "default": 1.5,
+      "description": "Configuration parameter: contrast_factor",
+      "name": "contrast_factor",
+      "required": false,
+      "type": "number"
+    }
+  ],
+  "layer": 3,
+  "name": "Ocr",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Extracted Text",
+      "name": "text",
+      "type": "text"
+    },
+    {
+      "description": "Confidence",
+      "name": "confidence",
+      "type": "percentage"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "file",
+      "scope": "local.read"
+    },
+    {
+      "kind": "file",
+      "scope": "input_document"
+    },
+    {
+      "kind": "file",
+      "scope": "input_image"
+    },
+    {
+      "kind": "env",
+      "scope": "process"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    },
+    {
+      "kind": "network",
+      "scope": "http.outbound"
+    }
+  ],
+  "requires": [],
+  "signature": "u13qits9NwvZmPnD/j897HJTlJUMdbpHszUjMP0Lgu1rqe9xQfcBuUhYl89CfpK2DwuDnUMR5zGgNAK5A82xBA==",
+  "tags": [
+    "domain",
+    "vision",
+    "ocr",
+    "documents",
+    "typed"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "Upload image to extract text...",
+      "name": "input",
+      "widget": "file"
+    },
+    {
+      "label": "Languages",
+      "name": "languages",
+      "widget": "json"
+    },
+    {
+      "label": "Preprocess",
+      "name": "preprocess",
+      "widget": "toggle"
+    },
+    {
+      "label": "Deskew",
+      "name": "deskew",
+      "widget": "toggle"
+    },
+    {
+      "label": "Contrast Factor",
+      "name": "contrast_factor",
+      "widget": "number"
+    }
+  ],
+  "version": "2.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    },
+    {
+      "kind": "file",
+      "scope": "local.write"
+    },
+    {
+      "kind": "file",
+      "scope": "temp"
+    }
+  ]
+}

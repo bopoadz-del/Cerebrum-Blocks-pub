@@ -1,0 +1,12 @@
+{
+  "name": "grounded_answer",
+  "version": "0.1.0",
+  "sha256": "981664051a787a7de56fce537c6998e50296bbe7d7592e3f9588a6a482fa06aa",
+  "dependencies": [
+    "numpy"
+  ],
+  "provenance": "new",
+  "acceptance_test": "tests/test_grounded_answer.py",
+  "tier": "premium",
+  "note": "Premium-only; not available in the freemium tier."
+}

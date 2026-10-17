@@ -1,0 +1,23 @@
+{
+  "acceptance": [],
+  "description": "Read-only loyalty intelligence: points, miles, tiers, and benefits grounded in project documents.",
+  "digests": {
+    "block.json": "3810dae680fab81c1eb12a18e44c69bba3835e9d9b0905d4ee570f75087a14d3",
+    "block.py": "65731d5d5c8ebce6019e7ce835436e24ccc6472bf292b8a32b443ac75347f4cd"
+  },
+  "id": "aviation_loyalty_kit",
+  "name": "Aviation Loyalty Kit",
+  "never": [],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [],
+  "signature": "0K8t+7R0kzfnfi6Vt02uQ9zn7pwOiDW+5zRBP7yPM4ooB7SJ5OS4GAsysiobkbSGObibeEDdzOTrz3rSDwDLAQ==",
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": []
+}

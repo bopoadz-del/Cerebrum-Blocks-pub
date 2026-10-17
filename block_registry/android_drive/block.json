@@ -1,0 +1,74 @@
+{
+  "acceptance": [
+    {
+      "check": "returns not_implemented rather than inventing a result",
+      "id": "not_implemented",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Android device storage access \u2014 HONEST STUB: not implemented, refuses by name; needs net-new ADB/bridge integration (no donor)",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "605f8a41873dc53ff63ee50c0476390fc9454901ed3449083c83e48702bda9b3",
+    "block.py": "6fb288e2df6a33f36f701c7e44904c39104fb2f705bc09bf830278e4063ea398"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/android_drive:latest",
+    "type": "docker"
+  },
+  "id": "android_drive",
+  "inputs": [
+    {
+      "description": "Access Android device storage...",
+      "name": "input",
+      "required": false,
+      "type": "file"
+    }
+  ],
+  "layer": 4,
+  "name": "Android Drive",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Files",
+      "name": "files",
+      "type": "array"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "bnWU7W8HgT7CqzEmn3wnaNNhqiBfr4WSm+mCYidVfdIwdNLc3NPDT8wvzFj6YzcgNDKYpA7OYbUnQxgpjS0lDA==",
+  "tags": [
+    "integration",
+    "storage",
+    "mobile"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "Access Android device storage...",
+      "name": "input",
+      "widget": "file"
+    }
+  ],
+  "version": "1.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

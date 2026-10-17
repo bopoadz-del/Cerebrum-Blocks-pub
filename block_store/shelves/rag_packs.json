@@ -1,0 +1,977 @@
+{
+  "schema_version": "1.0.0",
+  "shelf_id": "rag_packs",
+  "name": "Prebuilt Domain RAG Pack Shelf",
+  "description": "Metadata for prebuilt domain knowledge collections. These packs describe available domain RAG collections but do not contain private enterprise data or perform ingestion.",
+  "packs": [
+    {
+      "id": "agriculture_core_rag",
+      "domain": "agriculture",
+      "name": "Agriculture Core RAG Pack",
+      "status": "metadata_only",
+      "description": "Prebuilt agriculture knowledge collection metadata for crop health, soil analysis, irrigation, pest management, and agronomy compliance.",
+      "collection_id": "prebuilt_agriculture_core",
+      "visibility": "platform_prebuilt",
+      "data_class": "public_or_licensed_reference",
+      "enterprise_specific": false,
+      "requires_blocks": [
+        "knowledge",
+        "vector_search"
+      ],
+      "recommended_with_blocks": [
+        "agriculture_v2",
+        "formula_executor_v2"
+      ],
+      "source_types": [
+        "statutes",
+        "regulations",
+        "templates",
+        "guidance",
+        "domain_reference"
+      ],
+      "expected_queries": [],
+      "expected_outputs": [],
+      "fetch_mode": "metadata_only",
+      "ingestion_status": {
+        "state": "not_ingested",
+        "documents_total": 0,
+        "documents_indexed": 0,
+        "chunks_total": 0,
+        "last_ingested_at": null,
+        "last_error": null
+      },
+      "notes": [],
+      "source_policy": {
+        "allowed_source_classes": [
+          "public_domain",
+          "open_license",
+          "official_statute_or_regulation",
+          "official_guidance",
+          "platform_curated_template"
+        ],
+        "precluded_source_classes": [
+          "private_enterprise_data",
+          "confidential_client_data",
+          "copyrighted_commercial_content_without_license",
+          "user_uploaded_project_records",
+          "unknown_license"
+        ],
+        "requires_source_record": true,
+        "requires_license_review": true,
+        "requires_authority_rating": true
+      }
+    },
+    {
+      "id": "automotive_core_rag",
+      "domain": "automotive",
+      "name": "Automotive Core RAG Pack",
+      "status": "metadata_only",
+      "description": "Prebuilt automotive knowledge collection metadata for vehicle documentation, recall notices, service records, supplier quality, and homologation.",
+      "collection_id": "prebuilt_automotive_core",
+      "visibility": "platform_prebuilt",
+      "data_class": "public_or_licensed_reference",
+      "enterprise_specific": false,
+      "requires_blocks": [
+        "knowledge",
+        "vector_search"
+      ],
+      "recommended_with_blocks": [
+        "automotive_v2",
+        "formula_executor_v2"
+      ],
+      "source_types": [
+        "statutes",
+        "regulations",
+        "templates",
+        "guidance",
+        "domain_reference"
+      ],
+      "expected_queries": [],
+      "expected_outputs": [],
+      "fetch_mode": "metadata_only",
+      "ingestion_status": {
+        "state": "not_ingested",
+        "documents_total": 0,
+        "documents_indexed": 0,
+        "chunks_total": 0,
+        "last_ingested_at": null,
+        "last_error": null
+      },
+      "notes": [],
+      "source_policy": {
+        "allowed_source_classes": [
+          "public_domain",
+          "open_license",
+          "official_statute_or_regulation",
+          "official_guidance",
+          "platform_curated_template"
+        ],
+        "precluded_source_classes": [
+          "private_enterprise_data",
+          "confidential_client_data",
+          "copyrighted_commercial_content_without_license",
+          "user_uploaded_project_records",
+          "unknown_license"
+        ],
+        "requires_source_record": true,
+        "requires_license_review": true,
+        "requires_authority_rating": true
+      }
+    },
+    {
+      "id": "aviation_core_rag",
+      "domain": "aviation",
+      "name": "Aviation Core RAG Pack",
+      "status": "metadata_only",
+      "description": "Prebuilt aviation knowledge collection metadata for flight logs, maintenance records, safety reports, crew documentation, and regulatory filings.",
+      "collection_id": "prebuilt_aviation_core",
+      "visibility": "platform_prebuilt",
+      "data_class": "public_or_licensed_reference",
+      "enterprise_specific": false,
+      "requires_blocks": [
+        "knowledge",
+        "vector_search"
+      ],
+      "recommended_with_blocks": [
+        "aviation_v2",
+        "formula_executor_v2"
+      ],
+      "source_types": [
+        "statutes",
+        "regulations",
+        "templates",
+        "guidance",
+        "domain_reference"
+      ],
+      "expected_queries": [],
+      "expected_outputs": [],
+      "fetch_mode": "metadata_only",
+      "ingestion_status": {
+        "state": "not_ingested",
+        "documents_total": 0,
+        "documents_indexed": 0,
+        "chunks_total": 0,
+        "last_ingested_at": null,
+        "last_error": null
+      },
+      "notes": [],
+      "source_policy": {
+        "allowed_source_classes": [
+          "public_domain",
+          "open_license",
+          "official_statute_or_regulation",
+          "official_guidance",
+          "platform_curated_template"
+        ],
+        "precluded_source_classes": [
+          "private_enterprise_data",
+          "confidential_client_data",
+          "copyrighted_commercial_content_without_license",
+          "user_uploaded_project_records",
+          "unknown_license"
+        ],
+        "requires_source_record": true,
+        "requires_license_review": true,
+        "requires_authority_rating": true
+      }
+    },
+    {
+      "id": "construction_core_rag",
+      "domain": "construction",
+      "name": "Construction Core RAG Pack",
+      "status": "metadata_only",
+      "description": "Prebuilt construction knowledge collection metadata for contracts, specifications, drawings, schedules, safety plans, and procurement documents.",
+      "collection_id": "prebuilt_construction_core",
+      "visibility": "platform_prebuilt",
+      "data_class": "public_or_licensed_reference",
+      "enterprise_specific": false,
+      "requires_blocks": [
+        "knowledge",
+        "vector_search"
+      ],
+      "recommended_with_blocks": [
+        "construction_v2",
+        "formula_executor_v2"
+      ],
+      "source_types": [
+        "statutes",
+        "regulations",
+        "templates",
+        "guidance",
+        "domain_reference"
+      ],
+      "expected_queries": [],
+      "expected_outputs": [],
+      "fetch_mode": "metadata_only",
+      "ingestion_status": {
+        "state": "not_ingested",
+        "documents_total": 0,
+        "documents_indexed": 0,
+        "chunks_total": 0,
+        "last_ingested_at": null,
+        "last_error": null
+      },
+      "notes": [],
+      "source_policy": {
+        "allowed_source_classes": [
+          "public_domain",
+          "open_license",
+          "official_statute_or_regulation",
+          "official_guidance",
+          "platform_curated_template"
+        ],
+        "precluded_source_classes": [
+          "private_enterprise_data",
+          "confidential_client_data",
+          "copyrighted_commercial_content_without_license",
+          "user_uploaded_project_records",
+          "unknown_license"
+        ],
+        "requires_source_record": true,
+        "requires_license_review": true,
+        "requires_authority_rating": true
+      }
+    },
+    {
+      "id": "education_core_rag",
+      "domain": "education",
+      "name": "Education Core RAG Pack",
+      "status": "metadata_only",
+      "description": "Prebuilt education knowledge collection metadata for syllabi, accreditation documents, learning materials, assessments, and academic policies.",
+      "collection_id": "prebuilt_education_core",
+      "visibility": "platform_prebuilt",
+      "data_class": "public_or_licensed_reference",
+      "enterprise_specific": false,
+      "requires_blocks": [
+        "knowledge",
+        "vector_search"
+      ],
+      "recommended_with_blocks": [
+        "education_v2",
+        "formula_executor_v2"
+      ],
+      "source_types": [
+        "statutes",
+        "regulations",
+        "templates",
+        "guidance",
+        "domain_reference"
+      ],
+      "expected_queries": [],
+      "expected_outputs": [],
+      "fetch_mode": "metadata_only",
+      "ingestion_status": {
+        "state": "not_ingested",
+        "documents_total": 0,
+        "documents_indexed": 0,
+        "chunks_total": 0,
+        "last_ingested_at": null,
+        "last_error": null
+      },
+      "notes": [],
+      "source_policy": {
+        "allowed_source_classes": [
+          "public_domain",
+          "open_license",
+          "official_statute_or_regulation",
+          "official_guidance",
+          "platform_curated_template"
+        ],
+        "precluded_source_classes": [
+          "private_enterprise_data",
+          "confidential_client_data",
+          "copyrighted_commercial_content_without_license",
+          "user_uploaded_project_records",
+          "unknown_license"
+        ],
+        "requires_source_record": true,
+        "requires_license_review": true,
+        "requires_authority_rating": true
+      }
+    },
+    {
+      "id": "finance_core_rag",
+      "domain": "finance",
+      "name": "Finance Core RAG Pack",
+      "status": "metadata_only",
+      "description": "Prebuilt finance knowledge collection metadata for financial reports, market data, regulatory guidance, and investment reference materials.",
+      "collection_id": "prebuilt_finance_core",
+      "visibility": "platform_prebuilt",
+      "data_class": "public_or_licensed_reference",
+      "enterprise_specific": false,
+      "requires_blocks": [
+        "knowledge",
+        "vector_search"
+      ],
+      "recommended_with_blocks": [
+        "finance_v2",
+        "formula_executor_v2"
+      ],
+      "source_types": [
+        "statutes",
+        "regulations",
+        "templates",
+        "guidance",
+        "domain_reference"
+      ],
+      "expected_queries": [],
+      "expected_outputs": [],
+      "fetch_mode": "metadata_only",
+      "ingestion_status": {
+        "state": "not_ingested",
+        "documents_total": 0,
+        "documents_indexed": 0,
+        "chunks_total": 0,
+        "last_ingested_at": null,
+        "last_error": null
+      },
+      "notes": [],
+      "source_policy": {
+        "allowed_source_classes": [
+          "public_domain",
+          "open_license",
+          "official_statute_or_regulation",
+          "official_guidance",
+          "platform_curated_template"
+        ],
+        "precluded_source_classes": [
+          "private_enterprise_data",
+          "confidential_client_data",
+          "copyrighted_commercial_content_without_license",
+          "user_uploaded_project_records",
+          "unknown_license"
+        ],
+        "requires_source_record": true,
+        "requires_license_review": true,
+        "requires_authority_rating": true
+      }
+    },
+    {
+      "id": "hotel_management_core_rag",
+      "domain": "hotel_management",
+      "name": "Hotel Management Core RAG Pack",
+      "status": "metadata_only",
+      "description": "Prebuilt hotel management knowledge collection metadata for guest services, operations manuals, hospitality standards, and compliance guides.",
+      "collection_id": "prebuilt_hotel_management_core",
+      "visibility": "platform_prebuilt",
+      "data_class": "public_or_licensed_reference",
+      "enterprise_specific": false,
+      "requires_blocks": [
+        "knowledge",
+        "vector_search"
+      ],
+      "recommended_with_blocks": [
+        "hotel_management_v2",
+        "formula_executor_v2"
+      ],
+      "source_types": [
+        "statutes",
+        "regulations",
+        "templates",
+        "guidance",
+        "domain_reference"
+      ],
+      "expected_queries": [],
+      "expected_outputs": [],
+      "fetch_mode": "metadata_only",
+      "ingestion_status": {
+        "state": "not_ingested",
+        "documents_total": 0,
+        "documents_indexed": 0,
+        "chunks_total": 0,
+        "last_ingested_at": null,
+        "last_error": null
+      },
+      "notes": [],
+      "source_policy": {
+        "allowed_source_classes": [
+          "public_domain",
+          "open_license",
+          "official_statute_or_regulation",
+          "official_guidance",
+          "platform_curated_template"
+        ],
+        "precluded_source_classes": [
+          "private_enterprise_data",
+          "confidential_client_data",
+          "copyrighted_commercial_content_without_license",
+          "user_uploaded_project_records",
+          "unknown_license"
+        ],
+        "requires_source_record": true,
+        "requires_license_review": true,
+        "requires_authority_rating": true
+      }
+    },
+    {
+      "id": "hr_core_rag",
+      "domain": "hr",
+      "name": "HR Core RAG Pack",
+      "status": "metadata_only",
+      "description": "Prebuilt hr knowledge collection metadata for employment policies, workforce guidelines, compensation references, and compliance documents.",
+      "collection_id": "prebuilt_hr_core",
+      "visibility": "platform_prebuilt",
+      "data_class": "public_or_licensed_reference",
+      "enterprise_specific": false,
+      "requires_blocks": [
+        "knowledge",
+        "vector_search"
+      ],
+      "recommended_with_blocks": [
+        "hr_v2",
+        "formula_executor_v2"
+      ],
+      "source_types": [
+        "statutes",
+        "regulations",
+        "templates",
+        "guidance",
+        "domain_reference"
+      ],
+      "expected_queries": [],
+      "expected_outputs": [],
+      "fetch_mode": "metadata_only",
+      "ingestion_status": {
+        "state": "not_ingested",
+        "documents_total": 0,
+        "documents_indexed": 0,
+        "chunks_total": 0,
+        "last_ingested_at": null,
+        "last_error": null
+      },
+      "notes": [],
+      "source_policy": {
+        "allowed_source_classes": [
+          "public_domain",
+          "open_license",
+          "official_statute_or_regulation",
+          "official_guidance",
+          "platform_curated_template"
+        ],
+        "precluded_source_classes": [
+          "private_enterprise_data",
+          "confidential_client_data",
+          "copyrighted_commercial_content_without_license",
+          "user_uploaded_project_records",
+          "unknown_license"
+        ],
+        "requires_source_record": true,
+        "requires_license_review": true,
+        "requires_authority_rating": true
+      }
+    },
+    {
+      "id": "insurance_core_rag",
+      "domain": "insurance",
+      "name": "Insurance Core RAG Pack",
+      "status": "metadata_only",
+      "description": "Prebuilt insurance knowledge collection metadata for policy forms, claims guidance, underwriting references, and regulatory materials.",
+      "collection_id": "prebuilt_insurance_core",
+      "visibility": "platform_prebuilt",
+      "data_class": "public_or_licensed_reference",
+      "enterprise_specific": false,
+      "requires_blocks": [
+        "knowledge",
+        "vector_search"
+      ],
+      "recommended_with_blocks": [
+        "insurance_v2",
+        "formula_executor_v2"
+      ],
+      "source_types": [
+        "statutes",
+        "regulations",
+        "templates",
+        "guidance",
+        "domain_reference"
+      ],
+      "expected_queries": [],
+      "expected_outputs": [],
+      "fetch_mode": "metadata_only",
+      "ingestion_status": {
+        "state": "not_ingested",
+        "documents_total": 0,
+        "documents_indexed": 0,
+        "chunks_total": 0,
+        "last_ingested_at": null,
+        "last_error": null
+      },
+      "notes": [],
+      "source_policy": {
+        "allowed_source_classes": [
+          "public_domain",
+          "open_license",
+          "official_statute_or_regulation",
+          "official_guidance",
+          "platform_curated_template"
+        ],
+        "precluded_source_classes": [
+          "private_enterprise_data",
+          "confidential_client_data",
+          "copyrighted_commercial_content_without_license",
+          "user_uploaded_project_records",
+          "unknown_license"
+        ],
+        "requires_source_record": true,
+        "requires_license_review": true,
+        "requires_authority_rating": true
+      }
+    },
+    {
+      "id": "legal_core_rag",
+      "domain": "legal",
+      "name": "Legal Core RAG Pack",
+      "status": "metadata_only",
+      "description": "Prebuilt legal knowledge collection metadata for contracts, clauses, deadlines, litigation support, and compliance workflows.",
+      "collection_id": "prebuilt_legal_core",
+      "visibility": "platform_prebuilt",
+      "data_class": "public_or_licensed_reference",
+      "enterprise_specific": false,
+      "requires_blocks": [
+        "knowledge",
+        "vector_search"
+      ],
+      "recommended_with_blocks": [
+        "legal_v2",
+        "formula_executor_v2"
+      ],
+      "source_types": [
+        "statutes",
+        "regulations",
+        "templates",
+        "guidance",
+        "domain_reference"
+      ],
+      "expected_queries": [],
+      "expected_outputs": [],
+      "fetch_mode": "metadata_only",
+      "ingestion_status": {
+        "state": "not_ingested",
+        "documents_total": 0,
+        "documents_indexed": 0,
+        "chunks_total": 0,
+        "last_ingested_at": null,
+        "last_error": null
+      },
+      "notes": [],
+      "source_policy": {
+        "allowed_source_classes": [
+          "public_domain",
+          "open_license",
+          "official_statute_or_regulation",
+          "official_guidance",
+          "platform_curated_template"
+        ],
+        "precluded_source_classes": [
+          "private_enterprise_data",
+          "confidential_client_data",
+          "copyrighted_commercial_content_without_license",
+          "user_uploaded_project_records",
+          "unknown_license"
+        ],
+        "requires_source_record": true,
+        "requires_license_review": true,
+        "requires_authority_rating": true
+      }
+    },
+    {
+      "id": "manufacturing_core_rag",
+      "domain": "manufacturing",
+      "name": "Manufacturing Core RAG Pack",
+      "status": "metadata_only",
+      "description": "Prebuilt manufacturing knowledge collection metadata for quality standards, BOM references, operations guides, and safety procedures.",
+      "collection_id": "prebuilt_manufacturing_core",
+      "visibility": "platform_prebuilt",
+      "data_class": "public_or_licensed_reference",
+      "enterprise_specific": false,
+      "requires_blocks": [
+        "knowledge",
+        "vector_search"
+      ],
+      "recommended_with_blocks": [
+        "manufacturing_v2",
+        "formula_executor_v2"
+      ],
+      "source_types": [
+        "statutes",
+        "regulations",
+        "templates",
+        "guidance",
+        "domain_reference"
+      ],
+      "expected_queries": [],
+      "expected_outputs": [],
+      "fetch_mode": "metadata_only",
+      "ingestion_status": {
+        "state": "not_ingested",
+        "documents_total": 0,
+        "documents_indexed": 0,
+        "chunks_total": 0,
+        "last_ingested_at": null,
+        "last_error": null
+      },
+      "notes": [],
+      "source_policy": {
+        "allowed_source_classes": [
+          "public_domain",
+          "open_license",
+          "official_statute_or_regulation",
+          "official_guidance",
+          "platform_curated_template"
+        ],
+        "precluded_source_classes": [
+          "private_enterprise_data",
+          "confidential_client_data",
+          "copyrighted_commercial_content_without_license",
+          "user_uploaded_project_records",
+          "unknown_license"
+        ],
+        "requires_source_record": true,
+        "requires_license_review": true,
+        "requires_authority_rating": true
+      }
+    },
+    {
+      "id": "medical_core_rag",
+      "domain": "medical",
+      "name": "Medical Core RAG Pack",
+      "status": "metadata_only",
+      "description": "Prebuilt medical knowledge collection metadata for clinical guidelines, drug references, diagnostic support, and healthcare compliance.",
+      "collection_id": "prebuilt_medical_core",
+      "visibility": "platform_prebuilt",
+      "data_class": "public_or_licensed_reference",
+      "enterprise_specific": false,
+      "requires_blocks": [
+        "knowledge",
+        "vector_search"
+      ],
+      "recommended_with_blocks": [
+        "medical_v2",
+        "formula_executor_v2"
+      ],
+      "source_types": [
+        "statutes",
+        "regulations",
+        "templates",
+        "guidance",
+        "domain_reference"
+      ],
+      "expected_queries": [],
+      "expected_outputs": [],
+      "fetch_mode": "metadata_only",
+      "ingestion_status": {
+        "state": "not_ingested",
+        "documents_total": 0,
+        "documents_indexed": 0,
+        "chunks_total": 0,
+        "last_ingested_at": null,
+        "last_error": null
+      },
+      "notes": [],
+      "source_policy": {
+        "allowed_source_classes": [
+          "public_domain",
+          "open_license",
+          "official_statute_or_regulation",
+          "official_guidance",
+          "platform_curated_template"
+        ],
+        "precluded_source_classes": [
+          "private_enterprise_data",
+          "confidential_client_data",
+          "copyrighted_commercial_content_without_license",
+          "user_uploaded_project_records",
+          "unknown_license"
+        ],
+        "requires_source_record": true,
+        "requires_license_review": true,
+        "requires_authority_rating": true
+      }
+    },
+    {
+      "id": "oil_gas_core_rag",
+      "domain": "oil_gas",
+      "name": "Oil & Gas Core RAG Pack",
+      "status": "metadata_only",
+      "description": "Prebuilt oil & gas knowledge collection metadata for drilling standards, safety regulations, environmental guidance, and operational references.",
+      "collection_id": "prebuilt_oil_gas_core",
+      "visibility": "platform_prebuilt",
+      "data_class": "public_or_licensed_reference",
+      "enterprise_specific": false,
+      "requires_blocks": [
+        "knowledge",
+        "vector_search"
+      ],
+      "recommended_with_blocks": [
+        "oil_gas_v2",
+        "formula_executor_v2"
+      ],
+      "source_types": [
+        "statutes",
+        "regulations",
+        "templates",
+        "guidance",
+        "domain_reference"
+      ],
+      "expected_queries": [],
+      "expected_outputs": [],
+      "fetch_mode": "metadata_only",
+      "ingestion_status": {
+        "state": "not_ingested",
+        "documents_total": 0,
+        "documents_indexed": 0,
+        "chunks_total": 0,
+        "last_ingested_at": null,
+        "last_error": null
+      },
+      "notes": [],
+      "source_policy": {
+        "allowed_source_classes": [
+          "public_domain",
+          "open_license",
+          "official_statute_or_regulation",
+          "official_guidance",
+          "platform_curated_template"
+        ],
+        "precluded_source_classes": [
+          "private_enterprise_data",
+          "confidential_client_data",
+          "copyrighted_commercial_content_without_license",
+          "user_uploaded_project_records",
+          "unknown_license"
+        ],
+        "requires_source_record": true,
+        "requires_license_review": true,
+        "requires_authority_rating": true
+      }
+    },
+    {
+      "id": "pharma_core_rag",
+      "domain": "pharma",
+      "name": "Pharma Core RAG Pack",
+      "status": "metadata_only",
+      "description": "Prebuilt pharma knowledge collection metadata for drug development guides, regulatory filings, pharmacovigilance references, and compliance.",
+      "collection_id": "prebuilt_pharma_core",
+      "visibility": "platform_prebuilt",
+      "data_class": "public_or_licensed_reference",
+      "enterprise_specific": false,
+      "requires_blocks": [
+        "knowledge",
+        "vector_search"
+      ],
+      "recommended_with_blocks": [
+        "pharma_v2",
+        "formula_executor_v2"
+      ],
+      "source_types": [
+        "statutes",
+        "regulations",
+        "templates",
+        "guidance",
+        "domain_reference"
+      ],
+      "expected_queries": [],
+      "expected_outputs": [],
+      "fetch_mode": "metadata_only",
+      "ingestion_status": {
+        "state": "not_ingested",
+        "documents_total": 0,
+        "documents_indexed": 0,
+        "chunks_total": 0,
+        "last_ingested_at": null,
+        "last_error": null
+      },
+      "notes": [],
+      "source_policy": {
+        "allowed_source_classes": [
+          "public_domain",
+          "open_license",
+          "official_statute_or_regulation",
+          "official_guidance",
+          "platform_curated_template"
+        ],
+        "precluded_source_classes": [
+          "private_enterprise_data",
+          "confidential_client_data",
+          "copyrighted_commercial_content_without_license",
+          "user_uploaded_project_records",
+          "unknown_license"
+        ],
+        "requires_source_record": true,
+        "requires_license_review": true,
+        "requires_authority_rating": true
+      }
+    },
+    {
+      "id": "real_estate_core_rag",
+      "domain": "real_estate",
+      "name": "Real Estate Core RAG Pack",
+      "status": "metadata_only",
+      "description": "Prebuilt real estate knowledge collection metadata for leases, valuation references, market reports, and property compliance guides.",
+      "collection_id": "prebuilt_real_estate_core",
+      "visibility": "platform_prebuilt",
+      "data_class": "public_or_licensed_reference",
+      "enterprise_specific": false,
+      "requires_blocks": [
+        "knowledge",
+        "vector_search"
+      ],
+      "recommended_with_blocks": [
+        "real_estate_v2",
+        "formula_executor_v2"
+      ],
+      "source_types": [
+        "statutes",
+        "regulations",
+        "templates",
+        "guidance",
+        "domain_reference"
+      ],
+      "expected_queries": [],
+      "expected_outputs": [],
+      "fetch_mode": "metadata_only",
+      "ingestion_status": {
+        "state": "not_ingested",
+        "documents_total": 0,
+        "documents_indexed": 0,
+        "chunks_total": 0,
+        "last_ingested_at": null,
+        "last_error": null
+      },
+      "notes": [],
+      "source_policy": {
+        "allowed_source_classes": [
+          "public_domain",
+          "open_license",
+          "official_statute_or_regulation",
+          "official_guidance",
+          "platform_curated_template"
+        ],
+        "precluded_source_classes": [
+          "private_enterprise_data",
+          "confidential_client_data",
+          "copyrighted_commercial_content_without_license",
+          "user_uploaded_project_records",
+          "unknown_license"
+        ],
+        "requires_source_record": true,
+        "requires_license_review": true,
+        "requires_authority_rating": true
+      }
+    },
+    {
+      "id": "retail_core_rag",
+      "domain": "retail",
+      "name": "Retail Core RAG Pack",
+      "status": "metadata_only",
+      "description": "Prebuilt retail knowledge collection metadata for product catalogs, supply references, pricing guides, and consumer compliance materials.",
+      "collection_id": "prebuilt_retail_core",
+      "visibility": "platform_prebuilt",
+      "data_class": "public_or_licensed_reference",
+      "enterprise_specific": false,
+      "requires_blocks": [
+        "knowledge",
+        "vector_search"
+      ],
+      "recommended_with_blocks": [
+        "retail_v2",
+        "formula_executor_v2"
+      ],
+      "source_types": [
+        "statutes",
+        "regulations",
+        "templates",
+        "guidance",
+        "domain_reference"
+      ],
+      "expected_queries": [],
+      "expected_outputs": [],
+      "fetch_mode": "metadata_only",
+      "ingestion_status": {
+        "state": "not_ingested",
+        "documents_total": 0,
+        "documents_indexed": 0,
+        "chunks_total": 0,
+        "last_ingested_at": null,
+        "last_error": null
+      },
+      "notes": [],
+      "source_policy": {
+        "allowed_source_classes": [
+          "public_domain",
+          "open_license",
+          "official_statute_or_regulation",
+          "official_guidance",
+          "platform_curated_template"
+        ],
+        "precluded_source_classes": [
+          "private_enterprise_data",
+          "confidential_client_data",
+          "copyrighted_commercial_content_without_license",
+          "user_uploaded_project_records",
+          "unknown_license"
+        ],
+        "requires_source_record": true,
+        "requires_license_review": true,
+        "requires_authority_rating": true
+      }
+    },
+    {
+      "id": "supply_chain_core_rag",
+      "domain": "supply_chain",
+      "name": "Supply Chain Core RAG Pack",
+      "status": "metadata_only",
+      "description": "Prebuilt supply chain knowledge collection metadata for logistics standards, routing references, supplier guides, and demand planning.",
+      "collection_id": "prebuilt_supply_chain_core",
+      "visibility": "platform_prebuilt",
+      "data_class": "public_or_licensed_reference",
+      "enterprise_specific": false,
+      "requires_blocks": [
+        "knowledge",
+        "vector_search"
+      ],
+      "recommended_with_blocks": [
+        "supply_chain_v2",
+        "formula_executor_v2"
+      ],
+      "source_types": [
+        "statutes",
+        "regulations",
+        "templates",
+        "guidance",
+        "domain_reference"
+      ],
+      "expected_queries": [],
+      "expected_outputs": [],
+      "fetch_mode": "metadata_only",
+      "ingestion_status": {
+        "state": "not_ingested",
+        "documents_total": 0,
+        "documents_indexed": 0,
+        "chunks_total": 0,
+        "last_ingested_at": null,
+        "last_error": null
+      },
+      "notes": [],
+      "source_policy": {
+        "allowed_source_classes": [
+          "public_domain",
+          "open_license",
+          "official_statute_or_regulation",
+          "official_guidance",
+          "platform_curated_template"
+        ],
+        "precluded_source_classes": [
+          "private_enterprise_data",
+          "confidential_client_data",
+          "copyrighted_commercial_content_without_license",
+          "user_uploaded_project_records",
+          "unknown_license"
+        ],
+        "requires_source_record": true,
+        "requires_license_review": true,
+        "requires_authority_rating": true
+      }
+    }
+  ]
+}

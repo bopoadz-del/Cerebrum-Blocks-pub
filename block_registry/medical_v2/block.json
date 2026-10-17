@@ -1,0 +1,68 @@
+{
+  "acceptance": [
+    {
+      "check": "an empty payload is refused, not silently accepted",
+      "id": "empty_payload",
+      "status": "refused"
+    },
+    {
+      "check": "an unknown action is refused, not silently accepted",
+      "id": "unknown_action",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Medical domain analysis: real published equations (2021 CKD-EPI race-free eGFR) plus clearly labelled clinical heuristics.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "1368410bfbcc649420cfad2d67239ab864c674d6437d9e887e7b6a0229c00501",
+    "block.py": "c8829082ce789997e6cce5db540e260510d489041538371c0a9e7e1b6338f765"
+  },
+  "id": "medical_v2",
+  "inputs": [
+    {
+      "description": "Document text to analyze",
+      "name": "text",
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 3,
+  "name": "medical_v2",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Capability result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "DxCuM/Idvm+VEyHwEL/F0O6cVDeQ8/2B8B2pDkVxV06h6WG5S7GTBB50vMM3SA40ZczIanYqGW6INvhJWo2yAw==",
+  "tags": [
+    "domain",
+    "vertical",
+    "medical"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

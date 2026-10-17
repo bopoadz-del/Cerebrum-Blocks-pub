@@ -1,0 +1,523 @@
+# GENERATED from docs/kit_questions/fire_protection.md by scripts/import_kit_questions.py — do not hand-edit.
+# Edit the markdown sheet and re-run. The sheet is the record of what the domain
+# owner actually asked for; this file is only its machine-readable form.
+#
+# gate: true  -> [GATE]. The platform refuses anything needing it until answered.
+# gate: false -> [GAP].  Experience worth having; does not block.
+# gate: null  -> the sheet marked neither. Treated as GATING, because a question
+#                whose class cannot be read must block rather than pass.
+#
+# There is deliberately NO answer slot in this file. Answers are per-platform and
+# per-client; this kit is a signed Store block shared by every customer.
+kit: fire_protection
+source_document: docs/kit_questions/fire_protection.md
+title: 'Fire Protection — Questions I Cannot Answer'
+answer_format:
+  - 'value'
+  - 'unit'
+  - 'building / system'
+  - 'code edition'
+  - 'source'
+  - 'date'
+sections:
+  '1':
+    title: 'Hazard classification'
+  '2':
+    title: 'System catalogue'
+  '3':
+    title: 'Cost'
+  '4':
+    title: 'Hydraulic design'
+  '5':
+    title: 'Life safety and egress'
+  '6':
+    title: 'Commissioning, ITM and system state'
+  '7':
+    title: 'Impairment — the live state'
+  '8':
+    title: 'Decision'
+  '9':
+    title: 'Evidence standard'
+  '10':
+    title: 'Never-estimate'
+  '11':
+    title: 'May-estimate'
+  '12':
+    title: 'Refusals'
+  '13':
+    title: 'Precedence and scope'
+  '14':
+    title: 'Unit-confusion history'
+  '15':
+    title: 'Incidents'
+  '16':
+    title: 'The five questions'
+questions:
+  - id: '1.1'
+    section: '1'
+    gate: true
+    covers: [hazard_classification]
+    text: >-
+      Your occupancy / area list with the actual hazard classification for each, and the
+      named engineer or approved document it is attributed to.
+  - id: '1.2'
+    section: '1'
+    gate: true
+    text: >-
+      Who classifies on your projects — designer, AHJ, insurer, combination — and who can
+      overrule whom.
+  - id: '1.3'
+    section: '1'
+    gate: false
+    text: >-
+      What triggers reclassification on your projects — tenant change, commodity change,
+      rack height, process change — and how it is captured after handover.
+  - id: '1.4'
+    section: '1'
+    gate: true
+    text: >-
+      For storage: your commodity class, rack configuration, height, clearance,
+      encapsulation — the design inputs as installed.
+  - id: '1.5'
+    section: '1'
+    gate: false
+    text: >-
+      Where the insurer requirement exceeds code on your projects, which governs, and where
+      that is recorded.
+  - id: '1.6'
+    section: '1'
+    gate: false
+    text: >-
+      Which areas in your buildings are specially designated (high-piled storage, flammable
+      liquid rooms, battery rooms, kitchens, atria, data halls) and why.
+  - id: '2.1'
+    section: '2'
+    gate: true
+    text: >-
+      Your systems by building — which selected by code, which by insurer, which by client
+      preference.
+  - id: '2.2'
+    section: '2'
+    gate: true
+    text: >-
+      For each gaseous system you have: design concentration, safety margin, room integrity
+      requirement, and what invalidates the design after installation.
+  - id: '2.3'
+    section: '2'
+    gate: false
+    text: >-
+      Which systems you have with discharges that endanger occupants, and the pre-discharge
+      / lockout / evacuation arrangements as practised on your sites.
+  - id: '3.1'
+    section: '3'
+    gate: true
+    text: >-
+      Your per-m² costs per system — sprinkler by hazard, ESFR, in-rack, pump set, tank per
+      m³, gaseous per m³, detection, smoke control, fire stopping per penetration,
+      structural protection, commissioning, annual ITM, fire watch per hour.
+  - id: '3.2'
+    section: '3'
+    gate: true
+    text: >-
+      Your impairment cost set — fire watch, insurance loading, cover suspended, operations
+      halt, hot work stop, occupancy withdrawal, emergency callout.
+  - id: '3.3'
+    section: '3'
+    gate: false
+    text: >-
+      Cost of failing an AHJ inspection or insurer survey on your projects — remedial,
+      re-inspection, occupancy delay.
+  - id: '3.4'
+    section: '3'
+    gate: false
+    text: >-
+      Cost of a delayed certificate of occupancy when fire systems are the last item on the
+      critical path.
+  - id: '3.5'
+    section: '3'
+    gate: false
+    text: >-
+      Cost of a false alarm / unwanted activation on your projects — evacuation, business
+      interruption, water damage, brigade charges.
+  - id: '4.1'
+    section: '4'
+    gate: true
+    covers: [design_density]
+    text: >-
+      Per system type: your design density, design area, area per sprinkler, spacing,
+      K-factor, C-factor, elevation losses, hose stream allowance, total demand, margin
+      over supply, duration, storage volume — with the code edition each is drawn from.
+  - id: '4.2'
+    section: '4'
+    gate: true
+    text: >-
+      How you establish the hydraulically most demanding area — assumed,
+      single-configuration, or multiple configurations analysed — and which areas you have
+      actually analysed.
+  - id: '4.3'
+    section: '4'
+    gate: true
+    text: >-
+      Your required margin between demand and available supply, and its source — code,
+      insurer, or practice.
+  - id: '4.4'
+    section: '4'
+    gate: true
+    covers: [water_supply]
+    text: >-
+      Your water supply basis per building — flow test, authority statement, tank and pump,
+      or assumption. Date of the flow test and validity period.
+  - id: '4.5'
+    section: '4'
+    gate: false
+    text: >-
+      Your hose stream allowance value and where it is added — point of connection or base
+      of riser.
+  - id: '4.6'
+    section: '4'
+    gate: false
+    text: >-
+      Which obstruction and clearance rules are most often violated on your projects by
+      other trades after the design is complete.
+  - id: '5.1'
+    section: '5'
+    gate: true
+    text: >-
+      Per building: occupant load, required exit capacity, number of exits, common path and
+      total travel distance, dead end limits, exit width, stair capacity, refuge areas,
+      assisted evacuation provisions — and who owns each calculation on your projects.
+  - id: '5.2'
+    section: '5'
+    gate: true
+    text: >-
+      For performance-based buildings: your accepted ASET/RSET margin, your tenability
+      criteria, and who approved them.
+  - id: '5.3'
+    section: '5'
+    gate: true
+    text: >-
+      Which of your buildings rely on a fire engineered solution rather than prescriptive
+      compliance, and what that solution assumes must remain true for the life of the
+      building — and how that assumption is protected.
+  - id: '5.4'
+    section: '5'
+    gate: false
+    text: >-
+      Your firefighting provisions per building — access roads, hardstanding, risers,
+      firefighting shafts, lifts, hydrant proximity — and which are most often compromised
+      by later works.
+  - id: '6.1'
+    section: '6'
+    gate: true
+    text: >-
+      Per test — hydrostatic, flushing, main drain, pump acceptance, trip test, room
+      integrity, cause-and-effect, integrated, smoke control, fire stopping — your
+      acceptance criteria, who witnesses, and where the record lives.
+  - id: '6.2'
+    section: '6'
+    gate: true
+    text: >-
+      Which systems on your projects must be proven to work together (detection triggering
+      dampers, lifts, pressurisation, shutdown, door release), and who owns the
+      cause-and-effect matrix.
+  - id: '6.3'
+    section: '6'
+    gate: true
+    text: >-
+      Your ITM intervals as practised — for each system, what is inspected / tested /
+      maintained and at what frequency.
+  - id: '6.4'
+    section: '6'
+    gate: false
+    text: >-
+      What happens on a failed test on your projects — impairment, deficiency, or
+      non-conformity — and who is notified, within what time.
+  - id: '7.1'
+    section: '7'
+    gate: true
+    text: >-
+      Your impairment list as you actually record it.
+  - id: '7.2'
+    section: '7'
+    gate: true
+    text: >-
+      Per impairment — valve closed, drained system, pump out, detection zone disabled,
+      panel bypass, fire stopping open, egress obstructed — authority required, maximum
+      duration, compensating measures mandatory.
+  - id: '7.3'
+    section: '7'
+    gate: true
+    text: >-
+      Your tag system — how impaired systems are marked physically, and who is notified
+      (facility, insurer, AHJ, brigade).
+  - id: '7.4'
+    section: '7'
+    gate: true
+    text: >-
+      Your fire watch — when required, what the watch actually does, patrol frequency,
+      training and equipment.
+  - id: '7.5'
+    section: '7'
+    gate: true
+    text: >-
+      During construction / renovation on your projects, what governs the partial or absent
+      protection — construction fire safety plan, impairment programme, phased handover —
+      and who holds it.
+  - id: '7.6'
+    section: '7'
+    gate: true
+    text: >-
+      Where impairment status lives — how would anyone reading the drawings, specification
+      or O&M manual know a system is impaired right now. Is it linked to anything a system
+      could read.
+  - id: '7.7'
+    section: '7'
+    gate: false
+    text: >-
+      Your shift / contractor handover record, and what must never be lost across it.
+  - id: '8.1'
+    section: '8'
+    gate: true
+    text: >-
+      Your priority order when protection is compromised or a deficiency is found.
+  - id: '8.2'
+    section: '8'
+    gate: true
+    text: >-
+      Per option — continue with fire watch, continue partial, restrict area, suspend hot
+      work, reduce occupancy, evacuate, temporary alternative, defer repair — what makes it
+      impossible rather than merely expensive on your projects.
+  - id: '8.3'
+    section: '8'
+    gate: true
+    text: >-
+      Your hard limits that can never be traded, whatever the commercial pressure.
+  - id: '8.4'
+    section: '8'
+    gate: true
+    text: >-
+      Your authority matrix — close control valve, disable detection zone, take pump out of
+      service, approve fire watch as sufficient, accept alternative means of compliance,
+      approve design deviation, sign off integrated testing, permit occupancy, permit hot
+      work with impaired protection, reclassify hazard, change stored commodity.
+  - id: '9.1'
+    section: '9'
+    gate: true
+    covers: [fire_rating, hazard_classification, water_supply]
+    text: >-
+      Per figure class — hazard classification, density and area, water supply, system
+      status, fire rating, occupant load, cause-and-effect behaviour, performance-based
+      conclusion — what your organisation accepts as proof and what it rejects even if it
+      states the number.
+  - id: '9.2'
+    section: '9'
+    gate: true
+    text: >-
+      Minimum acceptable citation per source type on your projects — code, AHJ variance,
+      insurer requirement, drawing, calculation, flow test, fire strategy, tested assembly,
+      ITM record, impairment log.
+  - id: '9.3'
+    section: '9'
+    gate: true
+    covers: [coverage_claim]
+    text: >-
+      Mandatory qualifiers your organisation requires with each figure — density, area,
+      supply, rating, occupant load, coverage, agent concentration.
+  - id: '9.3.2'
+    section: '9'
+    gate: true
+    text: >-
+      Confirm your rule on the impairment qualifier — must any statement about a protection
+      system carry its current in-service status, always.
+  - id: '9.4'
+    section: '9'
+    gate: true
+    text: >-
+      Your derivation rules — inferring classification from description, selecting density
+      from classification, interpolating code tables, calculating flow, calculating
+      friction loss, assuming most-remote is most-demanding, carrying design from a similar
+      building, carrying density between editions, extrapolating rating, estimating supply
+      without flow test — allowed or not on your projects.
+  - id: '9.4.2'
+    section: '9'
+    gate: true
+    text: >-
+      Confirm your classification rule — never a classification without a named engineer or
+      approved document.
+  - id: '9.5'
+    section: '9'
+    gate: true
+    covers: [hazard_classification]
+    text: >-
+      Staleness rules per figure — impairment status, flow test, hazard classification,
+      calculation, ITM result, cause-and-effect, fire strategy assumptions, code compliance
+      position — valid for how long, stale immediately on what.
+  - id: '9.5.2'
+    section: '9'
+    gate: true
+    covers: [coverage_claim]
+    text: >-
+      Confirm your live-state rule — no answer about protection coverage without checking
+      the impairment log.
+  - id: '9.6'
+    section: '9'
+    gate: true
+    text: >-
+      Conflict resolution on your projects — code vs insurer, drawing vs as-built, design
+      intent vs witnessed test, performance vs prescriptive, two code editions.
+  - id: '9.7'
+    section: '9'
+    gate: false
+    text: >-
+      Partial-evidence disclosure wording per situation, and which figures must never be
+      offered as estimates — only cited exactly or refused.
+  - id: '10.1'
+    section: '10'
+    gate: true
+    covers: [hazard_classification, water_supply]
+    text: >-
+      Which figures your organisation treats as absolute — hazard classification, density
+      and area, water supply, in-service status, fire resistance by tested assembly, travel
+      distance, gaseous concentration, sprinkler K-factor and spacing, duration and storage
+      volume, hose stream allowance, pump ratings, occupant load, exit capacity,
+      compartment size, smoke control parameters, tenability criteria, detector spacing and
+      siting, cause-and-effect logic, firefighting access dimensions, impairment duration
+      limits.
+  - id: '10.2'
+    section: '10'
+    gate: false
+    text: >-
+      Which of the above have caught you out, and how.
+  - id: '11.1'
+    section: '11'
+    gate: false
+    text: >-
+      Figures you accept as estimates on your projects — budget cost per m², expected ITM
+      duration, indicative pipe sizing — and the exact wording you want attached.
+  - id: '12.1'
+    section: '12'
+    gate: true
+    text: >-
+      Confirm the system never answers questions whose answer would permit occupancy,
+      permit hot work, or authorise an impairment.
+  - id: '13.1'
+    section: '13'
+    gate: true
+    text: >-
+      Your ranking, highest first, of: national fire regulation / building code · AHJ
+      approval and conditions · adopted code edition · insurer standard · approved fire
+      strategy · approved drawings · manufacturer listing and tested assembly ·
+      specification · O&M manual · site instruction.
+  - id: '13.2'
+    section: '13'
+    gate: true
+    text: >-
+      When insurer is stricter than code — which governs contractually on your projects and
+      which governs legally.
+  - id: '13.3'
+    section: '13'
+    gate: true
+    text: >-
+      When a fire strategy assumption no longer holds in the as-built — what happens on
+      your projects, and who is told.
+  - id: '13.4'
+    section: '13'
+    gate: false
+    text: >-
+      How your projects track which code edition a building was approved under, and which
+      applies to a modification now.
+  - id: '13.5'
+    section: '13'
+    gate: false
+    text: >-
+      Which figures are building-specific and never carried between buildings on your
+      portfolio.
+  - id: '13.6'
+    section: '13'
+    gate: false
+    text: >-
+      Which figures are area- or system-specific within a building.
+  - id: '14.1'
+    section: '14'
+    gate: false
+    text: >-
+      Where a metric / imperial K-factor confusion has occurred on your projects.
+  - id: '14.2'
+    section: '14'
+    gate: false
+    text: >-
+      Where most-remote vs most-demanding has produced an inadequate design on yours.
+  - id: '14.3'
+    section: '14'
+    gate: false
+    covers: [fire_rating]
+    text: >-
+      Where a fire rating from one test regime has been applied under another on yours.
+  - id: '14.4'
+    section: '14'
+    gate: false
+    text: >-
+      Where a density unit conversion has gone wrong on yours.
+  - id: '15.1'
+    section: '15'
+    gate: false
+    text: >-
+      A figure taken from a superseded drawing, calculation or code edition.
+  - id: '15.2'
+    section: '15'
+    gate: false
+    covers: [hazard_classification]
+    text: >-
+      A hazard classification that was wrong, or became wrong after a tenant or commodity
+      change.
+  - id: '15.3'
+    section: '15'
+    gate: false
+    text: >-
+      A design based on the most remote area rather than the most demanding.
+  - id: '15.4'
+    section: '15'
+    gate: false
+    covers: [water_supply]
+    text: >-
+      A water supply that did not deliver what the calculation assumed.
+  - id: '15.5'
+    section: '15'
+    gate: false
+    text: >-
+      A system believed in service that was impaired — and how it was discovered.
+  - id: '15.6'
+    section: '15'
+    gate: false
+    text: >-
+      Fire stopping breached by another trade and never made good.
+  - id: '15.7'
+    section: '15'
+    gate: false
+    text: >-
+      A cause-and-effect that worked on paper and failed on integrated test.
+  - id: '15.8'
+    section: '15'
+    gate: false
+    text: >-
+      A fire strategy assumption invalidated by a later change nobody linked back.
+  - id: '15.9'
+    section: '15'
+    gate: false
+    text: >-
+      A rating claimed for an assembly never tested in that configuration.
+  - id: '15.10'
+    section: '15'
+    gate: false
+    text: >-
+      An impairment that ran longer than authorised, and what happened.
+  - id: '15.11'
+    section: '15'
+    gate: false
+    text: >-
+      What a new fire protection engineer most commonly gets wrong in their first year.
+  - id: '16.1'
+    section: '16'
+    gate: false
+    text: >-
+      Five things you'd ask a system daily and trust completely.

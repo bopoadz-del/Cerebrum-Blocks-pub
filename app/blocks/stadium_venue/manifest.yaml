@@ -1,0 +1,199 @@
+kit: stadium_venue
+version: 1
+serves_verticals: [stadium_venue, stadium, sports_venue, arena, mega_event]
+hooks_used: [H0, H1, H2, H3, H4]
+scope: "venue- and configuration-specific — never carry a figure to another venue, configuration or event state"
+
+# Sports venues, from the owner's G2 draft, corrected to what this engine reads.
+#
+# The archetypes are the reason this kit is not "one stadium": the same number means
+# a different thing in each, and carrying it across is the defect this kit exists to
+# catch.
+#
+#   A_fixed_championship    a fixed venue hosting a championship window
+#   B_fixed_multitenant     a fixed venue with more than one primary tenant
+#   C_fixed_singlepurpose   a fixed venue, one sport, one tenant
+#   D_touring_event         an event that is a GUEST in someone else's building,
+#                           where every stop is a different building
+#
+# Corrections to the draft, each because the engine does not read what it declared:
+#   * `claim_class` moved into `applies_to` — the engine reads it there and NOWHERE
+#     else, so a top-level one is dropped and the record then governs every figure
+#     instead of one claim class. That is over-refusal, the opposite of the intent.
+#   * a `measurement` on every record — nothing ships without one (spec §4)
+#   * `flow:` dropped: the manifest parser does not read it, so it would have been
+#     another silent key
+#   * `roof_configuration` dropped from staleness_triggers: it is a qualifier field,
+#     not a quantity, and a trigger on a non-quantity cannot fire
+#   * every remaining trigger IS governed by a currency invariant, which the draft
+#     claimed but eight of its triggers were not
+
+quantities:
+  pitch_hardness:           {units: [g, Gmax],          classes: [any_pitch, any_measured]}
+  pitch_moisture:           {units: [pct],              classes: [any_pitch, any_measured]}
+  pitch_infill_depth:       {units: [mm],               classes: [any_pitch, any_measured]}
+  pitch_pile_height:        {units: [mm],               classes: [any_pitch, any_measured]}
+  pitch_drainfall_rate:     {units: [mm_h],             classes: [any_pitch, any_measured]}
+  pitch_overlay_load:       {units: [kN_m2],            classes: [any_structural]}
+  surface_grow_in_state:    {units: [state],            classes: [any_pitch]}
+  barrier_load:             {units: [kN_m],             classes: [any_structural]}
+  rigging_point_capacity:   {units: [kg, t],            classes: [any_structural]}
+  rigging_point_load:       {units: [kg, t],            classes: [any_structural]}
+  roof_load:                {units: [kN_m2],            classes: [any_structural]}
+  stand_load:               {units: [kN_m2],            classes: [any_structural]}
+  lux_horizontal:           {units: [lx],               classes: [any_lighting, any_measured]}
+  lux_vertical:             {units: [lx],               classes: [any_lighting, any_measured]}
+  lux_uniformity:           {units: [ratio],            classes: [any_lighting]}
+  lux_cri_tlci:             {units: [index],            classes: [any_lighting]}
+  exit_width:               {units: [m],                classes: [any_egress]}
+  exit_rate:                {units: [persons_m_min],    classes: [any_egress]}
+  vomitory_width:           {units: [m],                classes: [any_egress]}
+  turnstile_throughput:     {units: [persons_h],        classes: [any_crowd]}
+  seating_capacity:         {units: [persons],          classes: [any_crowd]}
+  event_capacity:           {units: [persons],          classes: [any_crowd]}
+  steward_ratio:            {units: [ratio],            classes: [any_crowd]}
+  ambulance_response_time:  {units: [min],              classes: [any_crowd]}
+  cctv_coverage:            {units: [pct],              classes: [any_crowd]}
+
+qualifier_fields:
+  archetype:                {type: enum, values: [A_fixed_championship, B_fixed_multitenant, C_fixed_singlepurpose, D_touring_event]}
+  governing_body:           {type: string}
+  venue_id:                 {type: string}
+  host_venue_id:            {type: string}
+  config_type:              {type: enum, values: [football, rugby, concert, conference, other]}
+  event_state:              {type: enum, values: [event_day, non_event_day, night_duty, derig]}
+  operational_phase:        {type: enum, values: [year_round, build_up, championships, derig, renovation]}
+  pitch_type:               {type: enum, values: [natural_turf, hybrid, artificial]}
+  surface_type:             {type: enum, values: [grass, clay, hardcourt, hybrid_turf, artificial_turf, ice, other]}
+  surface_conversion_state: {type: enum, values: [soccer_ready, nfl_ready, concert_ready, transition]}
+  stand_id:                 {type: string}
+  vomitory_id:              {type: string}
+  section_id:               {type: string}
+  point_id:                 {type: string}
+  broadcast_class:          {type: enum, values: [FIFA_A, FIFA_B, UEFA_Elite, domestic, non_broadcast]}
+  broadcast_partner:        {type: string}
+  measurement_grid:         {type: string}
+  measurement_standard:     {type: string}
+  measurement_date:         {type: date}
+  cert_ref:                 {type: string}
+  safety_certificate_ref:   {type: string}
+  p_factor:                 {type: number}
+  s_factor:                 {type: number}
+  overlay_type:             {type: string}
+  roof_configuration:       {type: enum, values: [open, closed, retractable_open, retractable_closed, fixed]}
+  primary_tenant:           {type: string}
+  tenant_schedule_ref:      {type: string}
+  renovation_phase:         {type: string}
+  crowd_density:            {type: number}
+  competition:              {type: string}
+
+source_classes:
+  national_safety_reg:                     {rank: 1}
+  safety_certificate:                      {rank: 2, reject_as_proof: [promoter_statement, contractor_statement]}
+  fire_authority:                          {rank: 3}
+  governing_body_regs:                     {rank: 4, reject_as_proof: [prior_year_regs, domestic_regs_for_international_fixture]}
+  structural_assessment:                   {rank: 5}
+  pitch_report:                            {rank: 6, reject_as_proof: [groundsman_verbal, pre_match_informal]}
+  lighting_measurement:                    {rank: 7, reject_as_proof: [lamp_spec_sheet, design_intent]}
+  rigging_point_cert:                      {rank: 8, reject_as_proof: [rigging_company_statement, tour_rig_drawing_only]}
+  maintenance_manual:                       {rank: 9, reject_as_proof: [unversioned_manual]}
+  stewarding_plan:                          {rank: 10}
+  host_venue_manual:                        {rank: 11}
+  tenant_contract:                          {rank: 12}
+  contractor_statement:                     {rank: 20}
+  promoter_statement:                       {rank: 21}
+  groundsman_verbal:                        {rank: 22}
+  pre_match_informal:                       {rank: 23}
+  lamp_spec_sheet:                          {rank: 24}
+  design_intent:                            {rank: 25}
+  rigging_company_statement:                {rank: 26}
+  tour_rig_drawing_only:                    {rank: 27}
+  unversioned_manual:                       {rank: 28}
+  domestic_regs_for_international_fixture:  {rank: 29}
+  prior_year_regs:                          {rank: 30}
+
+state_providers:
+  pitch_state:                    {kind: status,   max_age: event}
+  surface_conversion_current:     {kind: status,   max_age: event}
+  grow_in_current:                {kind: status,   max_age: event}
+  lux_current:                    {kind: status,   max_age: event}
+  turnstile_operational:          {kind: status,   max_age: realtime}
+  barrier_cert_current:           {kind: revision, max_age: event}
+  gate_operational:               {kind: status,   max_age: realtime}
+  exit_door_operational:          {kind: status,   max_age: realtime}
+  rigging_point_cert_current:     {kind: revision, max_age: event}
+  roof_state:                     {kind: status,   max_age: realtime}
+  structural_assessment_current:  {kind: revision, max_age: event}
+  cctv_operational:               {kind: status,   max_age: realtime}
+  pa_operational:                 {kind: status,   max_age: realtime}
+  scoreboard_operational:         {kind: status,   max_age: realtime}
+  safety_officer_on_duty:         {kind: status,   max_age: shift}
+  stands_open:                    {kind: status,   max_age: event}
+  event_configuration:            {kind: status,   max_age: event}
+  ambulance_access_state:         {kind: status,   max_age: shift}
+  steward_count_deployed:         {kind: status,   max_age: shift}
+  technology_override_state:      {kind: status,   max_age: realtime}
+  renovation_phase_current:       {kind: revision, max_age: event}
+  host_venue_cooperation:         {kind: status,   max_age: event}
+  event_stop_configuration:       {kind: status,   max_age: event}
+  tenant_schedule:                {kind: status,   max_age: event}
+
+staleness_triggers:
+  pitch_hardness:           [any_match, weather_event, aeration, topdressing]
+  pitch_moisture:           [rain, watering, any_event]
+  pitch_infill_depth:       [any_event, top_up]
+  pitch_pile_height:        [any_event, brushing]
+  surface_grow_in_state:    [season_change, championship_window, renovation_phase_change]
+  barrier_load:             [certification_interval, incident, modification]
+  rigging_point_capacity:   [certification_interval, incident, modification]
+  lux_horizontal:           [lamp_change, ballast_change]
+  lux_vertical:             [lamp_change]
+  exit_width:               [layout_change, seating_config_change]
+  event_capacity:           [config_change, safety_certificate_variation, renovation_phase_change]
+  seating_capacity:         [config_change, seat_out_of_service]
+  turnstile_throughput:     [any_turnstile_out]
+  steward_ratio:            [safety_certificate_variation, event_type_change]
+  cctv_coverage:            [camera_out, recorder_change]
+  roof_load:                [structural_assessment_revision]
+  pitch_overlay_load:       [overlay_type_change]
+
+scope_refusals:
+  - label: "event go/no-go"
+    pattern: "can we (start|begin|commence|proceed with) (the )?(match|event|fixture|concert|kick.?off)"
+    authority: "event safety officer / operations director"
+  - label: "pitch playability"
+    pattern: "is the pitch (playable|safe|fit)"
+    authority: "referee + pitch manager, on the day"
+  - label: "capacity release"
+    pattern: "can we (sell|release) (full|the full) capacity"
+    authority: "safety officer under the safety certificate"
+  - label: "rigging go/no-go"
+    pattern: "can we rig this (load|tour|show)"
+    authority: "structural engineer + rigging supervisor"
+  - label: "broadcast lighting adequacy"
+    pattern: "is the (lighting|lux) (adequate|ok|compliant) for (broadcast|TV)"
+    authority: "broadcast partner + measurement to the competition's class"
+  - label: "reopening a stand"
+    pattern: "can we (open|reopen) (the )?(stand|section|vomitory)"
+    authority: "safety officer"
+  - label: "barrier adequacy"
+    pattern: "is this barrier safe for the expected crowd"
+    authority: "structural engineer / crowd dynamics assessment"
+  - label: "roof configuration for play"
+    pattern: "can we (play|operate) with the roof (open|closed)"
+    authority: "referee / event control"
+  - label: "turnstile override"
+    pattern: "can we override (this|a) turnstile"
+    authority: "event control + safety officer"
+  - label: "stewarding ratio"
+    pattern: "can we accept a (reduced|lower) stewarding ratio"
+    authority: "safety officer — cannot be traded below certificate minimum"
+  - label: "surface conversion"
+    pattern: "can we (start|stop) the (surface )?conversion"
+    authority: "primary tenant + venue operations"
+  - label: "tour stop go/no-go"
+    pattern: "can we (proceed|continue) at this (tour )?stop"
+    authority: "event lead + host venue operations"
+  - label: "capacity at a tour stop"
+    pattern: "can we (raise|increase) (the )?capacity for this (stop|event)"
+    authority: "host venue safety officer"

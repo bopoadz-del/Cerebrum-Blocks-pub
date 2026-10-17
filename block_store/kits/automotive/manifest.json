@@ -1,0 +1,133 @@
+{
+  "learning_engine_enabled": false,
+  "id": "automotive",
+  "name": "Automotive & Mobility Suite",
+  "version": "2.0.0",
+  "description": "Automotive & Mobility Suite: typed document analysis, entity extraction, metrics, compliance checks, risk scoring, and governed RAG foundation pack for the automotive domain.",
+  "status": "available",
+  "author": "bopoadz-del",
+  "tags": [
+    "domain",
+    "container",
+    "automotive"
+  ],
+  "source": {
+    "repo": "https://github.com/bopoadz-del/Cerebrum-Blocks",
+    "ref": "main",
+    "publish_script": "scripts/publish_kit.py"
+  },
+  "container": {
+    "class": "app.containers.automotive.AutomotiveContainer",
+    "default_chat_prompt": null
+  },
+  "blocks": [
+    "pdf",
+    "ocr",
+    "chat",
+    "image",
+    "automotive_v2",
+    "formula_executor_v2"
+  ],
+  "prompts": [
+    "prompts/assistant_v1.txt"
+  ],
+  "data": [
+    "source_manifest.json",
+    "schemas/"
+  ],
+  "rag": {
+    "pack": "automotive_core_rag_v1",
+    "source_manifest": "source_manifest.json",
+    "schemas": ["schemas/"],
+    "prompts": ["prompts/"],
+    "evaluation": ["evaluation/golden_questions.jsonl"]
+  },
+  "core_modules": [
+    "app/core/automotive_knowledge.py",
+    "app/core/automotive_types.py",
+    "app/core/confidence.py",
+    "app/core/schema_registry.py",
+    "app/core/domain_block_v2.py",
+    "app/core/metric_utils.py",
+    "app/core/typed_block.py",
+    "app/core/universal_base.py",
+    "app/containers/base.py",
+    "app/core/sandbox.py",
+    "app/prompts/codegen_system.py"
+  ],
+  "artifacts": [
+    {
+      "src": "app/containers/automotive.py",
+      "dest": "app/containers/automotive.py"
+    },
+    {
+      "src": "app/blocks/automotive_v2.py",
+      "dest": "app/blocks/automotive_v2.py"
+    },
+    {
+      "src": "app/core/automotive_knowledge.py",
+      "dest": "app/core/automotive_knowledge.py"
+    },
+    {
+      "src": "app/core/automotive_types.py",
+      "dest": "app/core/automotive_types.py"
+    },
+    {
+      "src": "app/core/confidence.py",
+      "dest": "app/core/confidence.py"
+    },
+    {
+      "src": "app/core/schema_registry.py",
+      "dest": "app/core/schema_registry.py"
+    },
+    {
+      "src": "app/core/domain_block_v2.py",
+      "dest": "app/core/domain_block_v2.py"
+    },
+    {
+      "src": "app/core/metric_utils.py",
+      "dest": "app/core/metric_utils.py"
+    },
+    {
+      "src": "app/core/typed_block.py",
+      "dest": "app/core/typed_block.py"
+    },
+    {
+      "src": "app/core/universal_base.py",
+      "dest": "app/core/universal_base.py"
+    },
+    {
+      "src": "app/containers/base.py",
+      "dest": "app/containers/base.py"
+    },
+    {
+      "src": "app/core/sandbox.py",
+      "dest": "app/core/sandbox.py"
+    },
+    {
+      "src": "app/prompts/codegen_system.py",
+      "dest": "app/prompts/codegen_system.py"
+    },
+    {
+      "src": "app/blocks/formula_executor_v2.py",
+      "dest": "app/blocks/formula_executor_v2.py"
+    },
+    {
+      "src": "source_manifest.json",
+      "dest": "source_manifest.json"
+    },
+    {
+      "src": "schemas/",
+      "dest": "schemas/"
+    },
+    {
+      "src": "prompts/",
+      "dest": "prompts/"
+    }
+  ],
+  "price_cents": 0,
+  "install_requires": {
+    "min_platform_version": "2.0.0",
+    "python": ">=3.10"
+  }
+}

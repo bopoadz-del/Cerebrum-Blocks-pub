@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AutomotiveRecall",
+  "type": "object",
+  "required": ["record_type", "campaign_number", "summary", "source_url"],
+  "properties": {
+    "record_type": { "const": "recall" },
+    "campaign_number": { "type": "string" },
+    "manufacturer": { "type": ["string", "null"] },
+    "make": { "type": ["string", "null"] },
+    "model": { "type": ["string", "null"] },
+    "model_year": { "type": ["integer", "string", "null"] },
+    "component": { "type": ["string", "null"] },
+    "summary": { "type": "string" },
+    "consequence": { "type": ["string", "null"] },
+    "remedy": { "type": ["string", "null"] },
+    "report_received_date": { "type": ["string", "null"] },
+    "affected_units": { "type": ["integer", "null"] },
+    "source_url": { "type": "string", "format": "uri" },
+    "source_family": { "const": "recall" }
+  }
+}

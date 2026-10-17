@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Product Console — Cerebrum Floor</title>
+<style>
+  body { font-family: system-ui, sans-serif; margin: 2rem; background: #f6f7f9; color: #1a1d23; }
+  h1 { font-size: 1.3rem; }
+  .token-row { display: flex; gap: .5rem; margin: 1rem 0; }
+  input[type=password] { flex: 1; padding: .5rem; }
+  button { padding: .5rem .9rem; cursor: pointer; }
+  .cap-list { margin: 1rem 0; }
+  .cap { display: inline-block; margin: .3rem .4rem .3rem 0; padding: .5rem .8rem; border: 1px solid #b9c0cc; border-radius: 4px; background: #fff; }
+  .authority { display: inline-block; margin-left: .6rem; padding: .1rem .5rem; border-radius: 3px; font-size: .8rem; font-weight: 600; }
+  .a-grounded { background: #d9f2dd; color: #116329; }
+  .a-flag-as-estimate { background: #fff2cc; color: #7a5b00; }
+  .a-blocked { background: #fde2e2; color: #8f1d1d; }
+  .a-unlabelled { background: #e8eaee; color: #4a5060; }
+  pre { background: #fff; border: 1px solid #d5dae2; padding: 1rem; white-space: pre-wrap; }
+</style>
+</head>
+<body>
+<h1>Product Console</h1>
+<p>Drives capabilities discovered live from <code>GET /v1/capabilities</code> — no hardcoded capability names.</p>
+
+<div class="token-row">
+  <input type="password" id="token" placeholder="Paste operator token (never embedded)" autocomplete="off">
+</div>
+
+<div id="caps" class="cap-list">Loading capabilities…</div>
+<pre id="out">Responses appear here. Every answer shows its authority label.</pre>
+
+<script>
+// ONE UI: capability discovery + drive, authority label display, token paste.
+const AUTH = {
+  headers: () => {
+    const t = document.getElementById("token").value.trim();
+    return t ? { "Authorization": "Bearer " + t, "Content-Type": "application/json" }
+             : { "Content-Type": "application/json" };
+  },
+};
+
+function authorityLabel(resp) {
+  const g = resp && resp.grounding;
+  if (g && g.verdict) return g.verdict;
+  const a = resp && (resp.authority || resp.answer_authority);
+  if (a && a.verdict) return a.verdict;
+  if (resp && resp.tier) return "tier:" + resp.tier;
+  return "unlabelled";
+}
+
+function badge(v) {
+  const cls = v.startsWith("tier:") ? "a-unlabelled" : ("a-" + v);
+  return '<span class="authority ' + cls + '">' + v + "</span>";
+}
+
+async function refresh() {
+  const r = await fetch("/v1/capabilities");
+  const data = await r.json();
+  const list = data.capabilities || [];
+  const el = document.getElementById("caps");
+  el.innerHTML = "";
+  if (list.length < 2) { el.textContent = "Fewer than two capabilities discovered."; return; }
+  // The console drives the first TWO discovered capabilities, whatever they are.
+  const driven = list.slice(0, 2);
+  driven.forEach((c, i) => {
+    const b = document.createElement("button");
+    b.className = "cap";
+    b.textContent = (i === 0 ? "▶ " : "▶ ") + c.name + " (" + c.kind + ")";
+    b.onclick = () => drive(c);
+    el.appendChild(b);
+  });
+  el.appendChild(document.createTextNode(" — " + (list.length - driven.length) + " more discovered"));
+}
+
+async function drive(cap) {
+  const out = document.getElementById("out");
+  out.textContent = "Driving " + cap.name + " …";
+  try {
+    let r;
+    if (cap.kind === "pack") {
+      r = await fetch("/v1/pack/formulas", {
+        method: "POST",
+        headers: AUTH.headers(),
+        body: JSON.stringify({ formula_id: "area_rectangle", variables: { width: 5, height: 4 } }),
+      });
+    } else {
+      r = await fetch("/v1/execute", {
+        method: "POST",
+        headers: AUTH.headers(),
+        body: JSON.stringify({ block: cap.id, input: {} }),
+      });
+    }
+    const resp = await r.json();
+    out.innerHTML = badge(authorityLabel(resp)) + "\n" + JSON.stringify(resp, null, 2);
+  } catch (e) {
+    out.textContent = "Request failed: " + e;
+  }
+}
+
+refresh();
+</script>
+</body>
+</html>

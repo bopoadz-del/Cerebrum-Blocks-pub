@@ -1,0 +1,264 @@
+{
+  "ruleset_id": "hkia_gn16_ruleset",
+  "version": "2026.1-pilot",
+  "framework": "HKIA GN16 / GL16",
+  "jurisdiction": "Hong Kong",
+  "engine": "deterministic_keyword_and_structured_field",
+  "live_filing_submission": false,
+  "scope_summary": "Pilot checks for authorized insurers underwriting long term insurance business other than Class C business.",
+  "rules": [
+    {
+      "rule_id": "GN16-SCOPE-001",
+      "severity": "medium",
+      "citation": "HKIA GL16/GN16 sections 1.2 and 3.2",
+      "check_type": "required_evidence",
+      "keyword_groups": [
+        ["long term", "long-term", "life insurance", "whole life", "endowment", "annuity"],
+        ["class c", "non-class c", "other than class c", "not class c", "linked long term"]
+      ],
+      "field_groups": [
+        ["business_type", "product_class", "line_of_business"],
+        ["class_c_business", "is_class_c", "scope_exclusion"]
+      ],
+      "remediation": "Record product class, long-term business status, and any exclusion rationale before relying on GN16 controls."
+    },
+    {
+      "rule_id": "GN16-PROD-001",
+      "severity": "medium",
+      "citation": "HKIA GL16/GN16 section 5",
+      "applies_when": {
+        "text_any": ["product design", "new product", "product launch", "distribution channel", "target customer"],
+        "fields_any_true": ["product_launch", "product_design_review_required"]
+      },
+      "check_type": "required_evidence",
+      "keyword_groups": [
+        ["target customer", "target market", "customer segment"],
+        ["affordability", "needs", "financial circumstances"],
+        ["product risk", "key risk", "risk factor"],
+        ["distribution channel", "online channel", "agency channel", "broker channel"],
+        ["fee", "charge", "surrender penalty"],
+        ["post-launch", "ongoing monitoring", "product monitoring"]
+      ],
+      "field_groups": [
+        ["target_customer_reviewed", "target_market"],
+        ["affordability_reviewed", "needs_reviewed"],
+        ["risk_reviewed", "key_risks"],
+        ["distribution_channel_reviewed", "distribution_channels"],
+        ["fees_charges_reviewed", "surrender_penalty_reviewed"],
+        ["post_launch_monitoring", "product_monitoring"]
+      ],
+      "remediation": "Add a product governance note covering target customers, needs and affordability, key risks, channels, fees, charges, and post-launch monitoring."
+    },
+    {
+      "rule_id": "GN16-DISC-001",
+      "severity": "medium",
+      "citation": "HKIA GL16/GN16 sections 6 and 8.3",
+      "check_type": "required_evidence",
+      "keyword_groups": [
+        ["risk", "product risk", "key risk"],
+        ["exclusion", "key exclusion"],
+        ["fee", "charge", "surrender penalty"],
+        ["cooling-off", "cooling off", "cooling-off period", "21 day"],
+        ["plain language", "clear information", "bilingual", "english and chinese"]
+      ],
+      "field_groups": [
+        ["risks_disclosed", "key_risks"],
+        ["exclusions_disclosed", "key_exclusions"],
+        ["fees_charges_disclosed", "surrender_penalties_disclosed"],
+        ["cooling_off_disclosed"],
+        ["plain_language_reviewed", "bilingual_materials_available"]
+      ],
+      "remediation": "Add or link customer-facing disclosures for risks, exclusions, fees/charges, surrender consequences, and the cooling-off period."
+    },
+    {
+      "rule_id": "GN16-SUIT-001",
+      "severity": "high",
+      "citation": "HKIA GL16/GN16 section 7 and Annex sales process",
+      "check_type": "required_evidence",
+      "keyword_groups": [
+        ["financial needs analysis", "fna", "needs analysis", "suitability assessment"],
+        ["knowledge and experience", "customer knowledge", "insurance experience"],
+        ["needs", "priorities", "circumstances"],
+        ["affordability", "ability to afford", "premium payment horizon"]
+      ],
+      "field_groups": [
+        ["fna_completed", "suitability_assessment_completed"],
+        ["customer_knowledge_recorded", "experience_recorded"],
+        ["needs_recorded", "priorities_recorded", "circumstances_recorded"],
+        ["affordability_assessed", "premium_payment_horizon_assessed"]
+      ],
+      "remediation": "Complete or attach FNA/suitability evidence before recommendation, including affordability and needs analysis."
+    },
+    {
+      "rule_id": "GN16-ADVICE-001",
+      "severity": "medium",
+      "citation": "HKIA GL16/GN16 section 8",
+      "applies_when": {
+        "text_any": ["recommend", "recommended", "advice", "advisor", "agent advised"],
+        "fields_any_true": ["advice_given", "recommendation_made"]
+      },
+      "check_type": "required_evidence",
+      "keyword_groups": [
+        ["option", "alternative", "comparison"],
+        ["recommendation rationale", "basis of recommendation", "reason for recommendation"],
+        ["customer acknowledgement", "customer confirmed", "signed acknowledgement"]
+      ],
+      "field_groups": [
+        ["options_presented", "alternative_options_presented"],
+        ["recommendation_basis", "recommendation_rationale"],
+        ["customer_acknowledgement", "signed_acknowledgement"]
+      ],
+      "remediation": "Document the options considered, recommendation rationale, key features, exclusions, and customer acknowledgement."
+    },
+    {
+      "rule_id": "GN16-REM-001",
+      "severity": "critical",
+      "citation": "HKIA GL16/GN16 section 9.2",
+      "applies_when": {
+        "text_any": ["commission", "remuneration", "intermediary", "agent compensation"],
+        "fields_any_true": ["commission_arrangement", "intermediary_remuneration"]
+      },
+      "check_type": "prohibited_terms",
+      "terms": ["indemnity commission", "advance commission", "advanced commission", "commission advance", "advance payment of commission", "upfront commission loan"],
+      "allowed_context_terms": ["prohibited", "not permitted", "banned", "no indemnity commission", "no advance commission", "earned basis only"],
+      "remediation": "Remove indemnity or advance commission wording and replace it with earned-basis commission controls."
+    },
+    {
+      "rule_id": "GN16-CLAW-001",
+      "severity": "high",
+      "citation": "HKIA GL16/GN16 section 9.3",
+      "applies_when": {
+        "text_any": ["commission", "remuneration", "intermediary", "agent compensation", "broker compensation"],
+        "fields_any_true": ["commission_arrangement", "intermediary_remuneration"]
+      },
+      "check_type": "required_evidence",
+      "keyword_groups": [
+        ["clawback", "claw back", "recover commission", "commission recovery"],
+        ["fraud", "fraudulent"],
+        ["money laundering", "aml"],
+        ["mis-selling", "misselling", "mis selling"]
+      ],
+      "field_groups": [
+        ["clawback_mechanism"],
+        ["fraud_recovery_covered"],
+        ["aml_recovery_covered", "money_laundering_recovery_covered"],
+        ["misselling_recovery_covered", "mis_selling_recovery_covered"]
+      ],
+      "remediation": "Add a clawback mechanism that fully recovers commission paid in proven fraud, money-laundering, or mis-selling cases."
+    },
+    {
+      "rule_id": "GN16-CONF-001",
+      "severity": "medium",
+      "citation": "HKIA GL16/GN16 section 10.1 to 10.3",
+      "applies_when": {
+        "text_any": ["advice", "recommendation", "intermediary", "commission", "conflict"],
+        "fields_any_true": ["advice_given", "recommendation_made", "conflict_review_required"]
+      },
+      "check_type": "required_evidence",
+      "keyword_groups": [
+        ["conflict of interest", "conflicts of interest"],
+        ["disclosure", "disclosed"],
+        ["informed consent", "customer consent"],
+        ["ongoing monitor", "monitoring mechanism", "conflict monitoring"]
+      ],
+      "field_groups": [
+        ["conflicts_identified", "conflict_review_completed"],
+        ["conflicts_disclosed"],
+        ["informed_consent_obtained"],
+        ["conflict_monitoring"]
+      ],
+      "remediation": "Add conflict-of-interest monitoring, disclosure, and informed-consent evidence for advised sales."
+    },
+    {
+      "rule_id": "GN16-ANNUAL-001",
+      "severity": "medium",
+      "citation": "HKIA GL16/GN16 sections 4.2, 4.3, and 10.5",
+      "applies_when": {
+        "text_any": ["non-guaranteed", "nonguaranteed", "illustrated benefit", "standard illustration", "participating policy"],
+        "fields_any_true": ["non_guaranteed_benefits", "participating_policy"]
+      },
+      "check_type": "required_evidence",
+      "keyword_groups": [
+        ["annual statement", "anniversary statement", "annual communication"],
+        ["projection", "illustration update", "assumption update"]
+      ],
+      "field_groups": [
+        ["annual_statement_provided", "annual_communication"],
+        ["illustration_assumptions_reviewed", "projection_update_control"]
+      ],
+      "remediation": "Add annual communication controls for non-guaranteed benefits and update illustration assumptions when material changes occur."
+    },
+    {
+      "rule_id": "GN16-LOAN-001",
+      "severity": "medium",
+      "citation": "HKIA GL16/GN16 section 6.7",
+      "applies_when": {
+        "text_any": ["policy loan", "automatic policy loan", "loan facility"],
+        "fields_any_true": ["policy_loan_facility", "automatic_policy_loan"]
+      },
+      "check_type": "required_evidence",
+      "keyword_groups": [
+        ["loan term", "loan terms"],
+        ["interest rate"],
+        ["notification", "notice"],
+        ["account statement", "loan balance"]
+      ],
+      "field_groups": [
+        ["loan_terms_disclosed"],
+        ["loan_interest_disclosed"],
+        ["loan_notice_control"],
+        ["loan_statement_control"]
+      ],
+      "remediation": "Add policy loan disclosures covering terms, interest rate, automatic loan drawdown notices, rate-change notices, and account statements."
+    },
+    {
+      "rule_id": "GN16-VULN-001",
+      "severity": "critical",
+      "citation": "HKIA GL16/GN16 sections 11.2 and 11.3",
+      "applies_when": {
+        "text_any": ["vulnerable customer", "age 65", "over 65", "primary education", "no regular income"],
+        "fields_any_true": ["vulnerable_customer", "post_sale_call_required"],
+        "structured_conditions": [
+          {"field": "customer_age", "operator": ">=", "value": 65},
+          {"field": "education_level", "operator": "in", "value": ["primary", "primary level", "below primary"]},
+          {"field": "regular_income", "operator": "is", "value": false}
+        ]
+      },
+      "check_type": "required_evidence",
+      "keyword_groups": [
+        ["post-sale call", "post sale call", "post-sale confirmation", "confirmation call"],
+        ["audio-recorded", "audio recorded", "call recording", "recorded call"],
+        ["5 working days", "five working days"]
+      ],
+      "field_groups": [
+        ["post_sale_call_completed", "post_sale_call_attempted", "confirmation_letter_sent"],
+        ["post_sale_call_audio_recorded", "call_recording_id"],
+        ["post_sale_call_within_5_working_days"]
+      ],
+      "remediation": "Identify vulnerable-customer status and complete an audio-recorded post-sale confirmation call, or record unsuccessful-call letter and email/SMS controls."
+    },
+    {
+      "rule_id": "GN16-PSC-001",
+      "severity": "medium",
+      "citation": "HKIA GL16/GN16 sections 11.4 and 11.5",
+      "applies_when": {
+        "text_any": ["post-sale", "post sale", "confirmation call", "vulnerable customer"],
+        "fields_any_true": ["post_sale_call_required", "vulnerable_customer"]
+      },
+      "check_type": "required_evidence",
+      "keyword_groups": [
+        ["confirmation letter"],
+        ["email", "sms", "text message"],
+        ["control report", "quality control", "qa report"],
+        ["unsuccessful call", "failed call", "call attempt"]
+      ],
+      "field_groups": [
+        ["confirmation_letter_sent"],
+        ["email_sms_alert_sent"],
+        ["control_report_retained", "qa_report_retained"],
+        ["unsuccessful_call_monitoring", "call_attempts_logged"]
+      ],
+      "remediation": "Retain post-sale call records, confirmation letters, email/SMS alerts, control reports, and unsuccessful-call monitoring evidence."
+    }
+  ]
+}

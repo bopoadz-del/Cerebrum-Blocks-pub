@@ -1,0 +1,177 @@
+{
+  "acceptance": [
+    {
+      "check": "errors on an unknown or missing action",
+      "id": "unknown_action",
+      "status": "failed"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "78ee9a3016a0690384d555f387757f00cc80c50ad1cd5d348669f1dfb60f4b84",
+    "block.py": "78ac5a35f3aabd3c9fbd8fd7989f68be6b4ab881be8235c17dd6123dc93b8087"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/review:latest",
+    "type": "docker"
+  },
+  "id": "review",
+  "inputs": [
+    {
+      "description": "Review item id and metadata",
+      "name": "input",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "default": "approve",
+      "description": "Action",
+      "name": "action",
+      "options": [
+        "approve",
+        "reject",
+        "hide"
+      ],
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": 3,
+      "description": "Configuration parameter: min_reviews_for_public",
+      "name": "min_reviews_for_public",
+      "required": false,
+      "type": "number"
+    },
+    {
+      "default": 10,
+      "description": "Configuration parameter: trusted_reviewer_threshold",
+      "name": "trusted_reviewer_threshold",
+      "required": false,
+      "type": "number"
+    },
+    {
+      "default": 5000,
+      "description": "Configuration parameter: max_review_length",
+      "name": "max_review_length",
+      "required": false,
+      "type": "number"
+    },
+    {
+      "default": true,
+      "description": "Configuration parameter: require_verified",
+      "name": "require_verified",
+      "required": false,
+      "type": "boolean"
+    },
+    {
+      "default": true,
+      "description": "Configuration parameter: auto_moderate",
+      "name": "auto_moderate",
+      "required": false,
+      "type": "boolean"
+    },
+    {
+      "default": 3,
+      "description": "Configuration parameter: flag_threshold",
+      "name": "flag_threshold",
+      "required": false,
+      "type": "number"
+    }
+  ],
+  "layer": 4,
+  "name": "Review",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    }
+  ],
+  "requires": [
+    "database",
+    "auth",
+    "team"
+  ],
+  "signature": "CDgBsqwHsG1t+q09TJtRSKYxo2cszq3j541GyFNEgw0ViJs5Fg7yIwtUEGI/dOdxhkqICUhLmEtpAyu80qibAg==",
+  "tags": [
+    "store",
+    "community",
+    "quality",
+    "ratings"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "Review item id and metadata",
+      "name": "input",
+      "widget": "json"
+    },
+    {
+      "label": "Action",
+      "name": "action",
+      "options": [
+        "approve",
+        "reject",
+        "hide"
+      ],
+      "widget": "select"
+    },
+    {
+      "label": "Min Reviews For Public",
+      "name": "min_reviews_for_public",
+      "widget": "number"
+    },
+    {
+      "label": "Trusted Reviewer Threshold",
+      "name": "trusted_reviewer_threshold",
+      "widget": "number"
+    },
+    {
+      "label": "Max Review Length",
+      "name": "max_review_length",
+      "widget": "number"
+    },
+    {
+      "label": "Require Verified",
+      "name": "require_verified",
+      "widget": "toggle"
+    },
+    {
+      "label": "Auto Moderate",
+      "name": "auto_moderate",
+      "widget": "toggle"
+    },
+    {
+      "label": "Flag Threshold",
+      "name": "flag_threshold",
+      "widget": "number"
+    }
+  ],
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

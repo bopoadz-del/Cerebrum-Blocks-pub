@@ -1,0 +1,147 @@
+{
+  "acceptance": [
+    {
+      "check": "errors on an unknown or missing action",
+      "id": "unknown_action",
+      "status": "failed"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "capability_class": "events",
+  "description": "Event bus for synchronous and asynchronous block communication",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "05a4f825beb41886ce2a6a5ed351f1a0fee4ab5c7c87f362769865abe3f92ec2",
+    "block.py": "03c69b640fbd3ea92422766add606c5267ebbbdab65e7f7b8a34202d0472620f"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/event_bus:latest",
+    "type": "docker"
+  },
+  "id": "event_bus",
+  "inputs": [
+    {
+      "description": "{\"topic\": \"chat.response\", \"payload\": {}}",
+      "name": "input",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "default": "publish",
+      "description": "Action",
+      "name": "action",
+      "options": [
+        "publish",
+        "subscribe",
+        "request",
+        "respond",
+        "get_topology"
+      ],
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": 30,
+      "description": "Default Timeout",
+      "name": "default_timeout",
+      "required": false,
+      "type": "number"
+    },
+    {
+      "default": 1000,
+      "description": "Max Pending",
+      "name": "max_pending",
+      "required": false,
+      "type": "number"
+    }
+  ],
+  "layer": 5,
+  "name": "Event Bus",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Status",
+      "name": "status",
+      "type": "text"
+    },
+    {
+      "description": "Topic",
+      "name": "topic",
+      "type": "text"
+    },
+    {
+      "description": "Correlation ID",
+      "name": "correlation_id",
+      "type": "text"
+    },
+    {
+      "description": "Delivered",
+      "name": "delivered",
+      "type": "number"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    }
+  ],
+  "requires": [
+    "memory"
+  ],
+  "signature": "LKpFXDt11aWY6cp6yEbX0j6MSPF/hPD3ATlrV6Oo3WBaqZgE7lPkViQ6FUCf2tTS93lIhoXq4uMCO1msMF0ZDg==",
+  "tags": [
+    "interface",
+    "messaging",
+    "events",
+    "core"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "{\"topic\": \"chat.response\", \"payload\": {}}",
+      "name": "input",
+      "widget": "json"
+    },
+    {
+      "label": "Action",
+      "name": "action",
+      "options": [
+        "publish",
+        "subscribe",
+        "request",
+        "respond",
+        "get_topology"
+      ],
+      "widget": "select"
+    },
+    {
+      "label": "Default Timeout",
+      "name": "default_timeout",
+      "widget": "number"
+    },
+    {
+      "label": "Max Pending",
+      "name": "max_pending",
+      "widget": "number"
+    }
+  ],
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

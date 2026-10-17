@@ -1,0 +1,81 @@
+kit: water_treatment
+version: 1
+serves_verticals: [water_treatment]
+hooks_used: [H0, H1, H2, H3, H4]
+
+quantities:
+  ct_required:            {units: [mg_min_L]}
+  ct_achieved:            {units: [mg_min_L]}
+  contact_time:           {units: [min]}
+  turbidity_limit:        {units: [NTU]}
+  chlorine_residual:      {units: [mgL]}
+  chemical_dose:          {units: [mgL]}
+  log_inactivation:       {units: [log]}
+  membrane_flux:          {units: [Lmh]}
+  # Correction 5: staleness_triggers keys permit/chemical_strength/analyser/
+  # operating_manual are artifacts a trigger is keyed on, not measured
+  # figures the sheet asked about; unitless.
+  permit:                 {units: [—]}
+  chemical_strength:      {units: [—]}
+  analyser:               {units: [—]}
+  operating_manual:       {units: [—]}
+
+qualifier_fields:
+  ct_temp_c:              {type: number}
+  ct_ph:                  {type: number}
+  disinfectant:           {type: enum,   values: [free_chlorine, chloramine, chlorine_dioxide, ozone, UV]}
+  target_organism:        {type: string}
+  log_target:             {type: number}
+  contact_time_basis:     {type: enum,   values: [theoretical, T10, tracer]}
+  flow_at_calc:           {type: enum,   values: [peak_hourly, average, other]}
+  tank_level_assumed:     {type: number}
+  dose_basis:             {type: enum,   values: [as_product, as_active]}
+  delivered_strength:     {type: number}
+  averaging_basis:        {type: enum,   values: [instantaneous, running_avg, percentile]}
+  regulation_ref:         {type: string}
+  permit_ref:             {type: string}
+  sample_point:           {type: string}
+
+source_classes:
+  national_drinking_reg:  {rank: 1}
+  permit:                 {rank: 2, reject_as_proof: [superseded_permit]}
+  health_authority:       {rank: 3}
+  design_basis:           {rank: 4}
+  tracer_study:           {rank: 5, reject_as_proof: [pre_modification]}
+  operating_manual:       {rank: 6}
+  sop:                    {rank: 7}
+  chemical_supplier:      {rank: 8}
+  shift_instruction:      {rank: 9}
+  # The classes named in reject_as_proof above must themselves be declared, or
+  # the rule could never fire. Ranked below every governing class (1-9).
+  superseded_permit:      {rank: 10}
+  pre_modification:       {rank: 10}
+
+state_providers:
+  analyser_status:        {kind: status,   max_age: realtime}
+  tracer_current:         {kind: revision, max_age: event}
+  permit_current:         {kind: revision, max_age: event}
+  chemical_strength_current: {kind: revision, max_age: event}
+  scada_vs_design:        {kind: status,   max_age: realtime}
+  # Correction 2: window.provider must name a declared state_providers entry.
+  # operating_manual's currency plumbing (below) needs one the sheet did not
+  # separately declare.
+  operating_manual_current: {kind: revision, max_age: event}
+
+staleness_triggers:
+  ct_required:            [tracer_change, physical_change, operational_change, disinfection_change]
+  contact_time:           [tank_modification, baffle_change]
+  permit:                 [renewal, variation]
+  chemical_strength:      [each_delivery]
+  analyser:               [calibration_expiry]
+  operating_manual:       [revision]
+
+scope_refusals:
+  - pattern: "is this water safe to supply"
+    authority: "duty certified operator"
+  - pattern: "can we skip filter-to-waste"
+    authority: "plant manager + permit"
+  - pattern: "do we need a boil notice"
+    authority: "water quality lead + regulator"
+  - pattern: "can I enter the chlorine room"
+    authority: "permit process — atmospheric test required"

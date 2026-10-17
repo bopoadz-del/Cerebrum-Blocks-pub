@@ -1,0 +1,60 @@
+# Build the image and push it to ECR, then roll the ECS service.
+#
+# Replaces Render's auto-deploy-on-merge. Render built the image itself from
+# this repo's Dockerfile; ECS pulls a prebuilt image, so the build has to
+# happen somewhere — here, rather than on a laptop, so a deploy never depends
+# on one machine having Docker installed.
+#
+# The service roll is conditional: on the very first run no ECS service exists
+# yet, and the push alone is what lets the service be created. Afterwards the
+# same workflow deploys.
+name: deploy-aws
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  AWS_REGION: us-west-2
+  ECR_REPOSITORY: cerebrum-blocks
+  ECS_CLUSTER: cerebrum
+  ECS_SERVICE: cerebrum-blocks
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build and push
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        run: |
+          IMAGE="$REGISTRY/$ECR_REPOSITORY"
+          docker build -t "$IMAGE:${{ github.sha }}" -t "$IMAGE:latest" .
+          docker push "$IMAGE:${{ github.sha }}"
+          docker push "$IMAGE:latest"
+          echo "pushed $IMAGE:${{ github.sha }}"
+
+      - name: Roll the service if it exists
+        run: |
+          count=$(aws ecs describe-services \
+            --cluster "$ECS_CLUSTER" --services "$ECS_SERVICE" \
+            --query 'length(services[?status==`ACTIVE`])' --output text 2>/dev/null || echo 0)
+          if [ "$count" = "1" ]; then
+            aws ecs update-service --cluster "$ECS_CLUSTER" \
+              --service "$ECS_SERVICE" --force-new-deployment >/dev/null
+            echo "deployment triggered"
+          else
+            echo "no ACTIVE service yet — image pushed, service still to be created"
+          fi

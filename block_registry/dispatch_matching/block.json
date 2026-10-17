@@ -1,0 +1,125 @@
+{
+  "acceptance": [
+    {
+      "check": "errors on an unknown or missing action",
+      "id": "unknown_action",
+      "status": "failed"
+    },
+    {
+      "check": "refuses or errors when a required input is absent",
+      "id": "missing_required_input",
+      "status": "failed"
+    },
+    {
+      "check": "control-delete mutation turns the block's tests red",
+      "id": "control_delete",
+      "status": "failed"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Deterministic job-to-worker dispatch: skill/distance/load/reputation scoring with component decomposition, capacity-guarded exclusive assignment, accept/reject lifecycle with sequence-based timeouts, and release on cancel.",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "5bbfabac75aca15b8e124b1757cffd0557a23115703ce45fa1422347a5e2fffc",
+    "block.py": "71a5f4c535af45e899552c545a103cf53b987d1173d7a5b097928cf0a6a12727"
+  },
+  "execution": {
+    "entrypoint": "block.py",
+    "image": "ghcr.io/cerebrum-blocks/dispatch_matching:latest",
+    "type": "python"
+  },
+  "id": "dispatch_matching",
+  "inputs": [
+    {
+      "description": "JSON payload for the selected operation",
+      "name": "input",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "default": "match",
+      "description": "Dispatch operation",
+      "name": "operation",
+      "options": [
+        "register_worker",
+        "register_job",
+        "match",
+        "assign",
+        "accept",
+        "reject",
+        "release",
+        "status"
+      ],
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 3,
+  "name": "Dispatch Matching",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Dispatch operation result (registered entity, candidate ranking, assignment, response, release, status)",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [
+      "typing"
+    ],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    }
+  ],
+  "requires": [],
+  "signature": "6aOdI112OCmuaUty/VsQyqOTF5yZzH7jzh8hhbjjWlT7klq1G7hZ771lS5IF6bIygzYt6/z30bahm8Dpy8P1AA==",
+  "tags": [
+    "domain",
+    "marketplace",
+    "dispatch",
+    "matching",
+    "deterministic"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "JSON payload for the selected operation",
+      "name": "input",
+      "widget": "json"
+    },
+    {
+      "label": "Operation",
+      "name": "operation",
+      "options": [
+        "register_worker",
+        "register_job",
+        "match",
+        "assign",
+        "accept",
+        "reject",
+        "release",
+        "status"
+      ],
+      "widget": "select"
+    }
+  ],
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

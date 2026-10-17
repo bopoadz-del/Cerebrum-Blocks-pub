@@ -1,0 +1,23 @@
+{
+  "acceptance": [],
+  "description": "WebSocket transport for the aviation agent. Routes every message through the orchestrator and streams frames back.",
+  "digests": {
+    "block.json": "cc5c58ff2bcaf2c61f0dffe03c579bbe9eba686050a3579ad5fcdec2e64c3c3d",
+    "block.py": "8bc2e23870a058f9c131788a43c11b1d218bd9c1322e2cfe5ad25071a5a42f23"
+  },
+  "id": "aviation_chat_server",
+  "name": "Aviation Chat Server",
+  "never": [],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [],
+  "signature": "C3aJte5tpFLNyXx4aMq0N+rBZcnz2IXPQqaBftCxJI012AFEtIk/5yNn3B/xr3QkdMEekFDzVcdb47TprufnAQ==",
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": []
+}

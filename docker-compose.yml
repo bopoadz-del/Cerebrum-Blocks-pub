@@ -1,0 +1,62 @@
+version: "3.8"
+
+services:
+  cerebrum-api:
+    build: .
+    container_name: cerebrum-api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data
+      - ./.env:/app/.env:ro
+    environment:
+      - PORT=8000
+      - HOST=0.0.0.0
+      - DATA_DIR=/app/data
+      - PYTHONUNBUFFERED=1
+      - SANDBOX_RUNNER_URL=http://sandbox-runner:8001
+    restart: unless-stopped
+    depends_on:
+      - sandbox-runner
+    # /ready, not /health: /health is liveness and always returns 200.
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/ready"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  sandbox-runner:
+    build:
+      context: .
+      dockerfile: sandbox-runner/Dockerfile
+    container_name: cerebrum-sandbox-runner
+    ports:
+      - "8001:8001"
+    environment:
+      - PORT=8001
+      - BLOCK_REGISTRY_ROOT=/app/block_registry
+      - SANDBOX_NETWORK=none
+    read_only: true
+    tmpfs:
+      - /scratch:noexec,nosuid,size=100m
+    cap_drop:
+      - ALL
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  # Frontend dev server (optional — for local development)
+  # cerebrum-frontend:
+  #   build: ./frontend
+  #   container_name: cerebrum-frontend
+  #   ports:
+  #     - "5173:5173"
+  #   volumes:
+  #     - ./frontend:/app
+  #     - /app/node_modules
+  #   command: npm run dev -- --host

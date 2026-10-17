@@ -1,0 +1,123 @@
+
+=== cluster Â· hotel 3 ===
+  src: Cerebrum-Blocks · app/blocks/hotel_v2.py (= block_store/kits/hotel_management/bundle/app/blocks/hotel_v2.py)
+  item: hotel_v2.py is 779 lines of real deterministic logic: keyword-based document-type detection across 8 hotel document type
+  rec:  Either wire hotel_v2.process() into an actual product endpoint (e.g. api/routes/documents.py's ingest path, so uploaded revenue reports/folios get real ADR/RevPAR/GOPPAR/risk extraction instead of onl
+  src: Cerebrum-Blocks · block_store/kits/hotel_management/blocks/opera_connector.py
+  item: opera_connector.py's fetch_raw() always returns {"stub": True, "message": "Opera connector not yet implemented â€” wire 
+  rec:  Replace the Store stub with a real block built on v2's connect/fetch/normalise/MockLevel pattern (safer than v1's unvalidated static-header 'live' path), and either add it to manifest.json artifacts o
+  src: Cerebrum-Blocks · block_store/kits/hotel_management/blocks/hotel_trigger.py
+  item: hotel_trigger.py's process() always returns triggered: False / a stub workflow_payload, version="0.1.0-skeleton"
+  rec:  Leave flagged as not-yet-implemented rather than silently present as a normal kit file. I did not have budget to search the other ~13 non-hotel donor repos (Cerebrum, <private-product>, etc.)
+
+=== cluster Â· retail 3 ===
+  src: Cerebrum-Blocks · app/blocks/channel_router.py
+  item: Line 1 docstring: "Insurance channel router with explainable heuristic scoring." Line 83: tags = ["domain", "insurance",
+  rec:  Do not let retail-cluster platform assembly pull this block expecting retail channel logic -- it will silently deliver insurance agency/MGA/direct/partner scoring instead. Either (a) rename/re-namespa
+  src: Cerebrum-Blocks · app/blocks/traffic_manager.py
+  item: Line 14: layer = 1
+  rec:  Keep this block classified purely as core/platform governance (layer 1) -- it is solid at what it does and should not be presented to retail-platform assembly as retail-domain traffic analytics. If a 
+  src: Cerebrum-Blocks · app/blocks/retail_v2.py
+  item: (1) Registry gap: confirmed absent from block_registry/ (only channel_router and traffic_manager are registered for this
+  rec:  Register retail_v2 in block_registry/ directly (not only via the kit bundle) so it's discoverable through the standard path. Wire the financial-metric formulas to consume values already captured by _e
+  src: Cerebrum-Blocks · app/blocks/medical_ehr_connector.py
+  item: Not a stub: authenticate()/fetch_raw()/normalize() genuinely build an httpx.AsyncClient call to FHIR_BASE_URL, handle Be
+  rec:  Add model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True) (or explicit Field(alias=...)) to Patient/Observation/MedicationRequest in app/core/connector_events.py, call model_valid
+  src: Cerebrum-Blocks · app/blocks/medical_v2.py
+  item: Real: 2021 CKD-EPI race-free eGFR equation is implemented correctly (kappa/alpha/female_factor branch match the publishe
+  rec:  Either replace wells_score/chads2_vasc/child_pugh/cardiac_risk with citations to the real weighted criteria (or an off-the-shelf validated calculator) or rename/relabel them clearly as unvalidated heu
+  src: Cerebrum-Blocks · app/blocks/legal_v2.py
+  item: Real: legal citation regexes match actual Bluebook-style reporter formats (U.S., F.2d/F.3d, Cal.2d, N.E.2d, 400-419), st
+  rec:  Move the LegalKnowledge/MedicalKnowledge instances to be per-request (constructed inside process(), or pass custom_rules as a call argument instead of mutating shared state) to close the cross-request
+  src: Cerebrum-Blocks · app/blocks/aviation_v2.py
+  item: app/blocks/aviation_v2.py (615 lines), extends DomainBlockV2, deterministic regex+math (no LLM)
+  rec:  Fix the airport-extraction regex (drop re.IGNORECASE or require an explicit airport-context keyword nearby, matching the pattern used by _extract_aircraft_registrations). Otherwise this block is real 
+  src: Cerebrum-Blocks · app/blocks/aviation_grounding_gate.py
+  item: app/blocks/aviation_grounding_gate.py (471 lines)
+  rec:  No fix needed on correctness grounds. Recommend: (1) register this block (and its 6 dependents below) into block_registry/ so it appears in the Store's standard 108-block catalogue, since it is curren
+  src: Cerebrum-Blocks · app/blocks/aviation_chat_server.py
+  item: app/blocks/aviation_chat_server.py (465 lines)
+  rec:  Register into block_registry/ alongside the gate. No functional fix needed.
+  src: Cerebrum-Blocks · app/blocks/aviation_cargo_kit.py, aviation_cx_kit.py, aviation_loyalty_kit.py, aviation_pss_kit.py, aviation_revenue_kit.py
+  item: Read all 5 files in full (cargo: 240 lines, cx: 232, loyalty: 232, pss: 238, revenue: 241)
+  rec:  Not a quality problem (each does what it claims: read-only, grounded, gated), but flag as a maintainability/DRY issue -- 5 files to keep in sync for what is really one pattern. If the Store values gen
+
+=== cluster Â· connector-infra 4 ===
+  src: Cerebrum-Blocks · app/blocks/mcp_adapter.py
+  item: mcp_adapter.py builds its own 'tool catalog' (list_tools/describe actions) by iterating BLOCK_REGISTRY
+  rec:  Delete mcp_adapter.py's redundant catalog logic (or the whole block) and fix/remove the stale app/routers/mcp.py reference; app/mcp_server.py is already the real, working MCP-server foundation to buil
+  rec:  Port verify_incoming_webhook/WebhookMiddleware and the persisted WebhookDelivery/retry_failed_deliveries pattern from Cerebrum's webhook_security.py into the Store's webhook block (or a new inbound-we
+  rec:  The Store's google_drive.py only covers per-user OAuth; for the connector-infra work (which will need unattended/service-to-service Drive access, not just a logged-in user's session) port gdrive_servi
+  src: Cerebrum-Blocks · app/blocks/android_drive.py
+  item: 49-line HONEST stub: process() unconditionally returns {status:'error', error:'not_implemented', detail:'android_drive i
+  rec:  Zero functional risk of being mistaken for real (it self-reports as not implemented), but it is zero capability. No donor exists to copy from -- flagging as store_upgrade because it needs net-new ADB-
+
+=== cluster Â· core-infra 8 ===
+  src: Cerebrum-Blocks · app/blocks/migration.py
+  item: _create_backup (line ~445) is '# TODO: Implement actual backup' and returns only a fabricated backup_id; _restore_backup
+  src: Cerebrum-Blocks · app/blocks/health_check.py
+  item: _check_external_apis (line 326-349): comment '# Simulated check - in production would do actual HTTP request' then hardc
+  src: Cerebrum-Blocks · app/blocks/queue.py
+  item: Docstring (line 1) claims 'Supports Redis (production) or memory (edge/local)'
+  src: Cerebrum-Blocks · app/blocks/config.py
+  item: default_config (line 20-23) declares config_file: 'config/blocks.json' and env_prefix: 'CEREBRUM_'
+  src: Cerebrum-Blocks · app/blocks/rate_limiter.py
+  item: self.counters / self.buckets (lines 52-53) are plain Python dicts; self.memory_block / self.database_block are never ref
+  src: Cerebrum-Blocks · app/blocks/version.py
+  item: __init__ (lines 44-49) stores everything in plain dicts
+  src: Cerebrum-Blocks · app/blocks/monitoring.py
+  item: self.providers (line 38-40) is hardcoded to {'kimi': {...}} only -- no register_provider/add_provider method exists anyw
+  src: Cerebrum-Blocks · app/blocks/billing.py
+  item: _upgrade_plan (line 252-266): 'if self.auth_block: # Would update user role \n pass' -- then unconditionally returns {'u
+
+=== cluster Â· reasoning-orchestration 13 ===
+  src: Cerebrum-Blocks · app/blocks/formula_executor.py
+  item: 574 lines
+  rec:  None needed â€” flag as a positive baseline. This block already implements a real fragment of REASONING_KERNEL.md's DeterministicFormulaExecutor (#5) and UnitAndCurrencyValidator (#6).
+  src: Cerebrum-Blocks · app/blocks/formula_executor_v2.py
+  item: 318 lines implementing a full LLM-codegen -> RestrictedPython sandbox -> retry loop with per-session code caching, a rea
+  rec:  Complete the registration (generate block.py adapter + Dockerfile) so this real capability becomes reachable. This directly narrows REASONING_KERNEL.md's 'unbuilt' FormulaRegistry/DeterministicFormula
+  src: Cerebrum-Blocks · app/blocks/sympy_reasoning.py
+  item: 212 lines
+  rec:  Either use real symbolic capability (e.g., solve tolerance/threshold equations symbolically) or rename/redescribe as a statistical variance engine so the block's stated sophistication matches its code
+  src: Cerebrum-Blocks · app/blocks/project_reasoner.py
+  item: 305 lines implementing a real UNDERSTAND->PLAN->EXECUTE->DELIVER agent loop: builds a plan prompt, validates the LLM rep
+  rec:  Complete registration. This block is a direct, already-built answer to the 'ReasoningPlanner' component the reasoning-kernel mission lists as unbuilt.
+  src: Cerebrum-Blocks · app/blocks/smart_orchestrator.py
+  item: 361 lines
+  rec:  None â€” solid as-is.
+  src: Cerebrum-Blocks · app/blocks/adaptive_router.py
+  item: 497 lines, registered
+  rec:  Either wire _load_historical_data to a real analytics/persistence backend (matching learning_engine.py's storage_backend injection pattern) or relabel the block's claims to match reality: single-provi
+  src: Cerebrum-Blocks · app/blocks/orchestrator.py
+  item: 566 lines, registered
+  rec:  None â€” solid as-is. Its type-validated step-chain model is workflow-adjacent (partial overlap with REASONING_KERNEL.md's WorkflowEngine #9) but lacks approval gates, permitted-actor checks, or state
+  src: Cerebrum-Blocks · app/blocks/learning_engine.py
+  item: 575 lines, registered
+  rec:  None â€” solid as-is. Its drift-detection/credibility-tier logic is a real, usable building block toward REASONING_KERNEL.md's VerificationOracleRunner (#19)/AssumptionRegistry (#17) concepts and shou
+  src: Cerebrum-Blocks · app/blocks/recommendation_template.py
+  item: 303 lines, registered
+  rec:  This condition-matching rule engine is a real, working fragment of REASONING_KERNEL.md's RuleEngine (#7)/DecisionTableEngine (#8) â€” worth reusing rather than building those from zero.
+  src: Cerebrum-Blocks · app/blocks/historical_benchmark.py
+  item: 234 lines, registered
+  rec:  Wire 'record' to the already-working learning_engine.record_correction path (learning_engine.py in this same cluster) instead of returning status:success for a no-op, or change the status to something
+  src: Cerebrum-Blocks · app/blocks/context_broker.py
+  item: 195 lines, registered
+  rec:  Low priority: either implement the advertised drive_files/chat_history/construction_data aggregation or trim the ui_schema to match what the block actually returns.
+  src: Cerebrum-Blocks · app/blocks/agent_swarm.py
+  item: 786 lines, registered
+  rec:  None â€” solid as-is.
+  src: Cerebrum-Blocks · app/blocks/safety_world_detector.py
+  item: 112 lines
+  rec:  If this is meant to be store capability, wrap it as a proper UniversalBlock/TypedBlock with a process() method and register it; otherwise document clearly which registered block(s) actually consume it
+
+=== cluster Â· media-vision-misc 3 ===
+  src: Cerebrum-Blocks · app/blocks/discovery.py
+  item: discovery.py declares requires=["vector","analytics"] and default_config["recommendation_model"]="embedding_similarity",
+  rec:  Route recommend/search through vector.py's cosine-similarity search (already implemented with real sentence-transformers embeddings and a working _cosine_similarity) or vector_search.py's TF-IDF searc
+  src: Cerebrum-Blocks · app/blocks/review.py
+  item: async def _verify_purchase(self, data: Dict) -> Dict (line 282) reads: `# TODO: Verify actual purchase/usage in billing 
+  rec:  Call the billing block (review.requires includes no billing dep currently â€” add one) to confirm an actual transaction/usage record for (user_id, block_id) exists before setting verified=True; return
+  src: Cerebrum-Blocks · app/blocks/sandbox.py
+  item: _execute_python (line 180) only reaches real isolation if os.getenv("SANDBOX_RUNNER_URL") is set; otherwise it falls thr
+  rec:  Make the external SANDBOX_RUNNER_URL path (real process isolation) mandatory rather than best-effort-with-insecure-fallback for any code that isn't already trusted/first-party, and replace the substri

@@ -1,0 +1,64 @@
+{
+  "acceptance": [],
+  "author": "Cerebrum Team",
+  "description": "Decimal-safe grouped reconciliation with exception evidence.",
+  "digests": {
+    "block.json": "c0956dd5004300e4907dff4696f8d5d57455d3901d1f3d866a3d1f2fc5852123",
+    "block.py": "e7c6dd873eb6b9f408b234ae6eec50b2330f8a2b14246057bd870d487e59ccf8"
+  },
+  "id": "finance_reconciliation",
+  "inputs": [
+    {
+      "description": "FinanceOps payload",
+      "name": "input",
+      "required": false,
+      "type": "json"
+    }
+  ],
+  "layer": 3,
+  "name": "Finance Reconciliation",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Deterministic FinanceOps result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [
+      "decimal",
+      "typing"
+    ],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    }
+  ],
+  "signature": "x7geNLAyKjx1S8YLslHa46txsQmeYVEiZlMeqLsuDDUsajNzmjdM0pCSCwt+Y0oC1RcDb9XCWxVUfco1cmOZCQ==",
+  "tags": [
+    "domain",
+    "finance_ops",
+    "reconciliation",
+    "controls",
+    "deterministic"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

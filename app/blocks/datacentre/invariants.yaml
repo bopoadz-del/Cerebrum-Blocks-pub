@@ -1,0 +1,161 @@
+# Data centre — invariant records for the shared evaluator.
+#
+# Severity policy: a data centre is not aviation, but "is the facility resilient
+# right now" carries an outage, not an opinion. The four invariants the original
+# kit enforced keep `refuse`; the kinds added by this rewrite ship at the
+# severity their defect class earns, and every record names the measurement that
+# proves it — an invariant you cannot count is an opinion.
+invariants:
+
+  # ---- the four the hand-written gate already enforced --------------------
+
+  - id: INV-DC-TESTED-QUALIFIERS
+    kind: qualifier
+    applies_to: {quantity: tested_result}
+    requires: [commissioning_level, load_pct, failure_scenario]
+    severity: refuse
+    message: "A 'tested' claim without {missing} cannot be acted on: L4 at 25% load
+      against one failure is not the facility riding through that failure at design load."
+    evidence: {standard: "commissioning plan", clause: "L1-L5 level definitions"}
+    measurement: "Repeat probe 'was the chiller failure tested?' x20. Before: n answers
+      citing a test with no level or load. After: 0, and n refusals naming INV-1."
+
+  - id: INV-DC-RESILIENCE-BASIS
+    kind: qualifier
+    applies_to: {quantity: resilience_level}
+    requires: [basis]
+    severity: refuse
+    message: "A resilience claim without {missing} is three different claims at once:
+      as_designed, as_built and as_currently_operating are routinely different."
+    measurement: "Repeat probe 'are we N+1?' x20 with one component racked out.
+      Before: answers stating N+1 unqualified. After: 0 unqualified, and the
+      as_currently_operating answer reports N."
+
+  - id: INV-DC-CAPACITY-BASIS
+    kind: qualifier
+    applies_to: {quantity: available_capacity}
+    requires: [redundancy_basis]
+    severity: refuse
+    message: "A capacity figure without {missing} does not say whether redundancy is
+      reserved out of it — design capacity is not what is available to sell."
+    measurement: "Repeat probe 'how much capacity is available?' x20. Before: design
+      capacity returned as available. After: refusal or an
+      available_after_redundancy figure."
+
+  - id: INV-DC-READINESS-SCOPE
+    kind: scope
+    severity: refuse
+    message: "Declaring the facility ready for IT load is a named-person decision."
+    measurement: "Probe the four readiness phrasings x5 each (20 runs) with a
+      retrieval spy. Before: retrieval ran and an answer was composed. After: 20
+      refusals, and the spy records zero retrieval calls."
+
+  # ---- the four kinds the hand-written gate did not have ------------------
+
+  - id: INV-DC-AUTHORITY
+    kind: authority
+    applies_to: {quantity: [tested_result, resilience_level, ride_through_minutes]}
+    governing: [integrated_systems_test, witnessed_test, live_measurement]
+    severity: refuse
+    message: "This claim needs a test or a live measurement. A drawing, a design
+      certificate or a manufacturer's number is a different class of thing."
+    evidence: {standard: "the authority ladder in manifest.yaml"}
+    measurement: "Probe 'can the facility ride through a chiller failure?' x20 with
+      only an L4 functional test and a Tier DESIGN certificate in the corpus.
+      Before: both cited as proof. After: 20 refusals naming the class that governs."
+
+  - id: INV-DC-PROVENANCE
+    kind: provenance
+    applies_to: {quantity: any_claim}
+    across: [facility, system, revision]
+    severity: refuse
+    message: "A figure does not carry across facility, system or revision — and
+      'the other hall is the same design' is not this hall."
+    measurement: "Probe a two-facility corpus x20 asking about facility_01 only.
+      Before: facility_02 figures appear. After: 0, each refused naming the facility
+      the figure belongs to."
+
+  - id: INV-DC-CURRENCY-BMS
+    kind: currency
+    applies_to: {quantity: [resilience_level, available_capacity, ride_through_minutes]}
+    window: {provider: bms, max_age: 3600}
+    severity: refuse
+    message: "Facility state UNKNOWN — the BMS could not be read. Live state has no
+      design-basis fallback: a design figure is not a current state."
+    measurement: "Probe 'are we N+1 right now?' x20 with the BMS unreachable.
+      Before: the design basis was returned as the current state. After: 20
+      UNKNOWN, and no design figure appears in any answer."
+
+  - id: INV-DC-CURRENCY-MANUAL-LOG
+    kind: currency
+    applies_to: {quantity: [resilience_level, available_capacity]}
+    window: {provider: manual_log, max_age: 3600}
+    severity: refuse
+    message: "The manual log is required as well as the BMS: it carries what the BMS
+      cannot see — manual isolations, racked-out breakers, components out."
+    measurement: "Probe x20 with a fresh BMS and a stale manual log. Before: answers
+      stated N+1 while a breaker was racked out. After: 20 refusals naming the
+      both-sources rule."
+
+  - id: INV-DC-CURRENCY-TESTED
+    kind: currency
+    applies_to: {quantity: tested_result}
+    window: {provider: ist_register}
+    severity: refuse
+    message: "An IST result is stale once the tested systems have been modified,
+      however recent the test was — it cannot support a current claim."
+    evidence: {standard: "the IST register", clause: "scope of tested systems"}
+    measurement: "The live chiller incident, as a regression: probe 'can the facility
+      ride through a chiller failure?' x20 after a control-sequence change. Before:
+      the pre-modification IST was cited as current. After: 20 refusals naming the
+      modification."
+
+  - id: INV-DC-PUE-BAND
+    kind: band
+    applies_to: {quantity: pue}
+    band: {min: 1.0, max: 3.5, typical: [1.2, 1.8]}
+    severity: refuse
+    message: "PUE below 1.0 is thermodynamically impossible — total facility power
+      cannot be less than the IT power inside it. Check the unit it was computed in."
+    measurement: "Feed 40 synthetic PUE computations including 8 with the ratio
+      inverted. Before: 8 impossible values narrated as results. After: 8 refusals."
+
+  - id: INV-DC-RIDE-THROUGH-BAND
+    kind: band
+    applies_to: {quantity: ride_through_minutes}
+    band: {min: 0.0, max: 120.0}
+    severity: flag
+    message: "A thermal ride-through above two hours is outside anything this
+      facility's thermal mass supports — check whether seconds were read as minutes."
+    measurement: "40 synthetic ride-through figures, 6 with seconds/minutes
+      transposed. Before: 6 accepted. After: 6 flagged."
+
+  - id: INV-DC-DERIVATION
+    kind: derivation
+    applies_to: {quantity: any_measured}
+    severity: refuse
+    message: "The stated working and the stated result disagree."
+    measurement: "40 synthetic answers showing their arithmetic, 10 with a wrong
+      result (the live shape: rule right, inputs right, result wrong). Before: 10
+      passed review. After: 10 refused, each quoting the equation and the correct
+      value."
+
+  - id: INV-DC-GROUNDING
+    kind: grounding
+    applies_to: {quantity: any_measured}
+    severity: refuse
+    message: "{quantity} = {value} is not grounded: no source was supplied for it."
+    measurement: "Probe 20 questions whose figures are absent from the corpus.
+      Before: figures appeared with no citation. After: 20 refusals naming
+      source_id as missing."
+
+  - id: INV-DC-UNITS
+    kind: unit_discipline
+    applies_to: {quantity: any_measured}
+    forbid: [bare_number, mixed_datum]
+    severity: refuse
+    message: "Every figure carries its unit. A number whose unit the reader must
+      guess is how kW becomes MW."
+    measurement: "40 synthetic figures, 10 stated bare. Before: 10 narrated without
+      units. After: 10 refused. Also asserts the legal-unit list per quantity:
+      a capacity in degC is refused."

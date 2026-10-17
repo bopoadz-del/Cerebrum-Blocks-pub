@@ -1,0 +1,227 @@
+{
+  "acceptance": [
+    {
+      "check": "INV-RAIL-SCOPE-REFUSAL (scope at per the routing map, severity refuse): Named-person go/no-go decisions (handback, adjacent-line work, crane placement, stressing, building risk, four-foot entry) are refused before retrieval.",
+      "id": "inv_rail_scope_refusal",
+      "status": "refused"
+    },
+    {
+      "check": "INV-RAIL-1-TIER (qualifier at per the routing map, severity refuse): INV-1 violation: geometry limit without {missing}. A limit with no tier (design | maintenance | safety) and no line speed is a number nobody can act on.",
+      "id": "inv_rail_1_tier",
+      "status": "refused"
+    },
+    {
+      "check": "INV-RAIL-2-SFT (qualifier at per the routing map, severity refuse): INV-2 violation: SFT figure without {missing}. Half of route, verification date, method and disturbed_since is how an SFT record answers a rail it was never taken on.",
+      "id": "inv_rail_2_sft",
+      "status": "refused"
+    },
+    {
+      "check": "INV-RAIL-3-DISTURBANCE (qualifier at per the routing map, severity refuse): INV-3 violation: no buckling, stressing or handback-speed answer without the disturbance state since the last record \u2014 unknown is not the same as undisturbed.",
+      "id": "inv_rail_3_disturbance",
+      "status": "refused"
+    },
+    {
+      "check": "INV-RAIL-4-CLEARANCE (qualifier at per the routing map, severity refuse): INV-4 violation: clearance figure without {missing}. A clearance without the envelope type, line speed, cant and curve radius it was assessed against is not a clearance.",
+      "id": "inv_rail_4_clearance",
+      "status": "refused"
+    },
+    {
+      "check": "INV-RAIL-5-TBM-QUALIFIERS (qualifier at per the routing map, severity refuse): INV-5 violation: TBM face pressure without {missing}. A schedule with no chainage band (min AND max) and no ground/groundwater basis is not a schedule.",
+      "id": "inv_rail_5_tbm_qualifiers",
+      "status": "refused"
+    },
+    {
+      "check": "INV-RAIL-CATEGORY-CARRY (provenance at per the routing map, severity refuse): never-allowed derivation: interpolate geometry limits across categories \u2014 a plain-line limit does not average with a bridge-approach limit into something valid for either.",
+      "id": "inv_rail_category_carry",
+      "status": "refused"
+    },
+    {
+      "check": "INV-RAIL-ASSET-CARRY (provenance at per the routing map, severity refuse): never-allowed derivation: carry triggers between assets \u2014 a trigger level is set per monitored building from its own risk assessment.",
+      "id": "inv_rail_asset_carry",
+      "status": "refused"
+    },
+    {
+      "check": "INV-RAIL-LIVE-STATE-POSSESSION (currency at per the routing map, severity refuse): track state UNKNOWN \u2014 possession/signalling system unreachable. Live state has no design-basis fallback: a design figure is not a current state.",
+      "id": "inv_rail_live_state_possession",
+      "status": "refused"
+    },
+    {
+      "check": "INV-RAIL-LIVE-STATE-MANUAL-LOG (currency at per the routing map, severity refuse): track state unavailable \u2014 the manual log is required as well as the possession/signalling system: it carries what the system cannot see (manual disturbance records, local protection arrangements).",
+      "id": "inv_rail_live_state_manual_log",
+      "status": "refused"
+    },
+    {
+      "check": "INV-RAIL-TSR-STALENESS (currency at per the routing map, severity refuse): staleness: a TSR is only as current as the notice \u2014 citing the possession plan is not proof of what is in force now; only the current notice does.",
+      "id": "inv_rail_tsr_staleness",
+      "status": "refused"
+    },
+    {
+      "check": "INV-RAIL-SFT-STALENESS (currency at per the routing map, severity refuse): staleness: the SFT record is stale \u2014 tamping, renewal, undercutting, rail replacement or known creep since it was verified invalidates it.",
+      "id": "inv_rail_sft_staleness",
+      "status": "refused"
+    },
+    {
+      "check": "INV-RAIL-BALLAST-STALENESS (currency at per the routing map, severity refuse): staleness: the ballast figure is stale \u2014 any disturbance since it was recorded invalidates it.",
+      "id": "inv_rail_ballast_staleness",
+      "status": "refused"
+    },
+    {
+      "check": "INV-RAIL-GEOMETRY-RECORDING-STALENESS (currency at per the routing map, severity refuse): staleness: the geometry recording is stale \u2014 subsequent works or a new run invalidate it.",
+      "id": "inv_rail_geometry_recording_staleness",
+      "status": "refused"
+    },
+    {
+      "check": "INV-RAIL-CLEARANCE-STALENESS (currency at per the routing map, severity refuse): staleness: the gauging assessment is stale \u2014 a structure, track or cant change since it was assessed invalidates it.",
+      "id": "inv_rail_clearance_staleness",
+      "status": "refused"
+    },
+    {
+      "check": "INV-RAIL-FACE-PRESSURE-STALENESS (currency at per the routing map, severity refuse): staleness: the face pressure schedule is stale \u2014 a revised ground model or drive feedback invalidates it.",
+      "id": "inv_rail_face_pressure_staleness",
+      "status": "refused"
+    },
+    {
+      "check": "INV-RAIL-TRIGGER-STALENESS (currency at per the routing map, severity refuse): staleness: the trigger level is stale \u2014 a revised building risk assessment invalidates it.",
+      "id": "inv_rail_trigger_staleness",
+      "status": "refused"
+    },
+    {
+      "check": "INV-RAIL-AUTHORITY-SFT (authority at per the routing map, severity refuse): This SFT claim needs a verified stressing record. An installation-temperature or unverified record proves the temperature the rail was installed at, not the temperature it was stressed to.",
+      "id": "inv_rail_authority_sft",
+      "status": "refused"
+    },
+    {
+      "check": "INV-RAIL-AUTHORITY-CLEARANCE (authority at per the routing map, severity refuse): This clearance claim needs a gauging assessment. A design drawing is a different class of thing, and scaling off a drawing is the classic substitution.",
+      "id": "inv_rail_authority_clearance",
+      "status": "refused"
+    },
+    {
+      "check": "INV-RAIL-AUTHORITY-FACE-PRESSURE (authority at per the routing map, severity refuse): This face pressure claim needs a chainage-specific schedule. A similar drive's schedule is drive-specific, not chainage-specific.",
+      "id": "inv_rail_authority_face_pressure",
+      "status": "refused"
+    },
+    {
+      "check": "INV-RAIL-AUTHORITY-TSR (authority at per the routing map, severity refuse): This TSR claim needs the current notice. The possession plan is a different class of thing \u2014 it is the plan, not the notice.",
+      "id": "inv_rail_authority_tsr",
+      "status": "refused"
+    },
+    {
+      "check": "INV-RAIL-AUTHORITY-HANDBACK (authority at per the routing map, severity refuse): This handback-speed claim needs the engineering acceptance record. A working timetable states an intended speed, not an accepted one.",
+      "id": "inv_rail_authority_handback",
+      "status": "refused"
+    },
+    {
+      "check": "INV-RAIL-GROUNDING (grounding at per the routing map, severity refuse): {quantity} = {value} is not grounded: no source was supplied for it. This kit never asserts a value of its own.",
+      "id": "inv_rail_grounding",
+      "status": "refused"
+    },
+    {
+      "check": "INV-RAIL-UNITS (unit_discipline at per the routing map, severity refuse): Every figure carries its unit. A number whose unit the reader must guess is how metres become millimetres.",
+      "id": "inv_rail_units",
+      "status": "refused"
+    },
+    {
+      "check": "INV-RAIL-DERIVATION (derivation at per the routing map, severity refuse): The stated working and the stated result disagree.",
+      "id": "inv_rail_derivation",
+      "status": "refused"
+    },
+    {
+      "check": "INV-RAIL-SPEED-BAND (band at per the routing map, severity flag): A speed above 125 mph is outside anything a handback or TSR figure plausibly states on this network \u2014 check the unit it was computed in.",
+      "id": "inv_rail_speed_band",
+      "status": "partial"
+    },
+    {
+      "check": "INV-RAIL-SFT-BAND (band at per the routing map, severity flag): An SFT outside -10 to 60 degC is outside anything a UK/European rail stressing record plausibly states \u2014 check the unit it was computed in.",
+      "id": "inv_rail_sft_band",
+      "status": "partial"
+    },
+    {
+      "check": "INV-RAIL-FACE-PRESSURE-BAND (band at per the routing map, severity flag): A face pressure outside 0-10 bar is outside anything a TBM schedule plausibly states \u2014 check the unit it was computed in.",
+      "id": "inv_rail_face_pressure_band",
+      "status": "partial"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Declarative rail reasoning kit on the shared reasoning layer. 28 invariants declared in app/blocks/rail/invariants.yaml across the kinds the portable spec defines (grounding, qualifier, unit_discipline, authority, provenance, currency, scope, derivation, band) and the five hooks (H0 pre-retrieval, H1 ranking, H2 tool-time, H3 answer-time, H4 export-time). Vocabulary in app/blocks/rail/manifest.yaml. Scope refusals classify BEFORE retrieval. Fail closed: a kit that does not parse is DISABLED and refuses every statement rather than passing them through with no invariants. NO INTERVIEW HAS RUN, so every declared figure value is null and the block refuses rather than inventing one (app/blocks/rail/KNOWN_GAPS.md). Measured by tests/blocks/test_reasoning_kits.py.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "9a62ebdffc316bd69ee42ef925b473e32343d702e1a4e523540eda7706928664",
+    "block.py": "fb4bf121c55e5b828bf65d9e9be869aeb37090d7b3bc5407abd7fed6c8318183"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/rail_kit:latest",
+    "type": "docker"
+  },
+  "id": "rail_kit",
+  "inputs": [
+    {
+      "description": "the operator question, classified at H0 BEFORE any retrieval",
+      "name": "question",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "description": "figures to gate: quantity, value, unit, origin, source_id, source_class, revision, qualifiers, claim_class, derivations, conditions, steps, bounds, asked_about, span, text",
+      "name": "figures",
+      "required": false,
+      "type": "array"
+    },
+    {
+      "description": "state records by provider name, each {as_of: <epoch>}; an absent provider yields UNKNOWN, never a design-basis fallback",
+      "name": "state",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "description": "events that have happened, matched against the kit's staleness_triggers",
+      "name": "events",
+      "required": false,
+      "type": "array"
+    },
+    {
+      "description": "subset of H0..H4 to run; all five by default, because a partial sweep is a silent coverage gap",
+      "name": "hooks",
+      "required": false,
+      "type": "array"
+    }
+  ],
+  "layer": 3,
+  "name": "rail_kit",
+  "never": [],
+  "outputs": [
+    {
+      "description": "pass | annotated | flagged | refused, with findings, blocked_reason, hooks_run, retrieval_permitted, interview_status, unfilled_figures, unmeasured_invariants, ships and kit_disabled",
+      "name": "verdict",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "wIsV2UH7Egy62eWepUwSYKce4mTuxiz8mRTH0OgtSktwWjHPIyc+Iemo2j8nJbiXP/HRVAhKz1jdgR0sS5LSCw==",
+  "tags": [
+    "gate",
+    "kit",
+    "rail",
+    "reasoning"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

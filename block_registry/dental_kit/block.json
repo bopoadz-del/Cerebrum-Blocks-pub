@@ -1,0 +1,127 @@
+{
+  "acceptance": [
+    {
+      "check": "INV-DEN-AUTH-MRD (authority at H1, severity refuse): MRD governed by regulator; {value} from a lesser class is not the governing source",
+      "id": "inv_den_auth_mrd",
+      "status": "refused"
+    },
+    {
+      "check": "INV-DEN-DOSE-QUALIFIERS (qualifier at H3, severity refuse): dose missing {missing} \u2014 same cartridge, different drug loads at different concentrations",
+      "id": "inv_den_dose_qualifiers",
+      "status": "refused"
+    },
+    {
+      "check": "INV-DEN-SOURCE-SPECIFICITY (qualifier at H3, severity refuse): MRD without source specificity \u2014 edition or protocol version required",
+      "id": "inv_den_source_specificity",
+      "status": "refused"
+    },
+    {
+      "check": "INV-DEN-STEP-VISIBILITY (derivation at H3, severity refuse): mg/kg chain performed without step visibility \u2014 a bare answer cannot be checked",
+      "id": "inv_den_step_visibility",
+      "status": "refused"
+    },
+    {
+      "check": "INV-DEN-CONFLICT-REFUSE (derivation at H3, severity refuse): two sources conflict on a dose \u2014 refuse and report",
+      "id": "inv_den_conflict_refuse",
+      "status": "refused"
+    },
+    {
+      "check": "INV-DEN-TORQUE-SYSTEM (qualifier at H3, severity refuse): implant torque without system \u2014 torque values are not transferable between systems",
+      "id": "inv_den_torque_system",
+      "status": "refused"
+    },
+    {
+      "check": "INV-DEN-PROVENANCE (provenance at H3, severity refuse): forbidden derivation: {value}",
+      "id": "inv_den_provenance",
+      "status": "refused"
+    },
+    {
+      "check": "INV-DEN-CURRENCY (currency at H3, severity refuse): protocol currency unverifiable \u2014 refuse, do not warn",
+      "id": "inv_den_currency",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Declarative dental reasoning kit on the shared reasoning layer. 8 invariants declared in app/blocks/dental/invariants.yaml across the kinds the portable spec defines (grounding, qualifier, unit_discipline, authority, provenance, currency, scope, derivation, band) and the five hooks (H0 pre-retrieval, H1 ranking, H2 tool-time, H3 answer-time, H4 export-time). Vocabulary in app/blocks/dental/manifest.yaml. Scope refusals classify BEFORE retrieval. Fail closed: a kit that does not parse is DISABLED and refuses every statement rather than passing them through with no invariants. NO INTERVIEW HAS RUN, so every declared figure value is null and the block refuses rather than inventing one (app/blocks/dental/KNOWN_GAPS.md). Measured by tests/blocks/test_reasoning_kits.py.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "8fb22a2b199ba47bff9b6531f50b398285330eaf83e98b6360bf1b5b9c995c39",
+    "block.py": "4c05ecacf478589c55f31d1ecdd363567e8c5ddbd9f5497b630f9aba360f2377"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/dental_kit:latest",
+    "type": "docker"
+  },
+  "id": "dental_kit",
+  "inputs": [
+    {
+      "description": "the operator question, classified at H0 BEFORE any retrieval",
+      "name": "question",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "description": "figures to gate: quantity, value, unit, origin, source_id, source_class, revision, qualifiers, claim_class, derivations, conditions, steps, bounds, asked_about, span, text",
+      "name": "figures",
+      "required": false,
+      "type": "array"
+    },
+    {
+      "description": "state records by provider name, each {as_of: <epoch>}; an absent provider yields UNKNOWN, never a design-basis fallback",
+      "name": "state",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "description": "events that have happened, matched against the kit's staleness_triggers",
+      "name": "events",
+      "required": false,
+      "type": "array"
+    },
+    {
+      "description": "subset of H0..H4 to run; all five by default, because a partial sweep is a silent coverage gap",
+      "name": "hooks",
+      "required": false,
+      "type": "array"
+    }
+  ],
+  "layer": 3,
+  "name": "dental_kit",
+  "never": [],
+  "outputs": [
+    {
+      "description": "pass | annotated | flagged | refused, with findings, blocked_reason, hooks_run, retrieval_permitted, interview_status, unfilled_figures, unmeasured_invariants, ships and kit_disabled",
+      "name": "verdict",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "svXUwZfZoB4cRWTLRP4oWZ3w0vkJiZJ/cnyvBSy2jVWgieA+YKeBdKh5zyj+LDLbkU5K1ntgbBTLe9FuyiBOCQ==",
+  "tags": [
+    "dental",
+    "gate",
+    "kit",
+    "reasoning"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

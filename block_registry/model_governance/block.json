@@ -1,0 +1,79 @@
+{
+  "acceptance": [
+    {
+      "check": "create_ai_use_case with a risk_tier outside {low,medium,high} fails loud",
+      "id": "invalid_risk_tier_failed",
+      "status": "failed"
+    },
+    {
+      "check": "create_model_governance_record with a validation_status outside {pending,approved,failed} fails loud",
+      "id": "invalid_validation_status_failed",
+      "status": "failed"
+    },
+    {
+      "check": "a governance record referencing a non-existent AI use case fails loud",
+      "id": "record_missing_use_case_failed",
+      "status": "failed"
+    },
+    {
+      "check": "approve_model on a non-existent record fails loud",
+      "id": "approve_missing_record_failed",
+      "status": "failed"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "real: AI use-case risk-tier register and model validation records ported from <private-repo> backend/app/governance/service.py (create_ai_use_case, list_ai_use_cases, create_model_governance_record, approve_model). Validates risk_tier against {low,medium,high} and validation_status against {pending,approved,failed}; records may only reference existing use cases. In-process store (SQLAlchemy not ported).",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "b2eb5da799525286c59781212fdd909952b818402ac45ae49ae9980dfd67a5f2",
+    "block.py": "ef12f5719a47284ca9d21dc67f60a116055849f0740d41658a044d437bedb5f9"
+  },
+  "id": "model_governance",
+  "inputs": [
+    {
+      "description": "action + tenant_id + fields",
+      "name": "input",
+      "type": "json"
+    }
+  ],
+  "layer": 3,
+  "name": "model_governance",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Capability result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "fXvL8qowVNhNKO6fZhYzoWnHlO1A2KGgZHysrAnuBZfv8RJEWDL9XPjTweDOn/oOpbcHHRpCwtWJcO9n48ykDQ==",
+  "tags": [
+    "governance",
+    "ai-governance",
+    "risk-tier",
+    "model-validation",
+    "finance_ops"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

@@ -1,0 +1,123 @@
+name: Docker Build and Publish
+
+on:
+  push:
+    branches: [ main ]
+    tags: [ 'v*' ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  REGISTRY: docker.io
+  IMAGE_NAME: bopoadz-del/cerebrum-blocks
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: linux/amd64,linux/arm64
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # Publishing to Docker Hub requires two repository secrets. When they are
+      # absent, the image is still built (proving the Dockerfile) but login and
+      # push are skipped and the workflow exits green.
+      - name: Check Docker Hub secrets
+        id: docker-secrets
+        run: |
+          if [ -n "${{ secrets.DOCKER_HUB_USERNAME }}" ] && [ -n "${{ secrets.DOCKER_HUB_TOKEN }}" ]; then
+            echo "available=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "available=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Docker Hub secrets are not configured. The image will be built but not pushed. Publishing activates when DOCKER_HUB_USERNAME and DOCKER_HUB_TOKEN secrets are added."
+          fi
+
+      - name: Log into Docker Hub
+        if: github.event_name != 'pull_request' && steps.docker-secrets.outputs.available == 'true'
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+
+      - name: Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+            type=sha
+            latest
+
+      - name: Build and push Docker image
+        id: build-and-push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          # PRs build amd64 only to stay within the GitHub runner disk limit
+          # now that sentence-transformers/torch are in the base image. Main
+          # and tags still produce the multi-arch image.
+          platforms: ${{ github.event_name == 'pull_request' && 'linux/amd64' || 'linux/amd64,linux/arm64' }}
+          push: ${{ github.event_name != 'pull_request' && steps.docker-secrets.outputs.available == 'true' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Print image digest
+        if: github.event_name != 'pull_request' && steps.docker-secrets.outputs.available == 'true'
+        run: echo "Image digest - ${{ steps.build-and-push.outputs.digest }}"
+
+  # Store-gate for the Console Floor pack: the image must BUILD (release
+  # gate runs inside the build) and BOOT (/health, /ready, /v1/capabilities
+  # and the console at /). This is the boot verification the pack requires.
+  pack-store-gate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build the Console Floor pack image (release gate inside the build)
+        run: docker build -f block_store/packs/console_floor/Dockerfile -t console-floor:gate .
+
+      - name: Boot the image and verify the console contract
+        run: |
+          docker run -d --name console-floor-gate -p 18000:8000 console-floor:gate
+          for i in $(seq 1 60); do
+            if curl -fsS http://127.0.0.1:18000/health >/dev/null 2>&1; then break; fi
+            sleep 2
+          done
+          curl -fsS http://127.0.0.1:18000/health | head -c 200
+          echo
+          curl -fsS http://127.0.0.1:18000/v1/capabilities | grep -q '"capabilities"'
+          curl -fsS http://127.0.0.1:18000/ | grep -q 'Product Console'
+          # /ready must ANSWER (a 503 with a dependency report is an answer;
+          # a connection failure is not).
+          code=$(curl -s -o /tmp/ready.json -w '%{http_code}' http://127.0.0.1:18000/ready)
+          if [ "$code" != "200" ] && [ "$code" != "503" ]; then
+            echo "ready answered $code — unexpected"
+            exit 1
+          fi
+          echo "ready answered $code"
+
+      - name: Container logs if boot failed
+        if: failure()
+        run: |
+          docker logs console-floor-gate || true

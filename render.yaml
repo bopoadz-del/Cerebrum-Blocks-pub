@@ -1,0 +1,121 @@
+# Render blueprint for the Cerebrum Blocks API.
+#
+# Key change vs. the dashboard-only config: `healthCheckPath: /ready`.
+# With it set, Render waits for the new instance to return 2xx on /ready
+# before swapping traffic. Without it, Render swaps as soon as the worker
+# binds to $PORT — which is BEFORE FastAPI's lifespan / route mounting
+# completes, so users see ~30-60s of CORS-stripped 502s on every deploy.
+#
+# /ready (not /health) is the probe target: /health is liveness and always
+# returns 200, so it can never fail a deploy or raise an alert. /ready runs
+# the real dependency checks (DATA_DIR writable, block registry populated)
+# and returns 503 when the service is up but broken.
+#
+# To apply:
+#   Option A (preferred — keeps dashboard env vars): Render dashboard →
+#     the cerebrum-platform-api service → Settings → Health & Alerts →
+#     Health Check Path → set to `/ready` → Save. One-click; no
+#     blueprint sync needed.
+#
+#   Option B (full blueprint adoption): Render dashboard → Blueprints
+#     → "Sync from repo". Will import all settings from this file.
+#     Caveat: secret env vars (CEREBRUM_API_KEY_*, STRIPE_SECRET_KEY,
+#     OPENAI_API_KEY, etc.) must remain in the dashboard with
+#     `sync: false` semantics — never commit them here.
+
+services:
+  - type: web
+    name: cerebrum-platform-api
+    runtime: python
+    plan: starter
+    region: oregon
+    buildCommand: ./render-build.sh
+    # --no-access-log matches entrypoint.sh; uvicorn binds to $PORT.
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT --no-access-log
+    # Zero-downtime gate — Render holds traffic on the old instance
+    # until the new one returns 2xx here. /ready runs two cheap checks
+    # (DATA_DIR write probe, block registry non-empty) and responds the
+    # moment uvicorn binds (lifespan() returns instantly; init_blocks
+    # runs as a background task) so this adds <1s to swap latency, while
+    # still being able to FAIL when the instance is genuinely broken.
+    healthCheckPath: /ready
+    autoDeploy: true
+    envVars:
+      - key: ENV
+        value: production
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      # Stop writing .pyc files — was the original reason the
+      # __pycache__-clearing import-time hack existed in main.py.
+      - key: PYTHONDONTWRITEBYTECODE
+        value: "1"
+      # Durable storage root. The grounding audit log
+      # ($STORAGE_PATH/grounding/verdicts.jsonl) and any other on-disk
+      # state live here.
+      #
+      # This MUST point at the disk that is already mounted on the live
+      # service (/app/data), not at a new path. Render allows exactly one
+      # disk per service, so declaring a second one would replace the
+      # existing `cerebrum-blocks-data` volume -- which is where DATA_DIR
+      # keeps the API keys (app/core/api_keys.py). Pointing at the mount
+      # that already exists gets durability with no volume churn.
+      - key: STORAGE_PATH
+        value: /app/data
+      # Secret env vars stay in the dashboard. List with `sync: false`
+      # so blueprint sync doesn't overwrite them with placeholders.
+      - key: CORS_ORIGINS
+        sync: false
+      - key: DATA_DIR
+        sync: false
+      - key: SENTRY_DSN
+        sync: false
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: KIMI_API_KEY
+        sync: false
+      - key: CEREBRUM_MASTER_KEY
+        sync: false
+      - key: CEREBRUM_VIRGIN
+        sync: false
+      - key: DATABASE_URL
+        sync: false
+      # Private-network URL of the sandbox runner sibling service.
+      # Render resolves this hostname inside the private network only.
+      # Port is 10000 because Render assigns that to private services
+      # by default; the runner's Dockerfile honours $PORT so the same
+      # image still works on port 8001 locally.
+      - key: SANDBOX_RUNNER_URL
+        value: http://cerebrum-sandbox-runner:10000
+    # Persistent disk so the grounding audit log and other on-disk state
+    # survive restarts/deploys (STORAGE_PATH points here).
+    #
+    # These values MATCH the disk already attached to this service
+    # (dsk-d7dd87v7f7vs73es1310, named "data", mounted at /app/data), so a
+    # blueprint sync is a no-op rather than a volume swap. Render allows
+    # exactly one disk per service; renaming it or changing mountPath
+    # would detach the existing volume, which is where DATA_DIR keeps the
+    # API keys (app/core/api_keys.py).
+    #
+    # NOTE: this blueprint describes `cerebrum-platform-api`, which is
+    # currently SUSPENDED. The live block store is the separate service
+    # `cerebrum-blocks` (srv-d8rrorvavr4c73evhvi0), which is NOT managed
+    # by this file, so setting STORAGE_PATH here does not reach it. The
+    # live service already has a 1 GB disk at /app/data; to make the
+    # grounding audit log durable there, set STORAGE_PATH=/app/data on
+    # that service in the Render dashboard. Without it, grounding.py
+    # falls back to a relative "./storage" path that is wiped on deploy.
+    disk:
+      name: data
+      mountPath: /app/data
+      sizeGB: 1
+
+  - type: pserv
+    name: cerebrum-sandbox-runner
+    runtime: docker
+    plan: starter
+    region: oregon
+    rootDir: sandbox-runner
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars: []

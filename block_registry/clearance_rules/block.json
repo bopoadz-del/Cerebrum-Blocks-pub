@@ -1,0 +1,82 @@
+{
+  "acceptance": [
+    {
+      "check": "an unknown action is refused, not silently accepted",
+      "id": "unknown_action",
+      "status": "refused"
+    },
+    {
+      "check": "an empty payload without required arguments is refused, not faked",
+      "id": "missing_arguments",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Clearance rule table loader and evaluator: category pairs + axes with precedent resolution; rules must carry a citation.",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "3ebddc006f57877676f541c8b83d6dd67f3150add1a392fbd1f1b1cbf807c3a2",
+    "block.py": "ad7cba1ae54fc6fe45f1bf6ea4d23ad5c39cca443b71606cd1dc5e76ffccb003"
+  },
+  "id": "clearance_rules",
+  "inputs": [
+    {
+      "description": "evaluate | find | load | resolve",
+      "name": "action",
+      "options": [
+        "evaluate",
+        "find",
+        "load",
+        "resolve"
+      ],
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 3,
+  "name": "Clearance Rules",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Capability result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": true,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "file",
+      "scope": "local.read"
+    }
+  ],
+  "requires": [],
+  "signature": "Oe8gpX52vP1uDBNUbEBQA3kSqiV8PDnOljdPGi4iJAm1/nmqlVDJQZ2uem0l8fRJYJRisuFo/uA1M6uvq9u5Cg==",
+  "tags": [
+    "mep",
+    "construction",
+    "coordination"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    },
+    {
+      "kind": "file",
+      "scope": "local.write"
+    }
+  ]
+}

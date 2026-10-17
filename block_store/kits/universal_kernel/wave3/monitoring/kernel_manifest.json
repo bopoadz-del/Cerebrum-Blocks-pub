@@ -1,0 +1,10 @@
+{
+  "name": "monitoring",
+  "version": "0.1.0",
+  "sha256": "e7bb46e8d679777439c850083c4eeea00fb09e842fe9b566b28254daac1c26ac",
+  "dependencies": [],
+  "provenance": "fork",
+  "acceptance_test": "tests/test_monitoring.py",
+  "tier": "premium",
+  "note": "Premium-only; not available in the freemium tier."
+}

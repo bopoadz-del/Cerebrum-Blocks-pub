@@ -1,0 +1,122 @@
+{
+  "acceptance": [
+    {
+      "check": "INV-HE-AUTH-FABRIC (authority at H1, severity refuse): a figure about this fabric is governed by analysis OF this fabric \u2014 {value} from a generic source is not proof",
+      "id": "inv_he_auth_fabric",
+      "status": "refused"
+    },
+    {
+      "check": "INV-HE-COMPATIBILITY (derivation at H3, severity refuse): material proposed without compatibility assessment \u2014 stronger is not better here",
+      "id": "inv_he_compatibility",
+      "status": "refused"
+    },
+    {
+      "check": "INV-HE-EVIDENCE-BASIS (qualifier at H3, severity refuse): historical claim without documented/inferred/assumed basis \u2014 {missing}",
+      "id": "inv_he_evidence_basis",
+      "status": "refused"
+    },
+    {
+      "check": "INV-HE-CONSENT-GATE (qualifier at H3, severity refuse): no work recommendation without consent position and reference \u2014 {missing}",
+      "id": "inv_he_consent_gate",
+      "status": "refused"
+    },
+    {
+      "check": "INV-HE-SUBSTRATE (qualifier at H3, severity refuse): mortar strength without the substrate it must remain weaker than \u2014 {missing}",
+      "id": "inv_he_substrate",
+      "status": "refused"
+    },
+    {
+      "check": "INV-HE-PROVENANCE (provenance at H3, severity refuse): forbidden derivation: {value}",
+      "id": "inv_he_provenance",
+      "status": "refused"
+    },
+    {
+      "check": "INV-HE-CURRENCY (currency at H3, severity refuse): specification predates an unreported discovery \u2014 refusal, not silent acceptance",
+      "id": "inv_he_currency",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Declarative heritage reasoning kit on the shared reasoning layer. 7 invariants declared in app/blocks/heritage/invariants.yaml across the kinds the portable spec defines (grounding, qualifier, unit_discipline, authority, provenance, currency, scope, derivation, band) and the five hooks (H0 pre-retrieval, H1 ranking, H2 tool-time, H3 answer-time, H4 export-time). Vocabulary in app/blocks/heritage/manifest.yaml. Scope refusals classify BEFORE retrieval. Fail closed: a kit that does not parse is DISABLED and refuses every statement rather than passing them through with no invariants. NO INTERVIEW HAS RUN, so every declared figure value is null and the block refuses rather than inventing one (app/blocks/heritage/KNOWN_GAPS.md). Measured by tests/blocks/test_reasoning_kits.py.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "85f50a0b6a86dd5e1f4168252131a52aecf07566caf7536c6a57afad36e24b09",
+    "block.py": "ac175f7c8d9a569801388a00f8d3761481188e6ec79f8acf073ea8d26532c784"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/heritage_kit:latest",
+    "type": "docker"
+  },
+  "id": "heritage_kit",
+  "inputs": [
+    {
+      "description": "the operator question, classified at H0 BEFORE any retrieval",
+      "name": "question",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "description": "figures to gate: quantity, value, unit, origin, source_id, source_class, revision, qualifiers, claim_class, derivations, conditions, steps, bounds, asked_about, span, text",
+      "name": "figures",
+      "required": false,
+      "type": "array"
+    },
+    {
+      "description": "state records by provider name, each {as_of: <epoch>}; an absent provider yields UNKNOWN, never a design-basis fallback",
+      "name": "state",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "description": "events that have happened, matched against the kit's staleness_triggers",
+      "name": "events",
+      "required": false,
+      "type": "array"
+    },
+    {
+      "description": "subset of H0..H4 to run; all five by default, because a partial sweep is a silent coverage gap",
+      "name": "hooks",
+      "required": false,
+      "type": "array"
+    }
+  ],
+  "layer": 3,
+  "name": "heritage_kit",
+  "never": [],
+  "outputs": [
+    {
+      "description": "pass | annotated | flagged | refused, with findings, blocked_reason, hooks_run, retrieval_permitted, interview_status, unfilled_figures, unmeasured_invariants, ships and kit_disabled",
+      "name": "verdict",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "yuhd9qHka8+6hmUJTA65qngh7BuGetm/vx7qy0bekunu5Sn+543yoirMLKyzoUDY5Og0hlcc0e4pmMF9PuJECg==",
+  "tags": [
+    "gate",
+    "heritage",
+    "kit",
+    "reasoning"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

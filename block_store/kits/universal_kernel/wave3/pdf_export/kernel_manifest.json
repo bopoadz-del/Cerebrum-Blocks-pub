@@ -1,0 +1,12 @@
+{
+  "name": "pdf_export",
+  "version": "0.1.0",
+  "sha256": "f2848a368f1f1b8ecaacbb99824c3d83c389ab4c63d110e385768574315c1fd7",
+  "dependencies": [
+    "fpdf2"
+  ],
+  "provenance": "fork",
+  "acceptance_test": "tests/test_pdf_export.py",
+  "tier": "premium",
+  "note": "Premium-only; not available in the freemium tier."
+}

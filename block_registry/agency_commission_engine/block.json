@@ -1,0 +1,101 @@
+{
+  "acceptance": [
+    {
+      "check": "refuses or errors when a required input is absent",
+      "id": "missing_required_input",
+      "status": "refused"
+    },
+    {
+      "check": "errors on an unknown or missing action",
+      "id": "unknown_action",
+      "status": "failed"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Deterministic insurance agency commission engine for life FYC, P&C new business, renewals, hierarchy overrides, chargebacks, and effective dating.",
+  "digests": {
+    "block.json": "dac4ce417ed45bca4c024ecc5b49efef83913195f0bcd32616747910523717c0",
+    "block.py": "8400f50d0a485b80b3923077324d99ed155876581ecfe492580a79c328afe0e1"
+  },
+  "id": "agency_commission_engine",
+  "inputs": [
+    {
+      "description": "Commission calculation payload",
+      "name": "input",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "default": "calculate",
+      "description": "Commission engine operation",
+      "name": "operation",
+      "options": [
+        "calculate",
+        "preview_override",
+        "apply_chargeback",
+        "effective_schedule"
+      ],
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 3,
+  "name": "Agency Commission Engine",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Commission calculation result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": true,
+    "imports": [
+      "copy",
+      "datetime",
+      "decimal",
+      "json",
+      "os",
+      "pathlib",
+      "typing"
+    ],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "file",
+      "scope": "local.read"
+    },
+    {
+      "kind": "env",
+      "scope": "process"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    }
+  ],
+  "signature": "WLdIUJmt7uEWpMYKbhPIi4uWJHC/GRNnmmZGNd/g4oPt9rTMSDInQFcSrbS+7rtFW0Hi2P0KQb1uR1Qf6nnOAg==",
+  "tags": [
+    "domain",
+    "insurance",
+    "commission",
+    "agency",
+    "deterministic"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

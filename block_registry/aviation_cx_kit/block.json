@@ -1,0 +1,23 @@
+{
+  "acceptance": [],
+  "description": "Read-only customer-experience intelligence: policies, feedback, and service standards grounded in project documents.",
+  "digests": {
+    "block.json": "02cb577e4a7a764bc3bb5b2ac0114229c6e2864758ab6fc1b6999804b934da85",
+    "block.py": "d5090f998be550c214a8ee344d65743a41385b861e3fe29a16613d37ce8732d8"
+  },
+  "id": "aviation_cx_kit",
+  "name": "Aviation Cx Kit",
+  "never": [],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [],
+  "signature": "Jzsm+6lsXpUMGyRg1fRpz9ZnktvRcZ/L2cIM8Mn6nB1NkrwM8t90594BvuEq/jX6ZxP0Mr7cYBfOcBqPaJu1CQ==",
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": []
+}

@@ -1,0 +1,187 @@
+# Offshore marine operations reasoning layer — installation spread design basis.
+#
+# Source of truth: the domain encoding sheet for Offshore Oil & Gas Marine
+# Operations. NO INTERVIEW HAS RUN. Every `value` below is null on purpose and
+# stays null until the interview fills it; see KNOWN_GAPS.md.
+#
+# A null value is legal. A MISSING QUALIFIER IS NOT: the loader refuses any
+# figure that does not carry every key in MANDATORY_QUALIFIERS, at load time,
+# naming the figure and the keys it lacks. A half-qualified figure is how a
+# sagbend allowable ends up answering an overbend question.
+#
+# spread_type is part of the identity of every figure, not a label on it:
+#   s_lay      shallow, moored            J-lay is not S-lay
+#   j_lay      deep, dynamically positioned
+#   reel_lay   flexible + cable, deep, DP
+#   heavy_lift live-asset modules
+# Nothing carries between them. See DERIVATION_GUARD in reasoning.py.
+source: "domain encoding sheet, Offshore Oil & Gas Marine Operations"
+scope: "spread- and vessel-specific — never carry to another spread or sister vessel"
+interview_status: "not run — every value is null (KNOWN_GAPS.md)"
+
+design_basis:
+  # ---- lay tension envelope (INV-1: bands only, never single-sided) --------
+  lay_tension_min_kn:
+    value: null
+    unit: kN
+    spread_type: null
+    water_depth_range_m: null
+    pipe_or_cable_spec: null
+    static_or_dynamic: null
+    region: null
+    source: null
+    analysis_rev: null
+    sea_state_assumed: null
+    scope: null
+    date_recorded: null
+    valid_until: null
+  lay_tension_max_kn:
+    value: null
+    unit: kN
+    spread_type: null
+    water_depth_range_m: null
+    pipe_or_cable_spec: null
+    static_or_dynamic: null
+    region: null
+    source: null
+    analysis_rev: null
+    sea_state_assumed: null
+    scope: null
+    date_recorded: null
+    valid_until: null
+
+  # ---- strain / stress allowables (INV-2: static|dynamic AND region) ------
+  allowable_strain_overbend_pct:
+    value: null
+    unit: "%"
+    spread_type: null
+    water_depth_range_m: null
+    pipe_or_cable_spec: null
+    static_or_dynamic: null
+    region: overbend
+    source: null
+    analysis_rev: null
+    sea_state_assumed: null
+    scope: null
+    date_recorded: null
+    valid_until: null
+  allowable_strain_sagbend_pct:
+    value: null
+    unit: "%"
+    spread_type: null
+    water_depth_range_m: null
+    pipe_or_cable_spec: null
+    static_or_dynamic: null
+    region: sagbend
+    source: null
+    analysis_rev: null
+    sea_state_assumed: null
+    scope: null
+    date_recorded: null
+    valid_until: null
+  allowable_stress_touchdown_mpa:
+    value: null
+    unit: MPa
+    spread_type: null
+    water_depth_range_m: null
+    pipe_or_cable_spec: null
+    static_or_dynamic: null
+    region: touchdown
+    source: null
+    analysis_rev: null
+    sea_state_assumed: null
+    scope: null
+    date_recorded: null
+    valid_until: null
+
+  # ---- stinger (as-set is live state; nominal is not as-set) --------------
+  stinger_radius_nominal_m:
+    value: null
+    unit: m
+    spread_type: s_lay
+    water_depth_range_m: null
+    pipe_or_cable_spec: null
+    static_or_dynamic: null
+    region: overbend
+    source: null
+    analysis_rev: null
+    sea_state_assumed: null
+    scope: null
+    date_recorded: null
+    valid_until: null
+
+  # ---- DP / station keeping (INV-4: failure_case AND live_state_ref) ------
+  dp_capability_intact_hs_m:
+    value: null
+    unit: m
+    spread_type: null
+    water_depth_range_m: null
+    pipe_or_cable_spec: null
+    static_or_dynamic: dynamic
+    region: none
+    source: null
+    analysis_rev: null
+    sea_state_assumed: null
+    scope: null
+    date_recorded: null
+    valid_until: null
+
+  # ---- weather criteria (INV-5: never Hs alone, never without alpha) ------
+  operating_criterion_hs_m:
+    value: null
+    unit: m
+    spread_type: null
+    water_depth_range_m: null
+    pipe_or_cable_spec: null
+    static_or_dynamic: dynamic
+    region: none
+    source: null
+    analysis_rev: null
+    sea_state_assumed: null
+    scope: null
+    date_recorded: null
+    valid_until: null
+  operating_criterion_tp_s:
+    value: null
+    unit: s
+    spread_type: null
+    water_depth_range_m: null
+    pipe_or_cable_spec: null
+    static_or_dynamic: dynamic
+    region: none
+    source: null
+    analysis_rev: null
+    sea_state_assumed: null
+    scope: null
+    date_recorded: null
+    valid_until: null
+  forecast_alpha_factor:
+    value: null
+    unit: null
+    spread_type: null
+    water_depth_range_m: null
+    pipe_or_cable_spec: null
+    static_or_dynamic: null
+    region: none
+    source: null
+    analysis_rev: null
+    sea_state_assumed: null
+    scope: null
+    date_recorded: null
+    valid_until: null
+
+  # ---- heavy lift (SWL is configuration-specific, never carried) ----------
+  crane_swl_t:
+    value: null
+    unit: t
+    spread_type: heavy_lift
+    water_depth_range_m: null
+    pipe_or_cable_spec: null
+    static_or_dynamic: null
+    region: none
+    source: null
+    analysis_rev: null
+    sea_state_assumed: null
+    scope: null
+    date_recorded: null
+    valid_until: null

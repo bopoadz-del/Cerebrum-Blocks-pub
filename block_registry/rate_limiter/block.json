@@ -1,0 +1,170 @@
+{
+  "acceptance": [
+    {
+      "check": "errors on an unknown or missing action",
+      "id": "unknown_action",
+      "status": "failed"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "a97a05f0f3df6bdf8406466700a06aea2dfb6cfde8348055069793148b18a147",
+    "block.py": "942a4fb48dcd538c813dd405a8b58ff50d83bfe1616144c303689ae5a1ee6782"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/rate_limiter:latest",
+    "type": "docker"
+  },
+  "id": "rate_limiter",
+  "inputs": [
+    {
+      "description": "JSON payload for the selected action",
+      "name": "input",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "default": "check_limit",
+      "description": "Action",
+      "name": "action",
+      "options": [
+        "check_limit",
+        "record_hit",
+        "set_custom_limit",
+        "get_usage_stats",
+        "reset_limit",
+        "get_limit_info"
+      ],
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": "sliding_window",
+      "description": "Configuration parameter: strategy",
+      "name": "strategy",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": 1000,
+      "description": "Configuration parameter: default_limit",
+      "name": "default_limit",
+      "required": false,
+      "type": "number"
+    },
+    {
+      "default": 3600,
+      "description": "Configuration parameter: default_window",
+      "name": "default_window",
+      "required": false,
+      "type": "number"
+    },
+    {
+      "default": 10,
+      "description": "Configuration parameter: burst_allowance",
+      "name": "burst_allowance",
+      "required": false,
+      "type": "number"
+    },
+    {
+      "default": 300,
+      "description": "Configuration parameter: cleanup_interval",
+      "name": "cleanup_interval",
+      "required": false,
+      "type": "number"
+    }
+  ],
+  "layer": 1,
+  "name": "Rate Limiter",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    }
+  ],
+  "requires": [
+    "memory",
+    "database"
+  ],
+  "signature": "rRTztGqmb2ERjQVfgElBh5BnsF3b2KQBcQCpWZQktsx4R6hA4RoAn3KZZDZROL1WvLI9IhboTgwBIg7NFsAbCw==",
+  "tags": [
+    "security",
+    "protection",
+    "infra",
+    "rate_limiting"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "JSON payload for the selected action",
+      "name": "input",
+      "widget": "json"
+    },
+    {
+      "label": "Action",
+      "name": "action",
+      "options": [
+        "check_limit",
+        "record_hit",
+        "set_custom_limit",
+        "get_usage_stats",
+        "reset_limit",
+        "get_limit_info"
+      ],
+      "widget": "select"
+    },
+    {
+      "label": "Strategy",
+      "name": "strategy",
+      "widget": "text"
+    },
+    {
+      "label": "Default Limit",
+      "name": "default_limit",
+      "widget": "number"
+    },
+    {
+      "label": "Default Window",
+      "name": "default_window",
+      "widget": "number"
+    },
+    {
+      "label": "Burst Allowance",
+      "name": "burst_allowance",
+      "widget": "number"
+    },
+    {
+      "label": "Cleanup Interval",
+      "name": "cleanup_interval",
+      "widget": "number"
+    }
+  ],
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "acceptance": [
+    {
+      "check": "retrieval without a project_id is refused, never cross-tenant",
+      "id": "scope_required",
+      "status": "refused"
+    },
+    {
+      "check": "a named contract with no matching documents fails closed empty, never another contract",
+      "id": "contract_fail_closed",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "RAG tenant isolation ported from The_Fork app/core/rag/retriever.py STEP 0: the master/client fallback corpus is structurally unreachable from another project's populated query (disclosed fallback only when the project is empty/thin); the general-knowledge merge never contains the master corpus; a named-contract query keeps only that contract's documents, failing closed to empty rather than filling with another year's contract.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "f22439b06d9cf7dad5de5dcdc3b255e133e5c41807892d32c07c6fe2390fbb29",
+    "block.py": "b299288a30d883205453641f5d2598b1a1cc52dee5ee5d305b741306b7828d82"
+  },
+  "id": "rag_tenant_isolation",
+  "inputs": [
+    {
+      "description": "plan | scope_contract | fallback",
+      "name": "action",
+      "options": [
+        "plan",
+        "scope_contract",
+        "fallback"
+      ],
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 3,
+  "name": "rag_tenant_isolation",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Capability result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "4DB/F5JXBaP4siNNdFdek/Ecue1GHwQNTldyJHKdHp95FpE1SFsqHl644DACkZJ21kpbT+E/XAzRtAOMCGwUBA==",
+  "tags": [
+    "rag",
+    "tenant-isolation",
+    "retrieval",
+    "the-fork"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

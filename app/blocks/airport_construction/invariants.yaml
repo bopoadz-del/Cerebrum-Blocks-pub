@@ -1,0 +1,255 @@
+invariants:
+
+- id: INV-APC-AUTH-OLS
+  kind: authority
+  applies_to: {quantity: [ols_penetration_height, ils_critical_area, declared_distance]}
+  hook: H1
+  governing_class: icao_annex_14
+  fallback_class: national_aviation_reg
+  demote: [aerodrome_manual, design_drawings, method_statement]
+  severity: refuse
+  evidence: {sheet: "§5.1, §9.1"}
+  message: "OLS/declared-distance figure governed by ICAO Annex 14 — a lesser source is not acceptable proof"
+  measurement: >-
+    Probe ols_penetration_height, ils_critical_area, declared_distance x20 citing
+    aerodrome_manual, design_drawings, method_statement as the source. Before: n
+    answers accepted it as proof. After: 0 accepted, and n refusals naming
+    icao_annex_14 as the class that governs. Over-refusal check: the same probe
+    citing icao_annex_14 must pass.
+
+- id: INV-APC-OLS-QUALIFIERS
+  kind: qualifier
+  applies_to: {quantity: ols_penetration_height}
+  requires: [surface_name, aerodrome_reference_code, reference_point, datum_m_or_ft, amsl_basis]
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "§5.3"}
+  message: "OLS figure missing {missing}"
+  measurement: >-
+    Probe ols_penetration_height x20 with surface_name, aerodrome_reference_code,
+    reference_point, datum_m_or_ft, amsl_basis absent from the figure. Before: n
+    answers stated the figure with nothing to act on. After: 0 such answers, and n
+    refusals naming every missing field. Over-refusal check: the same probe WITH
+    surface_name, aerodrome_reference_code, reference_point, datum_m_or_ft,
+    amsl_basis present must pass.
+
+- id: INV-APC-DECLARED-DISTANCE
+  kind: qualifier
+  applies_to: {quantity: declared_distance}
+  requires: [runway_designator, direction, effective_date, temporary]
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "§5.3"}
+  message: "declared distance missing {missing}"
+  measurement: >-
+    Probe declared_distance x20 with runway_designator, direction, effective_date,
+    temporary absent from the figure. Before: n answers stated the figure with
+    nothing to act on. After: 0 such answers, and n refusals naming every missing
+    field. Over-refusal check: the same probe WITH runway_designator, direction,
+    effective_date, temporary present must pass.
+
+- id: INV-APC-SAFETY-AREA
+  kind: qualifier
+  applies_to: {quantity: [rsa_limit, rofa_limit, tsa_limit, tofa_limit]}
+  requires: [runway_category, aerodrome_reference_code]
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "§5.3"}
+  message: "safety area missing {missing}"
+  measurement: >-
+    Probe rsa_limit, rofa_limit, tsa_limit, tofa_limit x20 with runway_category,
+    aerodrome_reference_code absent from the figure. Before: n answers stated the
+    figure with nothing to act on. After: 0 such answers, and n refusals naming
+    every missing field. Over-refusal check: the same probe WITH runway_category,
+    aerodrome_reference_code present must pass.
+
+- id: INV-APC-PCN
+  kind: qualifier
+  applies_to: {quantity: [pcn, acr]}
+  requires: [pavement_type, subgrade_category, tyre_pressure_category, evaluation_method]
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "§5.3"}
+  message: "PCN/ACR missing {missing}"
+  measurement: >-
+    Probe pcn, acr x20 with pavement_type, subgrade_category,
+    tyre_pressure_category, evaluation_method absent from the figure. Before: n
+    answers stated the figure with nothing to act on. After: 0 such answers, and n
+    refusals naming every missing field. Over-refusal check: the same probe WITH
+    pavement_type, subgrade_category, tyre_pressure_category, evaluation_method
+    present must pass.
+
+- id: INV-APC-UNITS-DATUM
+  kind: unit_discipline
+  applies_to: {quantity: any}
+  requires_one_of: [m, ft]
+  forbid: [mixed, unspecified]
+  severity: refuse
+  hook: H2
+  evidence: {sheet: "§10"}
+  message: "units ambiguous — aviation works in feet, construction in metres"
+  measurement: >-
+    40 synthetic every declared quantity figures, 10 of them exhibiting mixed,
+    unspecified and 20 with none of m, ft stated. Before: 10 were narrated as
+    results. After: 10 refused, each naming the unit or datum at fault. The 30
+    correctly-dimensioned figures must all still pass.
+
+- id: INV-APC-WGS84
+  kind: unit_discipline
+  applies_to: {quantity: any, claim_class: position}
+  requires: [wgs84_confirmed]
+  severity: refuse
+  hook: H2
+  evidence: {sheet: "§10"}
+  message: "position without WGS-84 confirmation"
+  measurement: >-
+    40 synthetic every declared quantity figures, 10 of them exhibiting an
+    ambiguous unit and 20 with none of wgs84_confirmed stated. Before: 10 were
+    narrated as results. After: 10 refused, each naming the unit or datum at fault.
+    The 30 correctly-dimensioned figures must all still pass.
+
+- id: INV-APC-MAGNETIC
+  kind: unit_discipline
+  applies_to: {quantity: any, claim_class: bearing}
+  requires: [magnetic_or_true]
+  severity: refuse
+  hook: H2
+  evidence: {sheet: "§10"}
+  message: "bearing without magnetic/true basis — runway designator is magnetic"
+  measurement: >-
+    40 synthetic every declared quantity figures, 10 of them exhibiting an
+    ambiguous unit and 20 with none of magnetic_or_true stated. Before: 10 were
+    narrated as results. After: 10 refused, each naming the unit or datum at fault.
+    The 30 correctly-dimensioned figures must all still pass.
+
+- id: INV-APC-PROVENANCE
+  kind: provenance
+  applies_to: {quantity: any}
+  forbid: [carry_from_similar_runway, interpolate_ols_without_code, interpolate_declared_distance_without_qualifier, use_unverifiable_currency]
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "§5.4.1"}
+  message: "forbidden derivation: {value}"
+  measurement: >-
+    Probe every declared quantity x20 with a figure carried attempting
+    carry_from_similar_runway, interpolate_ols_without_code,
+    interpolate_declared_distance_without_qualifier, use_unverifiable_currency.
+    Before: n answers quoted it without remark. After: 0 quoted, and n refusals
+    naming which boundary was crossed. Over-refusal check (the bug this kind had by
+    hand): a companion probe naming ONE entity twice — what a CORRECT answer looks
+    like — must NOT refuse.
+
+- id: INV-APC-CURRENCY
+  kind: currency
+  applies_to: {quantity: declared_distance}
+  window: {provider: airac_cycle, max_age: next_cycle}
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "§5.5"}
+  message: "declared distance stale on {value}"
+  measurement: >-
+    Probe declared_distance x20 after a airac_cycle_change event, then x20 with
+    airac_cycle unreachable. Before: n answers quoted the superseded figure, and
+    the unreachable case fell back to the design basis. After: 0 superseded
+    figures; 20 refusals naming airac_cycle_change and 20 reporting state UNKNOWN
+    with no design figure in the refusal.
+
+# ---------------------------------------------------------------------------
+# Correction 6: engine-required completions of the DECLARED staleness
+# triggers. ols_geometry, ils_critical_area, rsa_limit, pcn, agl_unserviceable
+# and phasing_plan are named in staleness_triggers but no currency invariant
+# above governs them (INV-APC-CURRENCY governs declared_distance only) — a
+# declared trigger nothing checks is a rule that reports green while gating
+# nothing, and the loader refuses it. These records add only the provider
+# wiring — no new rule, no new event, no new state provider.
+# ---------------------------------------------------------------------------
+
+- id: INV-APC-CURRENCY-OLS-GEOMETRY
+  kind: currency
+  applies_to: {quantity: ols_geometry}
+  window: {provider: phasing_plan_current, max_age: event}
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "staleness_triggers"}
+  message: "OLS geometry is stale once an obstacle change or a safeguarding revision has happened"
+  measurement: >-
+    Probe ols_geometry x20 after a obstacle_change event, then x20 with
+    phasing_plan_current unreachable. Before: n answers quoted the superseded
+    figure, and the unreachable case fell back to the design basis. After: 0
+    superseded figures; 20 refusals naming obstacle_change and 20 reporting state
+    UNKNOWN with no design figure in the refusal.
+
+- id: INV-APC-CURRENCY-ILS
+  kind: currency
+  applies_to: {quantity: ils_critical_area}
+  window: {provider: NAVAID_status, max_age: realtime}
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "staleness_triggers"}
+  message: "ILS critical area is stale once a NAVAID change or siting revision has happened"
+  measurement: >-
+    Probe ils_critical_area x20 after a NAVAID_change event, then x20 with
+    NAVAID_status unreachable. Before: n answers quoted the superseded figure, and
+    the unreachable case fell back to the design basis. After: 0 superseded
+    figures; 20 refusals naming NAVAID_change and 20 reporting state UNKNOWN with
+    no design figure in the refusal.
+
+- id: INV-APC-CURRENCY-RSA
+  kind: currency
+  applies_to: {quantity: rsa_limit}
+  window: {provider: airac_cycle, max_age: next_cycle}
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "staleness_triggers"}
+  message: "the runway safety area limit is stale once the runway category has changed"
+  measurement: >-
+    Probe rsa_limit x20 after a runway_category_change event, then x20 with
+    airac_cycle unreachable. Before: n answers quoted the superseded figure, and
+    the unreachable case fell back to the design basis. After: 0 superseded
+    figures; 20 refusals naming runway_category_change and 20 reporting state
+    UNKNOWN with no design figure in the refusal.
+
+- id: INV-APC-CURRENCY-PCN
+  kind: currency
+  applies_to: {quantity: pcn}
+  window: {provider: phasing_plan_current, max_age: event}
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "staleness_triggers"}
+  message: "PCN is stale once its pavement evaluation interval has elapsed"
+  measurement: >-
+    Probe pcn x20 after a pavement_evaluation_interval event, then x20 with
+    phasing_plan_current unreachable. Before: n answers quoted the superseded
+    figure, and the unreachable case fell back to the design basis. After: 0
+    superseded figures; 20 refusals naming pavement_evaluation_interval and 20
+    reporting state UNKNOWN with no design figure in the refusal.
+
+- id: INV-APC-CURRENCY-AGL
+  kind: currency
+  applies_to: {quantity: agl_unserviceable}
+  window: {provider: agl_status, max_age: shift}
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "staleness_triggers"}
+  message: "AGL serviceability is stale once a light change or the service interval has passed"
+  measurement: >-
+    Probe agl_unserviceable x20 after a light_change event, then x20 with
+    agl_status unreachable. Before: n answers quoted the superseded figure, and the
+    unreachable case fell back to the design basis. After: 0 superseded figures; 20
+    refusals naming light_change and 20 reporting state UNKNOWN with no design
+    figure in the refusal.
+
+- id: INV-APC-CURRENCY-PHASING
+  kind: currency
+  applies_to: {quantity: phasing_plan}
+  window: {provider: phasing_plan_current, max_age: event}
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "staleness_triggers"}
+  message: "the phasing plan is stale once it has been revised"
+  measurement: >-
+    Probe phasing_plan x20 after a revision event, then x20 with
+    phasing_plan_current unreachable. Before: n answers quoted the superseded
+    figure, and the unreachable case fell back to the design basis. After: 0
+    superseded figures; 20 refusals naming revision and 20 reporting state UNKNOWN
+    with no design figure in the refusal.

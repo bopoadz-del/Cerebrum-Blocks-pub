@@ -1,0 +1,78 @@
+kit: architecture
+version: 1
+serves_verticals: [architecture, architecture_office]
+hooks_used: [H0, H1, H2, H3]
+
+quantities:
+  floor_area:             {units: [m2],  aliases: [GEA, GIA, NIA, GFA, BUA]}
+  plot_ratio:             {units: [ratio]}
+  site_coverage:          {units: [pct]}
+  travel_distance:        {units: [m]}
+  fire_rating:            {units: [min]}
+  level:                  {units: [m]}
+  u_value:                {units: [W_m2K]}
+  fee_percentage:         {units: [pct]}
+  charge_out_rate:        {units: [currency_per_hour]}
+  stage_duration:         {units: [weeks]}
+
+qualifier_fields:
+  area_basis:             {type: enum,   values: [GEA, GIA, NIA, IPMS1, IPMS2, IPMS3, local_GFA, BUA, saleable]}
+  level_basis:            {type: enum,   values: [FFL, SSL]}
+  datum:                  {type: string}
+  occupancy_class:        {type: string}
+  sprinklered:            {type: bool}
+  code_edition:           {type: string}
+  compartment_line:       {type: string}
+  discipline_owner:       {type: enum,   values: [architecture, structure, MEP, survey, fire_engineer]}
+  quality_band:           {type: enum,   values: [basic, standard, premium, super_prime]}
+  revision_status:        {type: enum,   values: [for_construction, for_information, draft, superseded]}
+
+source_classes:
+  building_code:          {rank: 1}
+  planning_consent:       {rank: 2}
+  contract_documents:     {rank: 3}
+  specification:          {rank: 4}
+  structural_drawings:    {rank: 5}
+  MEP_drawings:           {rank: 6}
+  architectural_drawings: {rank: 7, reject_as_proof: [for_information, superseded_revision, sketch, markup]}
+  consultant_reports:     {rank: 8}
+  contractor_shop_drawings: {rank: 9}
+  # Correction 1: every class named in reject_as_proof or demote must itself
+  # be a declared source class, or the rule that names it can never fire and
+  # the loader refuses. Ranked below every governing class.
+  for_information:        {rank: 10}
+  superseded_revision:    {rank: 11}
+  sketch:                 {rank: 12}
+  markup:                 {rank: 13}
+  design_guide:           {rank: 14}
+  previous_project:       {rank: 15}
+  consultant_email:       {rank: 16}
+
+state_providers:
+  drawing_revision:       {kind: revision, max_age: next_issue}
+  survey_date:            {kind: revision, max_age: event}
+  code_edition_current:   {kind: revision, max_age: event}
+  fire_strategy_current:  {kind: revision, max_age: event}
+
+staleness_triggers:
+  floor_area:             [any_revision]
+  plot_ratio:             [consent_variation, zoning_change]
+  travel_distance:        [layout_change, occupancy_change, sprinkler_change]
+  fire_rating:            [code_edition_change, compartment_line_change]
+  level:                  [design_revision, build_up_change]
+  u_value:                [product_change, standard_update]
+  fee_percentage:         [market_movement, project_type_change]
+
+scope_refusals:
+  - pattern: "does this design comply"
+    authority: "Building Control / approving authority"
+  - pattern: "can I remove this (wall|column|beam)"
+    authority: "structural engineer"
+  - pattern: "is this fire strategy acceptable"
+    authority: "fire engineer / civil defence"
+  - pattern: "will planning approve this"
+    authority: "planning authority"
+
+spec_extensions:
+  claim_class:            true
+  same_source:            true

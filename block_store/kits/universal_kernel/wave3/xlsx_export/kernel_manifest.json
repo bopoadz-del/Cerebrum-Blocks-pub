@@ -1,0 +1,12 @@
+{
+  "name": "xlsx_export",
+  "version": "0.1.0",
+  "sha256": "25ae567368fe30e5d18c7d752304ec08fd15538dc9db49c2b3f100a3b18345c7",
+  "dependencies": [
+    "openpyxl"
+  ],
+  "provenance": "fork",
+  "acceptance_test": "tests/test_xlsx_export.py",
+  "tier": "premium",
+  "note": "Premium-only; not available in the freemium tier."
+}

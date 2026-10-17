@@ -1,0 +1,101 @@
+{
+  "acceptance": [
+    {
+      "check": "compute/histogram/gantt/compress with no activities is refused, never an empty schedule dressed up as a result",
+      "id": "no_activities",
+      "status": "refused"
+    },
+    {
+      "check": "parse_xer with an empty or blank .xer blob is refused",
+      "id": "empty_xer",
+      "status": "refused"
+    },
+    {
+      "check": "lookahead with window_days < 1 is refused",
+      "id": "bad_window",
+      "status": "refused"
+    },
+    {
+      "check": "write_excel without an output path is refused",
+      "id": "no_path",
+      "status": "refused"
+    },
+    {
+      "check": "a circular dependency fails the computation loudly instead of producing dates",
+      "id": "cycle_failed",
+      "status": "failed"
+    },
+    {
+      "check": "compressing an activity id that is not in the network fails loudly",
+      "id": "unknown_activity",
+      "status": "failed"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "real (clone of The_Fork app/blocks/cpm_engine.py + app/lib/pm_computations.py): Critical Path Method engine - ES/EF/LS/LF, total/free float, critical path, resource histograms, schedule compression, Primavera P6 XER parsing, look-ahead windowing and schedule Excel export. Circular-dependency detection refuses a cycle instead of computing nonsense; an unknown activity id is refused. Pure computation, no AI, no network.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "094fc4efd5adcf54164a473027bfebcee9981c3acc97a94459f425355f62364e",
+    "block.py": "d67135c0bd7e0ccd61a61a802075a46f3cf2982724311d9cd11a7b84747d01a0"
+  },
+  "id": "cpm_engine",
+  "inputs": [
+    {
+      "description": "compute | histogram | gantt | compress | parse_xer | parse_xer_full | lookahead | write_excel",
+      "name": "action",
+      "options": [
+        "compute",
+        "histogram",
+        "gantt",
+        "compress",
+        "parse_xer",
+        "parse_xer_full",
+        "lookahead",
+        "write_excel"
+      ],
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 3,
+  "name": "cpm_engine",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Capability result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "ihCBovShN2mTdYiXhHSD+OGKNKoaVEeMYaGQMPhwc6tujyRXSkC6gp7sLFWesDjV/u1suQjqSvLYZmjj1I7SAQ==",
+  "tags": [
+    "construction",
+    "schedule",
+    "cpm",
+    "critical-path",
+    "primavera",
+    "the-fork"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

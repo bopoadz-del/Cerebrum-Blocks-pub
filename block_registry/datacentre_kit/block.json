@@ -1,0 +1,157 @@
+{
+  "acceptance": [
+    {
+      "check": "INV-DC-TESTED-QUALIFIERS (qualifier at per the routing map, severity refuse): A 'tested' claim without {missing} cannot be acted on: L4 at 25% load against one failure is not the facility riding through that failure at design load.",
+      "id": "inv_dc_tested_qualifiers",
+      "status": "refused"
+    },
+    {
+      "check": "INV-DC-RESILIENCE-BASIS (qualifier at per the routing map, severity refuse): A resilience claim without {missing} is three different claims at once: as_designed, as_built and as_currently_operating are routinely different.",
+      "id": "inv_dc_resilience_basis",
+      "status": "refused"
+    },
+    {
+      "check": "INV-DC-CAPACITY-BASIS (qualifier at per the routing map, severity refuse): A capacity figure without {missing} does not say whether redundancy is reserved out of it \u2014 design capacity is not what is available to sell.",
+      "id": "inv_dc_capacity_basis",
+      "status": "refused"
+    },
+    {
+      "check": "INV-DC-READINESS-SCOPE (scope at per the routing map, severity refuse): Declaring the facility ready for IT load is a named-person decision.",
+      "id": "inv_dc_readiness_scope",
+      "status": "refused"
+    },
+    {
+      "check": "INV-DC-AUTHORITY (authority at per the routing map, severity refuse): This claim needs a test or a live measurement. A drawing, a design certificate or a manufacturer's number is a different class of thing.",
+      "id": "inv_dc_authority",
+      "status": "refused"
+    },
+    {
+      "check": "INV-DC-PROVENANCE (provenance at per the routing map, severity refuse): A figure does not carry across facility, system or revision \u2014 and 'the other hall is the same design' is not this hall.",
+      "id": "inv_dc_provenance",
+      "status": "refused"
+    },
+    {
+      "check": "INV-DC-CURRENCY-BMS (currency at per the routing map, severity refuse): Facility state UNKNOWN \u2014 the BMS could not be read. Live state has no design-basis fallback: a design figure is not a current state.",
+      "id": "inv_dc_currency_bms",
+      "status": "refused"
+    },
+    {
+      "check": "INV-DC-CURRENCY-MANUAL-LOG (currency at per the routing map, severity refuse): The manual log is required as well as the BMS: it carries what the BMS cannot see \u2014 manual isolations, racked-out breakers, components out.",
+      "id": "inv_dc_currency_manual_log",
+      "status": "refused"
+    },
+    {
+      "check": "INV-DC-CURRENCY-TESTED (currency at per the routing map, severity refuse): An IST result is stale once the tested systems have been modified, however recent the test was \u2014 it cannot support a current claim.",
+      "id": "inv_dc_currency_tested",
+      "status": "refused"
+    },
+    {
+      "check": "INV-DC-PUE-BAND (band at per the routing map, severity refuse): PUE below 1.0 is thermodynamically impossible \u2014 total facility power cannot be less than the IT power inside it. Check the unit it was computed in.",
+      "id": "inv_dc_pue_band",
+      "status": "refused"
+    },
+    {
+      "check": "INV-DC-RIDE-THROUGH-BAND (band at per the routing map, severity flag): A thermal ride-through above two hours is outside anything this facility's thermal mass supports \u2014 check whether seconds were read as minutes.",
+      "id": "inv_dc_ride_through_band",
+      "status": "partial"
+    },
+    {
+      "check": "INV-DC-DERIVATION (derivation at per the routing map, severity refuse): The stated working and the stated result disagree.",
+      "id": "inv_dc_derivation",
+      "status": "refused"
+    },
+    {
+      "check": "INV-DC-GROUNDING (grounding at per the routing map, severity refuse): {quantity} = {value} is not grounded: no source was supplied for it.",
+      "id": "inv_dc_grounding",
+      "status": "refused"
+    },
+    {
+      "check": "INV-DC-UNITS (unit_discipline at per the routing map, severity refuse): Every figure carries its unit. A number whose unit the reader must guess is how kW becomes MW.",
+      "id": "inv_dc_units",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Declarative datacentre reasoning kit on the shared reasoning layer. 14 invariants declared in app/blocks/datacentre/invariants.yaml across the kinds the portable spec defines (grounding, qualifier, unit_discipline, authority, provenance, currency, scope, derivation, band) and the five hooks (H0 pre-retrieval, H1 ranking, H2 tool-time, H3 answer-time, H4 export-time). Vocabulary in app/blocks/datacentre/manifest.yaml. Scope refusals classify BEFORE retrieval. Fail closed: a kit that does not parse is DISABLED and refuses every statement rather than passing them through with no invariants. NO INTERVIEW HAS RUN, so every declared figure value is null and the block refuses rather than inventing one (app/blocks/datacentre/KNOWN_GAPS.md). Measured by tests/blocks/test_reasoning_kits.py.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "bcfcdc9fe90c52ee2d999c92aba302fa154ba85ef2fb989c4141d9cfbb9d92f5",
+    "block.py": "f2719c90b77f5fd405a701a48a3508d822ea9a32a4acdc63e15b261b046c2eff"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/datacentre_kit:latest",
+    "type": "docker"
+  },
+  "id": "datacentre_kit",
+  "inputs": [
+    {
+      "description": "the operator question, classified at H0 BEFORE any retrieval",
+      "name": "question",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "description": "figures to gate: quantity, value, unit, origin, source_id, source_class, revision, qualifiers, claim_class, derivations, conditions, steps, bounds, asked_about, span, text",
+      "name": "figures",
+      "required": false,
+      "type": "array"
+    },
+    {
+      "description": "state records by provider name, each {as_of: <epoch>}; an absent provider yields UNKNOWN, never a design-basis fallback",
+      "name": "state",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "description": "events that have happened, matched against the kit's staleness_triggers",
+      "name": "events",
+      "required": false,
+      "type": "array"
+    },
+    {
+      "description": "subset of H0..H4 to run; all five by default, because a partial sweep is a silent coverage gap",
+      "name": "hooks",
+      "required": false,
+      "type": "array"
+    }
+  ],
+  "layer": 3,
+  "name": "datacentre_kit",
+  "never": [],
+  "outputs": [
+    {
+      "description": "pass | annotated | flagged | refused, with findings, blocked_reason, hooks_run, retrieval_permitted, interview_status, unfilled_figures, unmeasured_invariants, ships and kit_disabled",
+      "name": "verdict",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "gU0POSpl47lCe9BjQVDVrN9xKn4VXZWs0dtuAff6/ZPMzx/HuDYlQqAkAH4DH5kxdoDPgS6mRGIlQpuj0jP2AQ==",
+  "tags": [
+    "datacentre",
+    "gate",
+    "kit",
+    "reasoning"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

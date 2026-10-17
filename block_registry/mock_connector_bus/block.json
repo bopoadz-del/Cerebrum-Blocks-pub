@@ -1,0 +1,72 @@
+{
+  "acceptance": [
+    {
+      "check": "a mock_unavailable system fetch fails closed and never fabricates data",
+      "id": "mock_unavailable",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Fail-closed connector taxonomy ported from <private-repo>-v2 connectors/base.py + event_bus.py: six enterprise systems (opera, micros, grms, gaming_cms, loyalty_lms, maximo) in mock_unavailable level \u2014 fetch fails closed with a structured refusal and NEVER fabricates operational data; events normalise onto a canonical CRM taxonomy and publish per system topic. In-process bus.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "a89971524bafb978486696a941ca6635fb88d3cd7b7cd3f65fc8884f20ff587b",
+    "block.py": "0c73ceb4b8bf694657c0b700f9577d950ad18d5ad484bba426a11bc02bb9ac90"
+  },
+  "id": "mock_connector_bus",
+  "inputs": [
+    {
+      "description": "fetch | normalise | publish | topics | systems",
+      "name": "action",
+      "options": [
+        "fetch",
+        "normalise",
+        "publish",
+        "topics",
+        "systems"
+      ],
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 3,
+  "name": "mock_connector_bus",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Capability result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "3S2rQoXu36RYYlUGZO00xd3FDJx0CbViVxVsj3Tu46trVyoHWaDMmwlSovNRqIoVbtBlgumvBMAhBaXyOkmOAA==",
+  "tags": [
+    "connector",
+    "hotel",
+    "mock",
+    "fail-closed",
+    "hotelops-v2"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

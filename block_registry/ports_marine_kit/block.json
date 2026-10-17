@@ -1,0 +1,137 @@
+{
+  "acceptance": [
+    {
+      "check": "INV-PM-AUTH-CAPACITY (authority at H1, severity refuse): asset capacity governed by design dossier \u2014 {value} from a lesser class is not acceptable proof",
+      "id": "inv_pm_auth_capacity",
+      "status": "refused"
+    },
+    {
+      "check": "INV-PM-DEPTH-BASIS (qualifier at H3, severity refuse): depth missing {missing} \u2014 datum, survey date and tide state are required",
+      "id": "inv_pm_depth_basis",
+      "status": "refused"
+    },
+    {
+      "check": "INV-PM-ASSET-CAPACITY (qualifier at H3, severity refuse): asset capacity without asset ID and cert ref \u2014 {missing}",
+      "id": "inv_pm_asset_capacity",
+      "status": "refused"
+    },
+    {
+      "check": "INV-PM-STACK-QUALIFIER (qualifier at H3, severity refuse): stack height without {missing}",
+      "id": "inv_pm_stack_qualifier",
+      "status": "refused"
+    },
+    {
+      "check": "INV-PM-CERT-CURRENCY (currency at H3, severity refuse): certification stale on {value}",
+      "id": "inv_pm_cert_currency",
+      "status": "refused"
+    },
+    {
+      "check": "INV-PM-PROVENANCE (provenance at H3, severity refuse): forbidden derivation: {value}",
+      "id": "inv_pm_provenance",
+      "status": "refused"
+    },
+    {
+      "check": "INV-PM-CURRENCY-DEPTH (currency at H3, severity refuse): declared depth is stale once dredging, silting or a survey supersession has happened",
+      "id": "inv_pm_currency_depth",
+      "status": "refused"
+    },
+    {
+      "check": "INV-PM-CURRENCY-QUAY (currency at H3, severity refuse): quay wall load is stale once a modification or an inspection finding has been recorded",
+      "id": "inv_pm_currency_quay",
+      "status": "refused"
+    },
+    {
+      "check": "INV-PM-CURRENCY-FENDER-CAPACITY (currency at H3, severity refuse): fender capacity is stale once its certification interval has lapsed or an incident has occurred",
+      "id": "inv_pm_currency_fender_capacity",
+      "status": "refused"
+    },
+    {
+      "check": "INV-PM-CURRENCY-STACK-LIMIT (currency at H3, severity refuse): stack height limit is stale once the operating manual has been revised",
+      "id": "inv_pm_currency_stack_limit",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Declarative ports marine reasoning kit on the shared reasoning layer. 10 invariants declared in app/blocks/ports_marine/invariants.yaml across the kinds the portable spec defines (grounding, qualifier, unit_discipline, authority, provenance, currency, scope, derivation, band) and the five hooks (H0 pre-retrieval, H1 ranking, H2 tool-time, H3 answer-time, H4 export-time). Vocabulary in app/blocks/ports_marine/manifest.yaml. Scope refusals classify BEFORE retrieval. Fail closed: a kit that does not parse is DISABLED and refuses every statement rather than passing them through with no invariants. NO INTERVIEW HAS RUN, so every declared figure value is null and the block refuses rather than inventing one (app/blocks/ports_marine/KNOWN_GAPS.md). Measured by tests/blocks/test_reasoning_kits.py.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "3d9a6e6320f3691b0b1ec28dc50f65b744335a67d2f7b0781abbffc4ebfddda3",
+    "block.py": "b447e9af990a2b907b936272d66aa2f864dc656f9c78812b783abdeb892a384f"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/ports_marine_kit:latest",
+    "type": "docker"
+  },
+  "id": "ports_marine_kit",
+  "inputs": [
+    {
+      "description": "the operator question, classified at H0 BEFORE any retrieval",
+      "name": "question",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "description": "figures to gate: quantity, value, unit, origin, source_id, source_class, revision, qualifiers, claim_class, derivations, conditions, steps, bounds, asked_about, span, text",
+      "name": "figures",
+      "required": false,
+      "type": "array"
+    },
+    {
+      "description": "state records by provider name, each {as_of: <epoch>}; an absent provider yields UNKNOWN, never a design-basis fallback",
+      "name": "state",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "description": "events that have happened, matched against the kit's staleness_triggers",
+      "name": "events",
+      "required": false,
+      "type": "array"
+    },
+    {
+      "description": "subset of H0..H4 to run; all five by default, because a partial sweep is a silent coverage gap",
+      "name": "hooks",
+      "required": false,
+      "type": "array"
+    }
+  ],
+  "layer": 3,
+  "name": "ports_marine_kit",
+  "never": [],
+  "outputs": [
+    {
+      "description": "pass | annotated | flagged | refused, with findings, blocked_reason, hooks_run, retrieval_permitted, interview_status, unfilled_figures, unmeasured_invariants, ships and kit_disabled",
+      "name": "verdict",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "t7ZbsZFoZdW3o7kvJY3JscI/UyaSLELLhar7eT+e+VmWoPyEkRBtFvtHPN984d0vtZIB/dyOvPZwFtaLvWxZCw==",
+  "tags": [
+    "gate",
+    "kit",
+    "ports",
+    "reasoning"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

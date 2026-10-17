@@ -1,0 +1,37 @@
+{
+  "acceptance": [],
+  "description": "Natural-language access to the construction knowledge base.",
+  "digests": {
+    "block.json": "d8dae2564265766855bd96d06b439a4c6b726982255a05199ae887c144f37f18",
+    "block.py": "3793e4b84eba79b79b41df51c8a3eb22c2e50fdc00c0cdcc4231d7b100a1c20c"
+  },
+  "id": "construction_advisor",
+  "name": "Construction Advisor",
+  "never": [],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "dataset",
+      "scope": "local"
+    }
+  ],
+  "signature": "pOettnQfcP1T/9Mlofq8+4vIcIncLFhGu3FWLxdLTS4tCnviAT9gx4wwgFqP9+65oGY2K69l1+QMjcNEVKQSDg==",
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

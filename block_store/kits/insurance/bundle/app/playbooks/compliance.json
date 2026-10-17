@@ -1,0 +1,46 @@
+{
+  "id": "insurance_compliance_playbook",
+  "name": "Insurance Distribution Compliance",
+  "sop": {
+    "purpose": "Triage insurance distribution evidence, licensing, and HKIA GN16/GL16 control signals before submission or approval.",
+    "steps": [
+      "Use insurance_v2 for Layer-1 document analysis and entity extraction from policies, disclosures, and control evidence.",
+      "Run hkia_gn16_rules on structured evidence packages and relevant document text.",
+      "Check producer_record for licensing status and agency_hierarchy for authorized supervision path.",
+      "Record pass, warning, fail, citation, remediation, and reviewer ownership for every compliance finding."
+    ],
+    "controls": [
+      "Treat deterministic rule output as triage, not legal advice.",
+      "Do not prepare, transmit, or submit filings to regulators from this playbook."
+    ]
+  },
+  "escalation": {
+    "triggers": [
+      "GN16/GL16 rule severity is high or critical.",
+      "Required evidence is missing for product scope, remuneration, clawback, or suitability controls.",
+      "Producer licensing, appointment, or supervisory hierarchy is invalid."
+    ],
+    "path": [
+      "Compliance analyst",
+      "Licensed compliance officer",
+      "Legal counsel"
+    ],
+    "sla": "Same business day for high-severity findings; two business days for medium-severity remediation review."
+  },
+  "memory_policy": {
+    "remember": [
+      "Rule IDs, citations, evidence pointers, and remediation state",
+      "Reviewer decision and approval timestamp",
+      "Producer licensing exception disposition"
+    ],
+    "retrieve": [
+      "Prior findings for the same product, producer, intermediary, or jurisdiction",
+      "Current GN16 ruleset and corpus summaries"
+    ],
+    "redact": [
+      "Sensitive customer identifiers",
+      "Unnecessary health or financial details",
+      "Privileged legal advice beyond decision metadata"
+    ]
+  }
+}

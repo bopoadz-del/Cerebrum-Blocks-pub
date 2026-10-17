@@ -1,0 +1,70 @@
+{
+  "acceptance": [
+    {
+      "check": "a source label without a source name is refused, not fabricated",
+      "id": "missing_source",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Ingestion provenance ported from <private-repo> cerebrum_product_kernel/provenance.py: factory provenance payloads, SHA-256 content hash trees, and page/sheet/row source labels for ingested documents.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "b157ba5cf6d7d1ec7c3ca883063f6d4998a9e6d34f5d477b240b857234fa6d3e",
+    "block.py": "5f17c2b1593a4b59eac59e41a0a38acfb846edd60947eedc9729c90303c07e0b"
+  },
+  "id": "ingestion_provenance",
+  "inputs": [
+    {
+      "description": "build | hash_tree | record_source | list_labels",
+      "name": "action",
+      "options": [
+        "build",
+        "hash_tree",
+        "record_source",
+        "list_labels"
+      ],
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 3,
+  "name": "ingestion_provenance",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Capability result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "bvq/KQDkUll5+Oo7I3xxPMghx0mbamrn9Ms18584XshF/ZKL/pYPzaLsqkVpD3dYnA+0c66fAwwWooz8Vt7BAA==",
+  "tags": [
+    "provenance",
+    "ingestion",
+    "steward",
+    "audit"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

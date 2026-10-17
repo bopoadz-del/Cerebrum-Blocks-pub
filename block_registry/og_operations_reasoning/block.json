@@ -1,0 +1,238 @@
+{
+  "acceptance": [
+    {
+      "check": "AC1: a pressure figure without which-pressure (design|mawp|operating), gauge|absolute and location is blocked, naming INV-1",
+      "id": "pressure_without_which_pressure",
+      "status": "refused"
+    },
+    {
+      "check": "AC2: an envelope/setpoint figure without envelope_tier (normal|alarm|trip|SOL|design) is blocked, naming INV-2",
+      "id": "envelope_without_tier",
+      "status": "refused"
+    },
+    {
+      "check": "AC3: a protective-function (SCE) answer with the override register missing is blocked, naming INV-3",
+      "id": "sce_answer_missing_override_register",
+      "status": "refused"
+    },
+    {
+      "check": "AC4: a limit carried from a sister asset is blocked by the derivation guard as an ASSET TRAP",
+      "id": "limit_carried_from_sister_asset",
+      "status": "refused"
+    },
+    {
+      "check": "AC5: remaining life extrapolated past the last inspection is blocked by the derivation guard",
+      "id": "remaining_life_extrapolated_past_inspection",
+      "status": "refused"
+    },
+    {
+      "check": "AC6: an unverifiable citation revision is refused, naming INV-5",
+      "id": "revision_unverifiable",
+      "status": "refused"
+    },
+    {
+      "check": "AC7: a PSV set pressure cited from a spreadsheet is rejected as evidence (REJECT_AS_PROOF)",
+      "id": "psv_set_from_spreadsheet",
+      "status": "refused"
+    },
+    {
+      "check": "AC8: an isolation claim cited from the plan (not a live cert) is rejected as evidence (REJECT_AS_PROOF)",
+      "id": "isolation_from_plan_not_cert",
+      "status": "refused"
+    },
+    {
+      "check": "AC9: a concentration figure with an ambiguous %LEL vs %vol basis is blocked, naming INV-4",
+      "id": "concentration_lel_vs_vol_confusion",
+      "status": "refused"
+    },
+    {
+      "check": "AC10: an exposure figure without TWA|STEL|ceiling named is blocked, naming INV-4",
+      "id": "exposure_basis_missing",
+      "status": "refused"
+    },
+    {
+      "check": "AC11: a keep-running question is refused BEFORE retrieval, asserted by a retrieval counter that stays empty",
+      "id": "keep_running_refused_before_retrieval",
+      "status": "refused"
+    },
+    {
+      "check": "manifest loader: a partially-qualified figure is refused at LOAD time, naming the figure and every mandatory qualifier it lacks",
+      "id": "partially_qualified_figure",
+      "status": "refused"
+    },
+    {
+      "check": "all five never-allowed derivations block and each names which inference was attempted",
+      "id": "derivation_guard_complete",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Deterministic oil & gas operations reasoning gate (structure only \u2014 domain encoding sheet, Oil & Gas Operations; reference pattern app/blocks/offshore_marine/ and app/blocks/aviation_grounding_gate.py). INV-1..5 enforced, five never-allowed derivations each naming itself, monitoring + override/isolation/permit-log two-source live-state gate, REJECT_AS_PROOF and the sister-asset trap. Keep-running, containment, trip-bypass, inspection-extension and fitness-for-service questions refuse BEFORE retrieval. NO INTERVIEW HAS RUN: every manifest value is null and the block refuses rather than supplying a figure it does not have (app/blocks/og_operations/KNOWN_GAPS.md). All refusals are measured by tests/blocks/test_og_operations_reasoning.py.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "e89d32a8e079ac399b788a653247d7f223a91de6ac190178307b8578d077f590",
+    "block.py": "578621a3f3dbea88d7b8becbe2acb2e6abae64933d0dc30b8f7dbcfa7d9f3a2b"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/og_operations_reasoning:latest",
+    "type": "docker"
+  },
+  "id": "og_operations_reasoning",
+  "inputs": [
+    {
+      "description": "operator question",
+      "name": "query",
+      "required": true,
+      "type": "string"
+    },
+    {
+      "description": "candidate answer to gate",
+      "name": "answer",
+      "required": true,
+      "type": "string"
+    },
+    {
+      "description": "which pressure: design | mawp | operating",
+      "name": "pressure_kind",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "description": "gauge | absolute",
+      "name": "gauge_or_absolute",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "description": "asset or tag location the figure applies to",
+      "name": "location",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "description": "envelope tier: normal | alarm | trip | SOL | design",
+      "name": "envelope_tier",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "description": "reference to the live override register entry for the protective function being asked about",
+      "name": "override_register_ref",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "description": "reference to the live isolation register entry for the protective function being asked about",
+      "name": "isolation_register_ref",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "description": "P&ID or procedure revision the cited figure comes from",
+      "name": "citation_rev",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "description": "MOC state for the citation: approved | pending | unverifiable",
+      "name": "citation_moc_state",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "description": "citations offered as evidence",
+      "name": "evidence",
+      "required": false,
+      "type": "array"
+    },
+    {
+      "description": "monitoring + override/isolation/permit log two-source live state ({monitoring, manual_log, fetched_at})",
+      "name": "live_state",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "description": "an approved MOC exists since the cited P&ID revision",
+      "name": "moc_approved_since_pid",
+      "required": false,
+      "type": "boolean"
+    },
+    {
+      "description": "the corrosion inspection is overdue",
+      "name": "inspection_overdue",
+      "required": false,
+      "type": "boolean"
+    },
+    {
+      "description": "the PSV test/service interval has elapsed",
+      "name": "psv_interval_elapsed",
+      "required": false,
+      "type": "boolean"
+    },
+    {
+      "description": "the SIF proof-test interval has elapsed",
+      "name": "sif_proof_test_overdue",
+      "required": false,
+      "type": "boolean"
+    },
+    {
+      "description": "the process has changed since the HAZOP/LOPA basis was set",
+      "name": "process_changed_since_hazop",
+      "required": false,
+      "type": "boolean"
+    },
+    {
+      "description": "the procedure revision has changed since this citation",
+      "name": "procedure_revision_changed",
+      "required": false,
+      "type": "boolean"
+    },
+    {
+      "description": "the gas detector calibration is overdue",
+      "name": "gas_detector_calibration_overdue",
+      "required": false,
+      "type": "boolean"
+    }
+  ],
+  "layer": 3,
+  "name": "og_operations_reasoning",
+  "never": [],
+  "outputs": [
+    {
+      "description": "verdict: pass | block | refused, with blocked_reason, interview_status and unfilled_figures",
+      "name": "verdict",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "NERoVoYYJZgHZH/F5Hrn1aH7b3m0lqE+OPHqFNduLV5JU5Yw49v+O+Vw3iKXh2dugiUjvce9d0Jkn7dRSvZxCA==",
+  "tags": [
+    "oil_gas",
+    "operations",
+    "process_safety",
+    "grounding",
+    "gate",
+    "sce"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

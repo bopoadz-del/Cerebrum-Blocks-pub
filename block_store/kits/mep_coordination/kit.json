@@ -1,0 +1,124 @@
+{
+  "id": "mep_coordination",
+  "name": "MEP Coordination — Clash Judge",
+  "version": "0.1.0",
+  "description": "Takes an IFC model, finds true clashes and clearance violations in MEP services, triages by congestion and programme, and proposes sourced resolutions on a clone. The original model is never written to.",
+  "entry_action": "run_coordination_pass",
+  "actions": {
+    "run_coordination_pass": {
+      "description": "Full pipeline: load -> judge every admitted pair -> evaluate clearance rules -> triage into a prioritised queue -> propose resolutions -> export BCF -> clone. The default action for a bare 'run clash detection' request.",
+      "tool": "geometry_engine"
+    },
+    "detect_clashes": {
+      "description": "Load an IFC model and judge every element pair the padded AABB pre-filter admits. Returns hard clashes, clearance violations, clear pairs, and unjudged pairs.",
+      "tool": "geometry_engine"
+    },
+    "check_clearance": {
+      "description": "Evaluate already-judged findings (or a specific element pair) against the sourced clearance rule table. Every violation cites the rule_id and clause it was judged against.",
+      "tool": "clearance_rules"
+    },
+    "triage_queue": {
+      "description": "Turn a findings list into a deduplicated, prioritised remediation queue ordered by resolution stage, programme date, congestion, and severity.",
+      "tool": "clash_triage"
+    },
+    "propose_resolution": {
+      "description": "Propose a checked, sourced move for one queued clash, or refuse and flag/escalate it. Never applies the move.",
+      "tool": "clash_resolver"
+    },
+    "export_bcf": {
+      "description": "Write clash and clearance findings as a BCF 2.1 issue package (.bcfzip) for Navisworks / Solibri / BIMcollab.",
+      "tool": "bcf_export"
+    },
+    "diff_versions": {
+      "description": "Compare two clash-detection runs on the same model and bucket every element pair into resolved / new / regressed / persisting.",
+      "tool": "version_diff"
+    },
+    "apply_to_clone": {
+      "description": "Write proposals as a change_set.json plus a modified IFC copy (or a Speckle commit when configured), never touching the original model.",
+      "tool": "model_clone"
+    }
+  },
+  "blocks": [
+    {
+      "id": "geometry_engine",
+      "module": "app.blocks.geometry_engine",
+      "entry": "judge_pair",
+      "description": "Exact clash and clearance judgement from one pass over IFC meshes. Padded AABB is a pre-filter only; the verdict comes from real triangle meshes."
+    },
+    {
+      "id": "clearance_rules",
+      "module": "app.blocks.clearance_rules",
+      "entry": "evaluate",
+      "description": "Sourced minimum-gap rules and the violations they judge. A rule without source.clause and source.text_hash is refused at load, never silently dropped."
+    },
+    {
+      "id": "clash_triage",
+      "module": "app.blocks.clash_triage",
+      "entry": "triage",
+      "description": "Dedupe, classify, and rank findings into a queue an engineer will actually work, in the resolution order recorded in order.yaml."
+    },
+    {
+      "id": "clash_resolver",
+      "module": "app.blocks.clash_resolver",
+      "entry": "resolve",
+      "description": "Propose a re-checked, sourced move for one queued clash, or flag/escalate it. No LLM in the decision path; gravity services keep their fall."
+    },
+    {
+      "id": "bcf_export",
+      "module": "app.blocks.bcf_export",
+      "entry": "export_bcf",
+      "description": "Write a validated BCF 2.1 package from clash/clearance findings for hand-off to coordination tools."
+    },
+    {
+      "id": "version_diff",
+      "module": "app.blocks.version_diff",
+      "entry": "diff_versions",
+      "description": "Compare two clash runs on the unordered element-pair key and bucket outcomes into resolved / new / regressed / persisting."
+    },
+    {
+      "id": "model_clone",
+      "module": "app.blocks.model_clone",
+      "entry": "apply_to_clone",
+      "description": "Write a change set and a modified clone (IFC copy, or Speckle when configured). The original IFC is opened read-only and is hash-identical before and after."
+    }
+  ],
+  "helpers": [
+    {
+      "id": "ifc_loader",
+      "module": "app.blocks.ifc_loader",
+      "description": "Not a block: loads and meshes an IFC model for the blocks above. Separated because parser work full of schema-version quirks should not need to live in every geometry test."
+    }
+  ],
+  "contracts": {
+    "reads": [
+      "IFC file path (IFC4 or IFC2X3 only)",
+      "element pairs",
+      "clearance rule table (JSON, cited)",
+      "optional programme CSV of (zone, planned_install_date)",
+      "optional SPECKLE_SERVER / SPECKLE_TOKEN env vars"
+    ],
+    "writes": [
+      "findings list (clash / clearance / clear / unjudged)",
+      "prioritised triage queue",
+      "resolution proposals",
+      "BCF 2.1 issue package (.bcfzip)",
+      "change_set.json",
+      "a modified clone of the IFC (or a Speckle commit when configured)"
+    ],
+    "never": [
+      "writes to the original IFC model or any authoring tool",
+      "parses .rvt/.nwd/.nwc -- export-to-IFC instruction stands",
+      "proposes a move that cannot be sourced to a rule without flagging it unsourced",
+      "reports an element with no geometry as clear",
+      "loads a clearance rule missing source.clause or source.text_hash",
+      "invents a clearance value or a citation"
+    ]
+  },
+  "requires": {
+    "python": ["ifcopenshell==0.8.5", "trimesh>=5.1.0", "manifold3d", "numpy", "scipy"],
+    "note": "manifold3d supplies the boolean backend. Without it the engine degrades to surface intersection and every affected finding records method='surface_intersection' rather than 'exact_boolean'."
+  },
+  "routing": {
+    "golden_matrix": "routing/golden_matrix.json"
+  }
+}

@@ -1,0 +1,144 @@
+{
+  "acceptance": [
+    {
+      "check": "a tenant_only licence can never enter a ref: corpus, however else it is labelled \u2014 the SGSA Green Guide is licensed personally",
+      "id": "licence_gate",
+      "status": "refused"
+    },
+    {
+      "check": "a document missing any of source_class, publisher, url, sha256, event, edition_year, licence is refused at ingest",
+      "id": "provenance_required",
+      "status": "refused"
+    },
+    {
+      "check": "a document cited at scribd.com, slideshare.net or a like host is refused by registered domain; a legitimate publisher whose path mentions one is not",
+      "id": "mirror_refused",
+      "status": "refused"
+    },
+    {
+      "check": "a named-asset query is answered from tenant chunks only, and a caller that does not say is treated as asking about one",
+      "id": "named_asset_tenant_only",
+      "status": "refused"
+    },
+    {
+      "check": "a reference corpus is structurally removed from the always-on merge even when a stale config lists it, via rag_tenant_isolation STEP 0",
+      "id": "never_in_the_always_on_merge",
+      "status": "refused"
+    },
+    {
+      "check": "a tenant project_id may not write into ref:, and a query is never asked AS the reference corpus",
+      "id": "reserved_prefix",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Shared read-only reference corpus under the reserved 'ref:' project prefix. Admission is refused unless a document carries source_class, publisher, url, sha256, event, edition_year and licence; a tenant_only licence can NEVER enter (the SGSA Green Guide is licensed personally, three downloads); mirror hosts are refused by domain because a mirror is not a citation. Retrieval plans through rag_tenant_isolation STEP 0 rather than restating it, so a reference corpus is structurally out of the always-on merge and reachable only as a disclosed fallback. A named-asset query is answered from tenant chunks only, and a caller that does not say is treated as if it is.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "5f684e75d9e62c17c1afff3c0c78830e2e848fa362433dcafcab1f76b9130eba",
+    "block.py": "3d4642ee5533f329fc87fc2ea9001e69a90975b4f832b3ebe79d6cdd7c2de602"
+  },
+  "id": "reference_corpus",
+  "inputs": [
+    {
+      "description": "plan | admit | label",
+      "name": "action",
+      "options": [
+        "plan",
+        "admit",
+        "label"
+      ],
+      "required": false,
+      "type": "string"
+    },
+    {
+      "description": "the TENANT asking, or the ref: corpus being written to",
+      "name": "project_id",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "description": "reference corpora this query may fall back to",
+      "name": "include_reference",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "description": "is this a question about a named venue or asset? omitted is treated as yes",
+      "name": "named_asset",
+      "required": false,
+      "type": "boolean"
+    },
+    {
+      "description": "the document offered for admission",
+      "name": "document",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "description": "retrieved chunks to label by corpus",
+      "name": "chunks",
+      "required": false,
+      "type": "json"
+    }
+  ],
+  "layer": 3,
+  "name": "reference_corpus",
+  "never": [
+    {
+      "kind": "index",
+      "scope": "corpus"
+    },
+    {
+      "kind": "database",
+      "scope": "documents"
+    },
+    {
+      "kind": "network",
+      "scope": "any"
+    },
+    {
+      "kind": "file",
+      "scope": "any"
+    }
+  ],
+  "outputs": [
+    {
+      "description": "Capability result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [
+      "rag_tenant_isolation"
+    ],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "wzljR6APaN0fVRPNU22/s6WGUjjAddr4Bz8w2RkD9tqHT1N9WulrBB9u4c33GaPSf3cUxaRR3FSj9VFNCvXUAg==",
+  "tags": [
+    "rag",
+    "reference-corpus",
+    "retrieval",
+    "provenance",
+    "licensing"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

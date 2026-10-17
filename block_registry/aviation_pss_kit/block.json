@@ -1,0 +1,23 @@
+{
+  "acceptance": [],
+  "description": "Read-only passenger service system (PSS) intelligence: fares, availability, and booking policy grounded in project documents.",
+  "digests": {
+    "block.json": "523bc6b189513987bf93186eaa819c16693b86df18e9f03b36172827a947f1d7",
+    "block.py": "c4f7440f115fed61149a407fced63e923632625dd4d951ca0ad2b892eac91ab2"
+  },
+  "id": "aviation_pss_kit",
+  "name": "Aviation Pss Kit",
+  "never": [],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [],
+  "signature": "hxcwJotYVuc5jTT87SnIAWHStPjtkRWrjpvCebpV5SMJxI5MyaryZnYlYKOysnHVC+Tuzq02jnwbMrFWCKAkDQ==",
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": []
+}

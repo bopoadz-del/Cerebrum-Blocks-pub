@@ -1,0 +1,108 @@
+{
+  "acceptance": [
+    {
+      "check": "refuses or errors when a required input is absent",
+      "id": "missing_required_input",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Execute Python or JavaScript code; analyze code for issues",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "79cd93805c5a2d467098f77296d50da42a9d9966c580d3354c03543710d8d3c8",
+    "block.py": "9d181ddba7cd8a98564a907d5caf555980d7298c86576f4734e3da137e9814ea"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/code:latest",
+    "type": "docker"
+  },
+  "id": "code",
+  "inputs": [
+    {
+      "description": "Paste code to execute or describe code to analyze...",
+      "name": "input",
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 3,
+  "name": "Code",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Result",
+      "name": "output",
+      "type": "code"
+    },
+    {
+      "description": "Language",
+      "name": "language",
+      "type": "text"
+    },
+    {
+      "description": "Time (ms)",
+      "name": "execution_time_ms",
+      "type": "number"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "file",
+      "scope": "local.read"
+    },
+    {
+      "kind": "env",
+      "scope": "process"
+    },
+    {
+      "kind": "network",
+      "scope": "http.outbound"
+    }
+  ],
+  "requires": [],
+  "signature": "yG50g2Cis16M/N5zrHYuNmMSldJ5GfInPXkKVN5zD2+rTd8vJiUA1rzlIPlWZUWxFmf6WA4s1qLVea+6aQ6CDQ==",
+  "tags": [
+    "domain",
+    "code",
+    "execution"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "Paste code to execute or describe code to analyze...",
+      "name": "input",
+      "widget": "text"
+    }
+  ],
+  "version": "2.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    },
+    {
+      "kind": "file",
+      "scope": "local.write"
+    },
+    {
+      "kind": "file",
+      "scope": "temp"
+    },
+    {
+      "kind": "subprocess",
+      "scope": "local"
+    }
+  ]
+}

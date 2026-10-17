@@ -1,0 +1,86 @@
+{
+  "acceptance": [
+    {
+      "check": "move_layer to an unknown layer returns status refused",
+      "id": "unknown_layer_refused",
+      "status": "refused"
+    },
+    {
+      "check": "handle_error without a deterministic patch refuses (LLM patch generation not ported)",
+      "id": "no_patch_generator_refused",
+      "status": "refused"
+    },
+    {
+      "check": "heal_error action is refused (donor stub not ported as a fabricated success)",
+      "id": "heal_error_stub_refused",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "real \u2014 Cerebrum self-healing + hot-swap state machine ported from C:\\Users\\<owner>\\Cerebrum\\backend\\app\\agent\\core_real.py (AgentLayer HOTSWAP/HEALING, AgentAction HEAL_ERROR, move_to_layer) and backend/app/healing/patch_generation.py (SelfHealingEngine confidence gating, auto-heal flag, healing history). LLM calls are not ported: handle_error without a caller-supplied deterministic patch fails closed with a structured refusal.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "b9e84196a8981e99104709bdc5e1e7e101950037fdacbae5055428fdb773b37c",
+    "block.py": "3fc8f7a8f0bbddcd4d60153e19715b5d2abd70023f9e0e7aa65f885f5960c81a"
+  },
+  "id": "cerebrum_self_healing",
+  "inputs": [
+    {
+      "description": "layers | actions | move_layer | handle_error | heal_error | set_confidence_threshold | enable_auto_heal | healing_history | status",
+      "name": "action",
+      "options": [
+        "layers",
+        "actions",
+        "move_layer",
+        "handle_error",
+        "heal_error",
+        "set_confidence_threshold",
+        "enable_auto_heal",
+        "healing_history",
+        "status"
+      ],
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 2,
+  "name": "cerebrum_self_healing",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Capability result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "Gbq0c22/2HZHMwxyR7ynWy9fj7wNkXstkhNexpJybJp+FTAwZVuzLGx46MKX5FftpGwLu3x2uh9pKhamJHlHDw==",
+  "tags": [
+    "cerebrum",
+    "self-healing",
+    "hotswap",
+    "state-machine",
+    "agent-core"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

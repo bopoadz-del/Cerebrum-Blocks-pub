@@ -1,0 +1,23 @@
+{
+  "acceptance": [],
+  "description": "Axis-aligned overlap clash detection (Cerebrum VDC port): overlap volume, center, and penetration depth. No IFC/spatial tree \u2014 AABB boxes only.",
+  "digests": {
+    "block.json": "3e46fd58b590dba854a3a188ee6d508cb7442f95076c41e5c58b1da29a0c5755",
+    "block.py": "f902e0cb3b4ea25ad7c27641e7066820e5a375d801be6510f2151353c450e530"
+  },
+  "id": "vdc_clash_detection",
+  "name": "VDC Clash Detection",
+  "never": [],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [],
+  "signature": "LqjSCCvv/WXjq2zKGJltEHUXDldVEwJFKtK2GMuG8WTtGIpTeYUymRMQPu3YzQl9YU2Ij9XKL3PLF8kHAqiYDw==",
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": []
+}

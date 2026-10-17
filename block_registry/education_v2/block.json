@@ -1,0 +1,68 @@
+{
+  "acceptance": [
+    {
+      "check": "an empty payload is refused, not silently accepted",
+      "id": "empty_payload",
+      "status": "refused"
+    },
+    {
+      "check": "an unknown action is refused, not silently accepted",
+      "id": "unknown_action",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Education domain analysis: deterministic document-type detection and entity extraction for the education vertical.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "22509d6d6c72c3b452f0e64a342cdd5aad7b352b63dcacae61482b3de0b89197",
+    "block.py": "0ed0a88f184cc0cfd56ff02338a77c8302caffb4300e75019a157db01b28f228"
+  },
+  "id": "education_v2",
+  "inputs": [
+    {
+      "description": "Document text to analyze",
+      "name": "text",
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 3,
+  "name": "education_v2",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Capability result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "1x7IWQKr6Bv5hGdEyMNPw1VH9VVF3pNZSgqwkZlucnqkKDDmWTyLytBrB79Fl8C8V/L2DhayWMB7sGj0EyIMDw==",
+  "tags": [
+    "domain",
+    "vertical",
+    "education"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

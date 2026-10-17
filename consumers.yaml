@@ -1,0 +1,44 @@
+# Known consuming products of Cerebrum-Blocks (the store).
+# Used by Carry-Back fan-out to flag who needs a fix on next build.
+# Keep this inventory updated when new platforms are assembled.
+
+consumers:
+  - product: The_Fork
+    repo: bopoadz-del/The_Fork
+    kits:
+      - construction
+    blocks:
+      - shared_generics
+      - pdf
+      - ocr
+      - document_engine
+      - construction
+    notes: "Construction reference platform / production Fork"
+
+  - product: FinanceOps
+    repo: bopoadz-del/FinanceOps
+    kits:
+      - finance_ops
+    blocks:
+      - shared_generics
+      - pdf
+      - finance_v2
+      - finance_import
+    notes: "Finance platform assembled from store kits"
+
+  - product: <private-repo>
+    repo: bopoadz-del/<private-repo>
+    kits:
+      - insurance
+    blocks:
+      - shared_generics
+      - pdf
+      - agency_commission_engine
+    notes: "Insurance platform assembled from store kits"
+
+  - product: CerebrumDev
+    repo: bopoadz-del/<private-repo>
+    kits: []
+    blocks:
+      - shared_generics
+    notes: "Factory / configurator — consumer of store kits, not a block author"

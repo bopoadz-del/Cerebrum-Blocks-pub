@@ -1,0 +1,97 @@
+{
+  "acceptance": [
+    {
+      "check": "fetch without live env is refused (no fixture pack, no fabricated data)",
+      "id": "unconfigured_fetch_refused",
+      "status": "refused"
+    },
+    {
+      "check": "resources other than assets/workorders are refused",
+      "id": "out_of_scope_resource_refused",
+      "status": "refused"
+    },
+    {
+      "check": "assets whose source_system is procore/aconex/bim are refused out of scope",
+      "id": "procore_asset_refused",
+      "status": "refused"
+    },
+    {
+      "check": "a connector-level claim of a forbidden source system is refused (construction_pm_out_of_scope)",
+      "id": "forbidden_claimed_source_refused",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "real \u2014 IBM Maximo CMMS connector ported from C:\\Users\\<owner>\\<private-repo>\\connectors\\maximo.py (normalise, out-of-scope source guard, /os/<resource> live URL, apikey header) and connectors/base.py (live-env gating + fetch_live). Unconfigured fetch and ingest fail closed with a structured refusal \u2014 this store ships no hotelops fixture pack. Assets from Aconex/Procore/BIM are refused.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "7375b596f6c3a71157e21c5ac7ed0eeafb7e633fa6a2f7e9fbf2c23a74502a1d",
+    "block.py": "cb5e2ad01c051b6488f59d6e04837bcfb7535bf7f8162105c5d8cd3c5c2c6ba0"
+  },
+  "id": "ibm_maximo_connector",
+  "inputs": [
+    {
+      "description": "status | capabilities | fetch | normalise | ingest",
+      "name": "action",
+      "options": [
+        "status",
+        "capabilities",
+        "fetch",
+        "normalise",
+        "ingest"
+      ],
+      "required": false,
+      "type": "string"
+    },
+    {
+      "description": "assets | workorders",
+      "name": "resource",
+      "options": [
+        "assets",
+        "workorders"
+      ],
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 2,
+  "name": "ibm_maximo_connector",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Capability result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": true
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "MUXHhIyD6D+75V1qjmXjvRBy52U9N4b9/CrhUmoshLrNQc4jE5mF0nl2p8PVNoDdYTCYsX6ny/F562QQNRKRCg==",
+  "tags": [
+    "connector",
+    "maximo",
+    "cmms",
+    "asset-management",
+    "hotelops"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

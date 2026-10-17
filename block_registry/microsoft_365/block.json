@@ -1,0 +1,81 @@
+{
+  "acceptance": [
+    {
+      "check": "a connection without access_token or refresh_token is refused before any network request",
+      "id": "no_token_refused",
+      "status": "refused"
+    },
+    {
+      "check": "an expired token without configured OAuth client credentials is refused (cannot refresh)",
+      "id": "expired_token_refused",
+      "status": "refused"
+    },
+    {
+      "check": "Teams actions on a connection without settings.team_id are refused",
+      "id": "missing_team_id_refused",
+      "status": "refused"
+    },
+    {
+      "check": "SharePoint actions on a connection without settings.site_id/drive_id are refused",
+      "id": "missing_sharepoint_refused",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "real: Microsoft 365 Graph integration (Teams meetings/messages, SharePoint folders/files, Outlook calendar events) ported from Cerebrum backend/app/integrations/microsoft_365.py. The donor SQLAlchemy connection model is held in-process; Graph requests are made only when a connection carries a usable token, and unconfigured calls fail closed with a structured refusal.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "096892548bbcdad4c54e6a2bb5bd92a41fcccf5ee73c1c1df85c63a6a3fb3c15",
+    "block.py": "fa58af4f06fa315e9b98a49d44c31f7d0eb47fb0cf47ebf9b49267df3a61763e"
+  },
+  "id": "microsoft_365",
+  "inputs": [
+    {
+      "description": "action + connection_id (+ meeting/event/folder/payload)",
+      "name": "input",
+      "type": "json"
+    }
+  ],
+  "layer": 3,
+  "name": "microsoft_365",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Capability result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "IXKkRh2tTuiK6uSZErISpaRhgSNj1V+iSvMhfPyZCglQGrPpNNtuUxjd5JOEHR/+2dj1Dwvd3ekFQG3LmIbMDQ==",
+  "tags": [
+    "microsoft365",
+    "teams",
+    "sharepoint",
+    "outlook",
+    "graph",
+    "connector",
+    "enterprise"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

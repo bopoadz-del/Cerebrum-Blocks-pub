@@ -1,0 +1,141 @@
+{
+  "acceptance": [],
+  "author": "Cerebrum Team",
+  "description": "Extract measurements, areas, and volumes from DXF/DWG construction drawings",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "74574c7bd0d86002d83d0c0d730da2b9880e45832855c4a1a3ab879e1db8b0c4",
+    "block.py": "7bd43f91dff3d083c3105f4f5d14f578e7f1580bd43fc32d0453ac75492d98c1"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/drawing_qto:latest",
+    "type": "docker"
+  },
+  "id": "drawing_qto",
+  "inputs": [
+    {
+      "description": "Upload DXF or DWG drawing...",
+      "name": "input",
+      "required": false,
+      "type": "file"
+    },
+    {
+      "default": 1.0,
+      "description": "Configuration parameter: unit_scale",
+      "name": "unit_scale",
+      "required": false,
+      "type": "number"
+    },
+    {
+      "default": [],
+      "description": "Configuration parameter: area_layer_filter",
+      "name": "area_layer_filter",
+      "required": false,
+      "type": "array"
+    },
+    {
+      "default": 0.01,
+      "description": "Configuration parameter: min_area_m2",
+      "name": "min_area_m2",
+      "required": false,
+      "type": "number"
+    }
+  ],
+  "layer": 3,
+  "name": "Drawing Qto",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Linear Measurements",
+      "name": "measurements",
+      "type": "list"
+    },
+    {
+      "description": "Areas",
+      "name": "areas",
+      "type": "list"
+    },
+    {
+      "description": "Volumes",
+      "name": "volumes",
+      "type": "list"
+    },
+    {
+      "description": "Total Area",
+      "name": "total_area_m2",
+      "type": "number"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    }
+  ],
+  "requires": [],
+  "signature": "KXUeKSiF520XAL37eXFElK5hx/YEoK7PSL3cvNQI1LKreBo3h5m7Fh2Rje87RIUMMtQDyi1yBU+E5Qtpz5qBAw==",
+  "tags": [
+    "domain",
+    "construction",
+    "drawing",
+    "qto",
+    "dxf",
+    "quantities"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "Upload DXF or DWG drawing...",
+      "name": "input",
+      "widget": "file"
+    },
+    {
+      "label": "Unit Scale",
+      "name": "unit_scale",
+      "widget": "number"
+    },
+    {
+      "label": "Area Layer Filter",
+      "name": "area_layer_filter",
+      "widget": "json"
+    },
+    {
+      "label": "Min Area M2",
+      "name": "min_area_m2",
+      "widget": "number"
+    }
+  ],
+  "version": "1.0.0",
+  "verticals": [
+    "construction",
+    "interior_design",
+    "architecture",
+    "facility_management",
+    "facilities_management"
+  ],
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    },
+    {
+      "kind": "file",
+      "scope": "local.write"
+    },
+    {
+      "kind": "file",
+      "scope": "temp"
+    }
+  ]
+}

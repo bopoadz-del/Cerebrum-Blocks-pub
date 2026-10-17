@@ -1,0 +1,136 @@
+{
+  "acceptance": [
+    {
+      "check": "refuses or errors when title is absent on create",
+      "id": "missing_title",
+      "status": "refused"
+    },
+    {
+      "check": "errors on an unknown work order id",
+      "id": "unknown_work_order",
+      "status": "failed"
+    },
+    {
+      "check": "errors when a work order id already exists",
+      "id": "duplicate_work_order",
+      "status": "failed"
+    },
+    {
+      "check": "errors on an unknown or missing action",
+      "id": "unknown_action",
+      "status": "failed"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Maintenance work orders: create(title, due), list sorted by due date, and complete(id); unknown work-order ids fail.",
+  "digests": {
+    "block.json": "7d2b1f177b508c571b47d299c1281c4cf123b9edd3b680c230fbe698f6365680",
+    "block.py": "b08f889a32de07dd1a484427a1f41e3620a6e43b97ae4077bad45377f8f780de"
+  },
+  "execution": {
+    "entrypoint": "block.py",
+    "type": "python"
+  },
+  "id": "estate_maintenance",
+  "inputs": [
+    {
+      "default": "create",
+      "description": "create | list | complete",
+      "name": "action",
+      "options": [
+        "create",
+        "list",
+        "complete"
+      ],
+      "required": false,
+      "type": "string"
+    },
+    {
+      "description": "Work order title (create)",
+      "name": "title",
+      "required": true,
+      "type": "string"
+    },
+    {
+      "description": "Due date ISO (create; optional \u2014 orders without a due date sort last)",
+      "name": "due",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "description": "Work order id (complete)",
+      "name": "id",
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 3,
+  "name": "Estate Maintenance",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Capability result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    }
+  ],
+  "requires": [],
+  "signature": "TpWRe0YKrLzd1aC5d0pWU8Sbe/wfyCDIOr6x++stpXe9QvvXH28PJBX72L7AA8YEUri+smxW7fHn8UHuJ5MmBw==",
+  "tags": [
+    "estate",
+    "private_estate_operations",
+    "steward"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "Action",
+      "name": "action",
+      "options": [
+        "create",
+        "list",
+        "complete"
+      ],
+      "widget": "select"
+    },
+    {
+      "label": "Title",
+      "name": "title",
+      "widget": "text"
+    },
+    {
+      "label": "Due",
+      "name": "due",
+      "widget": "text"
+    },
+    {
+      "label": "Id",
+      "name": "id",
+      "widget": "text"
+    }
+  ],
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

@@ -1,0 +1,195 @@
+# Railway & Metro Construction — kit VOCABULARY for the shared kit_engine.
+#
+# Migrated from the hand-written gate in reasoning.py (see git history / the
+# reasoning_layer_portable_spec.md mapping table in this migration's report).
+# Nothing in the evaluator (app/blocks/kit_engine/) knows what a twist limit
+# or a chainage is; this file supplies that vocabulary.
+#
+# The track/civils design-basis FIGURES (the real, still-null values pending
+# the interview) live in design_basis.yaml, read only by TrackBasis in
+# reasoning.py for interview/provenance bookkeeping — never by the gate.
+kit: rail
+version: 1
+serves_verticals: [rail, railway, metro]
+interview_status: "not run — every design-basis value is null (KNOWN_GAPS.md)"
+
+quantities:
+  # ---- INV-1: geometry limits (tier + line_speed, or nothing) ------------
+  geometry_limit:
+    units: [mm]
+    aliases: [twist limit, cant deficiency limit, alignment limit, gauge limit,
+              geometry limit, passing value, intervention value,
+              immediate action limit]
+    classes: [any_figure, any_geometry_limit, any_category_scoped]
+
+  # ---- INV-2/INV-3: stress-free temperature ------------------------------
+  sft:
+    units: [degC]
+    aliases: [SFT, stress-free temperature, stressing temperature]
+    classes: [any_figure, any_disturbance_answer, any_staleness_tracked]
+
+  # ---- INV-3: buckling / stressing, not otherwise named ------------------
+  buckling_answer:
+    aliases: [buckling, stressing the rail]
+    classes: [any_figure, any_disturbance_answer]
+
+  # ---- INV-3: handback speed ----------------------------------------------
+  handback_speed:
+    units: [mph]
+    aliases: [handback speed, hand back speed]
+    classes: [any_figure, any_disturbance_answer, any_live_state]
+
+  # ---- INV-4: clearance / gauging -----------------------------------------
+  clearance_envelope:
+    units: [mm]
+    aliases: [clearance, structure gauge, kinematic envelope,
+              gauging assessment, gauging]
+    classes: [any_figure, any_staleness_tracked]
+
+  # ---- INV-5: TBM face pressure -------------------------------------------
+  face_pressure:
+    units: [bar]
+    aliases: [face pressure, TBM, tunnel boring]
+    classes: [any_figure, any_staleness_tracked]
+
+  # ---- settlement / movement trigger — never carried between assets ------
+  trigger_level:
+    units: [mm]
+    aliases: [settlement trigger, movement trigger, trigger]
+    classes: [any_figure, any_staleness_tracked, any_asset_scoped]
+
+  # ---- TSR — only the current notice proves what is in force -------------
+  tsr_speed:
+    units: [mph]
+    aliases: [TSR, temporary speed restriction]
+    classes: [any_figure, any_staleness_tracked, any_live_state]
+
+  # ---- ballast — staleness: any disturbance invalidates it ---------------
+  ballast_depth:
+    units: [mm]
+    aliases: [ballast]
+    classes: [any_figure, any_staleness_tracked]
+
+  # ---- track geometry recording -------------------------------------------
+  geometry_recording:
+    aliases: [geometry recording, track geometry record, track geometry reading,
+              track geometry run]
+    classes: [any_figure, any_staleness_tracked]
+
+  # ---- catch-all for a live-state question with no other named figure ----
+  # ("current isolation status", "adjacent line open", "the four-foot") — the
+  # possession/signalling + manual-log gate applies even when no numeric
+  # figure is being quoted.
+  live_state_answer:
+    aliases: [possession, isolation, protection arrangement, current state,
+              current status, four-foot, adjacent line]
+    classes: [any_figure, any_live_state]
+
+qualifier_fields:
+  tier:              {type: enum, values: [design, maintenance, safety]}
+  line_speed:        {type: number}
+  route:             {type: string}
+  line:              {type: string}
+  # `string` + a permissive pattern, not `enum`: the provenance carry-verb
+  # check (INV-RAIL-CATEGORY-CARRY) extracts distinct category MENTIONS from
+  # prose ("plain line", "switches and crossings") via this pattern, which an
+  # enum's exact-literal match ("plain_line") cannot do against natural text.
+  category:          {type: string, pattern: "plain[-_\\s]?line|switches?[-_\\s]+and[-_\\s]+crossings|s\\s*&\\s*c|bridge[-_\\s]+approach|tunnel"}
+  SFT_verified_date: {type: date}
+  method:            {type: string}
+  disturbed_since:   {type: bool}
+  envelope_type:     {type: string}
+  cant:              {type: number}
+  curve_radius:      {type: number}
+  chainage_min_m:    {type: number}
+  chainage_max_m:    {type: number}
+  ground_basis:      {type: string}
+  asset:             {type: string, pattern: "building\\s+\\w+|structure\\s+\\w+|asset\\s+\\w+"}
+
+source_classes:
+  # rank 1 governs. `reject_as_proof` is what a class may NOT stand in for —
+  # the old kit's REJECT_AS_PROOF table, expressed once as data.
+  verified_stressing_record:
+    rank: 1
+    name_patterns: ["stressing record", "witnessed stressing", "verified sft record"]
+  installation_temperature_record:
+    rank: 5
+    name_patterns: ["installation temperature record", "temperature record",
+                    "unverified record"]
+    # An installation-temperature record proves the temperature the rail was
+    # installed at, not the stress-free temperature it was set to.
+    reject_as_proof: [verified_stressing_record]
+  gauging_assessment:
+    rank: 1
+    name_patterns: ["gauging assessment", "clearance assessment"]
+  design_drawing:
+    rank: 5
+    name_patterns: ["design drawing", "as-designed drawing", "general arrangement"]
+    # Scaling a clearance off a drawing is the classic substitution.
+    reject_as_proof: [gauging_assessment, chainage_specific_schedule]
+  chainage_specific_schedule:
+    rank: 1
+    name_patterns: ["chainage-specific schedule", "tbm schedule", "face pressure schedule"]
+  similar_drive_record:
+    rank: 5
+    name_patterns: ["similar drive", "generic schedule", "another chainage"]
+    # A schedule is chainage-specific, not drive-specific.
+    reject_as_proof: [chainage_specific_schedule]
+  current_tsr_notice:
+    rank: 1
+    name_patterns: ["current notice", "tsr notice", "current tsr"]
+  possession_plan:
+    rank: 5
+    name_patterns: ["possession plan", "the plan", "planned tsr"]
+    # A TSR is only as current as the notice; the plan is not the notice.
+    reject_as_proof: [current_tsr_notice]
+  engineering_acceptance_record:
+    rank: 1
+    name_patterns: ["engineering acceptance", "handback certificate"]
+  working_timetable:
+    rank: 5
+    name_patterns: ["working timetable", "timetable", "planned timetable"]
+    reject_as_proof: [engineering_acceptance_record]
+
+state_providers:
+  # BOTH are required for a live-state claim — the possession/signalling
+  # system is itself a single point of failure; the manual log carries what
+  # it cannot see (manual disturbance records, local protection).
+  possession_system: {kind: status, max_age: 3600}
+  manual_log:        {kind: status, max_age: 3600}
+  # Disturbance is an EVENT (track_disturbed), not a clock: `disturbed_since`
+  # is either known (True/False) or it is not, regardless of wall time. The
+  # host always supplies this record; only the event gates staleness.
+  disturbance_record: {kind: status}
+
+staleness_triggers:
+  tsr_speed:          [track_disturbed]
+  sft:                [track_disturbed]
+  ballast_depth:      [track_disturbed]
+  geometry_recording: [track_disturbed]
+  clearance_envelope: [track_disturbed]
+  face_pressure:      [track_disturbed]
+  trigger_level:      [track_disturbed]
+
+scope_refusals:
+  # These are named-person decisions: the engineering supervisor, the
+  # COSS/IWA or the possession manager, under the safe system of work (SSOW).
+  # The system will not emit them, and nothing is retrieved.
+  - label: handback tonight
+    pattern: "can\\s+we\\s+hand\\s+(?:the\\s+)?line\\s+back\\s+tonight|hand\\s+the\\s+line\\s+back\\s+tonight"
+    authority: "the engineering supervisor, COSS/IWA or possession manager, under the safe system of work (SSOW)"
+  - label: adjacent line open
+    pattern: "is\\s+it\\s+safe\\s+to\\s+work\\s+with\\s+(?:the\\s+)?adjacent\\s+line\\s+open"
+    authority: "the engineering supervisor, COSS/IWA or possession manager, under the safe system of work (SSOW)"
+  - label: crane placement
+    pattern: "can\\s+we\\s+put\\s+the\\s+crane\\s+here|can\\s+we\\s+site\\s+the\\s+crane\\s+here"
+    authority: "the engineering supervisor, COSS/IWA or possession manager, under the safe system of work (SSOW)"
+  - label: stress the rail today
+    pattern: "can\\s+we\\s+stress\\s+the\\s+rail\\s+today"
+    authority: "the engineering supervisor, COSS/IWA or possession manager, under the safe system of work (SSOW)"
+  - label: building at risk
+    pattern: "is\\s+this\\s+building\\s+at\\s+risk"
+    authority: "the engineering supervisor, COSS/IWA or possession manager, under the safe system of work (SSOW)"
+  - label: enter the four-foot
+    pattern: "can\\s+we\\s+go\\s+into\\s+the\\s+four[-\\s]?foot"
+    authority: "the engineering supervisor, COSS/IWA or possession manager, under the safe system of work (SSOW)"

@@ -1,0 +1,167 @@
+{
+  "acceptance": [
+    {
+      "check": "errors on an unknown or missing action",
+      "id": "unknown_action",
+      "status": "failed"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "1468d80a1aced2b886f30a665e8bc64c957385f3226f4079f46e0a0176183957",
+    "block.py": "200cfc7e069d67a008f423b28408e18c2b573dab051323d712a17f364f127fd2"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/bim:latest",
+    "type": "docker"
+  },
+  "id": "bim",
+  "inputs": [
+    {
+      "description": "IFC/DWG/PDF path or folder payload",
+      "name": "input",
+      "required": false,
+      "type": "file"
+    },
+    {
+      "default": "index_folder",
+      "description": "Action",
+      "name": "action",
+      "options": [
+        "index_folder",
+        "parse_ifc",
+        "extract_dwg_metadata",
+        "process_pdf",
+        "get_elements",
+        "spatial_query",
+        "compare_versions"
+      ],
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": true,
+      "description": "Configuration parameter: ifc_enabled",
+      "name": "ifc_enabled",
+      "required": false,
+      "type": "boolean"
+    },
+    {
+      "default": true,
+      "description": "Configuration parameter: dwg_enabled",
+      "name": "dwg_enabled",
+      "required": false,
+      "type": "boolean"
+    },
+    {
+      "default": true,
+      "description": "Configuration parameter: auto_index",
+      "name": "auto_index",
+      "required": false,
+      "type": "boolean"
+    }
+  ],
+  "layer": 6,
+  "name": "Bim",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "file",
+      "scope": "local.read"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    }
+  ],
+  "requires": [
+    "config",
+    "storage",
+    "vector",
+    "pdf",
+    "ocr"
+  ],
+  "signature": "SWoSn243r9t0ZvUSvj9UTgtMROGK9nNLFWb4F+bozV4GTDtIL85ofVfTi/yJymWEPWxQwOJbvA5qXvWIHTHLAw==",
+  "tags": [
+    "construction",
+    "bim",
+    "cad",
+    "domain"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "IFC/DWG/PDF path or folder payload",
+      "name": "input",
+      "widget": "file"
+    },
+    {
+      "label": "Action",
+      "name": "action",
+      "options": [
+        "index_folder",
+        "parse_ifc",
+        "extract_dwg_metadata",
+        "process_pdf",
+        "get_elements",
+        "spatial_query",
+        "compare_versions"
+      ],
+      "widget": "select"
+    },
+    {
+      "label": "Ifc Enabled",
+      "name": "ifc_enabled",
+      "widget": "toggle"
+    },
+    {
+      "label": "Dwg Enabled",
+      "name": "dwg_enabled",
+      "widget": "toggle"
+    },
+    {
+      "label": "Auto Index",
+      "name": "auto_index",
+      "widget": "toggle"
+    }
+  ],
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    },
+    {
+      "kind": "file",
+      "scope": "local.write"
+    },
+    {
+      "kind": "file",
+      "scope": "temp"
+    },
+    {
+      "kind": "memory",
+      "scope": "cache"
+    }
+  ]
+}

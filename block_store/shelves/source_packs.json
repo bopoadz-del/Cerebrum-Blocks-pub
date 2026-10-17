@@ -1,0 +1,672 @@
+{
+  "schema_version": "1.0.0",
+  "shelf_id": "source_packs",
+  "name": "Domain Source Pack Shelf",
+  "description": "Rich metadata for every Domain Virgin Edition. Source packs describe what each domain does, how it should answer, what inputs it expects, what outputs it produces, and which blocks form a minimal useful chain. No documents are ingested here; this is pure metadata used by the factory chain generator.",
+  "packs": [
+    {
+      "id": "agriculture",
+      "domain": "agriculture",
+      "name": "Agriculture Source Pack",
+      "description": "Field reports, crop health, soil analysis, irrigation, pest/disease pressure, and compliance documentation for farms and agribusiness.",
+      "expert_prompt": "You are an Agriculture & AgriTech domain expert. You analyse farm field reports, crop health records, soil tests, irrigation schedules, pest scouting notes, and compliance documents. Always flag soil health risks, irrigation inefficiencies, pest or disease pressure, and regulatory compliance gaps. Be concrete and cite document sections when possible.",
+      "workflow": "1) Ingest field reports or scans via pdf/ocr/document_engine. 2) Retrieve relevant agronomy context. 3) Run agriculture_v2 analysis for crop/soil/pest/compliance flags. 4) Present results through chat. Optionally use formula_executor_v2 for deterministic calculations.",
+      "use_cases": [
+        "Analyse soil test reports",
+        "Flag pest and disease pressure",
+        "Review irrigation efficiency",
+        "Check farm compliance gaps"
+      ],
+      "example_prompts": [
+        "Analyse this season's field reports and flag any crop health risks.",
+        "What does this soil test say about nutrient deficiencies?",
+        "Review these scouting notes for pest pressure and compliance issues."
+      ],
+      "expected_inputs": [
+        "PDF field reports",
+        "scanned soil tests",
+        "irrigation logs",
+        "scouting notes"
+      ],
+      "expected_outputs": [
+        "crop health flags",
+        "soil recommendations",
+        "pest alerts",
+        "compliance gaps"
+      ],
+      "blocks": [
+        "pdf",
+        "ocr",
+        "chat",
+        "image",
+        "agriculture_v2",
+        "formula_executor_v2"
+      ]
+    },
+    {
+      "id": "automotive",
+      "domain": "automotive",
+      "name": "Automotive Source Pack",
+      "description": "Vehicle documentation, recall notices, service records, supplier quality reports, and mobility compliance.",
+      "expert_prompt": "You are an Automotive & Mobility domain expert. You analyse vehicle documentation, recall notices, service records, supplier quality reports, and homologation/compliance files. Always flag safety-relevant defects, recall obligations, warranty exposure, and supply-chain quality risks.",
+      "workflow": "1) Ingest vehicle or supplier documents via pdf/ocr/document_engine. 2) Retrieve relevant automotive context. 3) Run automotive_v2 analysis for defects, recalls, warranty, and compliance. 4) Present results through chat. Optionally use formula_executor_v2 for deterministic calculations.",
+      "use_cases": [
+        "Review recall notices",
+        "Analyse service records",
+        "Check supplier quality reports",
+        "Summarise vehicle manuals"
+      ],
+      "example_prompts": [
+        "Does this service record show any outstanding safety issues?",
+        "Summarise the recall obligations in this notice.",
+        "What quality risks appear in this supplier report?"
+      ],
+      "expected_inputs": [
+        "recall notices",
+        "service records",
+        "supplier reports",
+        "vehicle manuals"
+      ],
+      "expected_outputs": [
+        "safety flags",
+        "recall summary",
+        "warranty exposure",
+        "quality risks"
+      ],
+      "blocks": [
+        "pdf",
+        "ocr",
+        "chat",
+        "image",
+        "automotive_v2",
+        "formula_executor_v2"
+      ]
+    },
+    {
+      "id": "aviation",
+      "domain": "aviation",
+      "name": "Aviation Source Pack",
+      "description": "Flight logs, maintenance records, safety reports, crew documentation, and regulatory filings for aviation operators.",
+      "expert_prompt": "You are an Aviation & Aerospace domain expert. You analyse flight logs, maintenance records, safety reports, crew documentation, and regulatory filings. Always flag airworthiness concerns, maintenance overdue items, safety-event patterns, and regulatory compliance gaps.",
+      "workflow": "1) Ingest logs and reports via pdf/ocr/document_engine. 2) Retrieve relevant aviation context. 3) Run aviation_v2 analysis for maintenance, safety, and compliance flags. 4) Present results through chat. Optionally use formula_executor_v2 for deterministic calculations.",
+      "use_cases": [
+        "Review maintenance logs",
+        "Analyse safety reports",
+        "Check crew documentation",
+        "Summarise regulatory filings"
+      ],
+      "example_prompts": [
+        "Are there any overdue maintenance items in these logs?",
+        "Summarise the safety events from this report.",
+        "Does this crew documentation meet regulatory requirements?"
+      ],
+      "expected_inputs": [
+        "flight logs",
+        "maintenance records",
+        "safety reports",
+        "regulatory filings"
+      ],
+      "expected_outputs": [
+        "maintenance flags",
+        "safety summary",
+        "compliance gaps",
+        "risk scores"
+      ],
+      "blocks": [
+        "pdf",
+        "ocr",
+        "chat",
+        "image",
+        "aviation_v2",
+        "formula_executor_v2"
+      ]
+    },
+    {
+      "id": "construction",
+      "domain": "construction",
+      "name": "Construction Source Pack",
+      "description": "Contracts, specifications, drawings, schedules, BIM metadata, safety plans, and procurement documents for AEC projects.",
+      "expert_prompt": "You are a Construction & AEC domain expert. You analyse contracts, specifications, drawings, schedules, safety plans, and procurement documents. Always flag risky clauses, missing scope, schedule conflicts, safety non-conformances, and payment/liability issues. Cite document sections and relate findings to programme context when possible.",
+      "workflow": "1) Ingest contracts, specs, drawings, and schedules via pdf/ocr/document_engine/image. 2) Retrieve construction knowledge and project context. 3) Run construction_v2 analysis for contract, schedule, safety, and scope flags. 4) Present results through chat. Optionally use formula_executor_v2 for deterministic calculations.",
+      "use_cases": [
+        "Review construction contracts",
+        "Analyse specifications and drawings",
+        "Check schedule and milestone risks",
+        "Summarise safety plans"
+      ],
+      "example_prompts": [
+        "Flag risky clauses in this construction contract.",
+        "What scope gaps do you see between the spec and the drawings?",
+        "Summarise the safety non-conformances in this report."
+      ],
+      "expected_inputs": [
+        "contracts",
+        "specifications",
+        "drawings",
+        "schedules",
+        "safety plans"
+      ],
+      "expected_outputs": [
+        "risk flags",
+        "clause summary",
+        "scope gaps",
+        "schedule risks"
+      ],
+      "blocks": [
+        "pdf",
+        "ocr",
+        "chat",
+        "image",
+        "construction_v2",
+        "formula_executor_v2"
+      ]
+    },
+    {
+      "id": "education",
+      "domain": "education",
+      "name": "Education Source Pack",
+      "description": "Syllabi, accreditation documents, learning materials, assessments, and academic policies for educational institutions.",
+      "expert_prompt": "You are an Education & E-learning domain expert. You analyse syllabi, accreditation documents, learning materials, assessments, and academic policies. Always flag learning-outcome gaps, accreditation compliance issues, assessment inconsistencies, and accessibility concerns.",
+      "workflow": "1) Ingest syllabi, accreditation files, and learning materials via pdf/ocr/document_engine. 2) Retrieve education context. 3) Run education_v2 analysis for outcomes, accreditation, and assessment flags. 4) Present results through chat. Optionally use formula_executor_v2 for deterministic calculations.",
+      "use_cases": [
+        "Review syllabus alignment",
+        "Check accreditation compliance",
+        "Analyse assessment rubrics",
+        "Summarise learning materials"
+      ],
+      "example_prompts": [
+        "Does this syllabus cover all stated learning outcomes?",
+        "What accreditation gaps exist in this document?",
+        "Summarise this learning module for instructors."
+      ],
+      "expected_inputs": [
+        "syllabi",
+        "accreditation docs",
+        "learning materials",
+        "assessments"
+      ],
+      "expected_outputs": [
+        "outcome gaps",
+        "accreditation flags",
+        "assessment notes",
+        "summaries"
+      ],
+      "blocks": [
+        "pdf",
+        "ocr",
+        "chat",
+        "image",
+        "education_v2",
+        "formula_executor_v2"
+      ]
+    },
+    {
+      "id": "finance",
+      "domain": "finance",
+      "name": "Finance Source Pack",
+      "description": "Financial statements, investment research, credit memos, regulatory filings, and risk reports for finance teams.",
+      "expert_prompt": "You are a Finance & Investment domain expert. You analyse financial statements, investment research, credit memos, regulatory filings, and risk reports. Always flag revenue decline, margin compression, debt covenant risk, abnormal working-capital movement, and compliance issues. Quantify findings where the document provides numbers.",
+      "workflow": "1) Ingest financial documents via pdf/ocr/document_engine. 2) Retrieve relevant financial context. 3) Run finance_v2 analysis for revenue, margin, debt, and working-capital flags. 4) Present results through chat. Optionally use formula_executor_v2 for deterministic calculations.",
+      "use_cases": [
+        "Analyse earnings reports",
+        "Review credit memos",
+        "Check debt covenant compliance",
+        "Summarise regulatory filings"
+      ],
+      "example_prompts": [
+        "Flag revenue decline and margin compression in this earnings report.",
+        "Does this credit memo show covenant risk?",
+        "Summarise the key risks in this 10-K."
+      ],
+      "expected_inputs": [
+        "financial statements",
+        "earnings reports",
+        "credit memos",
+        "filings"
+      ],
+      "expected_outputs": [
+        "revenue flags",
+        "margin alerts",
+        "debt risks",
+        "summaries"
+      ],
+      "blocks": [
+        "pdf",
+        "ocr",
+        "chat",
+        "image",
+        "finance_v2",
+        "formula_executor_v2"
+      ]
+    },
+    {
+      "id": "hotel_management",
+      "domain": "hotel_management",
+      "name": "Hotel Management Source Pack",
+      "description": "Guest feedback, operational SOPs, housekeeping reports, revenue-management data, and hospitality compliance documents.",
+      "expert_prompt": "You are a Hotel Management & Hospitality domain expert. You analyse guest feedback, operational SOPs, housekeeping reports, revenue-management data, and compliance documents. Always flag service-quality trends, operational inefficiencies, compliance gaps, and revenue leakage.",
+      "workflow": "1) Ingest guest feedback, SOPs, and operational reports via pdf/ocr/document_engine. 2) Retrieve hospitality context. 3) Run hotel_management_v2 analysis for service, operations, compliance, and revenue flags. 4) Present results through chat. Optionally use formula_executor_v2 for deterministic calculations.",
+      "use_cases": [
+        "Analyse guest feedback",
+        "Review operational SOPs",
+        "Check compliance documentation",
+        "Summarise revenue reports"
+      ],
+      "example_prompts": [
+        "What service-quality trends appear in this guest feedback?",
+        "Review this SOP for operational gaps.",
+        "Summarise revenue leakage risks in this report."
+      ],
+      "expected_inputs": [
+        "guest feedback",
+        "SOPs",
+        "housekeeping reports",
+        "revenue data"
+      ],
+      "expected_outputs": [
+        "service trends",
+        "operational gaps",
+        "compliance flags",
+        "revenue risks"
+      ],
+      "blocks": [
+        "pdf",
+        "ocr",
+        "chat",
+        "image",
+        "hotel_management_v2",
+        "formula_executor_v2"
+      ]
+    },
+    {
+      "id": "hr",
+      "domain": "hr",
+      "name": "HR Source Pack",
+      "description": "Resumes, job descriptions, employee handbooks, policy documents, and workforce compliance files for HR teams.",
+      "expert_prompt": "You are a Human Resources & Recruitment domain expert. You analyse resumes, job descriptions, employee handbooks, policy documents, and compliance files. Always flag missing qualifications, policy inconsistencies, compliance gaps, and potential bias or fairness issues.",
+      "workflow": "1) Ingest HR documents via pdf/ocr/document_engine. 2) Retrieve HR context. 3) Run hr_v2 analysis for qualifications, policy, compliance, and fairness flags. 4) Present results through chat. Optionally use formula_executor_v2 for deterministic calculations.",
+      "use_cases": [
+        "Screen resumes against job descriptions",
+        "Review employee handbook policy gaps",
+        "Check compliance documentation",
+        "Summarise workforce trends"
+      ],
+      "example_prompts": [
+        "Does this candidate's resume match the job description?",
+        "What policy gaps exist in this employee handbook?",
+        "Summarise the compliance issues in these workforce files."
+      ],
+      "expected_inputs": [
+        "resumes",
+        "job descriptions",
+        "handbooks",
+        "policy docs"
+      ],
+      "expected_outputs": [
+        "qualification gaps",
+        "policy flags",
+        "compliance notes",
+        "summaries"
+      ],
+      "blocks": [
+        "pdf",
+        "ocr",
+        "chat",
+        "image",
+        "hr_v2",
+        "formula_executor_v2"
+      ]
+    },
+    {
+      "id": "insurance",
+      "domain": "insurance",
+      "name": "Insurance Source Pack",
+      "description": "Policy documents, claims files, underwriting worksheets, actuarial reports, and regulatory filings for insurers.",
+      "expert_prompt": "You are an Insurance & Risk domain expert. You analyse policy documents, claims files, underwriting worksheets, actuarial reports, and regulatory filings. Always flag coverage gaps, claims anomalies, underwriting misclassification, and compliance issues.",
+      "workflow": "1) Ingest policies, claims, and underwriting documents via pdf/ocr/document_engine. 2) Retrieve insurance context. 3) Run insurance_v2 analysis for coverage, claims, underwriting, and compliance flags. 4) Present results through chat. Optionally use formula_executor_v2 for deterministic calculations.",
+      "use_cases": [
+        "Review policy coverage",
+        "Analyse claims files",
+        "Check underwriting worksheets",
+        "Summarise regulatory filings"
+      ],
+      "example_prompts": [
+        "What coverage gaps exist in this policy?",
+        "Analyse this claim for anomalies.",
+        "Does this underwriting worksheet show misclassification risk?"
+      ],
+      "expected_inputs": [
+        "policies",
+        "claims files",
+        "underwriting sheets",
+        "filings"
+      ],
+      "expected_outputs": [
+        "coverage gaps",
+        "claim flags",
+        "underwriting risks",
+        "summaries"
+      ],
+      "blocks": [
+        "pdf",
+        "ocr",
+        "chat",
+        "image",
+        "insurance_v2",
+        "formula_executor_v2"
+      ]
+    },
+    {
+      "id": "legal",
+      "domain": "legal",
+      "name": "Legal Source Pack",
+      "description": "Contracts, pleadings, discovery documents, compliance memos, and legal correspondence for legal teams.",
+      "expert_prompt": "You are a Legal & Contracts domain expert. You analyse contracts, pleadings, discovery documents, and compliance memos. Always flag termination clauses, payment obligations, liability caps, governing law, dispute resolution, and missing signature pages. Cite specific clauses and suggest red-flag language.",
+      "workflow": "1) Ingest contracts and legal documents via pdf/ocr/document_engine. 2) Retrieve legal context. 3) Run legal_v2 analysis for clauses, risks, and compliance flags. 4) Present results through chat. Optionally use formula_executor_v2 for deterministic calculations.",
+      "use_cases": [
+        "Review contract clauses",
+        "Flag liability and termination risks",
+        "Check governing law and dispute resolution",
+        "Summarise discovery documents"
+      ],
+      "example_prompts": [
+        "Flag the risky clauses in this contract.",
+        "What payment and liability terms does this agreement contain?",
+        "Summarise these discovery documents and highlight key facts."
+      ],
+      "expected_inputs": [
+        "contracts",
+        "pleadings",
+        "discovery docs",
+        "compliance memos"
+      ],
+      "expected_outputs": [
+        "clause flags",
+        "risk summary",
+        "compliance notes",
+        "citations"
+      ],
+      "blocks": [
+        "pdf",
+        "ocr",
+        "chat",
+        "image",
+        "legal_v2",
+        "formula_executor_v2"
+      ]
+    },
+    {
+      "id": "manufacturing",
+      "domain": "manufacturing",
+      "name": "Manufacturing Source Pack",
+      "description": "Quality reports, BOMs, work instructions, supplier certificates, and production logs for manufacturing operations.",
+      "expert_prompt": "You are a Manufacturing & Industry 4.0 domain expert. You analyse quality reports, bills of materials, work instructions, supplier certificates, and production logs. Always flag quality non-conformances, BOM inconsistencies, supplier compliance gaps, and production-efficiency issues.",
+      "workflow": "1) Ingest quality reports, BOMs, and work instructions via pdf/ocr/document_engine. 2) Retrieve manufacturing context. 3) Run manufacturing_v2 analysis for quality, BOM, supplier, and production flags. 4) Present results through chat. Optionally use formula_executor_v2 for deterministic calculations.",
+      "use_cases": [
+        "Review quality reports",
+        "Check BOM consistency",
+        "Analyse supplier certificates",
+        "Summarise production logs"
+      ],
+      "example_prompts": [
+        "What quality non-conformances appear in this report?",
+        "Does this BOM match the work instructions?",
+        "Summarise supplier compliance gaps from these certificates."
+      ],
+      "expected_inputs": [
+        "quality reports",
+        "BOMs",
+        "work instructions",
+        "supplier certs"
+      ],
+      "expected_outputs": [
+        "quality flags",
+        "BOM discrepancies",
+        "supplier gaps",
+        "summaries"
+      ],
+      "blocks": [
+        "pdf",
+        "ocr",
+        "chat",
+        "image",
+        "manufacturing_v2",
+        "formula_executor_v2"
+      ]
+    },
+    {
+      "id": "medical",
+      "domain": "medical",
+      "name": "Medical Source Pack",
+      "description": "Clinical notes, discharge summaries, lab reports, imaging reports, and healthcare compliance documents.",
+      "expert_prompt": "You are a Medical & Healthcare domain expert. You analyse clinical notes, discharge summaries, lab reports, imaging reports, and compliance documents. Always flag abnormal findings, medication interactions, missing follow-up instructions, and compliance gaps. Never provide medical advice; surface information for clinical review only.",
+      "workflow": "1) Ingest clinical documents via pdf/ocr/document_engine. 2) Retrieve medical context. 3) Run medical_v2 analysis for entities, abnormal findings, and compliance flags. 4) Present results through chat. Optionally use formula_executor_v2 for deterministic calculations.",
+      "use_cases": [
+        "Extract entities from clinical notes",
+        "Summarise discharge instructions",
+        "Flag abnormal lab findings",
+        "Check compliance documentation"
+      ],
+      "example_prompts": [
+        "Extract the key entities from this clinical note.",
+        "What abnormal findings appear in this lab report?",
+        "Summarise the discharge instructions and flag missing follow-up."
+      ],
+      "expected_inputs": [
+        "clinical notes",
+        "discharge summaries",
+        "lab reports",
+        "imaging reports"
+      ],
+      "expected_outputs": [
+        "entities",
+        "abnormal flags",
+        "summaries",
+        "compliance gaps"
+      ],
+      "blocks": [
+        "pdf",
+        "ocr",
+        "chat",
+        "image",
+        "medical_v2",
+        "formula_executor_v2"
+      ]
+    },
+    {
+      "id": "oil_gas",
+      "domain": "oil_gas",
+      "name": "Oil & Gas Source Pack",
+      "description": "Well logs, drilling reports, permits, safety incidents, and environmental compliance documents for energy operations.",
+      "expert_prompt": "You are an Oil & Gas domain expert. You analyse well logs, drilling reports, permits, safety incidents, and environmental compliance documents. Always flag drilling risks, permit non-compliances, safety incidents, and environmental exposure.",
+      "workflow": "1) Ingest well logs, permits, and incident reports via pdf/ocr/document_engine. 2) Retrieve oil and gas context. 3) Run oil_gas_v2 analysis for drilling, permit, safety, and environmental flags. 4) Present results through chat. Optionally use formula_executor_v2 for deterministic calculations.",
+      "use_cases": [
+        "Review well logs",
+        "Check permit compliance",
+        "Analyse safety incidents",
+        "Summarise environmental reports"
+      ],
+      "example_prompts": [
+        "What drilling risks appear in this well log?",
+        "Does this permit documentation have compliance gaps?",
+        "Summarise the safety incidents and environmental exposure."
+      ],
+      "expected_inputs": [
+        "well logs",
+        "drilling reports",
+        "permits",
+        "incident reports"
+      ],
+      "expected_outputs": [
+        "drilling risks",
+        "permit flags",
+        "safety summary",
+        "environmental exposure"
+      ],
+      "blocks": [
+        "pdf",
+        "ocr",
+        "chat",
+        "image",
+        "oil_gas_v2",
+        "formula_executor_v2"
+      ]
+    },
+    {
+      "id": "pharma",
+      "domain": "pharma",
+      "name": "Pharma Source Pack",
+      "description": "Regulatory filings, clinical trial protocols, pharmacovigilance reports, manufacturing batch records, and label documents.",
+      "expert_prompt": "You are a Pharmaceuticals & Life Sciences domain expert. You analyse regulatory filings, clinical trial protocols, pharmacovigilance reports, batch records, and label documents. Always flag regulatory compliance gaps, safety signals, protocol deviations, and label inconsistencies.",
+      "workflow": "1) Ingest regulatory and clinical documents via pdf/ocr/document_engine. 2) Retrieve pharma context. 3) Run pharma_v2 analysis for regulatory, safety, protocol, and label flags. 4) Present results through chat. Optionally use formula_executor_v2 for deterministic calculations.",
+      "use_cases": [
+        "Review regulatory filings",
+        "Analyse clinical trial protocols",
+        "Check pharmacovigilance reports",
+        "Summarise batch records"
+      ],
+      "example_prompts": [
+        "What regulatory compliance gaps exist in this filing?",
+        "Analyse this protocol for deviation risks.",
+        "Summarise the safety signals in this pharmacovigilance report."
+      ],
+      "expected_inputs": [
+        "regulatory filings",
+        "trial protocols",
+        "safety reports",
+        "batch records"
+      ],
+      "expected_outputs": [
+        "regulatory flags",
+        "protocol deviations",
+        "safety signals",
+        "summaries"
+      ],
+      "blocks": [
+        "pdf",
+        "ocr",
+        "chat",
+        "image",
+        "pharma_v2",
+        "formula_executor_v2"
+      ]
+    },
+    {
+      "id": "real_estate",
+      "domain": "real_estate",
+      "name": "Real Estate Source Pack",
+      "description": "Leases, purchase agreements, listings, inspection reports, and property-management documents for real estate operations.",
+      "expert_prompt": "You are a Real Estate & Property domain expert. You analyse leases, purchase agreements, listings, inspection reports, and property-management documents. Always flag risky lease terms, missing disclosures, valuation concerns, and maintenance liabilities.",
+      "workflow": "1) Ingest leases, listings, and inspection reports via pdf/ocr/document_engine. 2) Retrieve real estate context. 3) Run real_estate_v2 analysis for lease, disclosure, valuation, and maintenance flags. 4) Present results through chat. Optionally use formula_executor_v2 for deterministic calculations.",
+      "use_cases": [
+        "Review lease terms",
+        "Analyse inspection reports",
+        "Check purchase agreements",
+        "Summarise property listings"
+      ],
+      "example_prompts": [
+        "What risky lease terms appear in this agreement?",
+        "Summarise the inspection report and flag maintenance liabilities.",
+        "Does this purchase agreement have missing disclosures?"
+      ],
+      "expected_inputs": [
+        "leases",
+        "purchase agreements",
+        "listings",
+        "inspection reports"
+      ],
+      "expected_outputs": [
+        "lease flags",
+        "disclosure gaps",
+        "valuation notes",
+        "maintenance liabilities"
+      ],
+      "blocks": [
+        "pdf",
+        "ocr",
+        "chat",
+        "image",
+        "real_estate_v2",
+        "formula_executor_v2"
+      ]
+    },
+    {
+      "id": "retail",
+      "domain": "retail",
+      "name": "Retail Source Pack",
+      "description": "Inventory reports, sales data, supplier invoices, planograms, and customer feedback for retail operations.",
+      "expert_prompt": "You are a Retail & E-commerce domain expert. You analyse inventory reports, sales data, supplier invoices, planograms, and customer feedback. Always flag stock-out risks, margin pressure, supplier issues, and customer-experience trends.",
+      "workflow": "1) Ingest inventory, sales, and supplier documents via pdf/ocr/document_engine. 2) Retrieve retail context. 3) Run retail_v2 analysis for inventory, margin, supplier, and customer flags. 4) Present results through chat. Optionally use formula_executor_v2 for deterministic calculations.",
+      "use_cases": [
+        "Analyse inventory reports",
+        "Review sales trends",
+        "Check supplier invoices",
+        "Summarise customer feedback"
+      ],
+      "example_prompts": [
+        "What stock-out risks appear in this inventory report?",
+        "Summarise sales trends and margin pressure.",
+        "What supplier issues show up in these invoices?"
+      ],
+      "expected_inputs": [
+        "inventory reports",
+        "sales data",
+        "supplier invoices",
+        "feedback"
+      ],
+      "expected_outputs": [
+        "stock-out risks",
+        "margin flags",
+        "supplier issues",
+        "trends"
+      ],
+      "blocks": [
+        "pdf",
+        "ocr",
+        "chat",
+        "image",
+        "retail_v2",
+        "formula_executor_v2"
+      ]
+    },
+    {
+      "id": "supply_chain",
+      "domain": "supply_chain",
+      "name": "Supply Chain Source Pack",
+      "description": "Purchase orders, invoices, shipping documents, customs forms, and logistics reports for supply chain operations.",
+      "expert_prompt": "You are a Supply Chain & Logistics domain expert. You analyse purchase orders, invoices, shipping documents, customs forms, and logistics reports. Always flag delivery delays, cost anomalies, customs compliance gaps, and supplier performance issues.",
+      "workflow": "1) Ingest POs, invoices, and shipping documents via pdf/ocr/document_engine. 2) Retrieve supply-chain context. 3) Run supply_chain_v2 analysis for delivery, cost, customs, and supplier flags. 4) Present results through chat. Optionally use formula_executor_v2 for deterministic calculations.",
+      "use_cases": [
+        "Review purchase orders",
+        "Analyse shipping documents",
+        "Check customs forms",
+        "Summarise logistics reports"
+      ],
+      "example_prompts": [
+        "What delivery delays appear in these shipping documents?",
+        "Analyse these invoices for cost anomalies.",
+        "Does this customs documentation have compliance gaps?"
+      ],
+      "expected_inputs": [
+        "purchase orders",
+        "invoices",
+        "shipping docs",
+        "customs forms"
+      ],
+      "expected_outputs": [
+        "delay flags",
+        "cost anomalies",
+        "customs gaps",
+        "supplier issues"
+      ],
+      "blocks": [
+        "pdf",
+        "ocr",
+        "chat",
+        "image",
+        "supply_chain_v2",
+        "formula_executor_v2"
+      ]
+    }
+  ]
+}

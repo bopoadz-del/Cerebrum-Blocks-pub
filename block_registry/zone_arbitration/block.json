@@ -1,0 +1,79 @@
+{
+  "acceptance": [
+    {
+      "check": "a proposal with fewer than two owning zones is refused, not committed",
+      "id": "not_shared",
+      "status": "refused"
+    },
+    {
+      "check": "a single-pass verdict is refused, never committed",
+      "id": "single_pass",
+      "status": "refused"
+    },
+    {
+      "check": "a zone that was never asked refuses the whole arbitration",
+      "id": "unasked_zone",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Zone arbitration ported from <private-repo> agents/coordinator.py arbitrate(): a shared clash's proposal commits only when every owning zone's monitor passes (double pass). A single pass is refused \u2014 one zone happy and the other unasked is the failure zoning introduced. The monitors themselves are the product's; this block enforces the double-pass contract. In-process.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "1b6e61ceeeee095af12575da9ea889c79c3a303869a55056803aa506e6f3f8f2",
+    "block.py": "f4f6ba52326db08a713aa488fc66b8ba7d218e71e1249a50b4334f577997c37f"
+  },
+  "id": "zone_arbitration",
+  "inputs": [
+    {
+      "description": "arbitrate | committed",
+      "name": "action",
+      "options": [
+        "arbitrate",
+        "committed"
+      ],
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 3,
+  "name": "zone_arbitration",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Capability result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "LbG79yqq3822oQkFvf3HtAC0h4y/ychZmBE29aRI/SMdbpiSv8oFp9ZY49f5K5cz76kLZplp55S54iyUXUajDQ==",
+  "tags": [
+    "bim",
+    "coordination",
+    "arbitration",
+    "multi-zone",
+    "bim-manager"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

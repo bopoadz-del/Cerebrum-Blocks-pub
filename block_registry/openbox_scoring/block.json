@@ -1,0 +1,67 @@
+{
+  "acceptance": [
+    {
+      "check": "missing statement blocks score 0, never a fabricated score",
+      "id": "missing_statements",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Multi-factor stock scoring ported from <private-repo> openbox/engine.ts: the 9-point Piotroski F-score with safe division (ROA positive/improving, CFO positive and above net income, leverage falling, current ratio rising, share count not rising, margin and turnover improving). NEVER the backtest. No network \u2014 statement dicts only.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "943e4813fd994d52004cf6f23077567b29b357dba84c92174431c6bfaf6da9a8",
+    "block.py": "1aae2391b657ce8e2f104f4707108aab2144084eef6d24d8f406eacf4c01d6ba"
+  },
+  "id": "openbox_scoring",
+  "inputs": [
+    {
+      "description": "score",
+      "name": "action",
+      "options": [
+        "score"
+      ],
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 3,
+  "name": "openbox_scoring",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Capability result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "C4lakVe33/HOoV7Ig8JGQxG02OjkhPxeWIzCZu2XZ/te07WrpYQQVTeigGCI74NyTdXcsKKwTpYlgyBWRldkBg==",
+  "tags": [
+    "finance",
+    "scoring",
+    "<private-repo>",
+    "openbox"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

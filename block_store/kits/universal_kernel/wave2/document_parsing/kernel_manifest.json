@@ -1,0 +1,12 @@
+{
+  "name": "document_parsing",
+  "version": "0.1.0",
+  "sha256": "3b19eaa8abed9b307279ce0b871e084230e58746be2526945bc81c008982c1de",
+  "dependencies": [
+    "openpyxl"
+  ],
+  "provenance": "fork",
+  "acceptance_test": "tests/test_document_parsing.py",
+  "tier": "premium",
+  "note": "Premium-only; not available in the freemium tier."
+}

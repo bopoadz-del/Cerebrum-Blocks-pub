@@ -1,0 +1,77 @@
+{
+  "acceptance": [
+    {
+      "check": "an unknown action fails loud with the known-action list",
+      "id": "unknown_action_failed",
+      "status": "failed"
+    },
+    {
+      "check": "summary without a graph spec object fails loud",
+      "id": "missing_graph_failed",
+      "status": "failed"
+    },
+    {
+      "check": "pcf_text for a line_id absent from the graph fails loud",
+      "id": "unknown_pipeline_failed",
+      "status": "failed"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "real: EPC piping digital-thread core ported from <private-repo> src/<private-repo>/{graph,routing,tables,clash,schedule_4d,generators,cascade,maturity,pcf_reader,pcf_strict,models}.py + exporters/. Topology graph, A* routing with obstacle avoidance, pipe tables (ASME B36.10-style), capsule/AABB/cylinder clash checking (Ericson 5.1.9), 4D co-activity/look-ahead, PCF/GA generation, change cascade (dirty-set) and maturity assessment. DEXPI ingestion stays with the dexpi_ingest block; agent/API layers not ported.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "523c319d87fa05f6d2cc35b068cd9d7bf10f78a910770895e8ee885c8affab42",
+    "block.py": "e87332995cb08b30afcb12666a1509587a1aba4d91ccb3c037844c4056e57961"
+  },
+  "id": "piping_digital_thread",
+  "inputs": [
+    {
+      "description": "action + graph spec",
+      "name": "input",
+      "type": "json"
+    }
+  ],
+  "layer": 3,
+  "name": "piping_digital_thread",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Capability result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "9MppQYAXJml8JEKipzOuY0102qSxGo4iPdV9/Q67H3KgjMa5g5HyzFI+xajPLKTGBvCQZHzJsXG8jV8My8XABQ==",
+  "tags": [
+    "epc",
+    "piping",
+    "digital-thread",
+    "clash",
+    "routing",
+    "4d",
+    "pcf",
+    "<private-repo>"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

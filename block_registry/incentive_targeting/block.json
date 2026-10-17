@@ -1,0 +1,43 @@
+{
+  "acceptance": [
+    {
+      "check": "errors on an unknown or missing action",
+      "id": "unknown_action",
+      "status": "failed"
+    }
+  ],
+  "description": "Heuristic insurance producer incentive targeting and budget simulation.",
+  "digests": {
+    "block.json": "adf57f367aa00500170911a2e0e333853004b8f6831d8162ca5baf1764dc5185",
+    "block.py": "98fd3bd734c5939fbca8bf5dd2c250d9c82f2c819f462c29080ee4c6878b794f"
+  },
+  "id": "incentive_targeting",
+  "name": "Incentive Targeting",
+  "never": [],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    }
+  ],
+  "signature": "xo7TJoVFdDlOP3skNYkhXvFJbEw+aXqTLSagZiFslcM2bqJZ8aI1DvZz3Hezsm7dQAeEE7a11k9jcpnBlxs4BA==",
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

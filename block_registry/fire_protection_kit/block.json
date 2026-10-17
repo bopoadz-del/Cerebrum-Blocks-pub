@@ -1,0 +1,192 @@
+{
+  "acceptance": [
+    {
+      "check": "INV-FP-SCOPE (scope at per the routing map, severity refuse): Operational and named-person fire protection questions are refused before retrieval.",
+      "id": "inv_fp_scope",
+      "status": "refused"
+    },
+    {
+      "check": "INV-FP-1-CLASSIFICATION-QUALIFIER (qualifier at per the routing map, severity refuse): INV-FP-1 violation: no hazard classification without a named engineer or an approved document. A classification with no attribution is an opinion, not a determination \u2014 this covers both a bare classification and one inferred from an occupancy description, since neither carries an attribution the host can extract.",
+      "id": "inv_fp_1_classification_qualifier",
+      "status": "refused"
+    },
+    {
+      "check": "INV-FP-1-CLASSIFICATION-AUTHORITY (authority at per the routing map, severity refuse): A hazard classification needs the engineer of record or an approved document. A visual inspection, a walkthrough or an inference from occupancy is a different class of thing (REJECT_AS_PROOF).",
+      "id": "inv_fp_1_classification_authority",
+      "status": "refused"
+    },
+    {
+      "check": "INV-FP-2-DESIGN-AREA-BASIS (qualifier at per the routing map, severity refuse): INV-FP-2 violation: naming a basis without confirming it was the one actually analysed is a label, not a result \u2014 most_remote and most_demanding are never interchangeable, and this fires whether the basis is simply absent or the answer names both and conflates them.",
+      "id": "inv_fp_2_design_area_basis",
+      "status": "refused"
+    },
+    {
+      "check": "INV-FP-3-IMPAIRMENT-LOG (currency at per the routing map, severity refuse): INV-FP-3 violation: no coverage answer without a current impairment log. The impairment log is a hard precondition for any coverage answer, not a drawing or a design record \u2014 state UNKNOWN has no design-basis fallback.",
+      "id": "inv_fp_3_impairment_log",
+      "status": "refused"
+    },
+    {
+      "check": "INV-FP-3-LIVE-STATUS (currency at per the routing map, severity refuse): INV-FP-3 violation: no coverage answer without current live system status (pump running, valves in normal position, in_service) \u2014 a design record is not a current state.",
+      "id": "inv_fp_3_live_status",
+      "status": "refused"
+    },
+    {
+      "check": "INV-FP-4-DENSITY-BUNDLE (qualifier at per the routing map, severity refuse): INV-FP-4 violation: classification, design area, code edition and classifier are required together on a density figure \u2014 any one missing and the figure cannot be attributed to a question. (design_area is INV-FP-2's job and is not re-checked here, so this fires only once a basis has been named.)",
+      "id": "inv_fp_4_density_bundle",
+      "status": "refused"
+    },
+    {
+      "check": "INV-FP-4-DENSITY-AUTHORITY (authority at per the routing map, severity refuse): A design density needs a classified density table or a hydraulic calculation run against one. An unclassified or generic table is a different class of thing (REJECT_AS_PROOF).",
+      "id": "inv_fp_4_density_authority",
+      "status": "refused"
+    },
+    {
+      "check": "INV-FP-5-RATING-ASSEMBLY (qualifier at per the routing map, severity refuse): INV-FP-5 violation: fire rating cited without the tested assembly, orientation and penetration detail. The product alone is REJECT_AS_PROOF \u2014 never acceptable evidence of a rating. This also covers a rating extrapolated to an untested or different assembly: it names no real tested assembly either, so no assembly reference is ever extracted.",
+      "id": "inv_fp_5_rating_assembly",
+      "status": "refused"
+    },
+    {
+      "check": "INV-FP-5-RATING-AUTHORITY (authority at per the routing map, severity refuse): A fire rating needs the tested assembly listing. A product data sheet or a manufacturer's listing alone is a different class of thing (REJECT_AS_PROOF).",
+      "id": "inv_fp_5_rating_authority",
+      "status": "refused"
+    },
+    {
+      "check": "INV-FP-SUPPLY-AUTHORITY (authority at per the routing map, severity refuse): A water supply figure needs a current flow test with a date and a location. A nameplate rating, a pump curve or a design flow assumption is a different class of thing (REJECT_AS_PROOF), and this is also what catches estimating supply without ever running a flow test.",
+      "id": "inv_fp_supply_authority",
+      "status": "refused"
+    },
+    {
+      "check": "INV-FP-SUPPLY-CURRENCY (currency at per the routing map, severity refuse): A stale flow test is not proof of current water supply \u2014 supply requires a CURRENT flow test, and this one has expired.",
+      "id": "inv_fp_supply_currency",
+      "status": "refused"
+    },
+    {
+      "check": "INV-FP-COVERAGE-AUTHORITY (authority at per the routing map, severity refuse): A coverage answer needs the live state (impairment log and live status), not a drawing. An as-built drawing, a design drawing or a fire strategy drawing is a different class of thing (REJECT_AS_PROOF).",
+      "id": "inv_fp_coverage_authority",
+      "status": "refused"
+    },
+    {
+      "check": "INV-FP-PROVENANCE-BUILDING (provenance at per the routing map, severity refuse): A figure does not carry across buildings \u2014 'the similar building' is not this building.",
+      "id": "inv_fp_provenance_building",
+      "status": "refused"
+    },
+    {
+      "check": "INV-FP-PROVENANCE-CODE-EDITION (provenance at per the routing map, severity refuse): A figure does not carry across code editions \u2014 the design density from one edition does not apply unchanged to another.",
+      "id": "inv_fp_provenance_code_edition",
+      "status": "refused"
+    },
+    {
+      "check": "INV-FP-BASIS-CURRENCY (currency at per the routing map, severity refuse): The basis is stale \u2014 classification, tenant, commodity or layout has changed since this basis was established; it cannot support a current figure.",
+      "id": "inv_fp_basis_currency",
+      "status": "refused"
+    },
+    {
+      "check": "INV-FP-GROUNDING (grounding at per the routing map, severity refuse): {quantity} is not grounded: no attribution, evidence or live reading was supplied for it. This kit never asserts a figure of its own.",
+      "id": "inv_fp_grounding",
+      "status": "refused"
+    },
+    {
+      "check": "INV-FP-UNITS (unit_discipline at per the routing map, severity refuse): Every fire rating carries its unit. A bare number is how 2 hours becomes 2 minutes.",
+      "id": "inv_fp_units",
+      "status": "refused"
+    },
+    {
+      "check": "INV-FP-DENSITY-BAND (band at per the routing map, severity flag): A design density outside 0.02-1.5 gpm/ft2 is outside anything NFPA 13 tabulates for any hazard classification \u2014 check the unit or the decimal it was read in.",
+      "id": "inv_fp_density_band",
+      "status": "partial"
+    },
+    {
+      "check": "INV-FP-RATING-BAND (band at per the routing map, severity flag): A fire rating above 4 hours is outside anything a standard tested assembly supports \u2014 check whether the number is really hours.",
+      "id": "inv_fp_rating_band",
+      "status": "partial"
+    },
+    {
+      "check": "INV-FP-DERIVATION (derivation at per the routing map, severity refuse): The answer contradicts itself, or its stated working and stated result disagree.",
+      "id": "inv_fp_derivation",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Declarative fire protection reasoning kit on the shared reasoning layer. 21 invariants declared in app/blocks/fire_protection/invariants.yaml across the kinds the portable spec defines (grounding, qualifier, unit_discipline, authority, provenance, currency, scope, derivation, band) and the five hooks (H0 pre-retrieval, H1 ranking, H2 tool-time, H3 answer-time, H4 export-time). Vocabulary in app/blocks/fire_protection/manifest.yaml. Scope refusals classify BEFORE retrieval. Fail closed: a kit that does not parse is DISABLED and refuses every statement rather than passing them through with no invariants. NO INTERVIEW HAS RUN, so every declared figure value is null and the block refuses rather than inventing one (app/blocks/fire_protection/KNOWN_GAPS.md). Measured by tests/blocks/test_reasoning_kits.py.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "98f8abf34dda9cb883422e22fd14a369ba674df63d8ce2df899cac5d547f2e33",
+    "block.py": "4761b4bba4535c1883bdb25f7209d6cd5871fb22aa0b476006f5715d0cddbf06"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/fire_protection_kit:latest",
+    "type": "docker"
+  },
+  "id": "fire_protection_kit",
+  "inputs": [
+    {
+      "description": "the operator question, classified at H0 BEFORE any retrieval",
+      "name": "question",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "description": "figures to gate: quantity, value, unit, origin, source_id, source_class, revision, qualifiers, claim_class, derivations, conditions, steps, bounds, asked_about, span, text",
+      "name": "figures",
+      "required": false,
+      "type": "array"
+    },
+    {
+      "description": "state records by provider name, each {as_of: <epoch>}; an absent provider yields UNKNOWN, never a design-basis fallback",
+      "name": "state",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "description": "events that have happened, matched against the kit's staleness_triggers",
+      "name": "events",
+      "required": false,
+      "type": "array"
+    },
+    {
+      "description": "subset of H0..H4 to run; all five by default, because a partial sweep is a silent coverage gap",
+      "name": "hooks",
+      "required": false,
+      "type": "array"
+    }
+  ],
+  "layer": 3,
+  "name": "fire_protection_kit",
+  "never": [],
+  "outputs": [
+    {
+      "description": "pass | annotated | flagged | refused, with findings, blocked_reason, hooks_run, retrieval_permitted, interview_status, unfilled_figures, unmeasured_invariants, ships and kit_disabled",
+      "name": "verdict",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "xSDxtUhG1ToSVpbAubzrozQcH9m/ASUS/wEP8QHv5ZEefO3rb+PsvJLeSZjBNiEqgKsRq60uGqHEhoZT0orLAw==",
+  "tags": [
+    "fire",
+    "gate",
+    "kit",
+    "reasoning"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

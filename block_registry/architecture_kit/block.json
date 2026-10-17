@@ -1,0 +1,127 @@
+{
+  "acceptance": [
+    {
+      "check": "INV-ARC-AUTH-CODE (authority at H1, severity refuse): code requirement governed by the code \u2014 a guide or previous project is not the code",
+      "id": "inv_arc_auth_code",
+      "status": "refused"
+    },
+    {
+      "check": "INV-ARC-AREA-BASIS (qualifier at H3, severity refuse): floor area missing {missing} \u2014 same building, several correct answers 20-30% apart",
+      "id": "inv_arc_area_basis",
+      "status": "refused"
+    },
+    {
+      "check": "INV-ARC-PLOT-RATIO (qualifier at H3, severity refuse): plot ratio missing {missing} \u2014 inclusions and exclusions vary by jurisdiction",
+      "id": "inv_arc_plot_ratio",
+      "status": "refused"
+    },
+    {
+      "check": "INV-ARC-TRAVEL-DISTANCE (qualifier at H3, severity refuse): travel distance missing {missing}",
+      "id": "inv_arc_travel_distance",
+      "status": "refused"
+    },
+    {
+      "check": "INV-ARC-FIRE-RATING (qualifier at H3, severity refuse): fire rating missing {missing}",
+      "id": "inv_arc_fire_rating",
+      "status": "refused"
+    },
+    {
+      "check": "INV-ARC-LEVEL (qualifier at H3, severity refuse): level missing {missing} \u2014 FFL and SSL differ by the floor build-up",
+      "id": "inv_arc_level",
+      "status": "refused"
+    },
+    {
+      "check": "INV-ARC-DISCIPLINE (provenance at H3, severity refuse): forbidden derivation: {value}",
+      "id": "inv_arc_discipline",
+      "status": "refused"
+    },
+    {
+      "check": "INV-ARC-CURRENCY (currency at H3, severity refuse): figure from an unverified or superseded revision",
+      "id": "inv_arc_currency",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Declarative architecture reasoning kit on the shared reasoning layer. 8 invariants declared in app/blocks/architecture/invariants.yaml across the kinds the portable spec defines (grounding, qualifier, unit_discipline, authority, provenance, currency, scope, derivation, band) and the five hooks (H0 pre-retrieval, H1 ranking, H2 tool-time, H3 answer-time, H4 export-time). Vocabulary in app/blocks/architecture/manifest.yaml. Scope refusals classify BEFORE retrieval. Fail closed: a kit that does not parse is DISABLED and refuses every statement rather than passing them through with no invariants. NO INTERVIEW HAS RUN, so every declared figure value is null and the block refuses rather than inventing one (app/blocks/architecture/KNOWN_GAPS.md). Measured by tests/blocks/test_reasoning_kits.py.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "6a6fdc4741665e600baf5fe79abba369cf90e6ce3b203ac1693b3a127cfe5d0b",
+    "block.py": "7171d0c5ceb17c88a289cadc396a4d8ddf63b5bebe471d2191471f20b0aebf5d"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/architecture_kit:latest",
+    "type": "docker"
+  },
+  "id": "architecture_kit",
+  "inputs": [
+    {
+      "description": "the operator question, classified at H0 BEFORE any retrieval",
+      "name": "question",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "description": "figures to gate: quantity, value, unit, origin, source_id, source_class, revision, qualifiers, claim_class, derivations, conditions, steps, bounds, asked_about, span, text",
+      "name": "figures",
+      "required": false,
+      "type": "array"
+    },
+    {
+      "description": "state records by provider name, each {as_of: <epoch>}; an absent provider yields UNKNOWN, never a design-basis fallback",
+      "name": "state",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "description": "events that have happened, matched against the kit's staleness_triggers",
+      "name": "events",
+      "required": false,
+      "type": "array"
+    },
+    {
+      "description": "subset of H0..H4 to run; all five by default, because a partial sweep is a silent coverage gap",
+      "name": "hooks",
+      "required": false,
+      "type": "array"
+    }
+  ],
+  "layer": 3,
+  "name": "architecture_kit",
+  "never": [],
+  "outputs": [
+    {
+      "description": "pass | annotated | flagged | refused, with findings, blocked_reason, hooks_run, retrieval_permitted, interview_status, unfilled_figures, unmeasured_invariants, ships and kit_disabled",
+      "name": "verdict",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "BlgYgI8IAVWaGJDoG4SuWx0K0Z0ru7pVIpn1TWYK/IYwOQq5U/uwLCL7DOpuCzDlGYdAjwvUnqMTjh8QVkkeBQ==",
+  "tags": [
+    "architecture",
+    "gate",
+    "kit",
+    "reasoning"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

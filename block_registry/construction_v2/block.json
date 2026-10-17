@@ -1,0 +1,148 @@
+{
+  "acceptance": [],
+  "author": "Cerebrum Team",
+  "description": "Construction document analysis with typed input/output",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "587c75c74637ca1e5f71bd423dcb1642278865b7808ba5c373c33b2a7510c633",
+    "block.py": "d06213ed2fb61d35a9ecaca5f662755e3cc2a3516deda4cf00468c59cf21bec7"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/construction_v2:latest",
+    "type": "docker"
+  },
+  "id": "construction_v2",
+  "inputs": [
+    {
+      "description": "Paste construction document text or chain from PDF/OCR...",
+      "name": "input",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": 0.85,
+      "description": "Configuration parameter: confidence_threshold",
+      "name": "confidence_threshold",
+      "required": false,
+      "type": "number"
+    },
+    {
+      "default": "concrete",
+      "description": "Configuration parameter: default_trade",
+      "name": "default_trade",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": true,
+      "description": "Configuration parameter: extract_measurements",
+      "name": "extract_measurements",
+      "required": false,
+      "type": "boolean"
+    },
+    {
+      "default": true,
+      "description": "Configuration parameter: extract_quantities",
+      "name": "extract_quantities",
+      "required": false,
+      "type": "boolean"
+    },
+    {
+      "default": true,
+      "description": "Configuration parameter: extract_materials",
+      "name": "extract_materials",
+      "required": false,
+      "type": "boolean"
+    }
+  ],
+  "layer": 3,
+  "name": "Construction V2",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Concrete",
+      "name": "concrete_volume_m3",
+      "type": "number"
+    },
+    {
+      "description": "Steel",
+      "name": "steel_weight_kg",
+      "type": "number"
+    },
+    {
+      "description": "Floor Area",
+      "name": "floor_area_m2",
+      "type": "number"
+    },
+    {
+      "description": "Confidence",
+      "name": "confidence",
+      "type": "percentage"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    }
+  ],
+  "requires": [],
+  "signature": "EBFxxoTrDr/SLtimxBDqS3jLX+3w2l8CB5OlqmwRsYtB3ZvtiTY/1z9stl/HWwsAn5Qm5waI2VIL7pHoflnKBQ==",
+  "tags": [
+    "domain",
+    "construction",
+    "aec",
+    "v2"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "Paste construction document text or chain from PDF/OCR...",
+      "name": "input",
+      "widget": "text"
+    },
+    {
+      "label": "Confidence Threshold",
+      "name": "confidence_threshold",
+      "widget": "number"
+    },
+    {
+      "label": "Default Trade",
+      "name": "default_trade",
+      "widget": "text"
+    },
+    {
+      "label": "Extract Measurements",
+      "name": "extract_measurements",
+      "widget": "toggle"
+    },
+    {
+      "label": "Extract Quantities",
+      "name": "extract_quantities",
+      "widget": "toggle"
+    },
+    {
+      "label": "Extract Materials",
+      "name": "extract_materials",
+      "widget": "toggle"
+    }
+  ],
+  "version": "2.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

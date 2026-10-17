@@ -1,0 +1,152 @@
+{
+  "acceptance": [
+    {
+      "check": "errors on an unknown or missing action",
+      "id": "unknown_action",
+      "status": "failed"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "2b64fafb6dc5f53491461e88c7c18bacb195ae4bd1beaf7e997db7c008d96eff",
+    "block.py": "8b121df4483e1dbdd29a9bd9d137a29e7d2c3e0fd27947f3d8bd3352a0585401"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/monitoring:latest",
+    "type": "docker"
+  },
+  "id": "monitoring",
+  "inputs": [
+    {
+      "description": "JSON payload for the selected action",
+      "name": "input",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "default": "record_call",
+      "description": "Action",
+      "name": "action",
+      "options": [
+        "record_call",
+        "leaderboard",
+        "provider_status",
+        "recommend",
+        "health_report",
+        "predictive_failover"
+      ],
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": [
+        "deepseek",
+        "anthropic"
+      ],
+      "description": "Track Providers",
+      "name": "track_providers",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "default": 100,
+      "description": "Window Size",
+      "name": "window_size",
+      "required": false,
+      "type": "number"
+    },
+    {
+      "default": 0.3,
+      "description": "Prediction Threshold",
+      "name": "prediction_threshold",
+      "required": false,
+      "type": "number"
+    }
+  ],
+  "layer": 2,
+  "name": "Monitoring",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    },
+    {
+      "kind": "llm",
+      "scope": "provider"
+    }
+  ],
+  "requires": [
+    "config",
+    "memory"
+  ],
+  "signature": "CpXUQNalvIqHpqYWYx+CdTRSz846EhhSrzG6JvFDnn+VwWDj/69Qqa79B7YvYVH128PgG5U+LLgP7KPbKcG0Dw==",
+  "tags": [
+    "monitoring",
+    "observability",
+    "core"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "JSON payload for the selected action",
+      "name": "input",
+      "widget": "json"
+    },
+    {
+      "label": "Action",
+      "name": "action",
+      "options": [
+        "record_call",
+        "leaderboard",
+        "provider_status",
+        "recommend",
+        "health_report",
+        "predictive_failover"
+      ],
+      "widget": "select"
+    },
+    {
+      "label": "Track Providers",
+      "name": "track_providers",
+      "widget": "json"
+    },
+    {
+      "label": "Window Size",
+      "name": "window_size",
+      "widget": "number"
+    },
+    {
+      "label": "Prediction Threshold",
+      "name": "prediction_threshold",
+      "widget": "number"
+    }
+  ],
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

@@ -1,0 +1,191 @@
+{
+  "acceptance": [
+    {
+      "check": "errors on an unknown or missing action",
+      "id": "unknown_action",
+      "status": "failed"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "fd0587f6e5ed8a8877b57676542c4fd109ba6d424435eef6679482a91cd5c487",
+    "block.py": "5784803a38e82d3a3f87c74b76e0d5da27a9fed156636877bcb5c7b33c529b3e"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/adaptive_router:latest",
+    "type": "docker"
+  },
+  "id": "adaptive_router",
+  "inputs": [
+    {
+      "description": "Task, quality tier, budget, provider constraints...",
+      "name": "input",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "default": "select_provider",
+      "description": "Action",
+      "name": "action",
+      "options": [
+        "select_provider",
+        "record_result",
+        "get_recommendation",
+        "forecast_issues",
+        "get_scores",
+        "reset_scores",
+        "ab_test",
+        "explain_choice"
+      ],
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": true,
+      "description": "Configuration parameter: learning_enabled",
+      "name": "learning_enabled",
+      "required": false,
+      "type": "boolean"
+    },
+    {
+      "default": 100,
+      "description": "Configuration parameter: history_window",
+      "name": "history_window",
+      "required": false,
+      "type": "number"
+    },
+    {
+      "default": 0.1,
+      "description": "Configuration parameter: exploration_rate",
+      "name": "exploration_rate",
+      "required": false,
+      "type": "number"
+    },
+    {
+      "default": 10,
+      "description": "Configuration parameter: min_samples",
+      "name": "min_samples",
+      "required": false,
+      "type": "number"
+    },
+    {
+      "default": true,
+      "description": "Configuration parameter: time_aware",
+      "name": "time_aware",
+      "required": false,
+      "type": "boolean"
+    },
+    {
+      "default": 0.8,
+      "description": "Configuration parameter: quality_threshold",
+      "name": "quality_threshold",
+      "required": false,
+      "type": "number"
+    }
+  ],
+  "layer": 2,
+  "name": "Adaptive Router",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    },
+    {
+      "kind": "llm",
+      "scope": "provider"
+    }
+  ],
+  "requires": [
+    "analytics",
+    "monitoring",
+    "failover"
+  ],
+  "signature": "sJIQn2nfh16cpXRD24QrjKGdDRXF84Opw6u3VyYBkObO67c4ESJBjPz8lzJdefOianRaPxMm097vOPjxnUcNBQ==",
+  "tags": [
+    "ai",
+    "optimization",
+    "smart",
+    "routing"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "Task, quality tier, budget, provider constraints...",
+      "name": "input",
+      "widget": "json"
+    },
+    {
+      "label": "Action",
+      "name": "action",
+      "options": [
+        "select_provider",
+        "record_result",
+        "get_recommendation",
+        "forecast_issues",
+        "get_scores",
+        "reset_scores",
+        "ab_test",
+        "explain_choice"
+      ],
+      "widget": "select"
+    },
+    {
+      "label": "Learning Enabled",
+      "name": "learning_enabled",
+      "widget": "toggle"
+    },
+    {
+      "label": "History Window",
+      "name": "history_window",
+      "widget": "number"
+    },
+    {
+      "label": "Exploration Rate",
+      "name": "exploration_rate",
+      "widget": "number"
+    },
+    {
+      "label": "Min Samples",
+      "name": "min_samples",
+      "widget": "number"
+    },
+    {
+      "label": "Time Aware",
+      "name": "time_aware",
+      "widget": "toggle"
+    },
+    {
+      "label": "Quality Threshold",
+      "name": "quality_threshold",
+      "widget": "number"
+    }
+  ],
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

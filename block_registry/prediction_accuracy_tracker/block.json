@@ -1,0 +1,75 @@
+{
+  "acceptance": [
+    {
+      "check": "a ticker with no score history is refused, never a fabricated hit rate",
+      "id": "empty_series",
+      "status": "refused"
+    },
+    {
+      "check": "non-list series input is refused",
+      "id": "non_list_series",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Self-evaluating signal-accuracy tracker ported from <private-repo> src/services/insights.ts (real): predictedDirection (>=70 up, <45 down, mid-band makes no call), time-ordered evaluateSeries over each ticker score/price rows, hitRate null when nothing is evaluable (never fabricated), score trends, top gainers/losers, most-alerted, and the model-ready context pack. Rows arrive as input; the donor SQLite db.ts layer is not ported. NEVER the backtest.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "f96c1915cfafbc62827d49ff8edfea088a3cfe16f82619ad12db166e46f8a182",
+    "block.py": "efec66f18ba44dbdbe640f4f9ac558e730fe92c8fca19abd70c6389f6b9f4f8a"
+  },
+  "id": "prediction_accuracy_tracker",
+  "inputs": [
+    {
+      "description": "market | ticker | context",
+      "name": "action",
+      "options": [
+        "market",
+        "ticker",
+        "context"
+      ],
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 3,
+  "name": "prediction_accuracy_tracker",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Capability result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "EAPNDCVox+voWAKHOfCn2CMJOCIA2rC1Vzh+hxyG0jADgIi/0VcBuxNu7U0hHJRKfYUUsyaozyJH+iomwab0Ag==",
+  "tags": [
+    "finance",
+    "analytics",
+    "accuracy",
+    "self-evaluation",
+    "<private-repo>"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

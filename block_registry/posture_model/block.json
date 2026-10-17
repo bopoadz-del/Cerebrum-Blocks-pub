@@ -1,0 +1,172 @@
+{
+  "acceptance": [
+    {
+      "check": "refuses to answer when fork_context is missing or null",
+      "id": "context_required",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Final-answer sampler pinned to <private-repo>@4e167a7. Calls sample_posture against the Tinker posture checkpoint (TINKER_API_KEY). Retrieval stays on The Fork: refuses when fork_context is not attached.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "f4727fa51cb435c0dd629847cc6ff7a899c2031ab9955784ef58d366ca7a3fae",
+    "block.py": "11139c5b93ae9a3d39f586ab54be0f1081e03892b040bb9ca6abe733d84eeec0"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/posture_model:latest",
+    "type": "docker"
+  },
+  "factory_attach": {
+    "cleared": false,
+    "reason": "The Fork pins this block for final-answer sampling. It refuses without Fork-attached retrieval context and is not a generic part the Factory attaches."
+  },
+  "failure_modes": [
+    {
+      "mode": "context_not_attached",
+      "status": "refused"
+    },
+    {
+      "mode": "sampler_unavailable",
+      "status": "failed"
+    }
+  ],
+  "id": "posture_model",
+  "inputs": [
+    {
+      "description": "Question text passed to sample_posture",
+      "name": "user_text",
+      "required": true,
+      "type": "string"
+    },
+    {
+      "description": "Retrieval context attached by The Fork. Missing or null is a refusal; this block does not retrieve.",
+      "name": "fork_context",
+      "required": true,
+      "type": "json"
+    },
+    {
+      "description": "Formula ids the caller allows. Forwarded to sample_posture; not interpreted here.",
+      "name": "allowed_formula_ids",
+      "required": false,
+      "type": "json"
+    }
+  ],
+  "layer": 3,
+  "name": "Posture Model",
+  "never": [
+    {
+      "kind": "index",
+      "scope": "retrieval"
+    },
+    {
+      "kind": "caller",
+      "scope": "answer_without_attached_fork_context"
+    }
+  ],
+  "outputs": [
+    {
+      "description": "ok, refused, or failed",
+      "name": "status",
+      "type": "string"
+    },
+    {
+      "description": "Sampled final answer, or null when refused or failed",
+      "name": "answer",
+      "type": "string"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": true
+  },
+  "preconditions": [
+    {
+      "kind": "credential",
+      "ref": "TINKER_API_KEY"
+    },
+    {
+      "kind": "dataset",
+      "ref": "fork_context"
+    }
+  ],
+  "provenance_policy": "pinned Tinker sampler checkpoint; answer only when fork_context is attached; no retrieval",
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "llm",
+      "scope": "tinker_sampling"
+    },
+    {
+      "kind": "env",
+      "scope": "TINKER_API_KEY"
+    },
+    {
+      "kind": "credential",
+      "scope": "TINKER_API_KEY"
+    },
+    {
+      "kind": "caller",
+      "scope": "fork_context"
+    }
+  ],
+  "requires": [
+    "fork_context"
+  ],
+  "requires_inputs": [
+    {
+      "name": "fork_context",
+      "required": true,
+      "type": "json",
+      "why": "retrieval context attached by the caller; this block does not retrieve and refuses when fork_context is missing or null"
+    },
+    {
+      "name": "user_text",
+      "required": true,
+      "type": "string"
+    },
+    {
+      "name": "allowed_formula_ids",
+      "required": false,
+      "type": "array"
+    }
+  ],
+  "signature": "+MSqYwASe46CxHnP3K8qDSuWbSkGpwQ+8BcFvkN1+dS67hbdxHBdMI9PEgD09A8flZngQbDA0QBQ/b2CuDAOAA==",
+  "source_commit": {
+    "repo": "https://github.com/bopoadz-del/<private-repo>",
+    "sha": "4e167a7"
+  },
+  "tags": [
+    "posture",
+    "sampling",
+    "tinker",
+    "final-answer"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "User Text",
+      "name": "user_text",
+      "widget": "text"
+    },
+    {
+      "label": "Fork Context",
+      "name": "fork_context",
+      "widget": "json"
+    },
+    {
+      "label": "Allowed Formula Ids",
+      "name": "allowed_formula_ids",
+      "widget": "json"
+    }
+  ],
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

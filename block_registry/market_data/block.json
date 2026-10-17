@@ -1,0 +1,69 @@
+{
+  "acceptance": [
+    {
+      "check": "a provider error payload is refused, never normalized into fake data",
+      "id": "provider_error",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Market data ported from <private-repo> stockPriceService.ts/alertService.ts: dual-provider failover (Twelve Data -> Alpha Vantage -> cached), per-provider quote normalization, alert evaluation (ABOVE/BELOW/EQUALS). Live quotes need provider API keys via env; unconfigured calls are refused by name. NEVER the backtest.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "f7fc00af785481ed024cf36ab08b5817a3c8001c884e3d62ee1835b9ac23e339",
+    "block.py": "756d47fa692d0c8f936c8faa28288280e77f7ab8cc8d0b4e24af0eb2e703e19b"
+  },
+  "id": "market_data",
+  "inputs": [
+    {
+      "description": "normalize | evaluate_alerts | provider_order",
+      "name": "action",
+      "options": [
+        "normalize",
+        "evaluate_alerts",
+        "provider_order"
+      ],
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 3,
+  "name": "market_data",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Capability result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "lMoCNdV8FZgAtTRn+bffTqgP5noBa7ggpZruAqJCQ3k/pviz209nnby/0en0dT+6KQXGRKz7ewPgwdY9B/q8CQ==",
+  "tags": [
+    "market-data",
+    "finance",
+    "<private-repo>",
+    "alerts"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "acceptance": [
+    {
+      "check": "a status line presented as an answer is failed, not passed",
+      "id": "status_line",
+      "status": "refused"
+    },
+    {
+      "check": "an empty response with reported success is failed, not passed",
+      "id": "empty_response",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Silent-failure scorer ported from <private-repo> level/scorers/silent_failure.py: status-line-as-answer, empty or too-short deliverable, scaffolding leaks, and truncation presented as whole. Runs on every answer; the battery's other scorers are not ported.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "1ca4b01f520270b8b2a954cf11a43f512652e89fcfa67b7613adc190e41dcbb3",
+    "block.py": "0f28173dd0d583b0651b6a4b8d95c8250dc2500149d84fc724554d96f664efc5"
+  },
+  "id": "answer_quality_scorer",
+  "inputs": [
+    {
+      "description": "score | is_status_line | looks_truncated",
+      "name": "action",
+      "options": [
+        "score",
+        "is_status_line",
+        "looks_truncated"
+      ],
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 3,
+  "name": "answer_quality_scorer",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Capability result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "1MYKfuvSxs0QTiJHNeHMd3lPgG3KTawFUNld+Q75P0cQ2ga3iGL0566CD7rAiZ4Sap0Akc5haa/zcDUCjBqaBA==",
+  "tags": [
+    "eval",
+    "quality",
+    "silent-failure",
+    "the-level"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

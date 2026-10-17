@@ -1,0 +1,103 @@
+{
+  "acceptance": [],
+  "author": "Cerebrum Team",
+  "description": "Local image analysis \u2014 metadata + OCR (no cloud vision)",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "c634818904fabf4f4587fb580245abf16c618a8f1c0e9a29930763123efbcbd4",
+    "block.py": "9d6423edfc64da54155092e4bacc995ec4bcdd2c1608304f1d00d3aac790f0ab"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/image:latest",
+    "type": "docker"
+  },
+  "id": "image",
+  "inputs": [
+    {
+      "description": "Upload image to analyze...",
+      "name": "input",
+      "required": false,
+      "type": "file"
+    }
+  ],
+  "layer": 3,
+  "name": "Image",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Analysis",
+      "name": "description",
+      "type": "markdown"
+    },
+    {
+      "description": "Text",
+      "name": "extracted_text",
+      "type": "text"
+    },
+    {
+      "description": "Metadata",
+      "name": "metadata",
+      "type": "object"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "file",
+      "scope": "local.read"
+    },
+    {
+      "kind": "file",
+      "scope": "input_image"
+    },
+    {
+      "kind": "env",
+      "scope": "process"
+    },
+    {
+      "kind": "network",
+      "scope": "http.outbound"
+    }
+  ],
+  "requires": [],
+  "signature": "/QHKqfHerNXCukyvTzR5jeJMy7LqmBdQxo1mVdaozcfQyi8H2pAJWTZ7fMNlTrJm5it+keN6VHHnsEAi32BVAg==",
+  "tags": [
+    "domain",
+    "vision",
+    "image",
+    "local"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "Upload image to analyze...",
+      "name": "input",
+      "widget": "file"
+    }
+  ],
+  "version": "3.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    },
+    {
+      "kind": "file",
+      "scope": "local.write"
+    },
+    {
+      "kind": "file",
+      "scope": "temp"
+    }
+  ]
+}

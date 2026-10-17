@@ -1,0 +1,10 @@
+{
+  "name": "billing_entitlement",
+  "version": "0.1.0",
+  "sha256": "99bc6d704439381ce9b21e84f06dfeda24f7dd2641e14dbb500aaee44a0c1367",
+  "dependencies": [],
+  "provenance": "new",
+  "acceptance_test": "tests/test_billing_entitlement.py",
+  "tier": "premium",
+  "note": "Premium-only; not available in the freemium tier."
+}

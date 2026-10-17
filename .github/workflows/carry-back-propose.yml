@@ -1,0 +1,81 @@
+# Carry-Back propose (stub) — NOT LIVE
+#
+# Operator / product webhook entry for later LIVE use.
+# v0 acceptance is CLI: python -m carry_back propose|self-test
+#
+# Never pushes to main. Never auto-merges. Proposal-only.
+
+name: Carry-Back Propose
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "dry-run | propose | live (live gated)"
+        required: true
+        default: "dry-run"
+        type: choice
+        options:
+          - dry-run
+          - propose
+          - live
+      fixture:
+        description: "Optional fixture path under fixtures/carry_back/ (seeded at run time)"
+        required: false
+        default: "fixtures/carry_back/block_level_fix"
+  repository_dispatch:
+    types: [product-fix-landed]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  propose:
+    name: Carry-Back propose (stub)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Generate the seeded fixtures (never committed)
+        run: python -m carry_back.seeds fixtures/carry_back
+
+      - name: Show Carry-Back status (LIVE gate)
+        run: python -m carry_back status
+
+      - name: Classify / propose from fixture (dispatch) or echo webhook payload
+        env:
+          MODE: ${{ github.event.inputs.mode || 'dry-run' }}
+          FIXTURE: ${{ github.event.inputs.fixture || 'fixtures/carry_back/block_level_fix' }}
+          CLIENT_PAYLOAD: ${{ toJson(github.event.client_payload) }}
+        run: |
+          set -euo pipefail
+          echo "Carry-Back stub — mode=$MODE"
+          if [ "${{ github.event_name }}" = "repository_dispatch" ]; then
+            echo "Received product-fix-landed payload (stub — wire CLI when LIVE):"
+            echo "$CLIENT_PAYLOAD"
+            echo "TODO: map client_payload.diff_url → python -m carry_back propose --diff ..."
+            python -m carry_back status
+          else
+            python -m carry_back propose --fixture "$FIXTURE" --mode "$MODE" || {
+              # live mode is expected to fail closed while gated
+              if [ "$MODE" = "live" ]; then
+                echo "LIVE correctly gated (expected until acceptance)."
+                exit 0
+              fi
+              exit 1
+            }
+          fi
+
+      - name: Upload proposal artifacts (if any)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: carry-back-proposals
+          path: .carry_back/proposals/
+          if-no-files-found: ignore

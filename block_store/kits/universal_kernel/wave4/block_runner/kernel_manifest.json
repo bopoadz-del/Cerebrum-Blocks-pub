@@ -1,0 +1,13 @@
+{
+  "name": "block_runner",
+  "version": "0.1.0",
+  "sha256": "c5dd2ed94699cc20b1c78fd9a0ad2f5fd56858a6acbce00bd563f499c0f0eb42",
+  "dependencies": [
+    "block_store.kits.universal_kernel.wave1.audit_evidence",
+    "block_store.kits.universal_kernel.wave3.structured_outcomes"
+  ],
+  "provenance": "new",
+  "acceptance_test": "tests/test_block_runner.py",
+  "tier": "premium",
+  "note": "Premium-only; not available in the freemium tier."
+}

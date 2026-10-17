@@ -1,0 +1,199 @@
+# Fire protection & firefighting systems — kit VOCABULARY for the shared
+# reasoning-layer evaluator (app/blocks/kit_engine).
+#
+# Migrated from the hand-written gate in reasoning.py. Reading that gate
+# against the portable spec: five qualifier-shaped invariants (INV-1..5) were
+# already there; `authority` was one bespoke REJECT_AS_PROOF loop over an
+# `evidence` list; `currency` existed only for the two-source live-state gate
+# (INV-3) and was not applied to a flow test's own validity; `provenance` was
+# two of the six DERIVATION_GUARD entries (carrying a design basis across a
+# building, or a density across a code edition) reimplemented as regex; and
+# `grounding`, `unit_discipline` and `band` were absent entirely, same as the
+# datacentre kit before its rewrite. They are declared here instead of
+# written again.
+#
+# The other four DERIVATION_GUARD entries — classification-from-occupancy,
+# most-remote-equals-most-demanding, rating-extrapolation, and
+# supply-without-flow-test — are NOT carrying-across-an-entity bugs, so they
+# are not `provenance`. They are also not expressible as the engine's
+# `derivation` kind, which is strictly arithmetic-consistency and
+# sibling-value-contradiction, not a generic forbidden-phrase matcher. Their
+# BEHAVIOUR (refuse the same unsafe statement) is reproduced through
+# `qualifier` (the host never extracts an attribution/basis/assembly qualifier
+# from inference language, so the qualifier invariant that already existed
+# for INV-1/2/5 fires on its own) — see fire_protection_reasoning.py and the
+# mapping table in the migration report.
+#
+# design_basis.yaml holds the eleven filled-or-null design-basis figures
+# (unchanged from the old manifest.yaml's `design_basis:` section) and is read
+# only by FireProtectionBasis, for interview-gap reporting. Nothing in the
+# shared evaluator reads it, and nothing in the evaluator knows what a
+# sprinkler is.
+kit: fire_protection
+version: 1
+serves_verticals: [fire_protection]
+interview_status: "not run — every design_basis.yaml value is null (KNOWN_GAPS.md)"
+
+quantities:
+  hazard_classification:
+    aliases: [hazard classification, fire hazard classification, light hazard,
+              ordinary hazard, extra hazard]
+    classes: [any_claim, any_basis_figure]
+  design_density:
+    units: [gpm/ft2, mm/min]
+    aliases: [design density, discharge density, sprinkler density]
+    classes: [any_claim, any_basis_figure, any_banded]
+  # A generic "the design basis ..." statement that does not (yet) name a
+  # specific density, classification or rating figure. Exists so a carry-the-
+  # basis-from-a-similar-building statement is still a figure the provenance
+  # kind can gate, even before any specific number is quoted.
+  design_basis_reference:
+    aliases: [design basis]
+    classes: [any_claim, any_basis_figure]
+  coverage_claim:
+    aliases: [coverage, adequately protected, fully covered, system available]
+    classes: [any_claim]
+  water_supply:
+    aliases: [water supply, available flow, available pressure, residual pressure]
+    classes: [any_claim]
+  fire_rating:
+    units: [hours]
+    aliases: [fire rating, fire-rated, fire resistance rating]
+    classes: [any_claim, any_basis_figure, any_banded, any_unit_checked]
+
+qualifier_fields:
+  # INV-FP-1: who or what determined the classification.
+  classification_source: {type: string}
+  # INV-FP-2: the basis a density figure was actually analysed under.
+  design_area_basis:      {type: enum, values: [most_remote, most_demanding]}
+  design_area_analysed:   {type: bool}
+  # INV-FP-4 / provenance: which edition of the code the figure belongs to.
+  code_edition:            {type: string}
+  # INV-FP-4: the hazard level actually named (light_hazard, ordinary_hazard_1,
+  # ordinary_hazard_2, extra_hazard_1, extra_hazard_2). Kept as a free string,
+  # not an enum: the qualifier invariant only needs PRESENCE, and validating it
+  # against the closed HAZARD_CLASSIFICATIONS list is done by the host's own
+  # extraction, not by the loader — a caller who has classified a building the
+  # sheet does not yet name a level for should not be refused by the schema.
+  classification:          {type: string}
+  # INV-FP-5: the tested assembly, orientation or penetration detail.
+  tested_assembly_ref:     {type: string}
+  # provenance: the building or facility a figure belongs to. Free string: no
+  # fixed roster exists (there is no airport-style closed list of buildings).
+  building:                {type: string}
+
+source_classes:
+  # rank 1 governs. reject_as_proof is what the governing class explicitly
+  # will not accept as a substitute — the old REJECT_AS_PROOF table, moved
+  # here as data instead of a bespoke evidence loop.
+  engineer_determination:
+    rank: 1
+    name_patterns: ["engineer of record", "determin(?:ed|ation)\\s+by\\s+(?:the\\s+)?engineer",
+                    "named engineer", "\\bP\\.?E\\.?\\b"]
+    reject_as_proof: [visual_inspection, occupancy_inference]
+  approved_document:
+    rank: 1
+    name_patterns: ["approved (?:fire protection )?(?:report|document|drawing|design)"]
+    reject_as_proof: [visual_inspection, occupancy_inference]
+  visual_inspection:
+    rank: 5
+    name_patterns: ["visual inspection", "walkthrough"]
+  occupancy_inference:
+    rank: 5
+    name_patterns:
+      - "inferred from occupancy"
+      - "assumed occupancy"
+      # the never-allowed inference itself: an occupancy word, a hazard word
+      # and a connective ("so", "therefore", "must be") all in one statement
+      # — moved here verbatim from the old DERIVATION_GUARD regex.
+      - "(?=.*(?:occup\\w*|used\\s+as|it.s\\s+an?\\b|looks\\s+like|based\\s+on\\s+(?:the\\s+)?occupancy))(?=.*(?:hazard\\s+class(?:ification)?|light\\s+hazard|ordinary\\s+hazard|extra\\s+hazard))(?=.*(?:so\\b|therefore|implies|must\\s+be|that\\s+makes|means\\s+it.s))"
+  classified_density_table:
+    rank: 1
+    name_patterns: ["classified (?:design )?density table", "hydraulic calculation"]
+    reject_as_proof: [unclassified_table]
+  unclassified_table:
+    rank: 6
+    name_patterns: ["unclassified table", "generic table", "table without classification"]
+  current_flow_test:
+    rank: 1
+    name_patterns: ["current flow test", "flow test result", "witnessed flow test"]
+    reject_as_proof: [nameplate_rating, pump_curve_estimate, design_flow_assumption]
+  nameplate_rating:
+    rank: 6
+    name_patterns: ["nameplate rating", "nameplate"]
+  pump_curve_estimate:
+    rank: 6
+    name_patterns: ["pump curve"]
+  design_flow_assumption:
+    rank: 6
+    name_patterns: ["design flow assumption", "estimated supply", "book value",
+                     "calculated from design"]
+  live_state_record:
+    rank: 1
+    name_patterns: ["impairment log", "live (?:system )?status", "live reading"]
+    reject_as_proof: [design_drawing_evidence]
+  design_drawing_evidence:
+    rank: 6
+    name_patterns: ["as-built drawing", "design drawing", "fire strategy drawing"]
+  tested_assembly_listing:
+    rank: 1
+    name_patterns: ["\\bUL\\s*[A-Z]?\\s*\\d+\\b", "tested assembly", "listing design",
+                     "assembly (?:no\\.?|number|reference)"]
+    reject_as_proof: [product_data_sheet]
+  product_data_sheet:
+    rank: 6
+    name_patterns: ["product data sheet", "manufacturer listing", "product rating alone",
+                     "product alone"]
+  commissioning_test_record:
+    rank: 1
+    name_patterns: ["as-tested", "commissioning test", "functional test record"]
+    reject_as_proof: [design_intent_narrative]
+  design_intent_narrative:
+    rank: 6
+    name_patterns: ["design intent", "sequence of operations narrative", "as-designed matrix"]
+
+state_providers:
+  # The two-source live-state gate (INV-FP-3). Impairment status goes stale in
+  # MINUTES, not hours: a valve closed five minutes ago is not reflected in a
+  # reading from an hour earlier.
+  impairment_log:        {kind: status, max_age: 900}
+  live_status:            {kind: status, max_age: 900}
+  # A current flow test's validity is an EVENT (it expires the moment
+  # valid_until passes), not merely a clock tick.
+  flow_test_record:       {kind: revision, max_age: flow_test_expired}
+  # The design basis itself (classification, density, rating) is superseded
+  # the moment the building it describes changes underneath it.
+  design_basis_revision:  {kind: revision, max_age: basis_changed}
+
+staleness_triggers:
+  water_supply:             [flow_test_expired]
+  hazard_classification:    [tenant_changed, commodity_changed, layout_changed, basis_changed]
+  design_density:           [tenant_changed, commodity_changed, layout_changed, basis_changed]
+  design_basis_reference:   [tenant_changed, commodity_changed, layout_changed, basis_changed]
+  fire_rating:              [layout_changed, basis_changed]
+
+scope_refusals:
+  # The seven. Named-person decisions: the engineer of record, the AHJ, the
+  # fire watch supervisor. Classified BEFORE retrieval so nothing is retrieved
+  # to dress up an answer that authorises none of it.
+  - label: hazard classification
+    pattern: "what\\s+hazard\\s+class(?:ification)?\\s+is\\s+this"
+    authority: "the engineer of record"
+  - label: adequacy of protection
+    pattern: "is\\s+(?:this|the)\\s+building\\s+adequately\\s+protected"
+    authority: "the engineer of record"
+  - label: valve closure
+    pattern: "can\\s+we\\s+close\\s+(?:this|that|the)\\s+valve"
+    authority: "the fire watch supervisor"
+  - label: fire watch sufficiency
+    pattern: "is\\s+a\\s+fire\\s+watch\\s+enough|is\\s+(?:a|the)\\s+fire\\s+watch\\s+sufficient"
+    authority: "the fire watch supervisor"
+  - label: pre-test occupancy
+    pattern: "can\\s+we\\s+occupy\\s+before\\s+testing|occupy\\s+the\\s+building\\s+before\\s+testing"
+    authority: "the AHJ"
+  - label: pass/fail prediction
+    pattern: "will\\s+this\\s+pass\\b|will\\s+it\\s+pass\\s+(?:inspection|testing)?"
+    authority: "the AHJ"
+  - label: firestopping adequacy
+    pattern: "is\\s+(?:this|the)\\s+fire\\s*stopping\\s+ok"
+    authority: "the AHJ"

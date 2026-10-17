@@ -1,0 +1,101 @@
+{
+  "acceptance": [],
+  "author": "Cerebrum Team",
+  "description": "Validate video analytics metadata and persist to the video store",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "4942b394663b3b5ffce3e47ca5ba1be8a76a69c33947808f3f6de04040c64002",
+    "block.py": "e26c82e9ba5b025f68089676508eff6e2e20deb4af97e6fb8c9105bf327267c0"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/video_metadata_ingest:latest",
+    "type": "docker"
+  },
+  "id": "video_metadata_ingest",
+  "inputs": [
+    {
+      "description": "{\"camera_id\": \"lobby-1\", \"zones\": [], \"anomalies\": []}",
+      "name": "input",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "default": "ingest",
+      "description": "Action",
+      "name": "action",
+      "options": [
+        "ingest",
+        "list",
+        "health"
+      ],
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 2,
+  "name": "Video Metadata Ingest",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Event ID",
+      "name": "event_id",
+      "type": "text"
+    },
+    {
+      "description": "Stored",
+      "name": "stored",
+      "type": "boolean"
+    },
+    {
+      "description": "Anomalies",
+      "name": "anomaly_count",
+      "type": "number"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "bdYLW4hD44u1SRCD7qSJ6QtSBPL/qpMYUGl2y1ENRGiKHKenEfTuPZaMNbrhqLkHEMhF9pA5VM1rcLeZxdWKAA==",
+  "tags": [
+    "connector",
+    "video",
+    "ingest",
+    "analytics"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "{\"camera_id\": \"lobby-1\", \"zones\": [], \"anomalies\": []}",
+      "name": "input",
+      "widget": "json"
+    },
+    {
+      "label": "Action",
+      "name": "action",
+      "options": [
+        "ingest",
+        "list",
+        "health"
+      ],
+      "widget": "select"
+    }
+  ],
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

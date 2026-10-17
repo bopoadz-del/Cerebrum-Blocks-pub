@@ -1,0 +1,41 @@
+{
+  "id": "routing_sops",
+  "title": "Insurance Channel Routing SOP Snippets",
+  "version": "1.0.0",
+  "scope": "Use with channel_router heuristic output for agency, direct, MGA, and partner routing decisions.",
+  "disclaimer": "These snippets support operations review and do not replace underwriting appetite, licensing, or compliance controls.",
+  "channels": {
+    "agency": [
+      "Confirm producer appointment, license status, and territory before binding.",
+      "Use agency routing when relationship context, coverage advice, or complex service needs are material.",
+      "Document why agency commission economics are appropriate for the premium and service model."
+    ],
+    "direct": [
+      "Use direct routing for simple, low-touch submissions where digital consent and disclosures are complete.",
+      "Escalate out of direct flow when specialty coverage, advice needs, or manual underwriting triggers appear.",
+      "Monitor abandonment and quote-to-bind metrics weekly for direct channel health."
+    ],
+    "mga": [
+      "Verify MGA delegated authority, program appetite, state eligibility, and capacity before referral.",
+      "Use MGA routing for specialty, hard-to-place, or niche product risks with clear submission documentation.",
+      "Retain underwriting rationale and referral notes for auditability."
+    ],
+    "partner": [
+      "Validate partner source, customer consent, data-sharing permissions, and brand/disclosure requirements.",
+      "Use partner routing for affinity, embedded, referral, or bundle-driven products.",
+      "Track partner conversion, complaint, and cancellation rates separately from direct traffic."
+    ]
+  },
+  "review_triggers": [
+    "Top channel score gap below 8 points",
+    "Any channel constraint conflicts with the recommended channel",
+    "High complexity submission recommended for direct or partner without manual review",
+    "MGA recommendation where no active authority or appetite exists"
+  ],
+  "provenance": {
+    "kind": "contributor_unverified",
+    "recorded_on": "2026-08-29",
+    "reference": "The_Fork-published bundle orphan; no checkable source recovered",
+    "parked": true
+  }
+}

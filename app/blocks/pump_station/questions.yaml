@@ -1,0 +1,487 @@
+# GENERATED from docs/kit_questions/pump_station.md by scripts/import_kit_questions.py — do not hand-edit.
+# Edit the markdown sheet and re-run. The sheet is the record of what the domain
+# owner actually asked for; this file is only its machine-readable form.
+#
+# gate: true  -> [GATE]. The platform refuses anything needing it until answered.
+# gate: false -> [GAP].  Experience worth having; does not block.
+# gate: null  -> the sheet marked neither. Treated as GATING, because a question
+#                whose class cannot be read must block rather than pass.
+#
+# There is deliberately NO answer slot in this file. Answers are per-platform and
+# per-client; this kit is a signed Store block shared by every customer.
+kit: pump_station
+source_document: docs/kit_questions/pump_station.md
+title: 'Water Pump Station Operations — Questions I Cannot Answer'
+answer_format:
+  - 'value'
+  - 'unit'
+  - 'station'
+  - 'pump / model'
+  - 'source'
+  - 'date'
+sections:
+  '1':
+    title: 'Station and pump register'
+  '2':
+    title: 'Energy and operating cost'
+  '3':
+    title: 'Maintenance and failure cost'
+  '4':
+    title: 'Hydraulic envelope'
+  '5':
+    title: 'Named calculations'
+  '6':
+    title: 'Control, protection and SCADA'
+  '7':
+    title: 'Operational decision'
+  '8':
+    title: 'Confined space and site safety'
+  '9':
+    title: 'Evidence standard'
+  '10':
+    title: 'Never-estimate'
+  '11':
+    title: 'May-estimate'
+  '12':
+    title: 'Refusals'
+  '13':
+    title: 'Precedence'
+  '14':
+    title: 'Unit-confusion history'
+  '15':
+    title: 'Incidents'
+  '16':
+    title: 'The five questions'
+questions:
+  - id: '1.1'
+    section: '1'
+    gate: true
+    covers: [wet_well_volume]
+    text: >-
+      Your station register — station name/ID, number of pumps (duty/standby/assist), pump
+      make/model/impeller diameter/trim, rated flow and head at duty point, BEP flow, motor
+      rated power/voltage/FLC, VFD fitted and speed range, static lift min/max, rising main
+      diameter/length/material, wet well volume (gross and working), design peak inflow —
+      with the source of each.
+  - id: '1.2'
+    section: '1'
+    gate: true
+    text: >-
+      Which of your pumps are oversized for present demand, and how you run them.
+  - id: '1.3'
+    section: '1'
+    gate: true
+    text: >-
+      Which of your pumps are duty-assist vs duty-standby, and how each is sequenced.
+  - id: '2.1'
+    section: '2'
+    gate: true
+    text: >-
+      Your specific energy consumption per station (kWh/m³), energy at BEP vs your actual
+      operating point, electricity tariff peak and off-peak, demand/capacity charge,
+      standby generator running cost, power factor penalty threshold — with source.
+  - id: '2.2'
+    section: '2'
+    gate: true
+    text: >-
+      Your target specific energy per m³, and the actual — with the gap.
+  - id: '2.3'
+    section: '2'
+    gate: true
+    text: >-
+      Where pumping is shifted to off-peak on your network, and what governs the window.
+  - id: '2.4'
+    section: '2'
+    gate: true
+    covers: [efficiency]
+    text: >-
+      What a 1% efficiency loss costs annually at each of your stations.
+  - id: '3.1'
+    section: '3'
+    gate: true
+    text: >-
+      Your cost and lead time per item — pump overhaul, impeller replacement, mechanical
+      seal, bearing, motor rewind, motor replacement, VFD replacement, emergency callout,
+      crane/lifting for pump removal, rising main repair, wet well clean-out.
+  - id: '3.2'
+    section: '3'
+    gate: true
+    text: >-
+      Your cost of a lost hour per station — offline with storage covering, offline storage
+      exhausted, sewage overflow, regulatory penalty, tankering, customer compensation.
+  - id: '3.3'
+    section: '3'
+    gate: true
+    text: >-
+      Your MTBF per pump type and the dominant failure mode on your estate.
+  - id: '3.4'
+    section: '3'
+    gate: true
+    text: >-
+      Your spares holding, and your longest lead item that would keep a station down.
+  - id: '4.1'
+    section: '4'
+    gate: true
+    covers: [npsh_available, npsha]
+    text: >-
+      Your NPSHa at design condition and at worst case (summer, low level, max flow, dirty
+      screen) — with the calculation basis.
+  - id: '4.2'
+    section: '4'
+    gate: true
+    covers: [npsh_margin, npsh_required]
+    text: >-
+      Your NPSHr per pump from datasheet — with trim, speed, flow — and the NPSH margin
+      your standard requires (fixed head, percentage, or per ANSI/HI 9.6.1 class), and
+      where that margin is written.
+  - id: '4.3'
+    section: '4'
+    gate: true
+    text: >-
+      Your POR and AOR as applied on your stations — the flow ranges you run within
+      routinely, and what authorises AOR operation and for how long.
+  - id: '4.4'
+    section: '4'
+    gate: true
+    text: >-
+      Your minimum continuous flow per pump, and what enforces it.
+  - id: '4.5'
+    section: '4'
+    gate: true
+    covers: [surge_pressure]
+    text: >-
+      Your maximum flow / runout, maximum discharge pressure, rising main pressure rating,
+      maximum permitted surge pressure.
+  - id: '4.6'
+    section: '4'
+    gate: true
+    covers: [starts_per_hour]
+    text: >-
+      Your minimum submergence over suction, maximum starts per hour, maximum continuous
+      run time, motor current and temperature limits, vibration alarm and trip levels.
+  - id: '4.7'
+    section: '4'
+    gate: true
+    text: >-
+      Which pumps in your estate are high or very high suction energy, and how you know.
+  - id: '5.1'
+    section: '5'
+    gate: true
+    covers: [efficiency, npsh_available, npsh_margin, npsha, starts_per_hour, wet_well_volume]
+    text: >-
+      For each calculation on your stations — NPSHa, NPSH margin, system head curve, duty
+      point, efficiency, specific energy, affinity law speed change, parallel combined
+      curve, surge on power failure, surge on valve closure, air vessel sizing, wet well
+      volume/cycle time, starts per hour, retention time (septicity/H₂S), friction loss,
+      rising main velocity min/max — the inputs you use, the standard each follows, and who
+      owns it.
+  - id: '5.2'
+    section: '5'
+    gate: true
+    text: >-
+      Your surge/transient study — date last done, and what has changed since (pump, valve
+      closure time, main, air vessel).
+  - id: '5.3'
+    section: '5'
+    gate: true
+    covers: [starts_per_hour, wet_well_volume]
+    text: >-
+      Your minimum wet well volume that keeps starts per hour within the motor limit at
+      design inflow — per station.
+  - id: '5.4'
+    section: '5'
+    gate: true
+    text: >-
+      Your retention time threshold that triggers septicity and H₂S generation in sewage
+      service.
+  - id: '5.5'
+    section: '5'
+    gate: true
+    text: >-
+      Your parallel operation check — whether each pump stays within POR when running
+      together on your stations.
+  - id: '6.1'
+    section: '6'
+    gate: true
+    text: >-
+      Your protection list per station — low level/dry run, high level, high-high/overflow,
+      low suction, high discharge, motor overcurrent, motor over-temperature, seal
+      water/failure, vibration, bearing temperature, surge/NRV failure, no-flow detection,
+      VFD fault — with setpoint, trip or alarm, how verified, last tested.
+  - id: '6.2'
+    section: '6'
+    gate: true
+    text: >-
+      Which protections are currently overridden, bypassed, forced, or in manual anywhere
+      in your estate — where that is recorded, who approves, and the maximum duration.
+  - id: '6.3'
+    section: '6'
+    gate: true
+    text: >-
+      How anyone reading the P&ID or SCADA screen would know a protection is bypassed —
+      where that lives, and whether it is linked to anything a system could read.
+  - id: '6.4'
+    section: '6'
+    gate: true
+    text: >-
+      Your control philosophy per station (level, pressure, flow, time-of-day,
+      optimisation), and who may change it.
+  - id: '6.5'
+    section: '6'
+    gate: true
+    text: >-
+      Your power failure and restoration behaviour, and whether restart is staggered.
+  - id: '6.6'
+    section: '6'
+    gate: true
+    text: >-
+      Your telemetry failure behaviour — fail to stop, fail to run, last known state.
+  - id: '7.1'
+    section: '7'
+    gate: true
+    text: >-
+      Your priority order when a pump or station is in trouble.
+  - id: '7.2'
+    section: '7'
+    gate: true
+    text: >-
+      What makes each option impossible on your stations — run standby, run both duty, run
+      outside POR/in AOR, run with protection bypassed, reduce speed on VFD, throttle
+      discharge, draw wet well down further, bypass pumping/tanker, shut station down,
+      restart after trip.
+  - id: '7.3'
+    section: '7'
+    gate: true
+    text: >-
+      Your hard limits that can never be traded, whatever the pressure.
+  - id: '7.4'
+    section: '7'
+    gate: true
+    covers: [starts_per_hour]
+    text: >-
+      Your authority matrix — operate outside POR, bypass or force a protection, reset a
+      trip without investigation, run pump below minimum flow, exceed starts per hour,
+      defer safety-critical maintenance, enter wet well or dry well, discharge to
+      environment.
+  - id: '8.1'
+    section: '8'
+    gate: true
+    text: >-
+      Which of your spaces are classified as confined spaces — wet well, dry well, valve
+      chamber, screen chamber — and your atmospheric entry limits as practised.
+  - id: '8.2'
+    section: '8'
+    gate: true
+    text: >-
+      Your H₂S limits for sewage stations — alarm, evacuation — as set on your sites.
+  - id: '8.3'
+    section: '8'
+    gate: true
+    text: >-
+      Your isolation and lock-off procedure before mechanical work — electrical, hydraulic,
+      stored energy.
+  - id: '8.4'
+    section: '8'
+    gate: true
+    text: >-
+      Your lifting plan requirement for pump removal, and maximum load of your fixed
+      lifting equipment per station.
+  - id: '8.5'
+    section: '8'
+    gate: true
+    text: >-
+      Your written emergency protocols — gas, drowning, entrapment, electrical, overflow,
+      flood.
+  - id: '9.1'
+    section: '9'
+    gate: true
+    covers: [npsh_available, npsh_required, npsha, pump_curve, surge_pressure, wet_well_volume]
+    text: >-
+      Per figure class — NPSHr, NPSHa, duty point, pump curve, surge pressure, protection
+      setpoint, wet well volume, exposure limit — what your organisation accepts as proof,
+      and what it rejects even if it states the number.
+  - id: '9.2'
+    section: '9'
+    gate: true
+    text: >-
+      Minimum acceptable citation per source type — pump datasheet/curve (model, impeller
+      trim, speed), motor datasheet, surge/transient study (date, configuration modelled),
+      design basis report, SCADA configuration (live, not design intent), standard,
+      maintenance record.
+  - id: '9.3'
+    section: '9'
+    gate: true
+    covers: [npsh_available, npsh_required, npsha]
+    text: >-
+      Mandatory qualifiers your organisation requires — NPSHr, NPSHa, duty point, flow,
+      head, protection setpoint — with the "3% head-drop requires margin" note on NPSHr and
+      the "design or worst case" note on NPSHa.
+  - id: '9.4'
+    section: '9'
+    gate: true
+    covers: [npsh_available, npsha, wet_well_volume]
+    text: >-
+      Your derivation rules — affinity laws, interpolating along a curve, extrapolating
+      beyond published curve, calculating NPSHa, combining curves for parallel,
+      head/pressure conversion, carrying curve across trims, carrying surge across
+      stations, estimating wet well volume — allowed or not on your stations.
+  - id: '9.5'
+    section: '9'
+    gate: true
+    covers: [efficiency, npsh_available, npsha, protection_setpoints, pump_curve, surge_study]
+    text: >-
+      Your staleness rules per figure — surge study, pump curve, NPSHa calculation,
+      protection setpoints, efficiency/specific energy, wet well working volume — valid for
+      how long, stale immediately on what.
+  - id: '9.5.2'
+    section: '9'
+    gate: true
+    text: >-
+      Confirm the live-state rule — no answer about a protection or an operating limit
+      without checking whether that protection is currently bypassed or forced.
+  - id: '9.6'
+    section: '9'
+    gate: true
+    text: >-
+      Your conflict resolution — design document vs live SCADA setpoint, manufacturer limit
+      vs operating procedure — which governs on your stations, and which the system should
+      quote.
+  - id: '9.7'
+    section: '9'
+    gate: false
+    text: >-
+      Partial-evidence disclosure wording per situation, and which figures must never be
+      offered as estimates — confirmed explicitly against your Section 10 list.
+  - id: '10.1'
+    section: '10'
+    gate: true
+    covers: [npsh_margin, starts_per_hour, surge_pressure, vibration_trip]
+    text: >-
+      Which figures your organisation treats as absolute — NPSH margin requirement, maximum
+      surge pressure, high-high level/overflow setpoint, H₂S evacuation limit, minimum
+      submergence, minimum continuous flow, POR and AOR boundaries, maximum discharge
+      pressure, rising main pressure rating, maximum starts per hour, motor current and
+      temperature limits, vibration trip levels, confined-space atmospheric limits, lifting
+      equipment maximum load, electrical isolation values.
+  - id: '10.2'
+    section: '10'
+    gate: false
+    text: >-
+      Which of the above have caught you out, and how.
+  - id: '11.1'
+    section: '11'
+    gate: false
+    text: >-
+      Figures you accept as estimates — expected run hours, energy forecast, remaining
+      bearing life — and the exact wording you want attached.
+  - id: '12.1'
+    section: '12'
+    gate: true
+    text: >-
+      Your list of questions that must be refused outright — run this pump harder, bypass
+      this trip, enter the wet well, reset and restart, main take this pressure — and what
+      the system should say instead.
+  - id: '13.1'
+    section: '13'
+    gate: true
+    covers: [surge_study]
+    text: >-
+      Your ranking, highest first — national regulation/discharge consent, standard, design
+      basis report, transient/surge study, manufacturer datasheet and curve, live SCADA
+      configuration, operating procedure, maintenance record, shift instruction.
+  - id: '13.2'
+    section: '13'
+    gate: true
+    text: >-
+      When live SCADA setpoint and design document differ on your stations — which governs,
+      and which the system should quote.
+  - id: '13.3'
+    section: '13'
+    gate: true
+    text: >-
+      When manufacturer limit and your procedure differ — which governs.
+  - id: '13.4'
+    section: '13'
+    gate: true
+    text: >-
+      How anyone knows a curve, study or setpoint is the current one on your estate.
+  - id: '13.5'
+    section: '13'
+    gate: false
+    text: >-
+      Which figures are station-specific on your estate and never carried between stations.
+  - id: '13.6'
+    section: '13'
+    gate: false
+    covers: [efficiency]
+    text: >-
+      Which are pump-specific rather than model-specific — after trim or wear, actual
+      efficiency, vibration baseline.
+  - id: '14.1'
+    section: '14'
+    gate: false
+    text: >-
+      Where a head vs pressure conversion error has occurred on your stations.
+  - id: '14.2'
+    section: '14'
+    gate: false
+    text: >-
+      Where a gross vs working volume error has caused a cycling or overflow problem on
+      yours.
+  - id: '14.3'
+    section: '14'
+    gate: false
+    covers: [npsh_required]
+    text: >-
+      Where an NPSHr-as-a-limit assumption has caused damage on yours.
+  - id: '15.1'
+    section: '15'
+    gate: false
+    text: >-
+      A figure taken from the wrong curve, trim, or a superseded study.
+  - id: '15.2'
+    section: '15'
+    gate: false
+    text: >-
+      A limit correct for one pump or station and wrong for another.
+  - id: '15.3'
+    section: '15'
+    gate: false
+    text: >-
+      A time someone assumed a figure because it "looked normal".
+  - id: '15.4'
+    section: '15'
+    gate: false
+    text: >-
+      A protection believed active that was bypassed or forced.
+  - id: '15.5'
+    section: '15'
+    gate: false
+    text: >-
+      A cavitation or dry-run event, and the number behind it.
+  - id: '15.6'
+    section: '15'
+    gate: false
+    text: >-
+      A surge or burst event traced to a change that invalidated the study.
+  - id: '15.7'
+    section: '15'
+    gate: false
+    text: >-
+      An overflow, and what the setpoint or telemetry actually said.
+  - id: '15.8'
+    section: '15'
+    gate: false
+    text: >-
+      A unit confusion — head, pressure, volume, power.
+  - id: '15.9'
+    section: '15'
+    gate: false
+    text: >-
+      What a new operator or duty engineer most commonly gets wrong in their first six
+      months.
+  - id: '16.1'
+    section: '16'
+    gate: false
+    text: >-
+      Five things you'd ask a system per shift and trust completely.

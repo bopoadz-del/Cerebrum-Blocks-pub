@@ -1,0 +1,93 @@
+{
+  "acceptance": [
+    {
+      "check": "a run whose grader identity equals the target fingerprint is refused - self-grading produces a score that means nothing and looks exactly like one that does",
+      "id": "self_grading",
+      "status": "refused"
+    },
+    {
+      "check": "a grader without an identity is refused - an unattributable score has nothing for the independence check to compare",
+      "id": "grader_no_identity",
+      "status": "refused"
+    },
+    {
+      "check": "a target fingerprint without provider and model is refused",
+      "id": "target_no_provider",
+      "status": "refused"
+    },
+    {
+      "check": "gate math without counted_total is refused - certifying nothing is not a verdict",
+      "id": "gate_no_total",
+      "status": "refused"
+    },
+    {
+      "check": "minting a canary from a too-short battery id or token is refused - a canary that could appear by chance proves nothing",
+      "id": "mint_too_short",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "real (clone of <private-repo> level/certify/gates.py + level/grader/independence.py + level/battery/canary.py + level/core/taxonomy.py): fraction-exact certification gates with CERTIFIED/PROVISIONAL/NOT_CERTIFIED/VOID tiers and recorded waivers (never floats, never rounded), a grader-independence check that REFUSES a run where grader identity == target fingerprint, content-stable canary minting/detection (a canary hit voids the run), and the 11-class failure taxonomy. Scorer implementations and the harness runner are not ported; the gate action takes explicit counts.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "73d7bfd13e977fe95ccf10e64e0e12f075d5589ec1ade3010f5c70c99c725dd0",
+    "block.py": "cb3d4da2b40ed855402e679daed1a738d93e8e7e09963f2dca4c72db4415345c"
+  },
+  "id": "level_certifier",
+  "inputs": [
+    {
+      "description": "gate | independence | mint_canary | scan_canary | taxonomy",
+      "name": "action",
+      "options": [
+        "gate",
+        "independence",
+        "mint_canary",
+        "scan_canary",
+        "taxonomy"
+      ],
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 3,
+  "name": "level_certifier",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Capability result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "Jp1CCsBTU9ysUe18F+PRlyr+/aX0MZ2JKbrPPcNW8kcyDqVzOCFHj1nbviyFxaeqJOnKhwxY15iI2Zwl1j/GDA==",
+  "tags": [
+    "evaluation",
+    "certification",
+    "grading",
+    "gates",
+    "taxonomy",
+    "the-level"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

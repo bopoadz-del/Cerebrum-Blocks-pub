@@ -1,0 +1,1501 @@
+{
+  "schema": "block_certification.v1",
+  "policy": "A certified block passes all three bars in scripts/certify_block.py. Control-delete (bar 3) is the one that counts: the block's tests must go RED when its entry method is gutted to a plausible success. New certifications must name a real fixture exercised by the tests. include_in_ci entries run on every CI push.",
+  "blocks": [
+    {
+      "block": "chat",
+      "module": "app.blocks.chat",
+      "class": "ChatBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_chat.py",
+        "tests/blocks/test_chat_real_payload.py"
+      ],
+      "fixture": "app/prompts/construction_expert.txt - a real system-prompt artifact on disk, loaded by process() and asserted in the conversation the doubled provider echoes back. The Moonshot chat-completion envelope itself is constructed in-test (no recorded provider response exists in the Store); assertions are on the text/provider/model/tokens process() lifted out of it, on the RAG-rewritten user turn, and on the offline template's own 240-char echo truncation.",
+      "certified": true,
+      "include_in_ci": true
+    },
+    {
+      "block": "capture",
+      "module": "app.blocks.capture",
+      "class": "CaptureBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_capture.py",
+        "tests/blocks/test_capture_real_payload.py"
+      ],
+      "fixture": "a 400x100 PNG drawn with PIL and written to disk in-test (precedent: tests/test_image_detection.py) - process() reads it back off disk, base64s it into the vision request (asserted byte-for-byte against the file) and greyscales it for the OCR path. The Kimi Vision / structuring envelopes and the Chroma add/query responses are doubled in-test; assertions are on the capture record process() built from them.",
+      "certified": true,
+      "include_in_ci": true
+    },
+    {
+      "block": "knowledge",
+      "module": "app.blocks.knowledge",
+      "class": "KnowledgeBlock",
+      "method": "execute",
+      "tests": [
+        "tests/blocks/test_knowledge.py"
+      ],
+      "fixture": null,
+      "certified": true,
+      "include_in_ci": true
+    },
+    {
+      "block": "pdf",
+      "module": "app.blocks.pdf",
+      "class": "PDFBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_pdf.py",
+        "tests/blocks/test_pdf_real_payload.py"
+      ],
+      "fixture": "tests/fixtures/synthetic_tm_detail.pdf - a generated drawing (tests/fixtures/make_synthetic_drawings.py): no real title block, firm, client or place",
+      "certified": true,
+      "include_in_ci": true
+    },
+    {
+      "block": "image",
+      "module": "app.blocks.image",
+      "class": "ImageBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_image.py",
+        "tests/test_image_detection.py"
+      ],
+      "fixture": "PNG written to disk by PIL and re-opened from disk by the block (tests/test_image_detection.py, harvested from The_Fork)",
+      "certified": true,
+      "include_in_ci": true
+    },
+    {
+      "block": "agent_swarm",
+      "module": "app.blocks.agent_swarm",
+      "class": "AgentSwarmBlock",
+      "method": "execute",
+      "tests": [
+        "tests/blocks/test_agent_swarm.py"
+      ],
+      "fixture": null,
+      "certified": true,
+      "include_in_ci": true
+    },
+    {
+      "block": "drawing_qto",
+      "module": "app.blocks.drawing_qto",
+      "class": "DrawingQTOBlock",
+      "method": "process",
+      "tests": [
+        "tests/test_drawing_qto.py"
+      ],
+      "fixture": "tests/fixtures/synthetic_tm_detail.pdf - a generated drawing (tests/fixtures/make_synthetic_drawings.py): no real title block, firm, client or place",
+      "certified": true,
+      "include_in_ci": true
+    },
+    {
+      "block": "boq_processor",
+      "module": "app.blocks.boq_processor",
+      "class": "BOQProcessorBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_boq_processor_wave1.py"
+      ],
+      "fixture": "xlsx + text/grid PDFs written in-test (real file parse via block.process)",
+      "certified": true,
+      "include_in_ci": true
+    },
+    {
+      "block": "spec_analyzer",
+      "module": "app.blocks.spec_analyzer",
+      "class": "SpecAnalyzerBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_spec_analyzer_wave1.py",
+        "tests/blocks/test_spec_analyzer_entrypoint.py"
+      ],
+      "fixture": "one- and two-page specification PDFs written with PyMuPDF in tests/blocks/test_spec_analyzer_entrypoint.py and reopened from disk by the block's own _extract_text",
+      "certified": true,
+      "include_in_ci": true,
+      "note": "Entry point covered 2026-09-20. The wave-1 file still calls the private _extract_grades and stays as-is; tests/blocks/test_spec_analyzer_entrypoint.py drives await SpecAnalyzerBlock().process(...) over a real PDF and asserts the resolved table values (C30 -> fck_mpa 30, ASTM A615 -> rebar, ACI 318 -> its covers text), that max_pages actually truncates the read, and the verbatim text of both refusals."
+    },
+    {
+      "block": "project_reasoner",
+      "module": "app.blocks.project_reasoner",
+      "class": "ProjectReasonerBlock",
+      "method": "process",
+      "tests": [
+        "tests/test_project_reasoner.py"
+      ],
+      "fixture": "real 3-activity CPM network executed end-to-end through PlanExecutor + app/lib/pm_computations (compute_cpm/gantt/histogram/compress are the real functions; only the two LLM calls are doubled)",
+      "certified": true,
+      "include_in_ci": true
+    },
+    {
+      "block": "formula_executor",
+      "module": "app.blocks.formula_executor",
+      "class": "FormulaExecutorBlock",
+      "method": "process",
+      "tests": [
+        "tests/test_formula_executor_real_documents.py"
+      ],
+      "fixture": "tests/fixtures/real_doc_formula_vectors.json - 247 line extensions from two real priced bills, 19 activities from a real 2013 Primavera P6 baseline .xer, and an interim payment on the bill's own 15.18M validated-row valuation",
+      "certified": true,
+      "include_in_ci": true
+    },
+    {
+      "block": "formula_executor_v2",
+      "module": "app.blocks.formula_executor_v2",
+      "class": "FormulaExecutorV2Block",
+      "method": "process",
+      "tests": [
+        "tests/test_formula_executor_v2.py"
+      ],
+      "fixture": "real sandboxed execution of generated numpy/sympy/pint code through app/core/sandbox (results asserted on the computed values, not on a mocked envelope); only the codegen LLM call is doubled",
+      "certified": true,
+      "include_in_ci": true
+    },
+    {
+      "block": "historical_benchmark",
+      "module": "app.blocks.historical_benchmark",
+      "class": "HistoricalBenchmarkBlock",
+      "method": "process",
+      "tests": [
+        "tests/test_historical_benchmark_pg.py"
+      ],
+      "fixture": null,
+      "certified": false,
+      "include_in_ci": false,
+      "note": "NOT CERTIFIED - BAR3 FAIL: suite stayed GREEN on a plausible-success gut. tests/test_historical_benchmark_pg.py exercises the 746-line parallel copy at tests/_fixtures/historical_benchmark.py and never imports app/blocks/historical_benchmark.py. The_Fork's tests/test_historical_benchmark.py cannot be harvested: this block has no supported_locations(), 22 location keys against The_Fork's 80+, no cost `basis` on any rate, and _location_factor() returns a bare float, so an unlisted country is silently priced at the US baseline instead of being flagged location_matched=False."
+    },
+    {
+      "block": "sympy_reasoning",
+      "module": "app.blocks.sympy_reasoning",
+      "class": "SymPyReasoningBlock",
+      "method": "process",
+      "tests": [
+        "tests/test_e2e.py"
+      ],
+      "fixture": null,
+      "certified": false,
+      "include_in_ci": false,
+      "note": "NOT CERTIFIED - BAR3 FAIL: suite stayed GREEN on a plausible-success gut. No runnable test exists for this block: tests/test_e2e.py's TestConstructionBlocks is module-skipped as legacy and tests/test_real_inputs.py is a script, not a pytest module. The_Fork has no sympy_reasoning test to harvest, and its own block is 489 lines to this one's 218 (no free-expression evaluation, no quantity-variance path)."
+    },
+    {
+      "block": "ocr",
+      "module": "app.blocks.ocr",
+      "class": "OCRBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_ocr.py",
+        "tests/blocks/test_ocr_real_payload.py"
+      ],
+      "fixture": "tests/fixtures/synthetic_tm_detail.pdf - a generated drawing (tests/fixtures/make_synthetic_drawings.py): no real title block, firm, client or place",
+      "certified": false,
+      "include_in_ci": false,
+      "failing_bar": "BAR3 satisfied by the new tests (the gut goes RED), but the block is NOT certified: no test can assert text read from an image, because OCRBlock.process cannot read one.",
+      "note": "NOT CERTIFIED. Root cause, corrected: the earlier note blamed a missing OCR fixture. The fixture is not the blocker. For ANY input that resolves to an existing file, process() -> _process_image() -> _detect_markup(), whose first statement is an unconditional `from app.core.redline import detect_redlines, summarize_markup` OUTSIDE the function's try. app/core/redline.py does not exist in this repository, and neither does app/core/image_quality.py (imported for summarize_ocr_quality at ocr.py:199 and deskew at ocr.py:348). So every image and every PDF raises ModuleNotFoundError before a pixel is read, and UniversalBlock.execute swallows it into a generic error envelope -- which is why the block looked certifiable. app/blocks/ocr_v2.py:192 has the same dead import. tests/blocks/test_ocr_real_payload.py asserts the four error payloads process() can still produce and pins the ModuleNotFoundError so the gap is executable rather than a note; those two pins must be replaced with assertions on extracted text when app.core.redline and app.core.image_quality land. Fixing this needs block/platform source, which is out of scope for a coverage lane."
+    },
+    {
+      "block": "safety_world_detector",
+      "module": "app.blocks.safety_world_detector",
+      "class": "SafetyWorldDetectorBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_safety_world_detector_block.py"
+      ],
+      "fixture": "image file written to disk in-test; refusal paths exercised without weights",
+      "certified": true,
+      "include_in_ci": true
+    },
+    {
+      "block": "bim",
+      "module": "app.blocks.bim",
+      "class": "BIMBlock",
+      "method": "process",
+      "tests": [
+        "tests/test_real_inputs.py"
+      ],
+      "fixture": null,
+      "certified": false,
+      "include_in_ci": false,
+      "note": "NOT CERTIFIED. BAR3 FAIL: baseline tests not green (pytest exit 5 -- no tests collected). tests/test_real_inputs.py is the only file in the Store that names this block and it is a plain script with no test functions, so BIMBlock has zero pytest coverage. The_Fork's tests/test_bim.py was harvested and dropped: the Store's BIMBlock is version 1.0.0 and returns no top-level `status` key on any path."
+    },
+    {
+      "block": "bim_extractor",
+      "module": "app.blocks.bim_extractor",
+      "class": "BIMExtractorBlock",
+      "method": "process",
+      "tests": [
+        "tests/test_real_inputs.py"
+      ],
+      "fixture": null,
+      "certified": false,
+      "include_in_ci": false,
+      "note": "NOT CERTIFIED. BAR3 FAIL: baseline tests not green (pytest exit 5 -- no tests collected); BIMExtractorBlock has zero pytest coverage in the Store. The real fixture is now present (tests/fixtures/sample_office.ifc, 22 KB IFC4) but no test reads it. The_Fork's tests/test_bim_extractor.py was harvested and dropped: 15 of 18 failed on genuine gaps, the worst being that process() returns status=success with hard-coded demo quantities when file_path is missing or the file does not exist."
+    },
+    {
+      "block": "sandbox",
+      "module": "app.blocks.sandbox",
+      "class": "SandboxBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_sandbox_isolated_requires_runner.py",
+        "tests/blocks/test_sandbox_does_not_cap_its_host.py",
+        "tests/test_sandbox_runner_client.py"
+      ],
+      "fixture": "real Python source strings executed through the restricted in-process exec, plus a fake sandbox-runner HTTP transport for the isolated path",
+      "certified": true,
+      "include_in_ci": true
+    },
+    {
+      "block": "cache_manager",
+      "module": "app.blocks.cache_manager",
+      "class": "CacheManagerBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_cache_manager.py"
+      ],
+      "fixture": "an injected in-process cache client, round-tripped under real scope_key() tenant/project/source-class keys",
+      "certified": true,
+      "include_in_ci": true
+    },
+    {
+      "block": "local_drive",
+      "module": "app.blocks.local_drive",
+      "class": "LocalDriveBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_local_drive.py"
+      ],
+      "fixture": "real files written to and read back from a tmp_path drive root, plus ../ escape attempts",
+      "certified": true,
+      "include_in_ci": true
+    },
+    {
+      "block": "google_drive",
+      "module": "app.blocks.google_drive",
+      "class": "GoogleDriveBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_google_drive.py",
+        "tests/blocks/test_google_drive_service_account.py"
+      ],
+      "fixture": "an RSA-2048 key generated in-test; a real RS256 service-account JWT is minted and its header/claims decoded",
+      "certified": true,
+      "include_in_ci": true
+    },
+    {
+      "block": "onedrive",
+      "module": "app.blocks.onedrive",
+      "class": "OneDriveBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_onedrive.py",
+        "tests/blocks/test_onedrive_graph_grant.py"
+      ],
+      "fixture": "a faked httpx transport replaying a real-shaped Microsoft refresh-token grant and Graph /me/drive payloads against a synthetic credential set; the token endpoint URL, the grant form fields, the Files.Read scope and the bearer forwarded to Graph are asserted on what the block actually sent",
+      "certified": true,
+      "include_in_ci": true
+    },
+    {
+      "block": "search",
+      "module": "app.blocks.search",
+      "class": "SearchBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_search.py",
+        "tests/blocks/test_search_providers.py"
+      ],
+      "fixture": "a scripted Serper JSON body served through a faked httpx.AsyncClient.post and a fake ddgs.DDGS context manager; assertions are on the endpoint/X-API-KEY header/request body the block built and on the rows it normalised (display_url derived with urlparse), not on the envelope",
+      "certified": true,
+      "include_in_ci": true
+    },
+    {
+      "block": "translate",
+      "module": "app.blocks.translate",
+      "class": "TranslateBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_translate.py",
+        "tests/blocks/test_translate_payload.py"
+      ],
+      "fixture": "deep_translator.GoogleTranslator and single_detection replaced with recorders; assertions are on the ISO code _normalize_lang resolved each language name to, the exact (5000-char truncated) text handed to the translator, and the detected source reported back",
+      "certified": true,
+      "include_in_ci": true
+    },
+    {
+      "block": "web",
+      "module": "app.blocks.web",
+      "class": "WebBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_web.py",
+        "tests/blocks/test_web_fetch_offline.py"
+      ],
+      "fixture": "a real HTML document parsed by BeautifulSoup in-test, served as real httpx.Response objects through a faked AsyncClient.get, over a fixed socket.getaddrinfo host table so app.core.url_guard runs its real private-address logic offline",
+      "certified": true,
+      "include_in_ci": true
+    },
+    {
+      "block": "learning_engine",
+      "module": "app.blocks.learning_engine",
+      "class": "LearningEngineBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_learning_engine_durability.py",
+        "tests/blocks/test_learning_engine_entrypoint.py",
+        "tests/core/test_learning_engine_config.py",
+        "tests/test_drift_detection.py"
+      ],
+      "fixture": "a real learning_engine.json written to tmp_path through an injected FileLearningStore and read back by a second block instance (tests/blocks/test_learning_engine_entrypoint.py)",
+      "certified": true,
+      "include_in_ci": true,
+      "note": "Entry point covered 2026-09-20. The three pre-existing files still reach into _save_state/_update_credibility/_store and stay as-is; tests/blocks/test_learning_engine_entrypoint.py drives await LearningEngineBlock().process(...) and asserts the fitted coefficient (scale 1.10 from five 10%-low corrections), the bronze->silver promotion on the 10th execution, the recomputed credibility tier (EXPERIMENTAL at accuracy 1.0 / n=10, QUARANTINE below 0.5), state surviving into a second block over the same file store, and the verbatim text of all four refusals."
+    },
+    {
+      "block": "webhook",
+      "module": "app.blocks.webhook",
+      "class": "WebhookBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_webhook_outbound.py"
+      ],
+      "fixture": "a faked aiohttp.ClientSession recording every outbound POST (url, json body, headers, allow_redirects) plus a fixed socket.getaddrinfo host table; X-Webhook-Signature is recomputed in-test with hmac/sha256 and compared byte for byte",
+      "certified": true,
+      "include_in_ci": true
+    },
+    {
+      "block": "bcf_export",
+      "module": "app.blocks.bcf_export",
+      "class": "BcfExportBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_bcf_export.py",
+        "tests/blocks/test_bcf_export_entrypoint.py"
+      ],
+      "fixture": "real .bcfzip archives written to tmp_path by the block and read back with the stdlib zipfile + ElementTree; a hand-built broken archive for the validator",
+      "certified": true,
+      "include_in_ci": true,
+      "note": "Certified 2026-09-20. tests/blocks/test_bcf_export.py exercised the module functions export_bcf/validate_bcf_zip and never constructed BcfExportBlock, so the _ACTIONS dispatcher was uncovered. tests/blocks/test_bcf_export_entrypoint.py drives await BcfExportBlock().process(...), reads the archive that call produced off disk (Topic titles, the formatted measurement, the cited clause, the conditional PerspectiveCamera), and pins both refusals block_registry/bcf_export/block.json advertises as acceptance criteria."
+    },
+    {
+      "block": "clash_resolver",
+      "module": "app.blocks.clash_resolver",
+      "class": "ClashResolverBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_clash_resolver.py",
+        "tests/blocks/test_clash_resolver_entrypoint.py"
+      ],
+      "fixture": "tests/blocks/test_clash_resolver.py builds real trimesh solids and now executes (trimesh + its manifold3d/rtree backends are pinned in requirements.txt); tests/blocks/test_clash_resolver_entrypoint.py drives the entry point with element stand-ins and asserts the move vectors the block computed",
+      "certified": true,
+      "include_in_ci": true,
+      "note": "Certified 2026-09-20 on the entry point; the 374-line geometry suite verified 2026-09-21. The earlier CAVEAT is cleared: tests/blocks/test_clash_resolver.py is behind a module-level pytest.importorskip('trimesh') and had skipped everywhere, so pytest exited 5 on that path alone. trimesh==4.12.2 made it RUN and it went RED in CI (BAR3 baseline, run 35504322136): 3 of 33 failed because bare trimesh has no boolean or ray backend -- _would_create_new_clash returned None for every candidate, so a move into a wall was proposed and a boxed-in element never escalated. Root cause was two undeclared optional backends, manifold3d and rtree (trimesh's own `easy` extra names both; block_store/kits/mep_coordination/manifest.json already declared manifold3d, rtree was declared nowhere). With both pinned, 46/46 pass across test_clash_resolver.py + test_clash_resolver_entrypoint.py + test_geometry_engine.py. No block source was changed. The entry-point file deliberately needs no geometry backend -- its elements carry mesh=None so _would_create_new_clash returns before importing geometry_engine -- and covers the gravity fall constraint, the candidate-set ordering, the flagged-vs-proposed distinction and both advertised refusals."
+    },
+    {
+      "block": "agency_commission_engine",
+      "module": "app.blocks.agency_commission_engine",
+      "class": "AgencyCommissionEngineBlock",
+      "method": "process",
+      "tests": [
+        "tests/insurance/test_agency_commission_engine.py"
+      ],
+      "fixture": "in-test data only - no on-disk artifact",
+      "certified": true,
+      "include_in_ci": false,
+      "note": "Verified individually by control-delete on 2026-09-20 and passed all three bars. Held out of CI because the full set has not been run in a single --all invocation, which is what CI does; include it once that run is green and its added runtime is acceptable."
+    },
+    {
+      "block": "agency_hierarchy",
+      "module": "app.blocks.agency_hierarchy",
+      "class": "AgencyHierarchyBlock",
+      "method": "process",
+      "tests": [
+        "tests/insurance/test_agency_hierarchy.py"
+      ],
+      "fixture": "in-test data only - no on-disk artifact",
+      "certified": true,
+      "include_in_ci": false,
+      "note": "Verified individually by control-delete on 2026-09-20 and passed all three bars. Held out of CI because the full set has not been run in a single --all invocation, which is what CI does; include it once that run is green and its added runtime is acceptable."
+    },
+    {
+      "block": "android_drive",
+      "module": "app.blocks.android_drive",
+      "class": "AndroidDriveBlock",
+      "method": "process",
+      "tests": [
+        "tests/test_all_blocks.py",
+        "tests/blocks/test_android_drive.py",
+        "tests/blocks/test_chaining.py",
+        "tests/blocks/test_stub_honesty.py"
+      ],
+      "fixture": "in-test data only - no on-disk artifact",
+      "certified": true,
+      "include_in_ci": false,
+      "note": "Verified individually by control-delete on 2026-09-20 and passed all three bars. Held out of CI because the full set has not been run in a single --all invocation, which is what CI does; include it once that run is green and its added runtime is acceptable."
+    },
+    {
+      "block": "attrition_scorer",
+      "module": "app.blocks.attrition_scorer",
+      "class": "AttritionScorerBlock",
+      "method": "process",
+      "tests": [
+        "tests/insurance/test_attrition_scorer.py"
+      ],
+      "fixture": "in-test data only - no on-disk artifact",
+      "certified": true,
+      "include_in_ci": false,
+      "note": "Verified individually by control-delete on 2026-09-20 and passed all three bars. Held out of CI because the full set has not been run in a single --all invocation, which is what CI does; include it once that run is green and its added runtime is acceptable."
+    },
+    {
+      "block": "audit_chain",
+      "module": "app.blocks.audit_chain",
+      "class": "AuditChainBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_audit_chain.py"
+      ],
+      "fixture": "in-test data only - no on-disk artifact",
+      "certified": true,
+      "include_in_ci": false,
+      "note": "Verified individually by control-delete on 2026-09-20 and passed all three bars. Held out of CI because the full set has not been run in a single --all invocation, which is what CI does; include it once that run is green and its added runtime is acceptable."
+    },
+    {
+      "block": "auth",
+      "module": "app.blocks.auth",
+      "class": "AuthBlock",
+      "method": "process",
+      "tests": [
+        "tests/test_auth.py",
+        "tests/test_wave2_clones.py"
+      ],
+      "fixture": "a tmp_path working directory; inputs are constructed in-test",
+      "certified": true,
+      "include_in_ci": false,
+      "note": "Verified individually by control-delete on 2026-09-20 and passed all three bars. Held out of CI because the full set has not been run in a single --all invocation, which is what CI does; include it once that run is green and its added runtime is acceptable."
+    },
+    {
+      "block": "aviation_cargo_kit",
+      "module": "app.blocks.aviation_cargo_kit",
+      "class": "AviationCargoKitBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_aviation_domain_kits.py"
+      ],
+      "fixture": "in-test data only - no on-disk artifact",
+      "certified": true,
+      "include_in_ci": false,
+      "note": "Verified individually by control-delete on 2026-09-20 and passed all three bars. Held out of CI because the full set has not been run in a single --all invocation, which is what CI does; include it once that run is green and its added runtime is acceptable."
+    },
+    {
+      "block": "aviation_chat_server",
+      "module": "app.blocks.aviation_chat_server",
+      "class": "AviationChatServerBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_aviation_chat_server.py",
+        "tests/blocks/test_aviation_grounding_closure.py",
+        "tests/blocks/test_phase4_mechanisms.py"
+      ],
+      "fixture": "real files written to and read back from a tmp_path in-test",
+      "certified": true,
+      "include_in_ci": false,
+      "note": "Verified individually by control-delete on 2026-09-20 and passed all three bars. Held out of CI because the full set has not been run in a single --all invocation, which is what CI does; include it once that run is green and its added runtime is acceptable."
+    },
+    {
+      "block": "aviation_cx_kit",
+      "module": "app.blocks.aviation_cx_kit",
+      "class": "AviationCxKitBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_aviation_domain_kits.py"
+      ],
+      "fixture": "in-test data only - no on-disk artifact",
+      "certified": true,
+      "include_in_ci": false,
+      "note": "Verified individually by control-delete on 2026-09-20 and passed all three bars. Held out of CI because the full set has not been run in a single --all invocation, which is what CI does; include it once that run is green and its added runtime is acceptable."
+    },
+    {
+      "block": "aviation_grounding_gate",
+      "module": "app.blocks.aviation_grounding_gate",
+      "class": "AviationGroundingGateBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_aviation_domain_kits.py",
+        "tests/blocks/test_aviation_grounding_gate.py"
+      ],
+      "fixture": "in-test data only - no on-disk artifact",
+      "certified": true,
+      "include_in_ci": false,
+      "note": "Verified individually by control-delete on 2026-09-20 and passed all three bars. Held out of CI because the full set has not been run in a single --all invocation, which is what CI does; include it once that run is green and its added runtime is acceptable."
+    },
+    {
+      "block": "aviation_loyalty_kit",
+      "module": "app.blocks.aviation_loyalty_kit",
+      "class": "AviationLoyaltyKitBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_aviation_domain_kits.py"
+      ],
+      "fixture": "in-test data only - no on-disk artifact",
+      "certified": true,
+      "include_in_ci": false,
+      "note": "Verified individually by control-delete on 2026-09-20 and passed all three bars. Held out of CI because the full set has not been run in a single --all invocation, which is what CI does; include it once that run is green and its added runtime is acceptable."
+    },
+    {
+      "block": "aviation_pss_kit",
+      "module": "app.blocks.aviation_pss_kit",
+      "class": "AviationPssKitBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_aviation_domain_kits.py"
+      ],
+      "fixture": "in-test data only - no on-disk artifact",
+      "certified": true,
+      "include_in_ci": false,
+      "note": "Verified individually by control-delete on 2026-09-20 and passed all three bars. Held out of CI because the full set has not been run in a single --all invocation, which is what CI does; include it once that run is green and its added runtime is acceptable."
+    },
+    {
+      "block": "aviation_revenue_kit",
+      "module": "app.blocks.aviation_revenue_kit",
+      "class": "AviationRevenueKitBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_aviation_domain_kits.py"
+      ],
+      "fixture": "in-test data only - no on-disk artifact",
+      "certified": true,
+      "include_in_ci": false,
+      "note": "Verified individually by control-delete on 2026-09-20 and passed all three bars. Held out of CI because the full set has not been run in a single --all invocation, which is what CI does; include it once that run is green and its added runtime is acceptable."
+    },
+    {
+      "block": "billing",
+      "module": "app.blocks.billing",
+      "class": "BillingBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_review_billing_verification.py"
+      ],
+      "fixture": "in-test data only - no on-disk artifact",
+      "certified": true,
+      "include_in_ci": false,
+      "note": "Verified individually by control-delete on 2026-09-20 and passed all three bars. Held out of CI because the full set has not been run in a single --all invocation, which is what CI does; include it once that run is green and its added runtime is acceptable."
+    },
+    {
+      "block": "bordereaux_ingest",
+      "module": "app.blocks.bordereaux_ingest",
+      "class": "BordereauxIngestBlock",
+      "method": "process",
+      "tests": [
+        "tests/insurance/test_bordereaux_distribution.py"
+      ],
+      "fixture": "in-test data only - no on-disk artifact",
+      "certified": true,
+      "include_in_ci": false,
+      "note": "Verified individually by control-delete on 2026-09-20 and passed all three bars. Held out of CI because the full set has not been run in a single --all invocation, which is what CI does; include it once that run is green and its added runtime is acceptable."
+    },
+    {
+      "block": "channel_router",
+      "module": "app.blocks.channel_router",
+      "class": "ChannelRouterBlock",
+      "method": "process",
+      "tests": [
+        "tests/insurance/test_channel_router.py"
+      ],
+      "fixture": "in-test data only - no on-disk artifact",
+      "certified": true,
+      "include_in_ci": false,
+      "note": "Verified individually by control-delete on 2026-09-20 and passed all three bars. Held out of CI because the full set has not been run in a single --all invocation, which is what CI does; include it once that run is green and its added runtime is acceptable."
+    },
+    {
+      "block": "code",
+      "module": "app.blocks.code",
+      "class": "CodeBlock",
+      "method": "process",
+      "tests": [
+        "tests/test_all_blocks.py",
+        "tests/test_e2e.py",
+        "tests/test_sandbox_runner_client.py",
+        "tests/blocks/test_chaining.py",
+        "tests/blocks/test_code.py"
+      ],
+      "fixture": "in-test data only - no on-disk artifact",
+      "certified": true,
+      "include_in_ci": false,
+      "note": "Verified individually by control-delete on 2026-09-20 and passed all three bars. Held out of CI because the full set has not been run in a single --all invocation, which is what CI does; include it once that run is green and its added runtime is acceptable."
+    },
+    {
+      "block": "construction_advisor",
+      "module": "app.blocks.construction_advisor",
+      "class": "ConstructionAdvisorBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_construction_advisor_transitions.py",
+        "tests/blocks/test_phase4_mechanisms.py"
+      ],
+      "fixture": "real files written to and read back from a tmp_path in-test",
+      "certified": true,
+      "include_in_ci": false,
+      "note": "Verified individually by control-delete on 2026-09-20 and passed all three bars. Held out of CI because the full set has not been run in a single --all invocation, which is what CI does; include it once that run is green and its added runtime is acceptable."
+    },
+    {
+      "block": "discovery",
+      "module": "app.blocks.discovery",
+      "class": "DiscoveryBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_discovery_vector_routing.py"
+      ],
+      "fixture": "in-test data only - no on-disk artifact",
+      "certified": true,
+      "include_in_ci": false,
+      "note": "Verified individually by control-delete on 2026-09-20 and passed all three bars. Held out of CI because the full set has not been run in a single --all invocation, which is what CI does; include it once that run is green and its added runtime is acceptable."
+    },
+    {
+      "block": "distribution_analytics",
+      "module": "app.blocks.distribution_analytics",
+      "class": "DistributionAnalyticsBlock",
+      "method": "process",
+      "tests": [
+        "tests/insurance/test_bordereaux_distribution.py"
+      ],
+      "fixture": "in-test data only - no on-disk artifact",
+      "certified": true,
+      "include_in_ci": false,
+      "note": "Verified individually by control-delete on 2026-09-20 and passed all three bars. Held out of CI because the full set has not been run in a single --all invocation, which is what CI does; include it once that run is green and its added runtime is acceptable."
+    },
+    {
+      "block": "estate_bearer_auth",
+      "module": "app.blocks.estate_bearer_auth",
+      "class": "EstateBearerAuthBlock",
+      "method": "process",
+      "tests": [
+        "tests/test_wave2_clones.py"
+      ],
+      "fixture": "a tmp_path working directory; inputs are constructed in-test",
+      "certified": true,
+      "include_in_ci": false,
+      "note": "Verified individually by control-delete on 2026-09-20 and passed all three bars. Held out of CI because the full set has not been run in a single --all invocation, which is what CI does; include it once that run is green and its added runtime is acceptable."
+    },
+    {
+      "block": "file_hasher",
+      "module": "app.blocks.file_hasher",
+      "class": "FileHasherBlock",
+      "method": "process",
+      "tests": [
+        "tests/test_e2e.py"
+      ],
+      "fixture": "in-test data only - no on-disk artifact",
+      "certified": true,
+      "include_in_ci": false,
+      "note": "Verified individually by control-delete on 2026-09-20 and passed all three bars. Held out of CI because the full set has not been run in a single --all invocation, which is what CI does; include it once that run is green and its added runtime is acceptable."
+    },
+    {
+      "block": "finance_canonical_model",
+      "module": "app.blocks.finance_canonical_model",
+      "class": "FinanceCanonicalModelBlock",
+      "method": "process",
+      "tests": [
+        "tests/finance_ops/test_foundation_blocks.py"
+      ],
+      "fixture": "in-test data only - no on-disk artifact",
+      "certified": true,
+      "include_in_ci": false,
+      "note": "Verified individually by control-delete on 2026-09-20 and passed all three bars. Held out of CI because the full set has not been run in a single --all invocation, which is what CI does; include it once that run is green and its added runtime is acceptable."
+    },
+    {
+      "block": "finance_coa_governance",
+      "module": "app.blocks.finance_coa_governance",
+      "class": "FinanceCoAGovernanceBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_finance_lifecycle_and_import.py",
+        "tests/finance_ops/test_foundation_blocks.py"
+      ],
+      "fixture": "real files written to and read back from a tmp_path in-test",
+      "certified": true,
+      "include_in_ci": false,
+      "note": "Verified individually by control-delete on 2026-09-20 and passed all three bars. Held out of CI because the full set has not been run in a single --all invocation, which is what CI does; include it once that run is green and its added runtime is acceptable."
+    },
+    {
+      "block": "finance_data_quality",
+      "module": "app.blocks.finance_data_quality",
+      "class": "FinanceDataQualityBlock",
+      "method": "process",
+      "tests": [
+        "tests/finance_ops/test_foundation_blocks.py"
+      ],
+      "fixture": "in-test data only - no on-disk artifact",
+      "certified": true,
+      "include_in_ci": false,
+      "note": "Verified individually by control-delete on 2026-09-20 and passed all three bars. Held out of CI because the full set has not been run in a single --all invocation, which is what CI does; include it once that run is green and its added runtime is acceptable."
+    },
+    {
+      "block": "finance_import",
+      "module": "app.blocks.finance_import",
+      "class": "FinanceImportBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_finance_lifecycle_and_import.py",
+        "tests/finance_ops/test_foundation_blocks.py"
+      ],
+      "fixture": "real files written to and read back from a tmp_path in-test",
+      "certified": true,
+      "include_in_ci": false,
+      "note": "Verified individually by control-delete on 2026-09-20 and passed all three bars. Held out of CI because the full set has not been run in a single --all invocation, which is what CI does; include it once that run is green and its added runtime is acceptable."
+    },
+    {
+      "block": "finance_reconciliation",
+      "module": "app.blocks.finance_reconciliation",
+      "class": "FinanceReconciliationBlock",
+      "method": "process",
+      "tests": [
+        "tests/finance_ops/test_foundation_blocks.py"
+      ],
+      "fixture": "in-test data only - no on-disk artifact",
+      "certified": true,
+      "include_in_ci": false,
+      "note": "Verified individually by control-delete on 2026-09-20 and passed all three bars. Held out of CI because the full set has not been run in a single --all invocation, which is what CI does; include it once that run is green and its added runtime is acceptable."
+    },
+    {
+      "block": "finance_saas_metrics",
+      "module": "app.blocks.finance_saas_metrics",
+      "class": "FinanceSaaSMetricsBlock",
+      "method": "process",
+      "tests": [
+        "tests/finance_ops/test_foundation_blocks.py"
+      ],
+      "fixture": "in-test data only - no on-disk artifact",
+      "certified": true,
+      "include_in_ci": false,
+      "note": "Verified individually by control-delete on 2026-09-20 and passed all three bars. Held out of CI because the full set has not been run in a single --all invocation, which is what CI does; include it once that run is green and its added runtime is acceptable."
+    },
+    {
+      "block": "governance_gate",
+      "module": "app.blocks.governance_gate",
+      "class": "GovernanceGateBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_governance_gate.py"
+      ],
+      "fixture": "in-test data only - no on-disk artifact",
+      "certified": true,
+      "include_in_ci": false,
+      "note": "Verified individually by control-delete on 2026-09-20 and passed all three bars. Held out of CI because the full set has not been run in a single --all invocation, which is what CI does; include it once that run is green and its added runtime is acceptable."
+    },
+    {
+      "block": "hkia_gn16_rules",
+      "module": "app.blocks.hkia_gn16_rules",
+      "class": "HKIAGN16RulesBlock",
+      "method": "process",
+      "tests": [
+        "tests/insurance/test_hkia_gn16_rules.py"
+      ],
+      "fixture": "in-test data only - no on-disk artifact",
+      "certified": true,
+      "include_in_ci": false,
+      "note": "Verified individually by control-delete on 2026-09-20 and passed all three bars. Held out of CI because the full set has not been run in a single --all invocation, which is what CI does; include it once that run is green and its added runtime is acceptable."
+    },
+    {
+      "block": "inbound_webhook",
+      "module": "app.blocks.inbound_webhook",
+      "class": "InboundWebhookBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_inbound_webhook.py"
+      ],
+      "fixture": "in-test data only - no on-disk artifact",
+      "certified": true,
+      "include_in_ci": false,
+      "note": "Verified individually by control-delete on 2026-09-20 and passed all three bars. Held out of CI because the full set has not been run in a single --all invocation, which is what CI does; include it once that run is green and its added runtime is acceptable."
+    },
+    {
+      "block": "incentive_targeting",
+      "module": "app.blocks.incentive_targeting",
+      "class": "IncentiveTargetingBlock",
+      "method": "process",
+      "tests": [
+        "tests/insurance/test_incentive_targeting.py"
+      ],
+      "fixture": "in-test data only - no on-disk artifact",
+      "certified": true,
+      "include_in_ci": false,
+      "note": "Verified individually by control-delete on 2026-09-20 and passed all three bars. Held out of CI because the full set has not been run in a single --all invocation, which is what CI does; include it once that run is green and its added runtime is acceptable."
+    },
+    {
+      "block": "library_container",
+      "module": "app.blocks.library_container",
+      "class": "LibraryContainerBlock",
+      "method": "process",
+      "tests": [
+        "tests/test_library_container.py"
+      ],
+      "fixture": "in-test data only - no on-disk artifact",
+      "certified": true,
+      "include_in_ci": false,
+      "note": "Verified individually by control-delete on 2026-09-20 and passed all three bars. Held out of CI because the full set has not been run in a single --all invocation, which is what CI does; include it once that run is green and its added runtime is acceptable."
+    },
+    {
+      "block": "llm_enhancer",
+      "module": "app.blocks.llm_enhancer",
+      "class": "LLMEnhancerBlock",
+      "method": "process",
+      "tests": [
+        "tests/test_llm_enhancer.py"
+      ],
+      "fixture": "in-test data only - no on-disk artifact",
+      "certified": true,
+      "include_in_ci": false,
+      "note": "Verified individually by control-delete on 2026-09-20 and passed all three bars. Held out of CI because the full set has not been run in a single --all invocation, which is what CI does; include it once that run is green and its added runtime is acceptable."
+    },
+    {
+      "block": "marker",
+      "module": "app.blocks.marker",
+      "class": "MarkerBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_marker.py"
+      ],
+      "fixture": "in-test data only - no on-disk artifact",
+      "certified": true,
+      "include_in_ci": false,
+      "note": "Verified individually by control-delete on 2026-09-20 and passed all three bars. Held out of CI because the full set has not been run in a single --all invocation, which is what CI does; include it once that run is green and its added runtime is acceptable."
+    },
+    {
+      "block": "mcp_adapter",
+      "module": "app.blocks.mcp_adapter",
+      "class": "MCPAdapterBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_mcp_adapter_block.py"
+      ],
+      "fixture": "in-test data only - no on-disk artifact",
+      "certified": true,
+      "include_in_ci": false,
+      "note": "Verified individually by control-delete on 2026-09-20 and passed all three bars. Held out of CI because the full set has not been run in a single --all invocation, which is what CI does; include it once that run is green and its added runtime is acceptable."
+    },
+    {
+      "block": "medical_ehr_connector",
+      "module": "app.blocks.medical_ehr_connector",
+      "class": "MedicalEHRConnectorBlock",
+      "method": "execute",
+      "tests": [
+        "tests/blocks/test_medical_ehr_connector.py",
+        "tests/integration/test_kit_connector_e2e.py"
+      ],
+      "fixture": "a tmp_path working directory; inputs are constructed in-test",
+      "certified": true,
+      "include_in_ci": false,
+      "note": "Verified individually by control-delete on 2026-09-20 and passed all three bars. Held out of CI because the full set has not been run in a single --all invocation, which is what CI does; include it once that run is green and its added runtime is acceptable."
+    },
+    {
+      "block": "memory",
+      "module": "app.blocks.memory",
+      "class": "MemoryBlock",
+      "method": "process",
+      "tests": [
+        "tests/test_auth.py",
+        "tests/test_blocks.py",
+        "tests/core/test_memory_isolation.py"
+      ],
+      "fixture": "in-test data only - no on-disk artifact",
+      "certified": true,
+      "include_in_ci": false,
+      "note": "Verified individually by control-delete on 2026-09-20 and passed all three bars. Held out of CI because the full set has not been run in a single --all invocation, which is what CI does; include it once that run is green and its added runtime is acceptable."
+    },
+    {
+      "block": "monitoring",
+      "module": "app.blocks.monitoring",
+      "class": "MonitoringBlock",
+      "method": "process",
+      "tests": [
+        "tests/test_blocks.py"
+      ],
+      "fixture": "in-test data only - no on-disk artifact",
+      "certified": true,
+      "include_in_ci": false,
+      "note": "Verified individually by control-delete on 2026-09-20 and passed all three bars. Held out of CI because the full set has not been run in a single --all invocation, which is what CI does; include it once that run is green and its added runtime is acceptable."
+    },
+    {
+      "block": "primavera_parser",
+      "module": "app.blocks.primavera_parser",
+      "class": "PrimaveraParserBlock",
+      "method": "process",
+      "tests": [
+        "tests/test_e2e.py",
+        "tests/blocks/test_primavera_parser_wave1.py"
+      ],
+      "fixture": "in-test data only - no on-disk artifact",
+      "certified": true,
+      "include_in_ci": false,
+      "note": "Verified individually by control-delete on 2026-09-20 and passed all three bars. Held out of CI because the full set has not been run in a single --all invocation, which is what CI does; include it once that run is green and its added runtime is acceptable."
+    },
+    {
+      "block": "producer_record",
+      "module": "app.blocks.producer_record",
+      "class": "ProducerRecordBlock",
+      "method": "process",
+      "tests": [
+        "tests/insurance/test_producer_record.py"
+      ],
+      "fixture": "in-test data only - no on-disk artifact",
+      "certified": true,
+      "include_in_ci": false,
+      "note": "Verified individually by control-delete on 2026-09-20 and passed all three bars. Held out of CI because the full set has not been run in a single --all invocation, which is what CI does; include it once that run is green and its added runtime is acceptable."
+    },
+    {
+      "block": "review",
+      "module": "app.blocks.review",
+      "class": "ReviewBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_review_billing_verification.py"
+      ],
+      "fixture": "in-test data only - no on-disk artifact",
+      "certified": true,
+      "include_in_ci": false,
+      "note": "Verified individually by control-delete on 2026-09-20 and passed all three bars. Held out of CI because the full set has not been run in a single --all invocation, which is what CI does; include it once that run is green and its added runtime is acceptable."
+    },
+    {
+      "block": "team",
+      "module": "app.blocks.team",
+      "class": "TeamBlock",
+      "method": "process",
+      "tests": [
+        "tests/test_team_state_survives_a_new_block_instance.py"
+      ],
+      "fixture": "real files written to and read back from a tmp_path in-test",
+      "certified": true,
+      "include_in_ci": false,
+      "note": "Verified individually by control-delete on 2026-09-20 and passed all three bars. Held out of CI because the full set has not been run in a single --all invocation, which is what CI does; include it once that run is green and its added runtime is acceptable."
+    },
+    {
+      "block": "user_auth",
+      "module": "app.blocks.user_auth",
+      "class": "UserAuthBlock",
+      "method": "process",
+      "tests": [
+        "tests/test_wave2_clones.py"
+      ],
+      "fixture": "a tmp_path working directory; inputs are constructed in-test",
+      "certified": true,
+      "include_in_ci": false,
+      "note": "Verified individually by control-delete on 2026-09-20 and passed all three bars. Held out of CI because the full set has not been run in a single --all invocation, which is what CI does; include it once that run is green and its added runtime is acceptable."
+    },
+    {
+      "block": "validation",
+      "module": "app.blocks.validation",
+      "class": "ValidationBlock",
+      "method": "process",
+      "tests": [
+        "tests/test_validation_stages.py"
+      ],
+      "fixture": "in-test data only - no on-disk artifact",
+      "certified": true,
+      "include_in_ci": false,
+      "note": "Verified individually by control-delete on 2026-09-20 and passed all three bars. Held out of CI because the full set has not been run in a single --all invocation, which is what CI does; include it once that run is green and its added runtime is acceptable."
+    },
+    {
+      "block": "video_anomaly_trigger",
+      "module": "app.blocks.video_anomaly_trigger",
+      "class": "VideoAnomalyTriggerBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_video_anomaly_trigger.py"
+      ],
+      "fixture": "in-test data only - no on-disk artifact",
+      "certified": true,
+      "include_in_ci": false,
+      "note": "Verified individually by control-delete on 2026-09-20 and passed all three bars. Held out of CI because the full set has not been run in a single --all invocation, which is what CI does; include it once that run is green and its added runtime is acceptable."
+    },
+    {
+      "block": "video_metadata_ingest",
+      "module": "app.blocks.video_metadata_ingest",
+      "class": "VideoMetadataIngestBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_video_metadata_ingest.py",
+        "tests/integration/test_kit_connector_e2e.py"
+      ],
+      "fixture": "a tmp_path working directory; inputs are constructed in-test",
+      "certified": true,
+      "include_in_ci": false,
+      "note": "Verified individually by control-delete on 2026-09-20 and passed all three bars. Held out of CI because the full set has not been run in a single --all invocation, which is what CI does; include it once that run is green and its added runtime is acceptable."
+    },
+    {
+      "block": "voice",
+      "module": "app.blocks.voice",
+      "class": "VoiceBlock",
+      "method": "process",
+      "tests": [
+        "tests/test_all_blocks.py",
+        "tests/blocks/test_chaining.py",
+        "tests/blocks/test_voice.py"
+      ],
+      "fixture": "in-test data only - no on-disk artifact",
+      "certified": true,
+      "include_in_ci": false,
+      "note": "Verified individually by control-delete on 2026-09-20 and passed all three bars. Held out of CI because the full set has not been run in a single --all invocation, which is what CI does; include it once that run is green and its added runtime is acceptable."
+    },
+    {
+      "block": "workbench",
+      "module": "app.blocks.workbench",
+      "class": "WorkbenchBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_workbench.py"
+      ],
+      "fixture": "in-test data only - no on-disk artifact",
+      "certified": true,
+      "include_in_ci": false,
+      "note": "Verified individually by control-delete on 2026-09-20 and passed all three bars. Held out of CI because the full set has not been run in a single --all invocation, which is what CI does; include it once that run is green and its added runtime is acceptable."
+    },
+    {
+      "block": "workflow",
+      "module": "app.blocks.workflow",
+      "class": "WorkflowBlock",
+      "method": "process",
+      "tests": [
+        "tests/test_e2e.py",
+        "tests/blocks/test_workflow.py"
+      ],
+      "fixture": "in-test data only - no on-disk artifact",
+      "certified": true,
+      "include_in_ci": false,
+      "note": "Verified individually by control-delete on 2026-09-20 and passed all three bars. Held out of CI because the full set has not been run in a single --all invocation, which is what CI does; include it once that run is green and its added runtime is acceptable."
+    },
+    {
+      "block": "queue",
+      "module": "app.blocks.queue",
+      "class": "QueueBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_queue.py"
+      ],
+      "fixture": "a fakeredis server (in-process Redis with the real list/zset/string semantics) bound in at the app.core.redis_infra seam the block consumes, so the block's own key layout, LPOP/LPUSH ordering, ZSET reservations and JSON job records run against a store that outlives the block instance; a real job payload dict is round-tripped through it. Assertions are on what process() computed: the job id it minted, the backend it declared, the payload handed back on dequeue, the re-delivery after the visibility timeout, and the refusal to ack an expired reservation.",
+      "certified": true,
+      "include_in_ci": true
+    },
+    {
+      "block": "notification",
+      "module": "app.blocks.notification",
+      "class": "NotificationBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_notification_delivery.py"
+      ],
+      "fixture": "real socket servers on 127.0.0.1 started in-test: an http.server ThreadingHTTPServer sink that records the raw POST bytes and headers and answers a scripted status sequence (500 then 200 for the retry), and a raw-socket ESMTP responder that stdlib smtplib completes a session against and which keeps the DATA bytes. The sink recomputes HMAC-SHA256 over the bytes it received with a key minted per test. Assertions are on the delivery record process() returned and on the bytes the sinks captured.",
+      "certified": true,
+      "include_in_ci": true
+    },
+    {
+      "block": "transaction_state_machine",
+      "module": "app.blocks.transaction_state_machine",
+      "class": "TransactionStateMachineBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_transaction_state_machine.py"
+      ],
+      "fixture": "in-test generated deterministic transition payloads (task/order/trip/transaction verticals from the embedded TRANSITIONS table); assertions are on the payload states, actor guards, idempotent replays and error listings process() returns.",
+      "certified": true,
+      "include_in_ci": true
+    },
+    {
+      "block": "payment_escrow",
+      "module": "app.blocks.payment_escrow",
+      "class": "PaymentEscrowBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_payment_escrow.py"
+      ],
+      "fixture": "in-test generated Decimal money payloads exercising hold/release/partial/refund/freeze; assertions are on exact Decimal fee and net amounts, state transitions and error codes process() returns.",
+      "certified": true,
+      "include_in_ci": true
+    },
+    {
+      "block": "task_listing",
+      "module": "app.blocks.task_listing",
+      "class": "TaskListingBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_task_listing.py"
+      ],
+      "fixture": "in-test generated listing payloads with real coordinates (Manhattan/Jersey City/LA) exercised through haversine distance_match; assertions are on listing ids, validation errors, distances, filters and price bands process() returns.",
+      "certified": true,
+      "include_in_ci": true
+    },
+    {
+      "block": "offer_bidding",
+      "module": "app.blocks.offer_bidding",
+      "class": "OfferBiddingBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_offer_bidding.py"
+      ],
+      "fixture": "in-test generated offer payloads with budgets and scoring inputs; assertions are on offer states, amounts, budget/actor refusals, rank ordering and score components process() returns.",
+      "certified": true,
+      "include_in_ci": true
+    },
+    {
+      "block": "review_reputation",
+      "module": "app.blocks.review_reputation",
+      "class": "ReviewReputationBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_review_reputation.py"
+      ],
+      "fixture": "in-test generated review payloads with controlled ages and comments; assertions are on decayed scores, Laplace confidence, fraud flags and effective weights process() returns.",
+      "certified": true,
+      "include_in_ci": true
+    },
+    {
+      "block": "task_messaging",
+      "module": "app.blocks.task_messaging",
+      "class": "TaskMessagingBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_task_messaging.py"
+      ],
+      "fixture": "in-test generated threads and messages including blocklisted bodies; assertions are on sequences, participant gates, moderation flags, cursors and evidence digests process() returns.",
+      "certified": true,
+      "include_in_ci": true
+    },
+    {
+      "block": "dispatch_matching",
+      "module": "app.blocks.dispatch_matching",
+      "class": "DispatchMatchingBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_dispatch_matching.py"
+      ],
+      "fixture": "in-test generated workers and jobs with skills, capacity and sequence steps; assertions are on candidate ranking with component scores, capacity guards, exclusive assignment and timeout lifecycle process() returns.",
+      "certified": true,
+      "include_in_ci": true
+    },
+    {
+      "block": "geolocation_tracking",
+      "module": "app.blocks.geolocation_tracking",
+      "class": "GeolocationTrackingBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_geolocation_tracking.py"
+      ],
+      "fixture": "in-test generated position sequences with real Manhattan/Jersey City coordinates and a 3 km geofence; assertions are on haversine segments, enter/exit events, out-of-order refusals and ETA math process() returns.",
+      "certified": true,
+      "include_in_ci": true
+    },
+    {
+      "block": "pricing_surge",
+      "module": "app.blocks.pricing_surge",
+      "class": "PricingSurgeBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_pricing_surge.py"
+      ],
+      "fixture": "in-test generated fare payloads with controlled ratios; assertions are on exact Decimal breakdowns, tier step-ups, cap enforcement and totals process() returns.",
+      "certified": true,
+      "include_in_ci": true
+    },
+    {
+      "block": "dispute_resolution",
+      "module": "app.blocks.dispute_resolution",
+      "class": "DisputeResolutionBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_dispute_resolution.py"
+      ],
+      "fixture": "in-test generated dispute payloads with party lists, evidence digests and step windows; assertions are on the state lifecycle, party/platform gates, escalation deadlines and history process() returns.",
+      "certified": true,
+      "include_in_ci": true
+    },
+    {
+      "block": "insurance_compliance",
+      "module": "app.blocks.insurance_compliance",
+      "class": "InsuranceComplianceBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_insurance_compliance.py"
+      ],
+      "fixture": "in-test generated policy records with validity windows and verticals; assertions are on covered lines, explicit gaps, expiry handling and incident verdicts process() returns.",
+      "certified": true,
+      "include_in_ci": true
+    },
+    {
+      "block": "loyalty_referrals",
+      "module": "app.blocks.loyalty_referrals",
+      "class": "LoyaltyReferralsBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_loyalty_referrals.py"
+      ],
+      "fixture": "in-test generated referral and credit payloads with step numbers; assertions are on two-sided grants, caps, expiry, FIFO redemption rows and Decimal balances process() returns.",
+      "certified": true,
+      "include_in_ci": true
+    },
+    {
+      "block": "vendor_catalog",
+      "module": "app.blocks.vendor_catalog",
+      "class": "VendorCatalogBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_vendor_catalog.py"
+      ],
+      "fixture": "in-test generated vendor and item payloads with Decimal prices; assertions are on registration, availability gates, closed category set, search filters and inactive-vendor refusals process() returns.",
+      "certified": true,
+      "include_in_ci": true
+    },
+    {
+      "block": "offshore_marine_reasoning",
+      "module": "app.blocks.offshore_marine_reasoning",
+      "class": "OffshoreMarineReasoningBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_offshore_marine_reasoning.py"
+      ],
+      "fixture": "app/blocks/offshore_marine/manifest.yaml - a real qualified manifest on disk, loaded by process() via InstallationBasis. The loader refuses a partially-qualified figure at load time and the test asserts the refusal names the figure and every missing qualifier; the gate's ten never-allowed derivations are each driven through process()'s reasoning path and asserted to name which inference was attempted.",
+      "include_in_ci": true
+    },
+    {
+      "block": "og_operations_reasoning",
+      "module": "app.blocks.og_operations_reasoning",
+      "class": "OgOperationsReasoningBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_og_operations_reasoning.py"
+      ],
+      "fixture": "app/blocks/og_operations/manifest.yaml - a real qualified operating-basis manifest on disk, loaded by process() via OperatingBasis. The loader refuses a partially-qualified figure at load time and the test asserts the refusal names the figure and every missing qualifier; the five never-allowed derivations (including the cross-facility limit carry, checked by distinct-facility tokens plus a carry verb rather than a mention-counting regex) are each driven through process() and asserted to name which inference was attempted.",
+      "include_in_ci": true
+    },
+    {
+      "block": "water_treatment_reasoning",
+      "module": "app.blocks.water_treatment_reasoning",
+      "class": "WaterTreatmentReasoningBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_water_treatment_reasoning.py"
+      ],
+      "fixture": "app/blocks/water_treatment/manifest.yaml - a real qualified manifest on disk (9 figures), loaded by process() via TreatmentBasis. The loader refuses a partially-qualified figure at load time and a test asserts the refusal names the figure and every missing qualifier; the never-allowed derivations (CT table interpolation, nameplate hypochlorite strength, design-document compliance, similar-plant carry, theoretical detention where T10 is required) are each driven through process() and asserted to name which inference was attempted.",
+      "include_in_ci": true
+    },
+    {
+      "block": "aesthetic_kit",
+      "module": "app.blocks.aesthetic_kit",
+      "class": "AestheticKitBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_reasoning_kits.py"
+      ],
+      "fixture": "app/blocks/aesthetic/manifest.yaml and invariants.yaml - the kit's real declaration on disk, loaded by process() through the shared evaluator. The tests drive process() and assert what only a real sweep produces: the H0 refusal returned BEFORE retrieval with retrieval_permitted false, every declared scope pattern refusing (each probe checked against its own pattern so a bad probe fails rather than passes), all five hooks in hooks_run, an undeclared qualifier refused by name, and the interview state travelling with the answer.",
+      "include_in_ci": true
+    },
+    {
+      "block": "airport_construction_kit",
+      "module": "app.blocks.airport_construction_kit",
+      "class": "AirportConstructionKitBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_reasoning_kits.py"
+      ],
+      "fixture": "app/blocks/airport_construction/manifest.yaml and invariants.yaml - the kit's real declaration on disk, loaded by process() through the shared evaluator. The tests drive process() and assert what only a real sweep produces: the H0 refusal returned BEFORE retrieval with retrieval_permitted false, every declared scope pattern refusing (each probe checked against its own pattern so a bad probe fails rather than passes), all five hooks in hooks_run, an undeclared qualifier refused by name, and the interview state travelling with the answer.",
+      "include_in_ci": true
+    },
+    {
+      "block": "architecture_kit",
+      "module": "app.blocks.architecture_kit",
+      "class": "ArchitectureKitBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_reasoning_kits.py"
+      ],
+      "fixture": "app/blocks/architecture/manifest.yaml and invariants.yaml - the kit's real declaration on disk, loaded by process() through the shared evaluator. The tests drive process() and assert what only a real sweep produces: the H0 refusal returned BEFORE retrieval with retrieval_permitted false, every declared scope pattern refusing (each probe checked against its own pattern so a bad probe fails rather than passes), all five hooks in hooks_run, an undeclared qualifier refused by name, and the interview state travelling with the answer.",
+      "include_in_ci": true
+    },
+    {
+      "block": "aviation_ops_kit",
+      "module": "app.blocks.aviation_ops_kit",
+      "class": "AviationOpsKitBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_reasoning_kits.py"
+      ],
+      "fixture": "app/blocks/aviation_ops/manifest.yaml and invariants.yaml - the kit's real declaration on disk, loaded by process() through the shared evaluator. The tests drive process() and assert what only a real sweep produces: the H0 refusal returned BEFORE retrieval with retrieval_permitted false, every declared scope pattern refusing (each probe checked against its own pattern so a bad probe fails rather than passes), all five hooks in hooks_run, an undeclared qualifier refused by name, and the interview state travelling with the answer.",
+      "include_in_ci": true
+    },
+    {
+      "block": "datacentre_kit",
+      "module": "app.blocks.datacentre_kit",
+      "class": "DatacentreKitBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_reasoning_kits.py"
+      ],
+      "fixture": "app/blocks/datacentre/manifest.yaml and invariants.yaml - the kit's real declaration on disk, loaded by process() through the shared evaluator. The tests drive process() and assert what only a real sweep produces: the H0 refusal returned BEFORE retrieval with retrieval_permitted false, every declared scope pattern refusing (each probe checked against its own pattern so a bad probe fails rather than passes), all five hooks in hooks_run, an undeclared qualifier refused by name, and the interview state travelling with the answer.",
+      "include_in_ci": true
+    },
+    {
+      "block": "dental_kit",
+      "module": "app.blocks.dental_kit",
+      "class": "DentalKitBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_reasoning_kits.py"
+      ],
+      "fixture": "app/blocks/dental/manifest.yaml and invariants.yaml - the kit's real declaration on disk, loaded by process() through the shared evaluator. The tests drive process() and assert what only a real sweep produces: the H0 refusal returned BEFORE retrieval with retrieval_permitted false, every declared scope pattern refusing (each probe checked against its own pattern so a bad probe fails rather than passes), all five hooks in hooks_run, an undeclared qualifier refused by name, and the interview state travelling with the answer.",
+      "include_in_ci": true
+    },
+    {
+      "block": "fire_protection_kit",
+      "module": "app.blocks.fire_protection_kit",
+      "class": "FireProtectionKitBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_reasoning_kits.py"
+      ],
+      "fixture": "app/blocks/fire_protection/manifest.yaml and invariants.yaml - the kit's real declaration on disk, loaded by process() through the shared evaluator. The tests drive process() and assert what only a real sweep produces: the H0 refusal returned BEFORE retrieval with retrieval_permitted false, every declared scope pattern refusing (each probe checked against its own pattern so a bad probe fails rather than passes), all five hooks in hooks_run, an undeclared qualifier refused by name, and the interview state travelling with the answer.",
+      "include_in_ci": true
+    },
+    {
+      "block": "fitout_kit",
+      "module": "app.blocks.fitout_kit",
+      "class": "FitoutKitBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_reasoning_kits.py"
+      ],
+      "fixture": "app/blocks/fitout/manifest.yaml and invariants.yaml - the kit's real declaration on disk, loaded by process() through the shared evaluator. The tests drive process() and assert what only a real sweep produces: the H0 refusal returned BEFORE retrieval with retrieval_permitted false, every declared scope pattern refusing (each probe checked against its own pattern so a bad probe fails rather than passes), all five hooks in hooks_run, an undeclared qualifier refused by name, and the interview state travelling with the answer.",
+      "include_in_ci": true
+    },
+    {
+      "block": "fm_kit",
+      "module": "app.blocks.fm_kit",
+      "class": "FmKitBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_reasoning_kits.py"
+      ],
+      "fixture": "app/blocks/fm/manifest.yaml and invariants.yaml - the kit's real declaration on disk, loaded by process() through the shared evaluator. The tests drive process() and assert what only a real sweep produces: the H0 refusal returned BEFORE retrieval with retrieval_permitted false, every declared scope pattern refusing (each probe checked against its own pattern so a bad probe fails rather than passes), all five hooks in hooks_run, an undeclared qualifier refused by name, and the interview state travelling with the answer.",
+      "include_in_ci": true
+    },
+    {
+      "block": "heritage_kit",
+      "module": "app.blocks.heritage_kit",
+      "class": "HeritageKitBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_reasoning_kits.py"
+      ],
+      "fixture": "app/blocks/heritage/manifest.yaml and invariants.yaml - the kit's real declaration on disk, loaded by process() through the shared evaluator. The tests drive process() and assert what only a real sweep produces: the H0 refusal returned BEFORE retrieval with retrieval_permitted false, every declared scope pattern refusing (each probe checked against its own pattern so a bad probe fails rather than passes), all five hooks in hooks_run, an undeclared qualifier refused by name, and the interview state travelling with the answer.",
+      "include_in_ci": true
+    },
+    {
+      "block": "offshore_marine_kit",
+      "module": "app.blocks.offshore_marine_kit",
+      "class": "OffshoreMarineKitBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_reasoning_kits.py"
+      ],
+      "fixture": "app/blocks/offshore_marine/manifest.yaml and invariants.yaml - the kit's real declaration on disk, loaded by process() through the shared evaluator. The tests drive process() and assert what only a real sweep produces: the H0 refusal returned BEFORE retrieval with retrieval_permitted false, every declared scope pattern refusing (each probe checked against its own pattern so a bad probe fails rather than passes), all five hooks in hooks_run, an undeclared qualifier refused by name, and the interview state travelling with the answer.",
+      "include_in_ci": true
+    },
+    {
+      "block": "og_construction_kit",
+      "module": "app.blocks.og_construction_kit",
+      "class": "OgConstructionKitBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_reasoning_kits.py"
+      ],
+      "fixture": "app/blocks/og_construction/manifest.yaml and invariants.yaml - the kit's real declaration on disk, loaded by process() through the shared evaluator. The tests drive process() and assert what only a real sweep produces: the H0 refusal returned BEFORE retrieval with retrieval_permitted false, every declared scope pattern refusing (each probe checked against its own pattern so a bad probe fails rather than passes), all five hooks in hooks_run, an undeclared qualifier refused by name, and the interview state travelling with the answer.",
+      "include_in_ci": true
+    },
+    {
+      "block": "og_operations_kit",
+      "module": "app.blocks.og_operations_kit",
+      "class": "OgOperationsKitBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_reasoning_kits.py"
+      ],
+      "fixture": "app/blocks/og_operations/manifest.yaml and invariants.yaml - the kit's real declaration on disk, loaded by process() through the shared evaluator. The tests drive process() and assert what only a real sweep produces: the H0 refusal returned BEFORE retrieval with retrieval_permitted false, every declared scope pattern refusing (each probe checked against its own pattern so a bad probe fails rather than passes), all five hooks in hooks_run, an undeclared qualifier refused by name, and the interview state travelling with the answer.",
+      "include_in_ci": true
+    },
+    {
+      "block": "ports_marine_kit",
+      "module": "app.blocks.ports_marine_kit",
+      "class": "PortsMarineKitBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_reasoning_kits.py"
+      ],
+      "fixture": "app/blocks/ports_marine/manifest.yaml and invariants.yaml - the kit's real declaration on disk, loaded by process() through the shared evaluator. The tests drive process() and assert what only a real sweep produces: the H0 refusal returned BEFORE retrieval with retrieval_permitted false, every declared scope pattern refusing (each probe checked against its own pattern so a bad probe fails rather than passes), all five hooks in hooks_run, an undeclared qualifier refused by name, and the interview state travelling with the answer.",
+      "include_in_ci": true
+    },
+    {
+      "block": "pump_station_kit",
+      "module": "app.blocks.pump_station_kit",
+      "class": "PumpStationKitBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_reasoning_kits.py"
+      ],
+      "fixture": "app/blocks/pump_station/manifest.yaml and invariants.yaml - the kit's real declaration on disk, loaded by process() through the shared evaluator. The tests drive process() and assert what only a real sweep produces: the H0 refusal returned BEFORE retrieval with retrieval_permitted false, every declared scope pattern refusing (each probe checked against its own pattern so a bad probe fails rather than passes), all five hooks in hooks_run, an undeclared qualifier refused by name, and the interview state travelling with the answer.",
+      "include_in_ci": true
+    },
+    {
+      "block": "rail_kit",
+      "module": "app.blocks.rail_kit",
+      "class": "RailKitBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_reasoning_kits.py"
+      ],
+      "fixture": "app/blocks/rail/manifest.yaml and invariants.yaml - the kit's real declaration on disk, loaded by process() through the shared evaluator. The tests drive process() and assert what only a real sweep produces: the H0 refusal returned BEFORE retrieval with retrieval_permitted false, every declared scope pattern refusing (each probe checked against its own pattern so a bad probe fails rather than passes), all five hooks in hooks_run, an undeclared qualifier refused by name, and the interview state travelling with the answer.",
+      "include_in_ci": true
+    },
+    {
+      "block": "water_treatment_kit",
+      "module": "app.blocks.water_treatment_kit",
+      "class": "WaterTreatmentKitBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_reasoning_kits.py"
+      ],
+      "fixture": "app/blocks/water_treatment/manifest.yaml and invariants.yaml - the kit's real declaration on disk, loaded by process() through the shared evaluator. The tests drive process() and assert what only a real sweep produces: the H0 refusal returned BEFORE retrieval with retrieval_permitted false, every declared scope pattern refusing (each probe checked against its own pattern so a bad probe fails rather than passes), all five hooks in hooks_run, an undeclared qualifier refused by name, and the interview state travelling with the answer.",
+      "include_in_ci": true
+    },
+    {
+      "block": "stadium_venue_kit",
+      "module": "app.blocks.stadium_venue_kit",
+      "class": "StadiumVenueKitBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_reasoning_kits.py",
+        "tests/blocks/test_stadium_venue_reasoning.py"
+      ],
+      "fixture": "app/blocks/stadium_venue/manifest.yaml, invariants.yaml and design_basis.yaml - the kit's real 46-record declaration on disk, loaded by process() through the shared evaluator. The tests drive process() and assert what only a real sweep produces: the H0 refusal returned BEFORE retrieval with retrieval_permitted false, every declared scope pattern refusing (each probe checked against its own pattern so a bad probe fails rather than passes), all five hooks in hooks_run, an undeclared qualifier refused by name, and the interview state travelling with the answer. test_stadium_venue_reasoning.py adds the assertion the refusal suites cannot make: a fully qualified, sourced, current capacity PASSING all four hooks, then one removal at a time to prove the pass was earned - which is how the three unenforced-declaration defects were found.",
+      "include_in_ci": true
+    },
+    {
+      "block": "reference_corpus",
+      "module": "app.blocks.reference_corpus",
+      "method": "process",
+      "class": "ReferenceCorpusBlock",
+      "tests": [
+        "tests/blocks/test_reference_corpus.py"
+      ],
+      "fixture": "the real licence and host rules in app/blocks/reference_corpus.py exercised through process(): a document admitted only on an 'open' licence with all seven ingest fields present, a tenant_only licence refused by name (the Green Guide case - a personal purchase licence allowing three downloads can only ever be tenant-supplied), a mirror host refused against the real REFUSED_HOSTS list, and the reserved 'ref:' project prefix enforced. The retrieval plan is delegated to the real RagTenantIsolationBlock._plan, not a double, so a chunk labelled corpus=reference cannot answer as a tenant's own.",
+      "include_in_ci": true
+    },
+    {
+      "block": "posture_model",
+      "module": "app.blocks.posture_model",
+      "class": "PostureModelBlock",
+      "method": "process",
+      "tests": [
+        "tests/blocks/test_posture_model.py"
+      ],
+      "fixture": "app/vendor/cerebrum_slm/configs/serve/posture-epoch2.json - the pinned serve file on disk (<private-repo>@4e167a7 checkpoint URI). process() refuses when fork_context is missing or null and, when context is attached, returns the text sample_posture produced from that checkpoint. No retrieval.",
+      "certified": true,
+      "include_in_ci": true
+    }
+  ]
+}

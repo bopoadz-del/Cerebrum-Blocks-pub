@@ -1,0 +1,182 @@
+{
+  "acceptance": [
+    {
+      "check": "errors on an unknown or missing action",
+      "id": "unknown_action",
+      "status": "failed"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "4507f51ec738d3e1e0427bcf38d733a9100c82df617cd812c4bbb36c80c6ab21",
+    "block.py": "fd02feccea158d04ad9b70e56d6e8a90463c5cafb56aa14f7d4592e3b8def090"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/version:latest",
+    "type": "docker"
+  },
+  "id": "version",
+  "inputs": [
+    {
+      "description": "JSON payload for the selected action",
+      "name": "input",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "default": "publish_version",
+      "description": "Action",
+      "name": "action",
+      "options": [
+        "publish_version",
+        "check_compatibility",
+        "rollback",
+        "deprecate",
+        "dependency_tree",
+        "get_version",
+        "list_versions",
+        "compare_versions",
+        "get_changelog",
+        "suggest_update",
+        "validate_version",
+        "yank_version"
+      ],
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": "semver",
+      "description": "Configuration parameter: default_strategy",
+      "name": "default_strategy",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": true,
+      "description": "Configuration parameter: auto_update_patch",
+      "name": "auto_update_patch",
+      "required": false,
+      "type": "boolean"
+    },
+    {
+      "default": 30,
+      "description": "Configuration parameter: breaking_change_threshold_days",
+      "name": "breaking_change_threshold_days",
+      "required": false,
+      "type": "number"
+    },
+    {
+      "default": 10,
+      "description": "Configuration parameter: max_versions_kept",
+      "name": "max_versions_kept",
+      "required": false,
+      "type": "number"
+    },
+    {
+      "default": true,
+      "description": "Configuration parameter: require_changelog",
+      "name": "require_changelog",
+      "required": false,
+      "type": "boolean"
+    }
+  ],
+  "layer": 3,
+  "name": "Version",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    }
+  ],
+  "requires": [
+    "database",
+    "storage"
+  ],
+  "signature": "Jh1BaXTEY1R6a2mOPEnWcRADK/jlEkoZFpoFtKgS7iOwlELRcNf/Ckqp3OzEHoW7/mBA/yLmT91yT5v9cWIYCQ==",
+  "tags": [
+    "platform",
+    "devops",
+    "store",
+    "versioning"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "JSON payload for the selected action",
+      "name": "input",
+      "widget": "json"
+    },
+    {
+      "label": "Action",
+      "name": "action",
+      "options": [
+        "publish_version",
+        "check_compatibility",
+        "rollback",
+        "deprecate",
+        "dependency_tree",
+        "get_version",
+        "list_versions",
+        "compare_versions",
+        "get_changelog",
+        "suggest_update",
+        "validate_version",
+        "yank_version"
+      ],
+      "widget": "select"
+    },
+    {
+      "label": "Default Strategy",
+      "name": "default_strategy",
+      "widget": "text"
+    },
+    {
+      "label": "Auto Update Patch",
+      "name": "auto_update_patch",
+      "widget": "toggle"
+    },
+    {
+      "label": "Breaking Change Threshold Days",
+      "name": "breaking_change_threshold_days",
+      "widget": "number"
+    },
+    {
+      "label": "Max Versions Kept",
+      "name": "max_versions_kept",
+      "widget": "number"
+    },
+    {
+      "label": "Require Changelog",
+      "name": "require_changelog",
+      "widget": "toggle"
+    }
+  ],
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

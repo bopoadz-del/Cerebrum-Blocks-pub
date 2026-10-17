@@ -1,0 +1,77 @@
+{
+  "acceptance": [
+    {
+      "check": "a lock without an approved governance request is refused",
+      "id": "lock_requires_approval",
+      "status": "refused"
+    },
+    {
+      "check": "an allocation with no members is refused, never fabricated",
+      "id": "no_members",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Finance planning ported from <private-repo> planning/service.py: draft budgets lock behind an approved governance request; locked budgets are immutable (edits create version N+1); allocation splits total/count quantized to 0.0001 with the remainder routed to the first member so the total stays exact. Store is in-process.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "22e63799b3ce4f95a23bc18e40cf0695ce9c24565f50a3495d3a704a22315d30",
+    "block.py": "4f45e76707586087a8d5a2ebc7535496b48ef85ad971b0773d3621297e777da9"
+  },
+  "id": "finance_planning",
+  "inputs": [
+    {
+      "description": "create_budget | lock_budget | update_budget | run_allocation | list_budgets",
+      "name": "action",
+      "options": [
+        "create_budget",
+        "lock_budget",
+        "update_budget",
+        "run_allocation",
+        "list_budgets"
+      ],
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 3,
+  "name": "finance_planning",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Capability result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "YGzDuJrgzHDJrZAm/YyH06trTxcmNXS2y6D0tVoK/YobxLaEuG1FR2sQFXEqWmW2Fiz1JUTWpcUJQWM/x5YlBQ==",
+  "tags": [
+    "finance",
+    "planning",
+    "budget",
+    "allocation",
+    "finance_ops"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "name": "durable_jobs",
+  "version": "0.1.0",
+  "sha256": "38acd8497041ae4ef504c936f668af69af128558af14385dd97dd7d072ced86f",
+  "dependencies": [],
+  "provenance": "factory",
+  "acceptance_test": "tests/test_durable_jobs.py",
+  "tier": "premium",
+  "note": "Premium-only; not available in the freemium tier."
+}

@@ -1,0 +1,465 @@
+# GENERATED from docs/kit_questions/og_operations.md by scripts/import_kit_questions.py — do not hand-edit.
+# Edit the markdown sheet and re-run. The sheet is the record of what the domain
+# owner actually asked for; this file is only its machine-readable form.
+#
+# gate: true  -> [GATE]. The platform refuses anything needing it until answered.
+# gate: false -> [GAP].  Experience worth having; does not block.
+# gate: null  -> the sheet marked neither. Treated as GATING, because a question
+#                whose class cannot be read must block rather than pass.
+#
+# There is deliberately NO answer slot in this file. Answers are per-platform and
+# per-client; this kit is a signed Store block shared by every customer.
+kit: og_operations
+source_document: docs/kit_questions/og_operations.md
+title: 'Oil & Gas Operations — Questions I Cannot Answer'
+answer_format:
+  - 'value'
+  - 'unit'
+  - 'asset / tag'
+  - 'parameter'
+  - 'source'
+  - 'date'
+sections:
+  '1':
+    title: 'Deferment economics'
+  '2':
+    title: 'Operating costs'
+  '3':
+    title: 'Maintenance and turnaround'
+  '4':
+    title: 'Operating envelope'
+  '5':
+    title: 'Named calculations'
+  '6':
+    title: 'Operational decision'
+  '7':
+    title: 'Permits, isolation and overrides'
+  '8':
+    title: 'Safety critical elements'
+  '9':
+    title: 'Evidence standard'
+  '10':
+    title: 'Never-estimate'
+  '11':
+    title: 'May-estimate'
+  '12':
+    title: 'Refusals'
+  '13':
+    title: 'Precedence'
+  '14':
+    title: 'Unit-confusion history'
+  '15':
+    title: 'Incidents'
+  '16':
+    title: 'The five questions'
+questions:
+  - id: '1.1'
+    section: '1'
+    gate: true
+    text: >-
+      Your agreed deferment cost figure per situation — full facility shutdown, single
+      train/module down, single well shut in, compression down, export/offtake unavailable,
+      rate reduction per %, flaring instead of export, planned outage per hour, unplanned
+      outage per hour — with source, owner, and revision date against price.
+  - id: '1.2'
+    section: '1'
+    gate: true
+    text: >-
+      Your unplanned vs planned ratio on your assets — the multiple as experienced.
+  - id: '1.3'
+    section: '1'
+    gate: true
+    text: >-
+      Your step costs — the points where an outage stops being linear on your asset
+      (contractual delivery failure, tank tops, well restart, flaring limits, regulatory
+      notification).
+  - id: '1.4'
+    section: '1'
+    gate: true
+    text: >-
+      Your restart cost independent of outage — time to stable, off-spec product, chemical
+      consumption, flaring.
+  - id: '2.1'
+    section: '2'
+    gate: true
+    text: >-
+      Your per-item cost — fuel gas/self-consumption, power import, corrosion inhibitor,
+      scale inhibitor, demulsifier, H₂S scavenger, methanol/MEG, amine make-up, catalyst
+      per charge, produced water handling, chemical disposal/waste, flare gas value and
+      carbon cost.
+  - id: '2.2'
+    section: '2'
+    gate: true
+    text: >-
+      Which of your consumables have a rate tied to production vs fixed.
+  - id: '2.3'
+    section: '2'
+    gate: true
+    text: >-
+      Your long lead consumables that constrain operations if stock runs low.
+  - id: '3.1'
+    section: '3'
+    gate: true
+    text: >-
+      Your turnaround interval per unit and what governs each on your asset — regulatory,
+      statutory inspection, catalyst life, or reliability.
+  - id: '3.2'
+    section: '3'
+    gate: true
+    text: >-
+      Your cost set — full facility turnaround (cost and duration), single unit turnaround,
+      major equipment overhaul, emergency contractor mobilisation, specialist crew day
+      rate, crane/heavy lift, scaffolding, NDT inspection campaign, vessel entry
+      preparation.
+  - id: '3.3'
+    section: '3'
+    gate: true
+    text: >-
+      Your cost of one day of turnaround overrun.
+  - id: '3.4'
+    section: '3'
+    gate: true
+    text: >-
+      Your proportion of turnaround scope that is discovery work found on opening.
+  - id: '4.1'
+    section: '4'
+    gate: true
+    covers: [maop, mawp, pressure, sif_setpoint]
+    text: >-
+      Your envelope table — separator pressure, separator level, compressor suction
+      pressure, compressor discharge temperature, vessel design pressure/MAWP, pipeline
+      MAOP, minimum design metal temperature, furnace/heater tube skin temp, column
+      differential pressure, tank level high-high, flare header pressure, H₂S in
+      product/gas — normal range, alarm, trip/SIF setpoint, safe operating limit, design
+      limit, source for each.
+  - id: '4.2'
+    section: '4'
+    gate: true
+    covers: [pressure]
+    text: >-
+      Your terminology for alarm, trip, SOL, design limit — which may be exceeded briefly,
+      which never.
+  - id: '4.3'
+    section: '4'
+    gate: true
+    covers: [pressure]
+    text: >-
+      Who may authorise operating outside normal envelope but inside SOL on your asset, for
+      how long, and what is recorded.
+  - id: '4.4'
+    section: '4'
+    gate: true
+    text: >-
+      What happens on a SOL exceedance on your asset — incident, deviation, or shutdown
+      trigger.
+  - id: '4.5'
+    section: '4'
+    gate: true
+    text: >-
+      Which parameters on your asset have no operator discretion at all.
+  - id: '5.1'
+    section: '5'
+    gate: true
+    covers: [corrosion_rate, mawp, pressure, remaining_life]
+    text: >-
+      For each calculation — relief valve sizing/required relief rate, flare load and
+      radiation, depressuring rate and time, MAWP/remaining strength corroded, corrosion
+      rate and remaining life, RBI interval, SIL determination/LOPA, gas
+      dispersion/exclusion distance, fire and explosion loading, hydrate prediction, dew
+      point/water content, well deliverability and drawdown limit, sand production limit,
+      pump/compressor operating window, tank filling rate and overfill protection, ESD
+      valve closure time — which the operating team calculates, and which requires
+      engineering authority on your asset.
+  - id: '5.2'
+    section: '5'
+    gate: true
+    covers: [corrosion_rate, remaining_life]
+    text: >-
+      For corrosion rate and remaining life on your assets — what data is required before a
+      figure may be given, and what happens when the last inspection is out of date.
+  - id: '6.1'
+    section: '6'
+    gate: true
+    text: >-
+      Your priority order when a problem occurs.
+  - id: '6.2'
+    section: '6'
+    gate: true
+    text: >-
+      What makes each option impossible on your asset — continue at rate, reduce rate, run
+      with bypassed protection, defer maintenance, controlled shutdown, emergency
+      shutdown/blowdown, restart after trip, operate with temporary repair.
+  - id: '6.3'
+    section: '6'
+    gate: true
+    covers: [pressure]
+    text: >-
+      Your hard limits that can never be traded, whatever the production pressure.
+  - id: '6.4'
+    section: '6'
+    gate: true
+    text: >-
+      Your authority matrix — operate outside normal envelope, bypass/override a safety
+      function, extend inspection interval, defer safety-critical maintenance, continue
+      with a failed SCE, restart after ESD, break containment, enter confined space,
+      approve temporary repair, approve MOC.
+  - id: '7.1'
+    section: '7'
+    gate: true
+    text: >-
+      Your permit types and what each requires before issue — hot work, cold work, breaking
+      containment, confined space, electrical isolation/LOTO, working at height,
+      excavation, critical lift, diving, SIMOPS.
+  - id: '7.2'
+    section: '7'
+    gate: true
+    text: >-
+      Your isolation register — whether a permit is blocked until isolations verified, and
+      whether an isolation is blocked from removal until the dependent permit is closed —
+      as it actually works on your asset.
+  - id: '7.3'
+    section: '7'
+    gate: true
+    text: >-
+      Your override register — how a bypassed SIF is recorded, who approves, maximum
+      duration, compensating measures mandatory.
+  - id: '7.4'
+    section: '7'
+    gate: true
+    text: >-
+      Where override/isolation state lives — how anyone reading the P&ID or datasheet would
+      know a safety function is overridden or a relief valve is isolated, and whether it is
+      linked to anything a system could read.
+  - id: '7.5'
+    section: '7'
+    gate: true
+    text: >-
+      Your SIMOPS reconciliation — how concurrent activities are reconciled, who can stop
+      them.
+  - id: '7.6'
+    section: '7'
+    gate: false
+    text: >-
+      Your shift handover record, and what must never be lost across it.
+  - id: '8.1'
+    section: '8'
+    gate: true
+    text: >-
+      How SCEs are identified on your asset, and where the register lives.
+  - id: '8.2'
+    section: '8'
+    gate: true
+    text: >-
+      Your performance standard per SCE class — fire & gas detection, emergency shutdown,
+      relief and blowdown, fire water, passive fire protection, escape/evacuation/rescue,
+      containment/primary barrier, ignition control — functionality, availability,
+      reliability, survivability, test frequency, failure = what.
+  - id: '8.3'
+    section: '8'
+    gate: true
+    text: >-
+      What happens when an SCE is found impaired on your asset — maximum time it may remain
+      so, compensating measures mandatory.
+  - id: '9.1'
+    section: '9'
+    gate: true
+    covers: [corrosion_rate, maop, mawp, pressure, remaining_life, sif_setpoint]
+    text: >-
+      Per figure class — design pressure/MAWP, MAOP, relief valve set pressure, SIF
+      setpoint/SIL, corrosion rate/remaining life, exposure limit (H₂S, benzene),
+      inspection interval, isolation boundary — what your organisation accepts as proof,
+      and what it rejects even if it states the number.
+  - id: '9.2'
+    section: '9'
+    gate: true
+    covers: [operating_procedure, pressure]
+    text: >-
+      Minimum acceptable citation per source type — API/ASME/ISO standard,
+      national/regional regulation, P&ID, equipment datasheet/U-1A, HAZOP/LOPA study, SIL
+      assessment, operating procedure, inspection report, MOC record.
+  - id: '9.3'
+    section: '9'
+    gate: true
+    covers: [concentration, corrosion_rate, flow, pressure]
+    text: >-
+      Mandatory qualifiers your organisation requires — pressure (gauge/absolute, location,
+      design/operating), flow (standard/normal/actual, ref T and P), corrosion rate
+      (inspection date, CML, method), relief set pressure (tag, service, cold set vs
+      operating), exposure limit (TWA/STEL/ceiling), gas concentration (%LEL/%vol/ppm).
+  - id: '9.4'
+    section: '9'
+    gate: true
+    covers: [corrosion_rate, remaining_life]
+    text: >-
+      Your derivation rules — unit conversions, interpolating corrosion rate between
+      inspections, extrapolating remaining life beyond last inspection, applying standard
+      formulas, carrying limits from identical item on same asset, carrying limits from
+      sister facility — allowed or not on your assets.
+  - id: '9.5'
+    section: '9'
+    gate: true
+    covers: [corrosion_rate, gas_detector, operating_procedure, pressure, remaining_life, sif_proof_test]
+    text: >-
+      Your staleness rules per figure — P&ID data, corrosion rate/remaining life, relief
+      valve certification, SIF proof test, HAZOP/LOPA study, operating procedure, gas
+      detector calibration — valid for how long, stale immediately on what.
+  - id: '9.5.1'
+    section: '9'
+    gate: true
+    text: >-
+      How your organisation knows a P&ID or procedure is current — revision field, MOC
+      register, document control system — or whether it depends on a person knowing.
+  - id: '9.5.2'
+    section: '9'
+    gate: true
+    text: >-
+      Confirm the live-state rule — no answer about protective functions without checking
+      the override and isolation registers.
+  - id: '9.6'
+    section: '9'
+    gate: true
+    text: >-
+      Your conflict rule — when two acceptable sources disagree, does the system answer
+      with higher-authority and say so, answer with both and flag, or refuse and report?
+      Which classes must always refuse?
+  - id: '9.6.2'
+    section: '9'
+    gate: false
+    text: >-
+      A real conflict of this kind on your asset — the two sources and what happened.
+  - id: '9.7'
+    section: '9'
+    gate: false
+    text: >-
+      Partial-evidence disclosure wording per situation, and which figures must never be
+      offered as estimates — confirmed against your Section 10 list.
+  - id: '10.1'
+    section: '10'
+    gate: true
+    covers: [fire_water_demand, maop, mawp, pressure]
+    text: >-
+      Which figures your organisation treats as absolute — MAWP/design pressure, MAOP,
+      relief set pressures and required relief rates, SIF setpoints and SIL ratings,
+      minimum design metal temperature, flash points and autoignition, H₂S/benzene/CO/LEL
+      limits, isolation boundaries and double-block-and-bleed requirements, hot work
+      exclusion radii, confined space entry limits, minimum remaining wall thickness,
+      maximum inspection intervals, ESD valve closure times, fire water demand and
+      duration, escape route capacities, maximum tank filling rates.
+  - id: '10.2'
+    section: '10'
+    gate: false
+    text: >-
+      Which of the above have caught you out, and how.
+  - id: '11.1'
+    section: '11'
+    gate: false
+    text: >-
+      Figures you accept as estimates — expected restart duration, chemical consumption
+      forecast — and the exact wording you want attached.
+  - id: '12.1'
+    section: '12'
+    gate: true
+    text: >-
+      Your list of questions that must be refused outright — keep running with this, break
+      containment here, bypass this trip, extend this inspection, is this vessel fit for
+      service — and what the system should say instead.
+  - id: '13.1'
+    section: '13'
+    gate: true
+    covers: [operating_procedure, pressure]
+    text: >-
+      Your ranking, highest first — national regulation, design code, certified design
+      dossier and U-1A, as-built P&ID, equipment datasheet, HAZOP/LOPA/SIL study, approved
+      MOC, operating procedure, shift instruction, vendor advice.
+  - id: '13.2'
+    section: '13'
+    gate: true
+    text: >-
+      When P&ID and datasheet disagree on your asset — which governs.
+  - id: '13.3'
+    section: '13'
+    gate: true
+    covers: [pressure]
+    text: >-
+      When design and as-built disagree on your asset — which governs, and how as-built is
+      maintained.
+  - id: '13.4'
+    section: '13'
+    gate: true
+    text: >-
+      How an approved MOC propagates on your asset — which documents must be updated, and
+      how a missed one is detected.
+  - id: '13.5'
+    section: '13'
+    gate: false
+    text: >-
+      Which figures are tag-specific on your asset and never applied to an apparently
+      identical item.
+  - id: '13.6'
+    section: '13'
+    gate: false
+    text: >-
+      Which figures are facility-specific and never carried from a sister asset.
+  - id: '14.1'
+    section: '14'
+    gate: false
+    text: >-
+      Where a gauge vs absolute error has occurred or nearly occurred on your asset.
+  - id: '14.2'
+    section: '14'
+    gate: false
+    covers: [flow]
+    text: >-
+      Where a standard vs actual conditions flow error has caused a problem on yours.
+  - id: '14.3'
+    section: '14'
+    gate: false
+    text: >-
+      Where a %LEL vs %vol confusion has caused one on yours.
+  - id: '15.1'
+    section: '15'
+    gate: false
+    text: >-
+      A figure taken from a superseded document or pre-MOC revision.
+  - id: '15.2'
+    section: '15'
+    gate: false
+    text: >-
+      A limit correct for one tag, train or facility and wrong for another.
+  - id: '15.3'
+    section: '15'
+    gate: false
+    text: >-
+      A time someone assumed a figure because it "looked normal".
+  - id: '15.4'
+    section: '15'
+    gate: false
+    text: >-
+      A protection believed in service that was overridden or isolated.
+  - id: '15.5'
+    section: '15'
+    gate: false
+    text: >-
+      An inspection interval extended on a figure that turned out to be stale.
+  - id: '15.6'
+    section: '15'
+    gate: false
+    text: >-
+      A permit issued on an isolation that was not what it appeared to be.
+  - id: '15.7'
+    section: '15'
+    gate: false
+    covers: [concentration, flow, pressure]
+    text: >-
+      A unit confusion — pressure, flow, concentration — and what followed.
+  - id: '15.8'
+    section: '15'
+    gate: false
+    text: >-
+      What a new panel or field operator most commonly gets wrong in their first six
+      months.
+  - id: '16.1'
+    section: '16'
+    gate: false
+    text: >-
+      Five things you'd ask a system per shift and trust completely.

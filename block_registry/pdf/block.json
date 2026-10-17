@@ -1,0 +1,120 @@
+{
+  "acceptance": [
+    {
+      "check": "refuses or errors when a required input is absent",
+      "id": "missing_required_input",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Extract text from PDF files",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "afc6e1bdcb94abda519d86dce1374838907feee0aaace6c7d1f9bccab13e9811",
+    "block.py": "8fcd5aab23db85e34e9beadcf65a0dfd5c8ff0d29fa79bc04aacdd8b0268a537"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/pdf:latest",
+    "type": "docker"
+  },
+  "id": "pdf",
+  "inputs": [
+    {
+      "description": "Upload PDF...",
+      "name": "input",
+      "required": false,
+      "type": "file"
+    },
+    {
+      "default": true,
+      "description": "Configuration parameter: extract_tables",
+      "name": "extract_tables",
+      "required": false,
+      "type": "boolean"
+    }
+  ],
+  "layer": 3,
+  "name": "Pdf",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Text",
+      "name": "text",
+      "type": "text"
+    },
+    {
+      "description": "Pages",
+      "name": "pages",
+      "type": "number"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "file",
+      "scope": "local.read"
+    },
+    {
+      "kind": "file",
+      "scope": "input_document"
+    },
+    {
+      "kind": "file",
+      "scope": "input_image"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    },
+    {
+      "kind": "network",
+      "scope": "http.outbound"
+    }
+  ],
+  "requires": [],
+  "signature": "d/yfqkkYJ+7Vg+d6IxNxkyKFimMW8UbKME9TFYbB15LRzftZZBVUcJS/59C3YdBEclIuL5Wk9pBhHWiOZe2+AQ==",
+  "tags": [
+    "domain",
+    "documents",
+    "pdf",
+    "typed"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "Upload PDF...",
+      "name": "input",
+      "widget": "file"
+    },
+    {
+      "label": "Extract Tables",
+      "name": "extract_tables",
+      "widget": "toggle"
+    }
+  ],
+  "version": "2.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    },
+    {
+      "kind": "file",
+      "scope": "local.write"
+    },
+    {
+      "kind": "file",
+      "scope": "temp"
+    }
+  ]
+}

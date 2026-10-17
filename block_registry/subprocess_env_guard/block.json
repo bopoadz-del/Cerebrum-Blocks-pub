@@ -1,0 +1,85 @@
+{
+  "acceptance": [
+    {
+      "check": "an extra whose name is secret-bearing is refused - the donor's 'extra wins last' would re-inject the secret the scrub exists to remove",
+      "id": "secret_reinjection",
+      "status": "refused"
+    },
+    {
+      "check": "classify without an env var name is refused",
+      "id": "classify_no_name",
+      "status": "refused"
+    },
+    {
+      "check": "audit with no names is refused",
+      "id": "audit_empty",
+      "status": "refused"
+    },
+    {
+      "check": "scrub with a non-mapping extra is refused",
+      "id": "extra_not_mapping",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "real (clone of The_Fork app/core/subprocess_env.py): the denylist that scrubs SECRET_KEY / DATABASE_URL / *_API_KEY / *_TOKEN / *_PASSWORD / *_DSN / *_KEY family names (case-insensitive) from the environment handed to subprocesses, keeping functional system env (PATH, HOME, LANG, LC_*, TMPDIR, TESSDATA_PREFIX, PYTHON*, NODE_*). Fail-closed hardening: an extra that re-injects a secret-bearing name is refused rather than applied.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "3e4faa66f1ec57c034339cadc88e6952d2adf8baeb2cde68738fff62ea24c979",
+    "block.py": "749523d56fe8514bbc939d22a587bc226eb5c926d9e4ba4aefc45ad9490cf2be"
+  },
+  "id": "subprocess_env_guard",
+  "inputs": [
+    {
+      "description": "scrub | classify | audit",
+      "name": "action",
+      "options": [
+        "scrub",
+        "classify",
+        "audit"
+      ],
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 3,
+  "name": "subprocess_env_guard",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Capability result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "8PKZosUylV+Z9pzefCx3FFyI+l2b+T1DOoHsysg70+3dpvGYjbB1+g9N/wj5ypGsQKR5zpx17e5QOB/ncnTdCw==",
+  "tags": [
+    "security",
+    "process-isolation",
+    "subprocess",
+    "environment",
+    "the-fork"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

@@ -1,0 +1,105 @@
+{
+  "acceptance": [
+    {
+      "check": "errors when records carry non-numeric values, reporting the invalid records",
+      "id": "invalid_records",
+      "status": "failed"
+    },
+    {
+      "check": "refuses or errors when properties is absent or not a list",
+      "id": "missing_properties",
+      "status": "refused"
+    },
+    {
+      "check": "errors on an unknown or missing action",
+      "id": "unknown_action",
+      "status": "failed"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Aggregates property records ({id, value, status}) into total value, count, and per-status groupings; empty input yields honest zeros.",
+  "digests": {
+    "block.json": "e38b76602097f7616dc0aed7cf45456c9783800e90219817aa46bb166fda9b3b",
+    "block.py": "e22ee7f2209d1ebabd3e4e28a1c1fce3190b48454eeff27625a5a83e48cfec2e"
+  },
+  "execution": {
+    "entrypoint": "block.py",
+    "type": "python"
+  },
+  "id": "portfolio_rollup",
+  "inputs": [
+    {
+      "default": "aggregate",
+      "description": "aggregate",
+      "name": "action",
+      "options": [
+        "aggregate"
+      ],
+      "required": false,
+      "type": "string"
+    },
+    {
+      "description": "[{id, value, status}] property records",
+      "name": "properties",
+      "required": true,
+      "type": "json"
+    }
+  ],
+  "layer": 3,
+  "name": "Portfolio Rollup",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Capability result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    }
+  ],
+  "requires": [],
+  "signature": "0qfK23ET1MdNzkgP/E8N4trfvUauAG8u03ev4MzQYmLGeWAHBYajJX+3kCZvzZAcebbj3sC1hXca1CGqzfSWCA==",
+  "tags": [
+    "estate",
+    "private_estate_operations",
+    "steward"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "Action",
+      "name": "action",
+      "options": [
+        "aggregate"
+      ],
+      "widget": "select"
+    },
+    {
+      "label": "Properties",
+      "name": "properties",
+      "widget": "json"
+    }
+  ],
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

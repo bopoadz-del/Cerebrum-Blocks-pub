@@ -1,0 +1,23 @@
+{
+  "acceptance": [],
+  "description": "Read-only cargo intelligence: weights, dimensions, limits, and handling rules grounded in project documents.",
+  "digests": {
+    "block.json": "7342b8584bf82f9a796bc74cadcac880136fac339c2e3dcacf2f34258f4afc7d",
+    "block.py": "e7276b4aff4e3e89d7e5b816765b404403d5160e4aa0005efb172fc7ab0fb9ea"
+  },
+  "id": "aviation_cargo_kit",
+  "name": "Aviation Cargo Kit",
+  "never": [],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [],
+  "signature": "KjPPR9BcW2QmF1AA/k8B266FdvGVwm1pHh8Wv9y8URAiHjqzGzbuFfjzAVeXA2XxfO4HOCJhWSBW7t1RfmvTAg==",
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": []
+}

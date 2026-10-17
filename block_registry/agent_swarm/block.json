@@ -1,0 +1,312 @@
+{
+  "acceptance": [
+    {
+      "check": "errors on an unknown or missing action",
+      "id": "unknown_action",
+      "status": "failed"
+    },
+    {
+      "check": "fails loud when a required credential or key is absent",
+      "id": "missing_credential",
+      "status": "failed"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Multi-agent task orchestration with dependency resolution and LLM routing",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "e5af603c24c8227222c223653af53bbacaff4d59794df00720e2fdf91af5f447",
+    "block.py": "1f624da9a908b9ea9ee718b808bcd9aa5ed9dd7cc1145353b00dfb2b745c1489"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/agent_swarm:latest",
+    "type": "docker"
+  },
+  "id": "agent_swarm",
+  "inputs": [
+    {
+      "description": "{\"objective\": \"Write a FastAPI endpoint\", \"agents\": [...], \"tasks\": [...]}",
+      "name": "input",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "default": "execute",
+      "description": "Action",
+      "name": "action",
+      "options": [
+        "execute",
+        "execute_async",
+        "status",
+        "health"
+      ],
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": 5,
+      "description": "Max Concurrent Agents",
+      "name": "max_concurrent_agents",
+      "required": false,
+      "type": "number"
+    },
+    {
+      "default": 120,
+      "description": "Default Timeout",
+      "name": "default_timeout",
+      "required": false,
+      "type": "number"
+    },
+    {
+      "default": "ollama",
+      "description": "Configuration parameter: llm_provider",
+      "name": "llm_provider",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": "http://localhost:11434",
+      "description": "Configuration parameter: ollama_base_url",
+      "name": "ollama_base_url",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": "llama3.2:3b",
+      "description": "Configuration parameter: ollama_model",
+      "name": "ollama_model",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": "",
+      "description": "Configuration parameter: deepseek_api_key",
+      "name": "deepseek_api_key",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": "deepseek-chat",
+      "description": "Configuration parameter: deepseek_model",
+      "name": "deepseek_model",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": "",
+      "description": "Configuration parameter: openrouter_api_key",
+      "name": "openrouter_api_key",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": "anthropic/claude-3.5-sonnet",
+      "description": "Configuration parameter: openrouter_model",
+      "name": "openrouter_model",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": "",
+      "description": "Configuration parameter: anthropic_api_key",
+      "name": "anthropic_api_key",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": "claude-sonnet-4-6",
+      "description": "Configuration parameter: anthropic_model",
+      "name": "anthropic_model",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": "http://localhost:8001",
+      "description": "Configuration parameter: vector_db_url",
+      "name": "vector_db_url",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": true,
+      "description": "Configuration parameter: store_memory",
+      "name": "store_memory",
+      "required": false,
+      "type": "boolean"
+    }
+  ],
+  "layer": 3,
+  "name": "Agent Swarm",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Project ID",
+      "name": "project_id",
+      "type": "text"
+    },
+    {
+      "description": "Status",
+      "name": "status",
+      "type": "text"
+    },
+    {
+      "description": "Final Output",
+      "name": "final_output",
+      "type": "text"
+    },
+    {
+      "description": "Agent Outputs",
+      "name": "outputs",
+      "type": "json"
+    },
+    {
+      "description": "Total Tokens",
+      "name": "total_tokens",
+      "type": "number"
+    },
+    {
+      "description": "Time (ms)",
+      "name": "total_time_ms",
+      "type": "number"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "env",
+      "scope": "process"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    },
+    {
+      "kind": "network",
+      "scope": "http.outbound"
+    },
+    {
+      "kind": "llm",
+      "scope": "provider"
+    },
+    {
+      "kind": "credential",
+      "scope": "env"
+    },
+    {
+      "kind": "block",
+      "scope": "peer"
+    }
+  ],
+  "requires": [
+    "vector_search"
+  ],
+  "signature": "T0QdDXh34gFrIpZ7lgEvEJI67dpWU7+4GtVlPp1RYdE865j/1Eb0/PN70cAQ4paKUcFsa0vHNCN3wAg9adD4Bg==",
+  "tags": [
+    "agents",
+    "swarm",
+    "orchestration",
+    "ai",
+    "multi-agent"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "{\"objective\": \"Write a FastAPI endpoint\", \"agents\": [...], \"tasks\": [...]}",
+      "name": "input",
+      "widget": "json"
+    },
+    {
+      "label": "Action",
+      "name": "action",
+      "options": [
+        "execute",
+        "execute_async",
+        "status",
+        "health"
+      ],
+      "widget": "select"
+    },
+    {
+      "label": "Max Concurrent Agents",
+      "name": "max_concurrent_agents",
+      "widget": "number"
+    },
+    {
+      "label": "Default Timeout",
+      "name": "default_timeout",
+      "widget": "number"
+    },
+    {
+      "label": "Llm Provider",
+      "name": "llm_provider",
+      "widget": "text"
+    },
+    {
+      "label": "Ollama Base Url",
+      "name": "ollama_base_url",
+      "widget": "text"
+    },
+    {
+      "label": "Ollama Model",
+      "name": "ollama_model",
+      "widget": "text"
+    },
+    {
+      "label": "Deepseek Api Key",
+      "name": "deepseek_api_key",
+      "widget": "text"
+    },
+    {
+      "label": "Deepseek Model",
+      "name": "deepseek_model",
+      "widget": "text"
+    },
+    {
+      "label": "Openrouter Api Key",
+      "name": "openrouter_api_key",
+      "widget": "text"
+    },
+    {
+      "label": "Openrouter Model",
+      "name": "openrouter_model",
+      "widget": "text"
+    },
+    {
+      "label": "Anthropic Api Key",
+      "name": "anthropic_api_key",
+      "widget": "text"
+    },
+    {
+      "label": "Anthropic Model",
+      "name": "anthropic_model",
+      "widget": "text"
+    },
+    {
+      "label": "Vector Db Url",
+      "name": "vector_db_url",
+      "widget": "text"
+    },
+    {
+      "label": "Store Memory",
+      "name": "store_memory",
+      "widget": "toggle"
+    }
+  ],
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

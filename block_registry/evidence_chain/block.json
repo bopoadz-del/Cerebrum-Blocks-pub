@@ -1,0 +1,70 @@
+{
+  "acceptance": [
+    {
+      "check": "an unapproved or missing request is refused, never passed",
+      "id": "fail_closed_refusal",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Tamper-evident SHA-256 evidence chain ported from <private-repo> audit/service.py with the missing full-walk verifier added: record, verify (walks every link), get_latest. Chain store is in-process.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "3ed8e34cc5f90bc1c09a7b2eeaecdc6353895a01de6afaf50fa2864254be868f",
+    "block.py": "f1d064e3d5ff62f6991154c061bda62b505a2d8726bcc69a72bbc2ed128a157b"
+  },
+  "id": "evidence_chain",
+  "inputs": [
+    {
+      "description": "record | verify | get_latest",
+      "name": "action",
+      "options": [
+        "record",
+        "verify",
+        "get_latest"
+      ],
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 3,
+  "name": "evidence_chain",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Capability result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "7FxXOFZxi2o/U2nENtMozfkbPXqeBOEuyf25UxFRcasqI2OUdM9n99zy/FdId3LK7OSQxShGQVmcIuf1HuveBA==",
+  "tags": [
+    "audit",
+    "evidence",
+    "hash-chain",
+    "governance",
+    "finance_ops"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

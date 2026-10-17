@@ -1,0 +1,208 @@
+{
+  "acceptance": [
+    {
+      "check": "refuses or errors when a required input is absent",
+      "id": "missing_required_input",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "capability_class": "document_extraction",
+  "description": "Parse \u2192 Reason \u2192 Map pipeline for technical document intelligence",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "3906c31ba80aa8707b020788f909589588007cc853e92574d2e3b85126e2ac0f",
+    "block.py": "cd38b29fc7f53f8eac94f33d9367098ccadb15a3dc93a3bd9a2ed6884ea91b91"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/document_engine:latest",
+    "type": "docker"
+  },
+  "id": "document_engine",
+  "inputs": [
+    {
+      "description": "Upload BOD, RFP, or spec documents...",
+      "name": "input",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": true,
+      "description": "Configuration parameter: extract_tables",
+      "name": "extract_tables",
+      "required": false,
+      "type": "boolean"
+    },
+    {
+      "default": true,
+      "description": "Configuration parameter: extract_glossary",
+      "name": "extract_glossary",
+      "required": false,
+      "type": "boolean"
+    },
+    {
+      "default": "yaml",
+      "description": "Configuration parameter: output_format",
+      "name": "output_format",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": true,
+      "description": "Configuration parameter: use_platform_pdf",
+      "name": "use_platform_pdf",
+      "required": false,
+      "type": "boolean"
+    },
+    {
+      "default": true,
+      "description": "Configuration parameter: use_platform_ocr",
+      "name": "use_platform_ocr",
+      "required": false,
+      "type": "boolean"
+    }
+  ],
+  "layer": 3,
+  "name": "Document Engine",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Glossary Terms",
+      "name": "glossary",
+      "type": "list"
+    },
+    {
+      "description": "Requirements",
+      "name": "requirements",
+      "type": "list"
+    },
+    {
+      "description": "Constraints",
+      "name": "constraints",
+      "type": "list"
+    },
+    {
+      "description": "Schedule Targets",
+      "name": "schedule_targets",
+      "type": "list"
+    },
+    {
+      "description": "Equipment Specs",
+      "name": "equipment_specs",
+      "type": "list"
+    },
+    {
+      "description": "Risks",
+      "name": "risks",
+      "type": "list"
+    },
+    {
+      "description": "Downstream Feed",
+      "name": "downstream",
+      "type": "object"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "file",
+      "scope": "local.read"
+    },
+    {
+      "kind": "file",
+      "scope": "input_document"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    }
+  ],
+  "requires": [
+    "pdf",
+    "ocr"
+  ],
+  "requires_inputs": [
+    {
+      "name": "attachment_path",
+      "required": false,
+      "satisfied_by": [
+        "file_path",
+        "pdf_path",
+        "docx_path",
+        "xlsx_path",
+        "attachment_path",
+        "document_path",
+        "text",
+        "bytes"
+      ],
+      "type": "string",
+      "why": "document_engine parses a document. With no path or text field it answers 'No input files provided (pdf/docx/xlsx). Pass file_path as pdf_path, docx_path, or xlsx_path.'"
+    }
+  ],
+  "signature": "hXHzevzHhxX9ze9yhaXyE0w9wAYBd3WjYu+6ojuC3bZA4yQ0lR+UyEznnPUugLcKReuuNv2dmGC6l6iT+JoVBA==",
+  "tags": [
+    "domain",
+    "construction",
+    "documents",
+    "reasoning",
+    "scheduling"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "Upload BOD, RFP, or spec documents...",
+      "name": "input",
+      "widget": "text"
+    },
+    {
+      "label": "Extract Tables",
+      "name": "extract_tables",
+      "widget": "toggle"
+    },
+    {
+      "label": "Extract Glossary",
+      "name": "extract_glossary",
+      "widget": "toggle"
+    },
+    {
+      "label": "Output Format",
+      "name": "output_format",
+      "widget": "text"
+    },
+    {
+      "label": "Use Platform Pdf",
+      "name": "use_platform_pdf",
+      "widget": "toggle"
+    },
+    {
+      "label": "Use Platform Ocr",
+      "name": "use_platform_ocr",
+      "widget": "toggle"
+    }
+  ],
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    },
+    {
+      "kind": "file",
+      "scope": "local.write"
+    },
+    {
+      "kind": "file",
+      "scope": "temp"
+    }
+  ]
+}

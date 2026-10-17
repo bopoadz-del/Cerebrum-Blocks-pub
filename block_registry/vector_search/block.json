@@ -1,0 +1,88 @@
+{
+  "acceptance": [
+    {
+      "check": "refuses or errors when a required input is absent",
+      "id": "missing_required_input",
+      "status": "refused"
+    },
+    {
+      "check": "errors on an unknown or missing action",
+      "id": "unknown_action",
+      "status": "failed"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Semantic search over in-memory document collections \u2014 no external DB needed",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "93236e74a584d39ccc24a61feaadf1601d358c76e0d365f214d10371aa0fb293",
+    "block.py": "4ff603ae8a4943e86896ec3005f6a14257eecbdb1ae77750e0a545a74a1f9ea7"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/vector_search:latest",
+    "type": "docker"
+  },
+  "id": "vector_search",
+  "inputs": [
+    {
+      "description": "Search knowledge base...",
+      "name": "input",
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 2,
+  "name": "Vector Search",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Matches",
+      "name": "results",
+      "type": "array"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "database",
+      "scope": "vector"
+    }
+  ],
+  "requires": [],
+  "signature": "voaYxqBE6ObBQRl/WfxP/At+0I3OYNYaHv7E0JnaIrQuPDaTLLCLrI5L8raLimeY0eisfYw1KXyA3VTass8PAg==",
+  "tags": [
+    "ai",
+    "core",
+    "vector",
+    "search"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "Search knowledge base...",
+      "name": "input",
+      "widget": "text"
+    }
+  ],
+  "version": "2.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    },
+    {
+      "kind": "database",
+      "scope": "vector"
+    }
+  ]
+}

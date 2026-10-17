@@ -1,0 +1,202 @@
+﻿{
+  "manifest": {
+    "domain_id": "marketplace_ops",
+    "version": "0.1.0",
+    "name": "Marketplace Ops",
+    "description": "Domain-approved pack for gig-economy marketplaces (task marketplaces, food delivery, ride share, two-sided transactions). Assembles the thirteen certified, signed marketplace blocks: transaction lifecycle, escrow payments, listings, bidding, reputation, messaging, dispatch, geolocation, surge pricing, disputes, insurance compliance, loyalty referrals, and vendor catalogs. Domain-approved by the platform owner on 2026-09-23.",
+    "certification": "domain_approved",
+    "donor_repo": null,
+    "donor_commit": null
+  },
+  "ontology": {
+    "terms": {
+      "task": {"definition": "A customer-posted job with category, location, and optional budget", "aliases": ["job", "gig", "listing"]},
+      "offer": {"definition": "A provider's priced proposal to perform a task", "aliases": ["bid", "quote"]},
+      "escrow": {"definition": "Customer funds held until task completion, then released minus platform fee", "aliases": ["hold", "held funds"]},
+      "surge": {"definition": "Demand-driven price multiplier applied to a fare, bounded by config caps", "aliases": ["dynamic pricing"]},
+      "dispatch": {"definition": "Matching and assignment of a job to a worker by skills, distance, load, and reputation", "aliases": ["matching", "assignment"]},
+      "geofence": {"definition": "A circular zone that emits enter/exit events as an entity moves", "aliases": ["zone"]},
+      "dispute": {"definition": "A party-raised claim on a task, resolved only by the platform", "aliases": ["claim", "case"]},
+      "referral_credit": {"definition": "Platform credit granted for a successful referral, expiring after a step window", "aliases": ["credit", "promo credit"]}
+    }
+  },
+  "entities": {
+    "task_listing": {"fields": ["listing_id", "title", "category", "location", "budget", "status"]},
+    "offer": {"fields": ["offer_id", "task_id", "provider_id", "amount", "state"]},
+    "payment": {"fields": ["payment_id", "amount", "state", "released", "platform_fee"]},
+    "dispute": {"fields": ["dispute_id", "task_id", "state", "resolution", "evidence"]},
+    "vendor": {"fields": ["vendor_id", "name", "categories", "active"]},
+    "item": {"fields": ["item_id", "vendor_id", "name", "price", "available"]}
+  },
+  "permissions": {
+    "role_permissions": {
+      "customer": ["mp.task.create", "mp.offer.accept", "mp.offer.counter", "mp.dispute.open", "mp.msg.send", "mp.loyalty.redeem"],
+      "provider": ["mp.offer.place", "mp.task.start", "mp.task.complete", "mp.dispute.open", "mp.msg.send"],
+      "platform": ["mp.dispute.resolve", "mp.payment.release", "mp.payment.refund", "mp.payment.freeze"],
+      "viewer": []
+    },
+    "action_requirements": {
+      "mp.dispute.resolve": "platform_only_with_reason",
+      "mp.payment.release": "escrow_state_held_or_partial",
+      "mp.task.create": "valid_category_and_location"
+    }
+  },
+  "evidence_policy": {
+    "mp.dispute.open": ["evidence_digest"],
+    "mp.dispute.resolve": ["resolution_reason"],
+    "mp.payment.refund": ["dispute_resolution"]
+  },
+  "authority_sources": {},
+  "refusal_policy": {
+    "unsupported_operations": "refuse_by_name",
+    "out_of_envelope": "refuse_not_extrapolate",
+    "missing_authority": "actor_not_permitted"
+  },
+  "formulas": [
+    {
+      "formula_id": "mp.escrow_fee",
+      "name": "Platform fee on held amount",
+      "domain": "marketplace_ops",
+      "version": "0.1.0",
+      "description": "fee = amount * rate + fixed, ROUND_HALF_UP, frozen at hold time",
+      "expression": "amount * rate + fixed",
+      "inputs": [{"name": "amount", "type": "decimal"}, {"name": "rate", "type": "decimal"}, {"name": "fixed", "type": "decimal"}],
+      "output": {"name": "fee", "type": "decimal"},
+      "units": {"output": "currency"},
+      "certification": "domain_approved"
+    },
+    {
+      "formula_id": "mp.surge_fare",
+      "name": "Surged fare total",
+      "domain": "marketplace_ops",
+      "version": "0.1.0",
+      "description": "total = (base + per_km * km + per_min * min) * multiplier, capped",
+      "expression": "(base + per_km * km + per_min * min) * multiplier",
+      "inputs": [{"name": "base", "type": "decimal"}, {"name": "per_km", "type": "decimal"}, {"name": "km", "type": "decimal"}, {"name": "per_min", "type": "decimal"}, {"name": "min", "type": "decimal"}, {"name": "multiplier", "type": "decimal"}],
+      "output": {"name": "total", "type": "decimal"},
+      "units": {"output": "currency"},
+      "certification": "domain_approved"
+    }
+  ],
+  "decision_tables": [
+    {
+      "table_id": "mp.surge_tier",
+      "version": "0.1.0",
+      "inputs": ["demand_supply_ratio"],
+      "rows": [
+        {"when": {"demand_supply_ratio": {"op": "ge", "value": 3.0}}, "then": {"multiplier": "2.00"}},
+        {"when": {"demand_supply_ratio": {"op": "ge", "value": 2.0}}, "then": {"multiplier": "1.50"}},
+        {"when": {"demand_supply_ratio": {"op": "ge", "value": 1.2}}, "then": {"multiplier": "1.25"}},
+        {"when": {"demand_supply_ratio": {"op": "ge", "value": 0}}, "then": {"multiplier": "1.00"}}
+      ],
+      "default_outcome": {"multiplier": "1.00"},
+      "certification": "domain_approved"
+    },
+    {
+      "table_id": "mp.dispatch_weights",
+      "version": "0.1.0",
+      "inputs": ["skills", "distance", "load", "reputation"],
+      "rows": [
+        {"when": {}, "then": {"skills": 0.40, "distance": 0.30, "load": 0.15, "reputation": 0.15}}
+      ],
+      "default_outcome": {"skills": 0.40, "distance": 0.30, "load": 0.15, "reputation": 0.15},
+      "certification": "domain_approved"
+    }
+  ],
+  "workflows": [
+    {
+      "workflow_id": "mp.task_lifecycle",
+      "version": "0.1.0",
+      "states": ["created", "offered", "accepted", "in_progress", "completed", "reviewed", "cancelled", "disputed", "refunded"],
+      "initial_state": "created",
+      "terminal_states": ["reviewed", "cancelled", "refunded"],
+      "transitions": [
+        {"from": "created", "to": "offered", "permitted_actors": ["provider"], "evidence_required": []},
+        {"from": "offered", "to": "accepted", "permitted_actors": ["customer"], "evidence_required": []},
+        {"from": "accepted", "to": "in_progress", "permitted_actors": ["provider"], "evidence_required": []},
+        {"from": "in_progress", "to": "completed", "permitted_actors": ["provider"], "evidence_required": []},
+        {"from": "completed", "to": "reviewed", "permitted_actors": ["customer"], "evidence_required": []},
+        {"from": "in_progress", "to": "disputed", "permitted_actors": ["customer", "provider"], "evidence_required": ["evidence_digest"]}
+      ],
+      "immutable_states": ["reviewed", "cancelled", "refunded"],
+      "certification": "domain_approved"
+    },
+    {
+      "workflow_id": "mp.order_lifecycle",
+      "version": "0.1.0",
+      "states": ["created", "accepted", "ready", "in_delivery", "delivered", "reviewed", "cancelled", "disputed", "refunded"],
+      "initial_state": "created",
+      "terminal_states": ["reviewed", "cancelled", "refunded"],
+      "transitions": [
+        {"from": "created", "to": "accepted", "permitted_actors": ["provider"], "evidence_required": []},
+        {"from": "accepted", "to": "ready", "permitted_actors": ["provider"], "evidence_required": []},
+        {"from": "ready", "to": "in_delivery", "permitted_actors": ["provider"], "evidence_required": []},
+        {"from": "in_delivery", "to": "delivered", "permitted_actors": ["provider"], "evidence_required": []},
+        {"from": "delivered", "to": "reviewed", "permitted_actors": ["customer"], "evidence_required": []}
+      ],
+      "immutable_states": ["reviewed", "cancelled", "refunded"],
+      "certification": "domain_approved"
+    },
+    {
+      "workflow_id": "mp.trip_lifecycle",
+      "version": "0.1.0",
+      "states": ["created", "matched", "driver_en_route", "in_progress", "completed", "reviewed", "cancelled", "disputed", "refunded"],
+      "initial_state": "created",
+      "terminal_states": ["reviewed", "cancelled", "refunded"],
+      "transitions": [
+        {"from": "created", "to": "matched", "permitted_actors": ["system"], "evidence_required": []},
+        {"from": "matched", "to": "driver_en_route", "permitted_actors": ["provider"], "evidence_required": []},
+        {"from": "driver_en_route", "to": "in_progress", "permitted_actors": ["provider"], "evidence_required": []},
+        {"from": "in_progress", "to": "completed", "permitted_actors": ["provider"], "evidence_required": []},
+        {"from": "completed", "to": "reviewed", "permitted_actors": ["customer"], "evidence_required": []}
+      ],
+      "immutable_states": ["reviewed", "cancelled", "refunded"],
+      "certification": "domain_approved"
+    }
+  ],
+  "approvals": [
+    {
+      "action": "mp.dispute.resolve",
+      "version": "0.1.0",
+      "risk_tier": "high",
+      "requester_roles": [],
+      "approver_roles": ["platform"],
+      "minimum_approvals": 1,
+      "self_approval": "prohibited",
+      "payload_binding": "required",
+      "replay_prevention": "required",
+      "certification": "domain_approved"
+    }
+  ],
+  "actions": {
+    "mp.task.create": {"risk": "low"},
+    "mp.offer.place": {"risk": "low"},
+    "mp.payment.release": {"risk": "high"},
+    "mp.payment.refund": {"risk": "high"},
+    "mp.dispute.resolve": {"risk": "high"}
+  },
+  "verification_oracles": {
+    "mp.escrow_fee": {"cases": [{"inputs": {"amount": "100.00", "rate": "0.15", "fixed": "0.00"}, "expected": "15.00"}]},
+    "mp.surge_fare": {"cases": [{"inputs": {"base": "2.50", "per_km": "1.10", "km": "10", "per_min": "0.25", "min": "20", "multiplier": "1.50"}, "expected": "27.75"}]}
+  },
+  "fixtures": {
+    "task_photo": {"kind": "placeholder", "note": "neutral synthetic fixture only - no donor data"}
+  },
+  "tests": {
+    "blocks": [
+      "tests/blocks/test_transaction_state_machine.py",
+      "tests/blocks/test_payment_escrow.py",
+      "tests/blocks/test_task_listing.py",
+      "tests/blocks/test_offer_bidding.py",
+      "tests/blocks/test_review_reputation.py",
+      "tests/blocks/test_task_messaging.py",
+      "tests/blocks/test_dispatch_matching.py",
+      "tests/blocks/test_geolocation_tracking.py",
+      "tests/blocks/test_pricing_surge.py",
+      "tests/blocks/test_dispute_resolution.py",
+      "tests/blocks/test_insurance_compliance.py",
+      "tests/blocks/test_loyalty_referrals.py",
+      "tests/blocks/test_vendor_catalog.py"
+    ]
+  }
+}

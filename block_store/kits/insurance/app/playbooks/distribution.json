@@ -1,0 +1,45 @@
+{
+  "id": "insurance_distribution_playbook",
+  "name": "Insurance Distribution Operations",
+  "sop": {
+    "purpose": "Route distribution opportunities through the best-fit agency, MGA, broker, partner, or direct channel.",
+    "steps": [
+      "Normalize submission, producer, channel, premium, jurisdiction, and service requirements.",
+      "Use channel_router to score direct, agency, MGA, broker, and partner paths with explainable factors.",
+      "Check producer_record and agency_hierarchy before assigning any producer or agency owner.",
+      "Record selected route, rejected alternatives, expected service obligations, and follow-up workflow."
+    ],
+    "controls": [
+      "Do not route to inactive producers or agencies with expired licenses.",
+      "Require documented rationale when overriding the highest-scoring channel."
+    ]
+  },
+  "escalation": {
+    "triggers": [
+      "No eligible channel scores above the minimum threshold.",
+      "Producer or agency licensing status is unknown, expired, or suspended.",
+      "Routing decision creates a conflict between service model, commission economics, and jurisdiction."
+    ],
+    "path": [
+      "Distribution operations lead",
+      "Agency compliance owner",
+      "Carrier relationship executive"
+    ],
+    "sla": "Same business day for licensing conflicts; two business days for channel optimization exceptions."
+  },
+  "memory_policy": {
+    "remember": [
+      "Approved channel rationale",
+      "Producer and agency assignment",
+      "Override approver and timestamp"
+    ],
+    "retrieve": [
+      "Prior routing outcomes for the same producer, agency, jurisdiction, or product line",
+      "Active hierarchy and appointment state"
+    ],
+    "redact": [
+      "Customer personal data not needed for distribution routing",
+      "Producer tax identifiers and private compensation details"
+    ]
+  }
+}

@@ -1,0 +1,76 @@
+kit: heritage
+version: 1
+serves_verticals: [heritage, heritage_restoration]
+hooks_used: [H0, H1, H3]
+
+quantities:
+  mortar_mix:             {units: [ratio, pct]}
+  compressive_strength:   {units: [MPa, Nmm2]}
+  vapour_permeability:    {units: [g_m2_day]}
+  substrate_strength:     {units: [MPa]}
+  structural_capacity:    {units: [kN, kNm]}
+  cleaning_parameter:     {units: [—]}
+  retention_ratio:        {units: [pct]}
+
+  # Spec §1: a staleness trigger is keyed on a QUANTITY. These are the
+  # artifacts the sheet's triggers name — records the domain talks about,
+  # unitless, so the trigger has something to be keyed on.
+  consent:               {units: [—]}
+  condition_survey:      {units: [—]}
+  materials_analysis:    {units: [—]}
+  monitoring:            {units: [—]}
+  method_statement:      {units: [—]}
+
+qualifier_fields:
+  evidence_basis:         {type: enum,   values: [documented, inferred, assumed]}
+  substrate_ref:          {type: string}
+  consent_ref:            {type: string}
+  element_or_phase:       {type: string}
+  building_id:            {type: string}
+  analysis_date:          {type: date}
+  reversibility:          {type: enum,   values: [reversible, irreversible, uncertain]}
+
+source_classes:
+  legislation:            {rank: 1}
+  listed_building_consent: {rank: 2}
+  statutory_body_guidance: {rank: 3}
+  conservation_officer_written: {rank: 4}
+  standards:              {rank: 5}
+  conservation_management_plan: {rank: 6}
+  materials_analysis:     {rank: 7}
+  specification:          {rank: 8}
+  professional_body_guidance: {rank: 9, reject_as_proof: [generic_guide, another_building_example]}
+  manufacturer_data:      {rank: 10}
+  generic_guide:          {rank: 11}
+  another_building_example: {rank: 11}
+
+state_providers:
+  consent_status:         {kind: revision, max_age: event}
+  survey_date:            {kind: revision, max_age: event}
+  analysis_date:          {kind: revision, max_age: event}
+  discovery_since_spec:   {kind: status,   max_age: event}
+
+staleness_triggers:
+  consent:                [lapse_period, departure_from_approved_details]
+  condition_survey:       [further_weathering, storm_damage, opening_up]
+  materials_analysis:     [different_element, different_phase]
+  monitoring:             [any_intervention]
+  method_statement:       [variation]
+
+scope_refusals:
+  - pattern: "do we need consent"
+    authority: "conservation officer — written pre-application advisable"
+  - pattern: "what mortar should I use"
+    authority: "requires mortar analysis for this fabric"
+  - pattern: "can we remove this"
+    authority: "conservation architect + consent"
+  - pattern: "is this original"
+    authority: "stratigraphic + archival investigation"
+  - pattern: "is this beam adequate"
+    authority: "conservation accredited engineer"
+  - pattern: "what did this look like originally"
+    authority: "archival evidence — comparators are not evidence for this building"
+
+spec_extensions:
+  claim_class:            true
+  same_source:            true

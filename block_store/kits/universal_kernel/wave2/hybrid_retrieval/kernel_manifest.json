@@ -1,0 +1,12 @@
+{
+  "name": "hybrid_retrieval",
+  "version": "0.1.0",
+  "sha256": "369447e8e88f883330631c979171498826d3e40bb2307e0ddf64f1f2214b1be9",
+  "dependencies": [
+    "numpy"
+  ],
+  "provenance": "fork+factory",
+  "acceptance_test": "tests/test_hybrid_retrieval.py",
+  "tier": "premium",
+  "note": "Premium-only; not available in the freemium tier."
+}

@@ -1,0 +1,113 @@
+invariants:
+
+# Correction 2 (domains 11-16, applied here): every kit carries one
+# kind: authority invariant firing at H1. The FM ladder is the regime ladder —
+# a work order is not a certificate, and a site procedure is not a statute.
+- id: INV-FM-AUTH-COMPLIANCE
+  kind: authority
+  applies_to: {quantity: compliance_status}
+  hook: H1
+  governing_class: statutory_regulation
+  fallback_class: authority_notice
+  demote: [client_policy, site_procedure, verbal_instruction]
+  severity: refuse
+  evidence: {sheet: "§5, §9.1"}
+  message: "compliance status governed by statute or authority notice — {value} from a lesser class is not proof"
+  measurement: >-
+    Probe compliance_status x20 citing client_policy, site_procedure,
+    verbal_instruction as the source. Before: n answers accepted it as proof.
+    After: 0 accepted, and n refusals naming statutory_regulation as the class that
+    governs. Over-refusal check: the same probe citing statutory_regulation must
+    pass.
+
+- id: INV-FM-REGIME
+  kind: qualifier
+  applies_to: {quantity: [compliance_status, asset_field]}
+  requires: [regime, deferral_authority]
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "§5, §2"}
+  message: "statutory/contractual/manufacturer/warranty/discretionary not named — {missing}"
+  measurement: >-
+    Probe compliance_status, asset_field x20 with regime, deferral_authority absent
+    from the figure. Before: n answers stated the figure with nothing to act on.
+    After: 0 such answers, and n refusals naming every missing field. Over-refusal
+    check: the same probe WITH regime, deferral_authority present must pass.
+
+- id: INV-FM-INSERVICE
+  kind: derivation
+  applies_to: {quantity: in_service_status}
+  requires_state: [bms_status, manual_log]
+  block_if_missing_state: true
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "§7.4, live-state rule"}
+  message: "current resilience state unavailable — BMS reading and manual log both required"
+  measurement: >-
+    Probe in_service_status x20 with bms_status, manual_log unavailable. Before: n
+    answers used the design basis as the current state. After: 0, and n reporting
+    state UNKNOWN with no design figure in the refusal.
+
+- id: INV-FM-SLA
+  kind: qualifier
+  applies_to: {quantity: [response_time, rectification_time]}
+  requires: [sla_clock_start, sla_clock_stop]
+  severity: flag
+  hook: H3
+  evidence: {sheet: "§3.1"}
+  message: "response/rectification time without clock-start and clock-stop definitions — {missing}"
+  measurement: >-
+    Probe response_time, rectification_time x20 with sla_clock_start,
+    sla_clock_stop absent from the figure. Before: n answers stated the figure with
+    nothing to act on. After: 0 such answers, and n refusals naming every missing
+    field. Over-refusal check: the same probe WITH sla_clock_start, sla_clock_stop
+    present must pass.
+
+- id: INV-FM-PROVENANCE
+  kind: provenance
+  applies_to: {quantity: any}
+  forbid: [infer_from_register, infer_from_work_order, infer_from_ppm]
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "§9.4"}
+  message: "figure inferred from register / work order / PPM schedule rather than verified: {value}"
+  measurement: >-
+    Probe every declared quantity x20 with a figure carried attempting
+    infer_from_register, infer_from_work_order, infer_from_ppm. Before: n answers
+    quoted it without remark. After: 0 quoted, and n refusals naming which boundary
+    was crossed. Over-refusal check (the bug this kind had by hand): a companion
+    probe naming ONE entity twice — what a CORRECT answer looks like — must NOT
+    refuse.
+
+- id: INV-FM-CURRENCY
+  kind: currency
+  applies_to: {quantity: [in_service_status, compliance_status]}
+  window: {provider: bms_status, max_age: realtime}
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "§9.5"}
+  message: "state reported as current but no live source confirms it"
+  measurement: >-
+    Probe in_service_status, compliance_status x20 after a any_isolation event,
+    then x20 with bms_status unreachable. Before: n answers quoted the superseded
+    figure, and the unreachable case fell back to the design basis. After: 0
+    superseded figures; 20 refusals naming any_isolation and 20 reporting state
+    UNKNOWN with no design figure in the refusal.
+
+# ---------------------------------------------------------------------------
+# Engine-required completions of the DECLARED staleness triggers.
+# The sheet names the events that invalidate each figure; the loader refuses a
+# trigger that no currency invariant can fire, because a declared trigger
+# nothing checks is a rule that reports green while gating nothing. These
+# records add only the provider wiring -- no new rule, no new event.
+# ---------------------------------------------------------------------------
+
+- id: INV-FM-RECORD-CURRENCY
+  kind: currency
+  applies_to: {quantity: [asset_register_entry, condition_survey, warranty]}
+  window: {provider: manual_log, max_age: event}
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "staleness_triggers"}
+  message: "a register entry, a condition survey and a warranty are all invalidated by a physical change; the manual log is the verification, the register is not"
+  measurement: "Probe each of the three x20 after its declared event (any_physical_change, intervening_works, non_approved_intervention). Before: the record was quoted as current. After: 60 refusals."

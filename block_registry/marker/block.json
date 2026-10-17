@@ -1,0 +1,114 @@
+{
+  "acceptance": [
+    {
+      "check": "refuses or errors when a required input is absent",
+      "id": "missing_required_input",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "PDF to Markdown-compatible text from the PDF text layer (pypdfium2, PyMuPDF fallback); no OCR",
+  "digests": {
+    "Dockerfile": "70e53651ddc62a3acfa3095348f6a77ee5fff1dd809a6d5c4f0f10801059c54e",
+    "block.json": "b61ae2a696ff68affdf1744db6a7f1335aff90081c4c3c3852c8ed2342f92c4a",
+    "block.py": "ccdb712d531cb0d753f12aa7f40f2a72c7908fccf21e3c99d92ec87f6c65ae01",
+    "requirements.txt": "2130af8cf44d9f9696fc471aa06af46b330da52da9942445f832b24279c7f691"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/marker:latest",
+    "type": "docker"
+  },
+  "id": "marker",
+  "inputs": [
+    {
+      "description": "Upload PDF...",
+      "name": "input",
+      "required": false,
+      "type": "file"
+    },
+    {
+      "default": 200000,
+      "description": "Maximum characters to return",
+      "name": "max_chars",
+      "required": false,
+      "type": "number"
+    }
+  ],
+  "layer": 3,
+  "name": "Marker PDF",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Markdown text",
+      "name": "text",
+      "type": "text"
+    },
+    {
+      "description": "Pages",
+      "name": "pages",
+      "type": "number"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "file",
+      "scope": "input_document"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    },
+    {
+      "kind": "network",
+      "scope": "http.outbound"
+    }
+  ],
+  "requires": [],
+  "signature": "FJj2eHUrrrNURDnhWvnPZnxVuQd5HuJrUio5yNSA052utzUMfvh6bLrcuU3Nn95lnZWZNkieb3XL8C7bKjFZDQ==",
+  "tags": [
+    "domain",
+    "documents",
+    "pdf",
+    "markdown",
+    "typed"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "Upload PDF...",
+      "name": "input",
+      "widget": "file"
+    },
+    {
+      "label": "Max characters",
+      "name": "max_chars",
+      "widget": "number"
+    }
+  ],
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    },
+    {
+      "kind": "file",
+      "scope": "local.write"
+    },
+    {
+      "kind": "file",
+      "scope": "temp"
+    }
+  ]
+}

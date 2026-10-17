@@ -1,0 +1,83 @@
+{
+  "acceptance": [
+    {
+      "check": "errors on an unknown or missing action",
+      "id": "unknown_action",
+      "status": "failed"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "OneDrive file operations \u2014 set ONEDRIVE_CLIENT_ID + ONEDRIVE_CLIENT_SECRET + ONEDRIVE_REFRESH_TOKEN or ONEDRIVE_ACCESS_TOKEN",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "f2867a761104b67b86f318acfe9a1d5559d80488326266b6208eb05a45e02a55",
+    "block.py": "d96c155b0eb0ecee10425cfb8555801529d2283532ea2f262d9836932d948bff"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/onedrive:latest",
+    "type": "docker"
+  },
+  "id": "onedrive",
+  "inputs": [
+    {
+      "description": "File path, ID, or search query...",
+      "name": "input",
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 4,
+  "name": "Onedrive",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Files",
+      "name": "files",
+      "type": "array"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "env",
+      "scope": "process"
+    },
+    {
+      "kind": "network",
+      "scope": "http.outbound"
+    }
+  ],
+  "requires": [],
+  "signature": "0NsppoL4PGkVKJOCgNkyc6s6/E36rAhbJ0E8ybBnEjGogUuDN+Vxc3UM9cYHlN5LI9XErVWFFB9qiy1ou5zcCA==",
+  "tags": [
+    "integration",
+    "storage",
+    "cloud",
+    "microsoft"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "File path, ID, or search query...",
+      "name": "input",
+      "widget": "text"
+    }
+  ],
+  "version": "2.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

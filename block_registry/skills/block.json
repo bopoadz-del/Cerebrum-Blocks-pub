@@ -1,0 +1,106 @@
+{
+  "acceptance": [
+    {
+      "check": "errors on an unknown or missing action",
+      "id": "unknown_action",
+      "status": "failed"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Extended-boot skill knowledge block \u2014 parses CEREBRUM_SKILL.md (domain file configurable via skill_file). Not loaded in virgin boot.",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "ac79c0a68f5b9d6ec02c64f5c85427a1a5e7066b85aa591378f685bb1492640d",
+    "block.py": "821483301b67279d2c777f63ffff66e5c8f322a6160dc7c1a710068e93f4fb29"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/skills:latest",
+    "type": "docker"
+  },
+  "id": "skills",
+  "inputs": [
+    {
+      "description": "Deliverable type or workflow name...",
+      "name": "input",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": "data/CEREBRUM_SKILL.md",
+      "description": "Configuration parameter: skill_file",
+      "name": "skill_file",
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 2,
+  "name": "Skills",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Hints",
+      "name": "hints",
+      "type": "object"
+    },
+    {
+      "description": "Validation Rules",
+      "name": "validation",
+      "type": "array"
+    },
+    {
+      "description": "Style System",
+      "name": "style",
+      "type": "object"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "file",
+      "scope": "local.read"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    }
+  ],
+  "requires": [],
+  "signature": "km37j+bWZbabtGhRfSj1CSQxO7NWbmhQnnDSDLICKW2rWj5BuXBccO/Gf9kSaM4JUQUEOeTILu7Eitnn50efCQ==",
+  "tags": [
+    "ai",
+    "core",
+    "skills",
+    "knowledge",
+    "orchestrator"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "Deliverable type or workflow name...",
+      "name": "input",
+      "widget": "text"
+    },
+    {
+      "label": "Skill File",
+      "name": "skill_file",
+      "widget": "text"
+    }
+  ],
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

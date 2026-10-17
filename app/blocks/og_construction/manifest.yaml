@@ -1,0 +1,104 @@
+kit: og_construction
+version: 1
+serves_verticals: [og_construction, oil_gas_construction]
+hooks_used: [H0, H1, H2, H3]
+
+quantities:
+  pressure:               {units: [barg, bara, psig, psia], aliases: [design, mawp, test, operating]}
+  test_pressure:          {units: [barg]}
+  pneumatic_radius:       {units: [m]}
+  preheat_temp:           {units: [degC]}
+  pwht_temp:              {units: [degC]}
+  pwht_hold_time:         {units: [min]}
+  zone_classification:    {units: [—]}
+  gas_free_level:         {units: [pctLEL]}
+  oxygen_level:           {units: [pct]}
+  h2s_level:              {units: [ppm]}
+  ndt_extent:             {units: [pct]}
+  isolation_boundary:     {units: [—]}
+
+  # Spec §1: a staleness trigger is keyed on a QUANTITY. These are the
+  # artifacts the sheet's triggers name — records the domain talks about,
+  # unitless, so each trigger has something to be keyed on. gas_free/HAC/pid/
+  # isolation/WPS are current-state artifacts, not measured figures; no
+  # interview value is ever expected for them (see KNOWN_GAPS.md).
+  gas_free:               {units: [—]}
+  HAC:                    {units: [—]}
+  pid:                    {units: [—]}
+  isolation:              {units: [—]}
+  WPS:                    {units: [—]}
+
+qualifier_fields:
+  pressure_kind:          {type: enum,   values: [design, mawp, hydro, pneumatic, leak, operating]}
+  gauge_or_absolute:      {type: enum,   values: [gauge, absolute]}
+  lowest_rated_component: {type: string}
+  test_medium:            {type: enum,   values: [hydrostatic, pneumatic]}
+  gas_group:              {type: string}
+  temp_class:             {type: string}
+  epL:                    {type: string}
+  material_group:         {type: string}
+  thickness_mm:           {type: number}
+  service_class:          {type: string}
+  gas_test_time:          {type: date}
+  gas_test_location:      {type: string}
+  isolation_cert_ref:     {type: string}
+  HAC_revision:           {type: string}
+  temp_equipment_accounted: {type: bool}
+
+source_classes:
+  national_regulation:    {rank: 1}
+  design_code:            {rank: 2}
+  design_dossier_u1a:     {rank: 3, reject_as_proof: [pid_annotation, spreadsheet]}
+  approved_moc:           {rank: 4}
+  as_built_pid:           {rank: 5, reject_as_proof: [pre_moc_revision]}
+  equipment_datasheet:    {rank: 6}
+  HAC_package:            {rank: 7, reject_as_proof: [pre_modification, temp_equipment_ignored]}
+  WPS:                    {rank: 8, reject_as_proof: [wrong_material_group, wrong_thickness_range]}
+  construction_procedure: {rank: 9, reject_as_proof: [draft, superseded_revision]}
+  site_instruction:       {rank: 10}
+  # The classes named in reject_as_proof above must themselves be declared, or
+  # the rule could never fire. Ranked below every governing class (1-10).
+  pid_annotation:          {rank: 11}
+  spreadsheet:             {rank: 11}
+  pre_moc_revision:        {rank: 11}
+  pre_modification:        {rank: 11}
+  temp_equipment_ignored:  {rank: 11}
+  wrong_material_group:    {rank: 11}
+  wrong_thickness_range:   {rank: 11}
+  draft:                   {rank: 11}
+  superseded_revision:     {rank: 11}
+
+state_providers:
+  gas_test:               {kind: status,   max_age: shift}
+  isolation_certificate:  {kind: status,   max_age: shift}
+  permit_register:        {kind: status,   max_age: realtime}
+  override_register:      {kind: status,   max_age: realtime}
+  HAC_state:              {kind: revision, max_age: event}
+  # Correction 2: window.provider must name a declared state_providers entry.
+  # pid and WPS currency (below) need providers the original sheet did not
+  # separately declare; added as revision providers, event-keyed like HAC_state.
+  pid_revision:            {kind: revision, max_age: event}
+  wps_revision:            {kind: revision, max_age: event}
+
+staleness_triggers:
+  gas_free:               [elapsed_validity, process_change, ventilation_change, meal_break]
+  HAC:                    [field_change, temp_equipment, blocked_ventilation, opened_drain]
+  pid:                    [approved_moc]
+  isolation:              [isolation_change, shift_change_without_handover]
+  WPS:                    [continuity_lapse, procedure_revision]
+
+scope_refusals:
+  - pattern: "can we do hot work here"
+    authority: "permit office — live gas test and permit required"
+  - pattern: "is this isolation good enough"
+    authority: "isolation authority"
+  - pattern: "can we bring (this|the) generator into the plot"
+    authority: "E&I authority + HAC gap assessment"
+  - pattern: "can we pressure test to"
+    authority: "test package + piping engineer (lowest-rated component)"
+  - pattern: "is this (system|unit) ready for hydrocarbons"
+    authority: "commissioning manager + PSSR"
+  - pattern: "can we downgrade this punch"
+    authority: "systems completion authority"
+  - pattern: "is it safe to enter this vessel"
+    authority: "permit process — atmospheric test required"

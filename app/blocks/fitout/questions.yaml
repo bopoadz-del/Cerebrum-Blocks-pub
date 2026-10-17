@@ -1,0 +1,401 @@
+# GENERATED from docs/kit_questions/fitout.md by scripts/import_kit_questions.py — do not hand-edit.
+# Edit the markdown sheet and re-run. The sheet is the record of what the domain
+# owner actually asked for; this file is only its machine-readable form.
+#
+# gate: true  -> [GATE]. The platform refuses anything needing it until answered.
+# gate: false -> [GAP].  Experience worth having; does not block.
+# gate: null  -> the sheet marked neither. Treated as GATING, because a question
+#                whose class cannot be read must block rather than pass.
+#
+# There is deliberately NO answer slot in this file. Answers are per-platform and
+# per-client; this kit is a signed Store block shared by every customer.
+kit: fitout
+source_document: docs/kit_questions/fitout.md
+title: 'Fit-Out — Questions I Cannot Answer'
+answer_format:
+  - 'value'
+  - 'unit'
+  - 'quality band'
+  - 'market'
+  - 'source'
+  - 'date'
+  - 'confirmed or indicative'
+sections:
+  'B':
+    title: 'Rates'
+  'C':
+    title: 'Lead times'
+  'D':
+    title: 'Productivity'
+  'E':
+    title: 'Cost of getting it wrong'
+  'F':
+    title: 'Base build interface'
+  'G':
+    title: 'Approvals'
+  'H':
+    title: 'Live building'
+  'I':
+    title: 'Handover'
+  'J':
+    title: 'Conflict and precedence'
+  'K':
+    title: 'Never-estimate (your confirmation)'
+  'L':
+    title: 'May-estimate'
+  'M':
+    title: 'Incidents (shape only)'
+  'N':
+    title: 'The five questions'
+questions:
+  - id: 'B.1'
+    section: 'B'
+    gate: true
+    text: >-
+      Cost per m² all-in by your quality band — basic, standard, premium, super-prime — and
+      what you define each band as.
+  - id: 'B.2'
+    section: 'B'
+    gate: true
+    covers: [rate]
+    text: >-
+      Your rate per package — partitions (plasterboard, glazed, demountable), ceilings
+      (grid, plasterboard/feature), raised floor, flooring (carpet, stone/tile, timber),
+      joinery (standard, bespoke), wall finishes (paint, specialist), doors and
+      ironmongery, MEP mechanical, MEP electrical, lighting, sprinkler modification, fire
+      alarm modification, BMS integration, AV/IT, kitchen equipment, sanitaryware, fire
+      stopping, T&C, prelims.
+  - id: 'B.3'
+    section: 'B'
+    gate: false
+    text: >-
+      Which packages you most often underestimate at tender, and by how much.
+  - id: 'B.4'
+    section: 'B'
+    gate: false
+    text: >-
+      Proportion of value in long-lead items on your jobs, and which ones.
+  - id: 'C.1'
+    section: 'C'
+    gate: true
+    text: >-
+      For each item — order-to-delivery as your suppliers actually deliver: bespoke
+      joinery, stone, glazed partitions, feature lighting, loose furniture, specialist
+      fabrics, kitchen equipment, specified sanitaryware, specified ironmongery, AV,
+      bespoke metalwork, imported finishes, fire-rated doorsets, MEP plant.
+  - id: 'C.2'
+    section: 'C'
+    gate: true
+    text: >-
+      Approval time before order for each of the above.
+  - id: 'C.3'
+    section: 'C'
+    gate: true
+    text: >-
+      Total from design freeze per item — your number.
+  - id: 'C.4'
+    section: 'C'
+    gate: false
+    covers: [lead_time]
+    text: >-
+      The cheap item with the longest lead time on your jobs — the one that always catches
+      you.
+  - id: 'C.5'
+    section: 'C'
+    gate: false
+    text: >-
+      Sample and mock-up approval — actual vs programmed on your jobs.
+  - id: 'C.6'
+    section: 'C'
+    gate: false
+    text: >-
+      Customs and clearance time in your market, and what blows it out.
+  - id: 'C.7'
+    section: 'C'
+    gate: false
+    text: >-
+      Last responsible moment per major package — your judgement.
+  - id: 'C.8'
+    section: 'C'
+    gate: false
+    text: >-
+      Real cost when a client changes a long-lead item after order — money and weeks, your
+      history.
+  - id: 'D.1'
+    section: 'D'
+    gate: true
+    text: >-
+      Your m²/day or unit/day per gang — partition erection, ceiling grid, flooring,
+      painting, joinery, tiling, MEP first fix, MEP second fix, snagging.
+  - id: 'D.2'
+    section: 'D'
+    gate: true
+    text: >-
+      Out-of-hours productivity multiplier in your live buildings — your measured figure.
+  - id: 'D.3'
+    section: 'D'
+    gate: false
+    text: >-
+      Restricted-access impact and how you price it.
+  - id: 'D.4'
+    section: 'D'
+    gate: false
+    text: >-
+      Snagging — actual vs programmed on your jobs.
+  - id: 'E.1'
+    section: 'E'
+    gate: true
+    text: >-
+      Cost per day of missing a fixed opening date on your projects.
+  - id: 'E.2'
+    section: 'E'
+    gate: true
+    text: >-
+      LDs you carry — typical range and worst case.
+  - id: 'E.3'
+    section: 'E'
+    gate: true
+    text: >-
+      One week of extended prelims on a typical job of yours.
+  - id: 'E.4'
+    section: 'E'
+    gate: false
+    text: >-
+      Cost of rework from base-build discrepancy, from late design change — your figures.
+  - id: 'E.5'
+    section: 'E'
+    gate: false
+    text: >-
+      Expediting and air-freight uplift — what you actually paid.
+  - id: 'E.6'
+    section: 'E'
+    gate: false
+    text: >-
+      Failed authority inspection — remedial, re-inspection, delay.
+  - id: 'E.7'
+    section: 'E'
+    gate: false
+    text: >-
+      Damage to landlord base build or occupied adjacent space — cost and resolution.
+  - id: 'F.1'
+    section: 'F'
+    gate: true
+    covers: [available_capacity]
+    text: >-
+      What you survey before starting, and the typical variance you actually find — slab
+      level, slab-to-slab, grid, columns, facade line, riser positions and sizes, MEP
+      terminations, available capacity (power/cooling/water/drainage), invert levels, fire
+      compartment lines, structural capacity, existing fire stopping.
+  - id: 'F.2'
+    section: 'F'
+    gate: false
+    text: >-
+      Where the tolerance stack shows first on your jobs, and how you absorb it.
+  - id: 'F.3'
+    section: 'F'
+    gate: true
+    text: >-
+      Scope boundary matrix — sprinkler heads/drops, fire alarm, smoke detection, DBs, air
+      terminals, BMS, fire stopping at your penetrations, blinds, common-area finishes,
+      signage — landlord / fit-out / tenant / disputed-how-often as your contracts draw it.
+  - id: 'F.4'
+    section: 'F'
+    gate: false
+    text: >-
+      What you have inherited as a defect that was actually base-build and had to fix
+      anyway, and how you protect against it now.
+  - id: 'F.5'
+    section: 'F'
+    gate: false
+    text: >-
+      Your dilapidations process at start and end.
+  - id: 'G.1'
+    section: 'G'
+    gate: true
+    text: >-
+      The approval chain as it actually runs — design/drawing, sample, mock-up, landlord,
+      authority permit, fire authority, municipality/civil defence, method statement, shop
+      drawing, brand standard, pre-inspection, witness T&C, final authority inspection,
+      handover — who approves, typical duration, what it blocks.
+  - id: 'G.2'
+    section: 'G'
+    gate: false
+    text: >-
+      Most common cause of delay on your jobs, and why.
+  - id: 'G.3'
+    section: 'G'
+    gate: false
+    text: >-
+      What you legitimately start at risk, and what you never start before approval.
+  - id: 'G.4'
+    section: 'G'
+    gate: false
+    text: >-
+      Sample rejected after fabrication started — who pays, how avoided.
+  - id: 'G.5'
+    section: 'G'
+    gate: false
+    text: >-
+      Common failure items at fire/authority inspection in your market, and which are
+      sequencing-avoidable.
+  - id: 'H.1'
+    section: 'H'
+    gate: true
+    text: >-
+      Working hours, noise limits, quiet hours, dust/containment, access routes and lift
+      use, loading bay windows, hot work permits, fire system isolation, water/power
+      shutdown windows, waste removal — the rules imposed on your jobs and the cost impact
+      of each.
+  - id: 'H.2'
+    section: 'H'
+    gate: true
+    text: >-
+      Fire system isolation procedure — compensating measures, who authorises, how
+      recorded.
+  - id: 'H.3'
+    section: 'H'
+    gate: false
+    text: >-
+      What must be made good before reoccupation each night, and who checks.
+  - id: 'H.4'
+    section: 'H'
+    gate: false
+    text: >-
+      What has gone wrong in a live building of yours because of fit-out works.
+  - id: 'I.1'
+    section: 'I'
+    gate: true
+    text: >-
+      Your contract definitions of snag · defect · incomplete · variation · damage by
+      others · fair wear — and for each: who rectifies, who pays.
+  - id: 'I.2'
+    section: 'I'
+    gate: true
+    text: >-
+      Your rule for what must be complete before practical completion, and what may be
+      outstanding.
+  - id: 'I.3'
+    section: 'I'
+    gate: false
+    text: >-
+      Your handover pack contents, and what is most often missing on your jobs.
+  - id: 'I.4'
+    section: 'I'
+    gate: false
+    text: >-
+      Your DLP length and what actually happens during it.
+  - id: 'I.5'
+    section: 'I'
+    gate: false
+    text: >-
+      Most common post-handover dispute and how it is usually resolved.
+  - id: 'J.1'
+    section: 'J'
+    gate: true
+    text: >-
+      Your ranking, highest first, of: building code/authority · fire authority · head
+      lease/landlord · contract and spec · approved drawings · brand standard · client
+      instruction · site instruction.
+  - id: 'J.2'
+    section: 'J'
+    gate: true
+    text: >-
+      When drawing and specification differ — which governs on your projects.
+  - id: 'J.3'
+    section: 'J'
+    gate: true
+    text: >-
+      When drawing and actual building differ — what happens and who pays.
+  - id: 'J.4'
+    section: 'J'
+    gate: false
+    text: >-
+      Landlord vs authority, brand standard vs local code — your rule.
+  - id: 'J.5'
+    section: 'J'
+    gate: false
+    text: >-
+      Which conflict classes your organisation always refuses to pick.
+  - id: 'K.1'
+    section: 'K'
+    gate: true
+    covers: [fire_rating]
+    text: >-
+      Which figures on your projects you confirm as never-estimate — fire rating by tested
+      assembly, structural capacity for suspended load, actual available
+      electrical/cooling/water/drainage capacity, escape width and travel distance,
+      compartment lines, slab penetration limits, sprinkler coverage after ceiling change,
+      smoke detection after partitioning, acoustic ratings, glazing safety, access and
+      disability dimensions.
+  - id: 'K.2'
+    section: 'K'
+    gate: false
+    text: >-
+      Which of the above has caught you out, and how.
+  - id: 'L.1'
+    section: 'L'
+    gate: false
+    text: >-
+      The figures you are comfortable seeing as estimates on your projects — concept
+      cost/m², programme duration, snagging quantity — and the exact wording you want
+      attached.
+  - id: 'M.1'
+    section: 'M'
+    gate: false
+    text: >-
+      A base build not as drawn — what it cost.
+  - id: 'M.2'
+    section: 'M'
+    gate: false
+    text: >-
+      A long-lead item ordered late or changed after order.
+  - id: 'M.3'
+    section: 'M'
+    gate: false
+    text: >-
+      A sample rejected after fabrication started.
+  - id: 'M.4'
+    section: 'M'
+    gate: false
+    text: >-
+      A fire stopping or compartmentation issue found at inspection.
+  - id: 'M.5'
+    section: 'M'
+    gate: false
+    text: >-
+      Capacity — power, cooling, drainage — that was not actually available.
+  - id: 'M.6'
+    section: 'M'
+    gate: false
+    text: >-
+      A scope boundary dispute with landlord or another contractor.
+  - id: 'M.7'
+    section: 'M'
+    gate: false
+    text: >-
+      Work done on a superseded drawing revision.
+  - id: 'M.8'
+    section: 'M'
+    gate: false
+    text: >-
+      An approval assumed from silence.
+  - id: 'M.9'
+    section: 'M'
+    gate: false
+    text: >-
+      A fixed opening date met by sacrificing something — what was sacrificed.
+  - id: 'M.10'
+    section: 'M'
+    gate: false
+    text: >-
+      Damage to occupied space or base build during works.
+  - id: 'M.11'
+    section: 'M'
+    gate: false
+    text: >-
+      What a PM new to fit-out most commonly gets wrong in their first year.
+  - id: 'N.1'
+    section: 'N'
+    gate: false
+    text: >-
+      Five things you'd ask a system daily and trust completely.

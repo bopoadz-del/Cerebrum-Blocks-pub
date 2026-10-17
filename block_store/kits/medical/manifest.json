@@ -1,0 +1,113 @@
+{
+  "learning_engine_enabled": false,
+  "id": "medical",
+  "name": "Medical & Healthcare Suite",
+  "version": "1.0.0",
+  "description": "Medical & Healthcare Suite: typed document analysis, entity extraction, metrics, compliance checks, and risk scoring for the medical domain.",
+  "serves_verticals": ["medical", "medical_clinic", "clinic", "healthcare"],
+  "excludes_verticals": ["veterinary", "vet", "veterinary_clinic"],
+  "build_ready": false,
+  "status": "available",
+  "author": "bopoadz-del",
+  "tags": [
+    "domain",
+    "container",
+    "medical"
+  ],
+  "source": {
+    "repo": "https://github.com/bopoadz-del/Cerebrum-Blocks",
+    "ref": "main",
+    "publish_script": "scripts/publish_kit.py"
+  },
+  "container": {
+    "class": "app.containers.medical.MedicalContainer",
+    "default_chat_prompt": null
+  },
+  "blocks": [
+    "pdf",
+    "ocr",
+    "chat",
+    "image",
+    "medical_v2",
+    "formula_executor_v2",
+    "medical_ehr_connector"
+  ],
+  "prompts": [],
+  "data": [],
+  "core_modules": [
+    "app/core/medical_knowledge.py",
+    "app/core/medical_types.py",
+    "app/core/confidence.py",
+    "app/core/schema_registry.py",
+    "app/core/domain_block_v2.py",
+    "app/core/metric_utils.py",
+    "app/core/typed_block.py",
+    "app/core/universal_base.py",
+    "app/containers/base.py",
+    "app/core/sandbox.py",
+    "app/prompts/codegen_system.py"
+  ],
+  "artifacts": [
+    {
+      "src": "app/containers/medical.py",
+      "dest": "app/containers/medical.py"
+    },
+    {
+      "src": "app/blocks/medical_v2.py",
+      "dest": "app/blocks/medical_v2.py"
+    },
+    {
+      "src": "app/core/medical_knowledge.py",
+      "dest": "app/core/medical_knowledge.py"
+    },
+    {
+      "src": "app/core/medical_types.py",
+      "dest": "app/core/medical_types.py"
+    },
+    {
+      "src": "app/core/confidence.py",
+      "dest": "app/core/confidence.py"
+    },
+    {
+      "src": "app/core/schema_registry.py",
+      "dest": "app/core/schema_registry.py"
+    },
+    {
+      "src": "app/core/domain_block_v2.py",
+      "dest": "app/core/domain_block_v2.py"
+    },
+    {
+      "src": "app/core/metric_utils.py",
+      "dest": "app/core/metric_utils.py"
+    },
+    {
+      "src": "app/core/typed_block.py",
+      "dest": "app/core/typed_block.py"
+    },
+    {
+      "src": "app/core/universal_base.py",
+      "dest": "app/core/universal_base.py"
+    },
+    {
+      "src": "app/containers/base.py",
+      "dest": "app/containers/base.py"
+    },
+    {
+      "src": "app/core/sandbox.py",
+      "dest": "app/core/sandbox.py"
+    },
+    {
+      "src": "app/prompts/codegen_system.py",
+      "dest": "app/prompts/codegen_system.py"
+    },
+    {
+      "src": "app/blocks/formula_executor_v2.py",
+      "dest": "app/blocks/formula_executor_v2.py"
+    }
+  ],
+  "price_cents": 0,
+  "install_requires": {
+    "min_platform_version": "2.0.0",
+    "python": ">=3.10"
+  }
+}

@@ -1,0 +1,125 @@
+{
+  "manifest": {
+    "domain_id": "investment_analysis",
+    "version": "0.1.0",
+    "name": "Investment Analysis — candidate pack",
+    "description": "Candidate pack extracted from <private-repo>'s scoring engine (the <private-repo> repo holds the API/portfolio shell; the weighted scoring lives in <private-repo>). Sharpe, drawdown, RSI, Piotroski, Altman Z, consensus mapping, weighted composite. CANDIDATE: requires domain-expert review before production authority.",
+    "certification": "candidate",
+    "donor_repo": "https://github.com/bopoadz-del/<private-repo>",
+    "donor_commit": "c744f89"
+  },
+  "ontology": {
+    "terms": {
+      "sharpe": {"definition": "Risk-adjusted return: (mean return - risk-free) / stddev", "aliases": ["sharpe ratio"]},
+      "drawdown": {"definition": "Peak-to-trough decline", "aliases": ["max drawdown"]},
+      "rsi": {"definition": "Relative Strength Index (14)", "aliases": ["relative strength"]},
+      "piotroski": {"definition": "9-point fundamental strength score", "aliases": ["f-score"]},
+      "altman_z": {"definition": "Bankruptcy-risk z-score", "aliases": ["z-score"]}
+    }
+  },
+  "entities": {
+    "quote": {"fields": ["ticker", "price", "pe_ratio", "pb_ratio", "roe", "margin", "revenue_growth", "debt_to_equity", "current_ratio", "rsi"]}
+  },
+  "permissions": {
+    "role_permissions": {
+      "analyst": ["inv.compute_score"],
+      "viewer": []
+    },
+    "action_requirements": {
+      "inv.compute_score": "inv.compute_score"
+    }
+  },
+  "evidence_policy": {
+    "inv.compute_score": ["ticker", "prices"]
+  },
+  "authority_sources": {
+    "inv.openbox": {"kind": "product_policy", "reference": "src/services/openbox/engine.ts", "tier": "controlled"},
+    "inv.legacy": {"kind": "product_policy", "reference": "src/services/legacy-scoring.ts", "tier": "controlled"}
+  },
+  "refusal_policy": {
+    "missing_price_history": "dependency_required",
+    "divergent_models": "conflict_detected"
+  },
+  "formulas": [
+    {
+      "formula_id": "inv.sharpe_ratio",
+      "name": "Sharpe ratio",
+      "domain": "investment_analysis",
+      "version": "0.1.0",
+      "description": "(mean log return - risk_free) / stddev of log returns; donor default risk-free 0.045.",
+      "expression": "(mean_return - risk_free) / stddev",
+      "inputs": [{"name": "mean_return", "type": "decimal"}, {"name": "stddev", "type": "decimal"}, {"name": "risk_free", "type": "decimal"}],
+      "output": {"name": "sharpe", "type": "decimal"},
+      "precision": 4,
+      "rounding": "half_even",
+      "preconditions": ["stddev gt 0"],
+      "authority_source": "inv.openbox",
+      "implementation": "tests.core.test_reasoning_kernel_packs._sharpe_impl",
+      "verification_oracle": "tests.core.test_reasoning_kernel_packs._sharpe_oracle",
+      "certification": "candidate",
+      "provenance": {"donor_repo": "https://github.com/bopoadz-del/<private-repo>", "donor_commit": "c744f89", "donor_path": "src/services/openbox/engine.ts", "donor_symbol": "calculateSharpeRatio", "note": "donor uses float; the pack is Decimal"}
+    },
+    {
+      "formula_id": "inv.altman_z",
+      "name": "Altman Z-Score",
+      "domain": "investment_analysis",
+      "version": "0.1.0",
+      "description": "Z = 1.2*X1 + 1.4*X2 + 3.3*X3 + 0.6*X4 + 1.0*X5 (working capital / retained earnings / EBIT / equity / sales ratios).",
+      "expression": "1.2*x1 + 1.4*x2 + 3.3*x3 + 0.6*x4 + 1.0*x5",
+      "inputs": [{"name": "x1", "type": "decimal"}, {"name": "x2", "type": "decimal"}, {"name": "x3", "type": "decimal"}, {"name": "x4", "type": "decimal"}, {"name": "x5", "type": "decimal"}],
+      "output": {"name": "z", "type": "decimal"},
+      "precision": 4,
+      "rounding": "half_even",
+      "authority_source": "inv.openbox",
+      "implementation": "tests.core.test_reasoning_kernel_packs._altman_impl",
+      "verification_oracle": "tests.core.test_reasoning_kernel_packs._altman_oracle",
+      "certification": "candidate",
+      "provenance": {"donor_repo": "https://github.com/bopoadz-del/<private-repo>", "donor_commit": "c744f89", "donor_path": "src/services/openbox/engine.ts", "donor_symbol": "computeAltmanZ"}
+    }
+  ],
+  "rules": [
+    {
+      "rule_id": "inv.zero_variance_sharpe_is_refused",
+      "version": "0.1.0",
+      "conditions": [{"field": "stddev", "op": "le", "value": 0}],
+      "decision": {"outcome": "refuse", "message": "Sharpe ratio is undefined for zero variance — refused, not extrapolated."},
+      "severity": "major",
+      "precedence": 80,
+      "refusal_behavior": "refuse",
+      "authority_source": "inv.openbox",
+      "certification": "candidate",
+      "provenance": {"donor_repo": "https://github.com/bopoadz-del/<private-repo>", "donor_commit": "c744f89", "donor_path": "src/services/openbox/engine.ts", "donor_symbol": "safeDivide"}
+    }
+  ],
+  "decision_tables": [
+    {
+      "table_id": "inv.consensus_rating",
+      "version": "0.1.0",
+      "inputs": ["rating"],
+      "rows": [
+        {"when": {"rating": "strong_buy"}, "then": {"action": "buy"}},
+        {"when": {"rating": "buy"}, "then": {"action": "buy"}},
+        {"when": {"rating": "hold"}, "then": {"action": "hold"}},
+        {"when": {"rating": "sell"}, "then": {"action": "sell"}},
+        {"when": {"rating": "strong_sell"}, "then": {"action": "sell"}}
+      ],
+      "default_outcome": {"action": "hold", "refuse": false},
+      "authority_source": "inv.openbox",
+      "certification": "candidate",
+      "provenance": {"donor_repo": "https://github.com/bopoadz-del/<private-repo>", "donor_commit": "c744f89", "donor_path": "src/services/openbox/engine.ts", "donor_symbol": "mapConsensusRating"}
+    }
+  ],
+  "workflows": [],
+  "approvals": [],
+  "actions": {
+    "inv.compute_score": {"risk": "low"}
+  },
+  "verification_oracles": {
+    "inv.sharpe_ratio": {"cases": [{"inputs": {"mean_return": "0.10", "stddev": "0.20", "risk_free": "0.045"}, "expected": "0.2750"}]},
+    "inv.altman_z": {"cases": [{"inputs": {"x1": "0.1", "x2": "0.2", "x3": "0.3", "x4": "0.4", "x5": "0.5"}, "expected": "2.1300"}]}
+  },
+  "fixtures": {},
+  "tests": {
+    "kernel": "tests/core/test_reasoning_kernel_packs.py"
+  }
+}

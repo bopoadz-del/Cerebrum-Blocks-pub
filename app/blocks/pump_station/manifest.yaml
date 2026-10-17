@@ -1,0 +1,103 @@
+kit: pump_station
+version: 1
+serves_verticals: [pump_station, water_pump_station]
+hooks_used: [H0, H1, H2, H3]
+
+quantities:
+  npsh_required:          {units: [m],   aliases: [NPSHr]}
+  npsh_available:         {units: [m],   aliases: [NPSHa]}
+  npsh_margin:            {units: [m]}
+  por_flow_min:           {units: [m3h, Ls]}
+  por_flow_max:           {units: [m3h, Ls]}
+  aor_flow_min:           {units: [m3h, Ls]}
+  aor_flow_max:           {units: [m3h, Ls]}
+  min_continuous_flow:    {units: [m3h, Ls]}
+  max_discharge_pressure: {units: [bar]}
+  surge_pressure:         {units: [bar]}
+  min_submergence:        {units: [m]}
+  starts_per_hour:        {units: [1h]}
+  vibration_trip:         {units: [mms, mm_s_rms]}
+  h2s_evac_level:         {units: [ppm]}
+  # Domain 8's INV-PS-CURRENCY (below) names pump_curve as an applies_to
+  # quantity, and staleness_triggers keys surge_study/pump_curve/npsha/
+  # protection_setpoints/efficiency/wet_well_volume on quantities the sheet
+  # never declared as figures. These are artifacts a trigger is keyed on,
+  # not measured figures; unitless.
+  pump_curve:             {units: [—]}
+  surge_study:            {units: [—]}
+  npsha:                  {units: [—]}
+  protection_setpoints:   {units: [—]}
+  efficiency:             {units: [—]}
+  wet_well_volume:        {units: [—]}
+
+qualifier_fields:
+  npsh_case:              {type: enum,   values: [design, worst]}
+  npsh_margin_basis:      {type: enum,   values: [fixed_head, percentage, ANSI_HI_class]}
+  impeller_trim_mm:       {type: number}
+  speed_rpm:              {type: number}
+  protection_in_service:  {type: bool}
+  scada_revision:         {type: string}
+  surge_study_date:       {type: date}
+  valve_closure_time_s:   {type: number}
+  air_vessel_config:      {type: string}
+  # Correction 3: every name in requires:/requires_any_of: must be a declared
+  # qualifier_fields entry. INV-PS-NPSH-MARGIN requires npsh_margin alongside
+  # npsh_margin_basis; npsh_margin was declared only as a quantity, not as a
+  # qualifier field carried on the npsh_required figure -- declared here too.
+  npsh_margin:            {type: number}
+  # Domain 8 has por_or_aor_named and authorisation_if_aor -- declared exactly
+  # as instructed.
+  por_or_aor_named:       {type: enum,   values: [POR, AOR]}
+  authorisation_if_aor:   {type: string}
+
+source_classes:
+  national_reg:           {rank: 1}
+  standard_ansi_hi_iso:   {rank: 2}
+  design_basis_report:    {rank: 3}
+  surge_study:            {rank: 4, reject_as_proof: [pre_valve_change, pre_main_change]}
+  manufacturer_datasheet: {rank: 5, reject_as_proof: [wrong_trim, generic_model_curve]}
+  live_scada:             {rank: 6, reject_as_proof: [design_document, as_designed]}
+  operating_procedure:    {rank: 7}
+  maintenance_record:     {rank: 8}
+  shift_instruction:      {rank: 9}
+  # The classes named in reject_as_proof above must themselves be declared, or
+  # the rule could never fire. Ranked below every governing class (1-9).
+  pre_valve_change:       {rank: 10}
+  pre_main_change:        {rank: 10}
+  wrong_trim:             {rank: 10}
+  generic_model_curve:    {rank: 10}
+  design_document:        {rank: 10}
+  as_designed:            {rank: 10}
+
+state_providers:
+  protection_status:      {kind: status,   max_age: realtime}
+  scada_state:             {kind: status,   max_age: realtime}
+  pump_curve_current:      {kind: revision, max_age: event}
+  surge_study_current:     {kind: revision, max_age: event}
+  # Correction 2: window.provider must name a declared state_providers entry.
+  # These four providers are needed by the staleness_triggers plumbing below
+  # (surge_study/pump_curve already have providers above; npsha,
+  # protection_setpoints, efficiency and wet_well_volume did not).
+  process_conditions:         {kind: status,   max_age: shift}
+  efficiency_test_current:    {kind: revision, max_age: event}
+  wet_well_survey_current:    {kind: revision, max_age: event}
+
+staleness_triggers:
+  surge_study:            [pump_change, valve_closure_change, main_change, air_vessel_change]
+  pump_curve:             [impeller_trim_change, wear, replacement]
+  npsha:                  [seasonal_temperature, level_regime, screen_fouling]
+  protection_setpoints:   [scada_change]
+  efficiency:             [wear_since_test]
+  wet_well_volume:        [siltation]
+
+scope_refusals:
+  - pattern: "can we run this pump harder"
+    authority: "rotating equipment engineer — POR/AOR and NPSH assessment"
+  - pattern: "can we bypass this trip"
+    authority: "override procedure + authorising engineer"
+  - pattern: "is it safe to enter the wet well"
+    authority: "permit process — atmospheric test required"
+  - pattern: "can we reset and restart"
+    authority: "duty engineer — cause determination"
+  - pattern: "will the main take this pressure"
+    authority: "surge study + network engineer"

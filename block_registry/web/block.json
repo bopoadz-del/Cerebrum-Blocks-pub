@@ -1,0 +1,82 @@
+{
+  "acceptance": [],
+  "author": "Cerebrum Team",
+  "description": "Fetch and extract content from any URL",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "ed8d71f07f00da0e2a9bb9a0706823b821cff67224ddadff77ffd48ad2435c53",
+    "block.py": "469864c13b4dcccb21835c12feb34a29f0c0f222aca1bad031e532e7b414a4c3"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/web:latest",
+    "type": "docker"
+  },
+  "id": "web",
+  "inputs": [
+    {
+      "description": "Enter URL to scrape...",
+      "name": "input",
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 3,
+  "name": "Web",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Title",
+      "name": "title",
+      "type": "text"
+    },
+    {
+      "description": "Content",
+      "name": "text",
+      "type": "markdown"
+    },
+    {
+      "description": "Links",
+      "name": "links",
+      "type": "array"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "network",
+      "scope": "http.outbound"
+    }
+  ],
+  "requires": [],
+  "signature": "oThqmGAzhR5R6zU4XmNKKAfAhqeU+vsnMuNzNFhQU0yx6Q2lnKvR10obkf5oxeTB5Lk/Intl4ng2hHmazVsVDQ==",
+  "tags": [
+    "domain",
+    "web",
+    "scraping"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "Enter URL to scrape...",
+      "name": "input",
+      "widget": "text"
+    }
+  ],
+  "version": "2.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

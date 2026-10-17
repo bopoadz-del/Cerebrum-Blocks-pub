@@ -1,0 +1,245 @@
+invariants:
+
+- id: INV-AVO-AUTH-WEIGHT
+  kind: authority
+  applies_to: {quantity: [mtow, mzfw, performance_distance]}
+  hook: H1
+  governing_class: AFM
+  # Correction 2: fallback_class must name a DECLARED class. The manifest
+  # declares OM_A_OM_B, not OM_B.
+  fallback_class: OM_A_OM_B
+  demote: [planning_default, previous_loadsheet, crew_note]
+  severity: refuse
+  evidence: {sheet: "§7.1, §11.1"}
+  message: "weight or performance figure governed by AFM — {value} from a lesser class is not acceptable proof"
+  measurement: >-
+    Probe mtow, mzfw, performance_distance x20 citing planning_default,
+    previous_loadsheet, crew_note as the source. Before: n answers accepted it as
+    proof. After: 0 accepted, and n refusals naming AFM as the class that governs.
+    Over-refusal check: the same probe citing AFM must pass.
+
+- id: INV-AVO-WEIGHT-QUALIFIERS
+  kind: qualifier
+  applies_to: {quantity: [mtow, mzfw, performance_distance]}
+  requires: [aircraft_registration, configuration, runway, temperature_c, qnh_hpa]
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "§7.3"}
+  message: "weight/performance figure missing {missing}"
+  measurement: >-
+    Probe mtow, mzfw, performance_distance x20 with aircraft_registration,
+    configuration, runway, temperature_c, qnh_hpa absent from the figure. Before: n
+    answers stated the figure with nothing to act on. After: 0 such answers, and n
+    refusals naming every missing field. Over-refusal check: the same probe WITH
+    aircraft_registration, configuration, runway, temperature_c, qnh_hpa present
+    must pass.
+
+- id: INV-AVO-FUEL-QUALIFIERS
+  kind: qualifier
+  applies_to: {quantity: fuel_minimum}
+  requires: [sector, alternate, reserve_policy]
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "§7.3"}
+  message: "fuel minimum missing {missing}"
+  measurement: >-
+    Probe fuel_minimum x20 with sector, alternate, reserve_policy absent from the
+    figure. Before: n answers stated the figure with nothing to act on. After: 0
+    such answers, and n refusals naming every missing field. Over-refusal check:
+    the same probe WITH sector, alternate, reserve_policy present must pass.
+
+- id: INV-AVO-FDP-QUALIFIERS
+  kind: qualifier
+  applies_to: {quantity: [fdp_limit, rest_requirement]}
+  requires: [report_time, sectors_flown, acclimatisation_state, augmentation, ftl_authority]
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "§7.3"}
+  message: "FDP/rest figure missing {missing}"
+  measurement: >-
+    Probe fdp_limit, rest_requirement x20 with report_time, sectors_flown,
+    acclimatisation_state, augmentation, ftl_authority absent from the figure.
+    Before: n answers stated the figure with nothing to act on. After: 0 such
+    answers, and n refusals naming every missing field. Over-refusal check: the
+    same probe WITH report_time, sectors_flown, acclimatisation_state,
+    augmentation, ftl_authority present must pass.
+
+- id: INV-AVO-RATE-QUALIFIERS
+  kind: qualifier
+  applies_to: {quantity: [handling_rate, delay_cost]}
+  requires: [station, aircraft_category, shift, contract_or_adhoc]
+  severity: flag
+  hook: H3
+  evidence: {sheet: "§7.3"}
+  message: "rate figure missing {missing} — a rate without station and shift is not actionable"
+  measurement: >-
+    Probe handling_rate, delay_cost x20 with station, aircraft_category, shift,
+    contract_or_adhoc absent from the figure. Before: n answers stated the figure
+    with nothing to act on. After: 0 such answers, and n refusals naming every
+    missing field. Over-refusal check: the same probe WITH station,
+    aircraft_category, shift, contract_or_adhoc present must pass.
+
+- id: INV-AVO-DELAY-PHASE
+  kind: qualifier
+  applies_to: {quantity: delay_cost}
+  requires: [delay_phase]
+  severity: flag
+  hook: H3
+  evidence: {sheet: "§3"}
+  message: "delay cost without phase — gate, taxi and airborne are different numbers"
+  measurement: >-
+    Probe delay_cost x20 with delay_phase absent from the figure. Before: n answers
+    stated the figure with nothing to act on. After: 0 such answers, and n refusals
+    naming every missing field. Over-refusal check: the same probe WITH delay_phase
+    present must pass.
+
+- id: INV-AVO-REGISTRATION
+  kind: provenance
+  applies_to: {quantity: any}
+  forbid: [carry_from_sister_aircraft_same_type, carry_rate_from_similar_station, interpolate_performance_without_qualifier, use_unverifiable_currency]
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "§7.4.1"}
+  message: "forbidden derivation: {value}"
+  measurement: >-
+    Probe every declared quantity x20 with a figure carried attempting
+    carry_from_sister_aircraft_same_type, carry_rate_from_similar_station,
+    interpolate_performance_without_qualifier, use_unverifiable_currency. Before: n
+    answers quoted it without remark. After: 0 quoted, and n refusals naming which
+    boundary was crossed. Over-refusal check (the bug this kind had by hand): a
+    companion probe naming ONE entity twice — what a CORRECT answer looks like —
+    must NOT refuse.
+
+- id: INV-AVO-CURRENCY
+  kind: currency
+  applies_to: {quantity: any}
+  window: {provider: manual_revision, max_age: next_issue}
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "§7.5"}
+  message: "manual, contract or NOTAM stale on {value}"
+  measurement: >-
+    Probe every declared quantity x20 with manual_revision unreachable, and x20
+    with it stale beyond its window. Before: n answers fell back to the design
+    basis and presented it as the current state. After: 0 such answers; 40
+    reporting state UNKNOWN with no design figure in the refusal. No staleness
+    EVENT is declared for every declared quantity, so the event half of this case
+    cannot be run until the kit declares one.
+
+# ---------------------------------------------------------------------------
+# Correction 6: engine-required completions of the DECLARED staleness
+# triggers. The sheet's triggers key on seven artifacts (weight_limits,
+# performance_data, mel_interval, duty_limits, contract_rate, fuel_price,
+# compensation) that are not figures; each is now a declared quantity above,
+# and each needs a currency invariant that governs it and names a declared
+# state provider, or the loader refuses the trigger as never-fireable. The
+# blanket INV-AVO-CURRENCY record above already matches quantity: any, but
+# the wiring here makes the provider-per-artifact mapping explicit rather
+# than relying on the blanket record alone. No new rule, no new event —
+# provider wiring only.
+# ---------------------------------------------------------------------------
+
+- id: INV-AVO-CURRENCY-WEIGHT-LIMITS
+  kind: currency
+  applies_to: {quantity: weight_limits}
+  window: {provider: manual_revision, max_age: next_issue}
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "staleness_triggers"}
+  message: "weight limits are stale once the configuration changed or the AFM was revised"
+  measurement: >-
+    Probe weight_limits x20 after a AFM_revision event, then x20 with
+    manual_revision unreachable. Before: n answers quoted the superseded figure,
+    and the unreachable case fell back to the design basis. After: 0 superseded
+    figures; 20 refusals naming AFM_revision and 20 reporting state UNKNOWN with no
+    design figure in the refusal.
+
+- id: INV-AVO-CURRENCY-PERFORMANCE
+  kind: currency
+  applies_to: {quantity: performance_data}
+  window: {provider: manual_revision, max_age: next_issue}
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "staleness_triggers"}
+  message: "performance data is stale once the AFM was revised or the runway changed"
+  measurement: >-
+    Probe performance_data x20 after a AFM_revision event, then x20 with
+    manual_revision unreachable. Before: n answers quoted the superseded figure,
+    and the unreachable case fell back to the design basis. After: 0 superseded
+    figures; 20 refusals naming AFM_revision and 20 reporting state UNKNOWN with no
+    design figure in the refusal.
+
+- id: INV-AVO-CURRENCY-MEL
+  kind: currency
+  applies_to: {quantity: mel_interval}
+  window: {provider: manual_revision, max_age: next_issue}
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "staleness_triggers"}
+  message: "an MEL interval is stale once it has expired"
+  measurement: >-
+    Probe mel_interval x20 after a expiry event, then x20 with manual_revision
+    unreachable. Before: n answers quoted the superseded figure, and the
+    unreachable case fell back to the design basis. After: 0 superseded figures; 20
+    refusals naming expiry and 20 reporting state UNKNOWN with no design figure in
+    the refusal.
+
+- id: INV-AVO-CURRENCY-DUTY
+  kind: currency
+  applies_to: {quantity: duty_limits}
+  window: {provider: manual_revision, max_age: next_issue}
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "staleness_triggers"}
+  message: "duty limits are stale once the FTL authority or the FTL scheme changed"
+  measurement: >-
+    Probe duty_limits x20 after a FTL_revision event, then x20 with manual_revision
+    unreachable. Before: n answers quoted the superseded figure, and the
+    unreachable case fell back to the design basis. After: 0 superseded figures; 20
+    refusals naming FTL_revision and 20 reporting state UNKNOWN with no design
+    figure in the refusal.
+
+- id: INV-AVO-CURRENCY-CONTRACT-RATE
+  kind: currency
+  applies_to: {quantity: contract_rate}
+  window: {provider: contract_revision, max_age: next_issue}
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "staleness_triggers"}
+  message: "a contract rate is stale once the contract has been renewed"
+  measurement: >-
+    Probe contract_rate x20 after a contract_renewal event, then x20 with
+    contract_revision unreachable. Before: n answers quoted the superseded figure,
+    and the unreachable case fell back to the design basis. After: 0 superseded
+    figures; 20 refusals naming contract_renewal and 20 reporting state UNKNOWN
+    with no design figure in the refusal.
+
+- id: INV-AVO-CURRENCY-FUEL-PRICE
+  kind: currency
+  applies_to: {quantity: fuel_price}
+  window: {provider: contract_revision, max_age: next_issue}
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "staleness_triggers"}
+  message: "a fuel price is stale once the contract or index it is drawn from has moved"
+  measurement: >-
+    Probe fuel_price x20 after a contract_or_index_movement event, then x20 with
+    contract_revision unreachable. Before: n answers quoted the superseded figure,
+    and the unreachable case fell back to the design basis. After: 0 superseded
+    figures; 20 refusals naming contract_or_index_movement and 20 reporting state
+    UNKNOWN with no design figure in the refusal.
+
+- id: INV-AVO-CURRENCY-COMPENSATION
+  kind: currency
+  applies_to: {quantity: compensation}
+  window: {provider: manual_revision, max_age: next_issue}
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "staleness_triggers"}
+  message: "a compensation figure is stale once the regime governing it has changed"
+  measurement: >-
+    Probe compensation x20 after a regime_change event, then x20 with
+    manual_revision unreachable. Before: n answers quoted the superseded figure,
+    and the unreachable case fell back to the design basis. After: 0 superseded
+    figures; 20 refusals naming regime_change and 20 reporting state UNKNOWN with
+    no design figure in the refusal.

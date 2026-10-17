@@ -1,0 +1,10 @@
+{
+  "name": "identity",
+  "version": "0.1.0",
+  "sha256": "170dd97ec2031f2fd986271e04191677b98237d69769c2e69abdc049f6900c98",
+  "dependencies": [],
+  "provenance": "fork",
+  "acceptance_test": "tests/test_identity.py",
+  "tier": "premium",
+  "note": "Premium-only; not available in the freemium tier."
+}

@@ -1,0 +1,137 @@
+{
+  "acceptance": [
+    {
+      "check": "refuses or errors when the record id is absent",
+      "id": "missing_record_id",
+      "status": "refused"
+    },
+    {
+      "check": "rejects a duplicate registry record id",
+      "id": "duplicate_id",
+      "status": "failed"
+    },
+    {
+      "check": "errors on an unknown record id on read",
+      "id": "unknown_record",
+      "status": "failed"
+    },
+    {
+      "check": "errors on an unknown or missing action",
+      "id": "unknown_action",
+      "status": "failed"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "JSON-file-backed registry of property and asset records: create with duplicate-id rejection and read-back of stored records.",
+  "digests": {
+    "block.json": "df2dc4580aa968dbd5a03d444d58665e550faa3512c9d25270e6e05029c358bd",
+    "block.py": "2302b6d98d27e076d8ccd9b053e6ef3387330941caf9e6ed7048f4e82415e038"
+  },
+  "execution": {
+    "entrypoint": "block.py",
+    "type": "python"
+  },
+  "id": "estate_registry",
+  "inputs": [
+    {
+      "default": "create",
+      "description": "create | read | list",
+      "name": "action",
+      "options": [
+        "create",
+        "read",
+        "list"
+      ],
+      "required": false,
+      "type": "string"
+    },
+    {
+      "description": "Registry record id (unique)",
+      "name": "id",
+      "required": true,
+      "type": "string"
+    },
+    {
+      "description": "Record payload",
+      "name": "data",
+      "required": false,
+      "type": "json"
+    }
+  ],
+  "layer": 3,
+  "name": "Estate Registry",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Capability result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": true,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    },
+    {
+      "kind": "env",
+      "scope": "process"
+    },
+    {
+      "kind": "file",
+      "scope": "local.read"
+    }
+  ],
+  "requires": [],
+  "signature": "L7WeK04qRwMKTdt9tjslUl3w3CJIQvu6M5yZRrfskavXG9IDLqm+DNRSztJFIP1ictrPr/nDsdz1j0xAnBhsCg==",
+  "tags": [
+    "estate",
+    "private_estate_operations",
+    "steward"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "Action",
+      "name": "action",
+      "options": [
+        "create",
+        "read",
+        "list"
+      ],
+      "widget": "select"
+    },
+    {
+      "label": "Id",
+      "name": "id",
+      "widget": "text"
+    },
+    {
+      "label": "Data",
+      "name": "data",
+      "widget": "json"
+    }
+  ],
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    },
+    {
+      "kind": "file",
+      "scope": "local.write"
+    }
+  ]
+}

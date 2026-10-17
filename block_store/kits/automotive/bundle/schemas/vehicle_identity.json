@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AutomotiveVehicleIdentity",
+  "type": "object",
+  "required": ["record_type", "make", "model", "source_family"],
+  "properties": {
+    "record_type": { "const": "vehicle_identity" },
+    "make": { "type": "string" },
+    "model": { "type": "string" },
+    "model_year": { "type": ["integer", "null"] },
+    "manufacturer": { "type": ["string", "null"] },
+    "component_tags": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "source_family": { "const": "vehicle_identity" }
+  }
+}

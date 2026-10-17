@@ -1,0 +1,111 @@
+invariants:
+
+# Correction 2: one kind: authority invariant at H1 per kit. In heritage the
+# ladder is what makes "stronger is not better" enforceable — a generic guide or
+# another building's example is explicitly not proof about THIS fabric.
+- id: INV-HE-AUTH-FABRIC
+  kind: authority
+  applies_to: {quantity: [mortar_mix, compressive_strength, substrate_strength, vapour_permeability]}
+  hook: H1
+  governing_class: materials_analysis
+  fallback_class: conservation_management_plan
+  demote: [professional_body_guidance, generic_guide, another_building_example, manufacturer_data]
+  severity: refuse
+  evidence: {sheet: "§8.1"}
+  message: "a figure about this fabric is governed by analysis OF this fabric — {value} from a generic source is not proof"
+  measurement: >-
+    Probe mortar_mix, compressive_strength, substrate_strength, vapour_permeability
+    x20 citing professional_body_guidance, generic_guide, another_building_example,
+    manufacturer_data as the source. Before: n answers accepted it as proof. After:
+    0 accepted, and n refusals naming materials_analysis as the class that governs.
+    Over-refusal check: the same probe citing materials_analysis must pass.
+
+- id: INV-HE-COMPATIBILITY
+  kind: derivation
+  applies_to: {quantity: [mortar_mix, compressive_strength, vapour_permeability]}
+  forbid: [performance_grounds_alone, stronger_is_better]
+  requires: [substrate_ref]
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "rule 1"}
+  message: "material proposed without compatibility assessment — stronger is not better here"
+  measurement: >-
+    Probe mortar_mix, compressive_strength, vapour_permeability x20 attempting
+    performance_grounds_alone, stronger_is_better and with substrate_ref absent.
+    Before: n answers made the inference and stated a figure from it. After: 0, and
+    n refusals naming which inference was attempted. Over-refusal check: the same
+    question answered WITHOUT the inference must pass.
+
+- id: INV-HE-EVIDENCE-BASIS
+  kind: qualifier
+  applies_to: {quantity: any, claim_class: historical}
+  requires: [evidence_basis]
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "rule 2"}
+  message: "historical claim without documented/inferred/assumed basis — {missing}"
+  measurement: >-
+    Probe every declared quantity x20 with evidence_basis absent from the figure.
+    Before: n answers stated the figure with nothing to act on. After: 0 such
+    answers, and n refusals naming every missing field. Over-refusal check: the
+    same probe WITH evidence_basis present must pass.
+
+- id: INV-HE-CONSENT-GATE
+  kind: qualifier
+  applies_to: {quantity: any, claim_class: work_recommendation}
+  requires: [consent_ref]
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "rule 3"}
+  message: "no work recommendation without consent position and reference — {missing}"
+  measurement: >-
+    Probe every declared quantity x20 with consent_ref absent from the figure.
+    Before: n answers stated the figure with nothing to act on. After: 0 such
+    answers, and n refusals naming every missing field. Over-refusal check: the
+    same probe WITH consent_ref present must pass.
+
+- id: INV-HE-SUBSTRATE
+  kind: qualifier
+  applies_to: {quantity: [mortar_mix, compressive_strength]}
+  requires: [substrate_ref]
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "§1.1.1, §8.3"}
+  message: "mortar strength without the substrate it must remain weaker than — {missing}"
+  measurement: >-
+    Probe mortar_mix, compressive_strength x20 with substrate_ref absent from the
+    figure. Before: n answers stated the figure with nothing to act on. After: 0
+    such answers, and n refusals naming every missing field. Over-refusal check:
+    the same probe WITH substrate_ref present must pass.
+
+- id: INV-HE-PROVENANCE
+  kind: provenance
+  applies_to: {quantity: any}
+  forbid: [carry_between_buildings, carry_between_elevations, reconstruct_from_comparator, infer_mortar_visually]
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "§8.4.1"}
+  message: "forbidden derivation: {value}"
+  measurement: >-
+    Probe every declared quantity x20 with a figure carried attempting
+    carry_between_buildings, carry_between_elevations, reconstruct_from_comparator,
+    infer_mortar_visually. Before: n answers quoted it without remark. After: 0
+    quoted, and n refusals naming which boundary was crossed. Over-refusal check
+    (the bug this kind had by hand): a companion probe naming ONE entity twice —
+    what a CORRECT answer looks like — must NOT refuse.
+
+- id: INV-HE-CURRENCY
+  kind: currency
+  applies_to: {quantity: any}
+  window: {provider: discovery_since_spec, max_age: event}
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "§8.5.2"}
+  message: "specification predates an unreported discovery — refusal, not silent acceptance"
+  measurement: >-
+    Probe every declared quantity x20 with discovery_since_spec unreachable, and
+    x20 with it stale beyond its window. Before: n answers fell back to the design
+    basis and presented it as the current state. After: 0 such answers; 40
+    reporting state UNKNOWN with no design figure in the refusal. No staleness
+    EVENT is declared for every declared quantity, so the event half of this case
+    cannot be run until the kit declares one.

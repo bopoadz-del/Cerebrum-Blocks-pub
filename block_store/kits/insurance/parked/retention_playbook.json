@@ -1,0 +1,41 @@
+{
+  "id": "retention_playbook",
+  "title": "Producer Retention Playbook Snippets",
+  "version": "1.0.0",
+  "scope": "Use with attrition_scorer heuristic risk bands and factor contributions.",
+  "disclaimer": "The attrition score is a deterministic heuristic, not trained ML and not a prediction guarantee.",
+  "risk_band_actions": {
+    "low": [
+      "Maintain standard cadence and continue monitoring production and engagement signals.",
+      "Recognize positive performance during regular producer reviews."
+    ],
+    "medium": [
+      "Schedule a check-in within 10 business days.",
+      "Review recent production trend, portal usage, service tickets, and complaint history.",
+      "Offer enablement or workflow support tied to the top factor contributions."
+    ],
+    "high": [
+      "Assign a retention owner and contact the producer within 3 business days.",
+      "Prepare a remediation plan for service issues, complaint themes, or missed target drivers.",
+      "Escalate compensation, appetite, or service blockers to the appropriate leader."
+    ],
+    "critical": [
+      "Open an executive retention case within 1 business day.",
+      "Validate all factor data before outreach and avoid implying automated prediction.",
+      "Create a documented recovery plan with owner, deadline, and follow-up cadence."
+    ]
+  },
+  "factor_guidance": {
+    "production_trend": "Compare current and prior period production; separate market seasonality from producer-specific decline.",
+    "tenure": "For early-tenure producers, confirm onboarding, appetite education, and quoting workflow support.",
+    "login_frequency": "Low portal usage may indicate workflow friction, missing access, or reduced engagement.",
+    "complaint_count": "Review complaint root cause and confirm remediation ownership.",
+    "open_service_tickets": "Prioritize stale or blocking service cases before retention outreach."
+  },
+  "provenance": {
+    "kind": "contributor_unverified",
+    "recorded_on": "2026-08-29",
+    "reference": "The_Fork-published bundle orphan; no checkable source recovered",
+    "parked": true
+  }
+}

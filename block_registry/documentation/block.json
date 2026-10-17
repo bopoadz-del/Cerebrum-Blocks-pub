@@ -1,0 +1,178 @@
+{
+  "acceptance": [
+    {
+      "check": "errors on an unknown or missing action",
+      "id": "unknown_action",
+      "status": "failed"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "f28c2e7e650da1242376d5b99a43de972a4527428b8fb954956dc9a996bb4b83",
+    "block.py": "13689dc3df6b651e00731bb5cec32c574aa4032a6c7c54a365a2b0dcf9719a87"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/documentation:latest",
+    "type": "docker"
+  },
+  "id": "documentation",
+  "inputs": [
+    {
+      "description": "JSON payload for the selected action",
+      "name": "input",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "default": "generate_docs",
+      "description": "Action",
+      "name": "action",
+      "options": [
+        "generate_docs",
+        "extract_signature",
+        "create_playground",
+        "search_docs",
+        "add_example",
+        "get_examples",
+        "render_markdown",
+        "validate_docs"
+      ],
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": true,
+      "description": "Configuration parameter: auto_generate",
+      "name": "auto_generate",
+      "required": false,
+      "type": "boolean"
+    },
+    {
+      "default": true,
+      "description": "Configuration parameter: include_playground",
+      "name": "include_playground",
+      "required": false,
+      "type": "boolean"
+    },
+    {
+      "default": 3,
+      "description": "Configuration parameter: examples_per_block",
+      "name": "examples_per_block",
+      "required": false,
+      "type": "number"
+    },
+    {
+      "default": "markdown",
+      "description": "Configuration parameter: doc_format",
+      "name": "doc_format",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": "github",
+      "description": "Configuration parameter: theme",
+      "name": "theme",
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 4,
+  "name": "Documentation",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    }
+  ],
+  "requires": [
+    "code",
+    "vector"
+  ],
+  "signature": "Y3+gHoq+MtIIhk1uaHIS3swDCA2q8cBE8rzkrZKhx8mGaGfOLbZ+IDls+2kOHUz1IAEi0AM2228w6uYL4/5MCw==",
+  "tags": [
+    "platform",
+    "docs",
+    "developer",
+    "developer_tools"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "JSON payload for the selected action",
+      "name": "input",
+      "widget": "json"
+    },
+    {
+      "label": "Action",
+      "name": "action",
+      "options": [
+        "generate_docs",
+        "extract_signature",
+        "create_playground",
+        "search_docs",
+        "add_example",
+        "get_examples",
+        "render_markdown",
+        "validate_docs"
+      ],
+      "widget": "select"
+    },
+    {
+      "label": "Auto Generate",
+      "name": "auto_generate",
+      "widget": "toggle"
+    },
+    {
+      "label": "Include Playground",
+      "name": "include_playground",
+      "widget": "toggle"
+    },
+    {
+      "label": "Examples Per Block",
+      "name": "examples_per_block",
+      "widget": "number"
+    },
+    {
+      "label": "Doc Format",
+      "name": "doc_format",
+      "widget": "text"
+    },
+    {
+      "label": "Theme",
+      "name": "theme",
+      "widget": "text"
+    }
+  ],
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    },
+    {
+      "kind": "memory",
+      "scope": "cache"
+    }
+  ]
+}

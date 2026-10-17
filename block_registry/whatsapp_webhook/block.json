@@ -1,0 +1,80 @@
+{
+  "acceptance": [
+    {
+      "check": "unwired scoring engine is refused with the donor could-not-score text, never a fabricated number",
+      "id": "scorer_unconfigured",
+      "status": "refused"
+    },
+    {
+      "check": "screenshot without an injected OCR service is refused with the donor failure text",
+      "id": "ocr_unconfigured",
+      "status": "refused"
+    },
+    {
+      "check": "NumMedia>0 without MediaUrl0 is refused",
+      "id": "media_url_missing",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Twilio WhatsApp webhook handler ported from <private-repo> src/web/whatsapp.ts (real): Twilio Body/From/NumMedia/MediaUrl0 form fields, the COMMON_WORDS/GREETINGS ticker + intent parser, score/explain/screenshot reply formatters with the experimental-study disclaimer, and the TwiML envelope. The OpenBox scoring engine, quote feed and OCR are dependency boundaries (wire scorer/quote/ocr); an unwired scorer answers the donor could-not-score text - never a fabricated number. Media downloads use httpx with basic auth when TWILIO_ACCOUNT_SID + TWILIO_AUTH_TOKEN are set. NEVER the backtest.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "29c7a9d0d3c5523d6d3eeab3f967d15c51acb359438903b78701ca9e5bd52e53",
+    "block.py": "8a4959ef90dfb935262da5fb7ba6fe8e5df0783909f1753aa57d39a4ff23817c"
+  },
+  "id": "whatsapp_webhook",
+  "inputs": [
+    {
+      "description": "message | parse_intent | help",
+      "name": "action",
+      "options": [
+        "message",
+        "parse_intent",
+        "help"
+      ],
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 5,
+  "name": "whatsapp_webhook",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Capability result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": true
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "Plj2YSYgGbn75m5xVZKBXB8J+roW4ZfdtOTSA0SJizTeMrmXnZ6nFIs8wEduPiJB6cJvVKJv5opMJdAwC+7nDw==",
+  "tags": [
+    "whatsapp",
+    "twilio",
+    "webhook",
+    "messaging",
+    "<private-repo>"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

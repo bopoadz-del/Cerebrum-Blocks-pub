@@ -1,0 +1,86 @@
+{
+  "acceptance": [
+    {
+      "check": "refuses or errors when a required input is absent",
+      "id": "missing_required_input",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Search the web via DuckDuckGo (no key required) or Serper API",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "3b1ee4dada981fc41704f9d22f6eb218a7fc65d294b40b62503b30fbad3573e7",
+    "block.py": "88f9d04e94b93619c1c4585a99226b78cb5835c820e903e2fc2f7fd060b2794c"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/search:latest",
+    "type": "docker"
+  },
+  "id": "search",
+  "inputs": [
+    {
+      "description": "Search the web...",
+      "name": "input",
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 3,
+  "name": "Search",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Results",
+      "name": "results",
+      "type": "array"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "env",
+      "scope": "process"
+    },
+    {
+      "kind": "network",
+      "scope": "http.outbound"
+    },
+    {
+      "kind": "credential",
+      "scope": "env"
+    }
+  ],
+  "requires": [],
+  "signature": "zPkgNPfxt4vVNoZOY0vafuLaFPvsNWTSxaOtRzCAQLwYE0NkJHv+pi58FpJ874srIW56naSASaoDhJh4UlfBDg==",
+  "tags": [
+    "domain",
+    "search",
+    "web"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "Search the web...",
+      "name": "input",
+      "widget": "text"
+    }
+  ],
+  "version": "2.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

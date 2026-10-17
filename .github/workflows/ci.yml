@@ -1,0 +1,425 @@
+name: CI
+
+on:
+  push:
+    branches: [main, "claude/**"]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    name: Backend (pytest)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      ENV: test
+      DATABASE_URL: postgresql://cerebrum:ci-${{ github.run_id }}@localhost:5433/cerebrum
+      EMBEDDING_MODEL: all-MiniLM-L6-v2
+      VECTOR_DIMENSION: "384"
+      CEREBRUM_VIRGIN: "false"
+    services:
+      postgres:
+        image: ankane/pgvector:v0.5.1
+        env:
+          POSTGRES_USER: cerebrum
+          POSTGRES_PASSWORD: ci-${{ github.run_id }}
+          POSTGRES_DB: cerebrum
+        ports:
+          - 5433:5432
+        options: >-
+          --health-cmd "pg_isready -U cerebrum -d cerebrum"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install system deps for OCR/PDF/MIME blocks
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            tesseract-ocr poppler-utils libgl1 libglib2.0-0 libmagic1
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      # torch arrives unpinned via sentence-transformers and now resolves with
+      # the CUDA 13 wheel set (cublas 423 MB, triton 248 MB, ...); with the pip
+      # cache restored onto the same disk the runner hits ENOSPC before any
+      # test runs. Remove preinstalled SDKs this job never uses (~20 GB).
+      - name: Free runner disk
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL
+          df -h /
+
+      - name: Install Python deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Stub audit (implement-or-register gate)
+        run: python scripts/audit_stubs.py
+
+      - name: Kit composition audit (declare-or-register gate)
+        run: python scripts/audit_kit_composition.py
+
+      - name: Secret scan (non-test paths)
+        run: python scripts/scan_secrets.py
+
+      - name: Registry census (B04 — advertised blocks must resolve)
+        run: python scripts/census_registry.py
+
+      - name: Silent-return twin (B07)
+        run: python scripts/scan_exception_pass.py
+
+      - name: Apply database migrations
+        run: |
+          sudo apt-get install -y --no-install-recommends postgresql-client
+          psql "$DATABASE_URL" -f migrations/001_historical_benchmark.sql
+          psql "$DATABASE_URL" -f migrations/002_vector_ingestion.sql
+
+      - name: Run integration tests
+        run: python -m pytest tests/integration/ -v
+
+      - name: Run typed-block tests
+        run: pytest -q tests/test_typed_block.py
+
+      - name: Block certification (three bars, control-delete)
+        run: python scripts/certify_block.py --all
+
+      - name: Run kit intake tests (stage K1)
+        # The source gate: no source, no encode. Exercised against real .xlsx
+        # and .docx, not just structured fixtures.
+        run: pytest -q tests/test_intake_kit.py
+
+      - name: Run formula intake tests
+        # Encoded figures enter through intake_formulas.py. Unverified
+        # insurance rates are parked, not given invented regulator cites.
+        run: pytest -q tests/test_intake_formulas.py
+
+      - name: Run kit scaffold tests (stage K3)
+        # K1 -> K3 -> K2: the scaffold writes the domain overlay to the exact
+        # path formula_definitions reads, so a formula that survived the
+        # source gate becomes a grounded definition without a further step.
+        run: pytest -q tests/test_scaffold_kit.py
+
+      - name: Run kit eval-seed tests (stage K6)
+        # Pins that a generated eval can never be mistaken for an authored
+        # one: authored stays null, and the method string says the set is
+        # corpus-sighted by construction.
+        run: pytest -q tests/test_build_kit_eval.py
+
+      - name: Run kit pipeline runner tests (K7)
+        # Pins that the runner blocks at K4 and calls it the expected
+        # terminal state -- a runner reporting "done" after scaffolding would
+        # invite exactly the outcome the pipeline exists to refuse.
+        run: pytest -q tests/test_pipeline_kit.py
+
+      - name: Run kit review tests (stage K4)
+        # Pins that sign-off cannot manufacture a judgement: it refuses while
+        # the reviewer's work is outstanding, demands a name, and records it.
+        run: pytest -q tests/test_review_kit.py
+
+      - name: Run kit publisher tests
+        # Publishing decides whether a kit the store advertises can be
+        # installed. CI names test files explicitly rather than running
+        # tests/, so a new file runs only once it is listed here.
+        # test_publish_construction_kit.py covers the Fork-sourced
+        # construction publisher against a hermetic fixture so a break
+        # is caught without cloning The_Fork or dispatching the
+        # publish-construction-kit workflow.
+        run: pytest -q tests/test_publish_kit.py tests/test_publish_construction_kit.py
+
+      - name: Run core RAG + vector + registry tests
+        run: pytest -q tests/core/test_registry_integrity.py tests/core/test_block_contracts.py tests/core/test_activation.py
+
+      - name: Run kit bundle freshness fence
+        # Completeness is not freshness: a kit can hold every declared
+        # artifact and still ship a copy from months ago. All 17 kits shipped
+        # a pre-grounding formula_executor_v2 while the current one sat in the
+        # repo, so the grounding work reached no product at all.
+        run: pytest -q tests/test_kit_bundle_freshness.py
+
+      - name: Run kit bundle completeness fence
+        # CI names test files explicitly rather than running tests/, so a new
+        # test file is not executed until it is listed here. This fence went
+        # green on its own PR without ever running; that is the failure mode
+        # it exists to prevent, one level up.
+        run: pytest -q tests/test_kit_bundle_completeness.py
+
+      - name: Run formula grounding + executor tests
+        # test_formula_executor_v2.py was among the 103 test files this repo
+        # never ran: CI names files explicitly rather than running tests/.
+        run: pytest -q tests/test_formula_grounding.py tests/test_formula_executor_v2.py tests/test_grounding_end_to_end.py
+
+      - name: Run block contract tests (Lane 2)
+        # The contract type and its adapter. A real gate, not one of the
+        # report-only conformance checks: this covers a module added in
+        # the same PR, so a red here is this PR's own defect.
+        run: |
+          pytest -q tests/core/test_block_result.py tests/core/test_manifest_contract.py tests/core/test_template_three_tests.py tests/core/test_lane2_conformance.py tests/core/test_block_config.py tests/core/test_answer_contract.py tests/core/test_learning_engine_config.py tests/core/test_registry_reuse.py tests/routers/test_registry_reuse.py
+
+      - name: Run lockfile-consistency mutation tests
+        # A pin change that does not touch the lock must fail. These tests
+        # apply synthetic diffs so the gate cannot rot into a no-op that
+        # only ever sees a clean tree. CI names test files explicitly,
+        # so this file is listed here and also in the dedicated job.
+        run: pytest -q tests/test_lockfile_consistency.py
+
+      - name: Run store-honesty gates (B04 census, B07 return twin, pip-audit twins)
+        run: |
+          pytest -q tests/test_registry_census.py \
+                    tests/test_scan_exception_return.py \
+                    tests/test_dep_audit.py
+
+      - name: Run all-blocks tests
+        run: pytest -q tests/test_all_blocks.py tests/blocks/test_document_engine_layout.py
+
+      - name: Run FinanceOps foundation tests
+        run: pytest -q tests/finance_ops/
+
+      - name: Run regression security tests
+        run: |
+          pytest -q tests/test_regression_security.py \
+                    tests/core/test_sentry_scrubbing.py \
+                    tests/core/test_rate_limit_key_storage.py \
+                    tests/core/test_tier_block_access.py \
+                    tests/core/test_api_key_rejection.py \
+                    tests/core/test_file_crypto.py \
+                    tests/core/test_file_crypto_imports_resolve.py \
+                    tests/core/test_backup_scheduler.py \
+                    tests/core/test_no_telegram.py \
+                    tests/core/test_ingestion_no_arbitrary_write.py \
+                    tests/core/test_block_resolution_choke_point.py \
+                    tests/core/test_ssrf_guard_wired.py \
+                    tests/core/test_secrets_master_key_required.py \
+                    tests/core/test_signing_operational.py \
+                    tests/core/test_trust_tier_manifest.py \
+                    tests/core/test_two_tenant_isolation.py \
+                    tests/core/test_deploy_parity.py \
+                    tests/core/test_ci_gates.py \
+                    tests/core/test_virgin_shelf.py \
+                    tests/core/test_trust_scope_enforcement.py \
+                    tests/routers/test_health_capability.py
+
+  full-suite:
+    # WHY THIS EXISTS
+    # The backend job names test files explicitly. That was invisible until
+    # it was counted: 25 of this repository's 134 test files were listed, and
+    # 103 never executed. A new test file therefore passed by never being
+    # asked -- which is how a bundle-completeness fence went green on its own
+    # PR without running.
+    #
+    # This job runs tests/ whole, so "green" stops meaning "green on a fifth
+    # of the suite". It is a SEPARATE job on purpose: the targeted steps keep
+    # their meaning and stay fast, and a failure here is attributable to this
+    # change rather than mixed into an existing check.
+    #
+    # It is required, not informational. A job allowed to fail is a job
+    # nobody reads.
+    name: Full suite (every test file)
+    runs-on: ubuntu-latest
+    # Above the suite's real runtime on purpose: when the cap fires first, the
+    # result is a CANCELLED check that names nothing. Let --timeout=90 be the
+    # thing that fails, because it names the test.
+    timeout-minutes: 45
+    env:
+      ENV: test
+      DATABASE_URL: postgresql://cerebrum:ci-${{ github.run_id }}@localhost:5433/cerebrum
+      EMBEDDING_MODEL: all-MiniLM-L6-v2
+      VECTOR_DIMENSION: "384"
+      CEREBRUM_VIRGIN: "false"
+    services:
+      postgres:
+        image: ankane/pgvector:v0.5.1
+        env:
+          POSTGRES_USER: cerebrum
+          POSTGRES_PASSWORD: ci-${{ github.run_id }}
+          POSTGRES_DB: cerebrum
+        ports:
+          - 5433:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install system deps for OCR/PDF/MIME blocks
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends             tesseract-ocr poppler-utils libgl1 libglib2.0-0 libmagic1
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      # torch arrives unpinned via sentence-transformers and now resolves with
+      # the CUDA 13 wheel set (cublas 423 MB, triton 248 MB, ...); with the pip
+      # cache restored onto the same disk the runner hits ENOSPC before any
+      # test runs. Remove preinstalled SDKs this job never uses (~20 GB).
+      - name: Free runner disk
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL
+          df -h /
+
+      - name: Install Python deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Apply database migrations
+        run: |
+          sudo apt-get install -y --no-install-recommends postgresql-client
+          psql "$DATABASE_URL" -f migrations/001_historical_benchmark.sql
+          psql "$DATABASE_URL" -f migrations/002_vector_ingestion.sql
+
+      - name: Lint (ruff, narrow blocking set)
+        # NOT the full rule set -- app/ carries ~6300 legacy findings and a
+        # blocking gate on all of them would never go green. These four are
+        # the ones where a finding is a DEFECT rather than a style opinion,
+        # and all four are at zero as of this commit:
+        #
+        #   F821  undefined name      -- a NameError waiting for its branch
+        #   E722  bare except         -- swallows KeyboardInterrupt and SystemExit
+        #   F811  redefinition        -- the second def silently wins
+        #   F401  unused import       -- in __init__ files, a dropped re-export
+        #
+        # F821 found four real ones the day this job was written, including a
+        # NameError on the primary pgvector RAG answer path. Widen the set by
+        # driving a selector to zero first, then adding it here.
+        run: |
+          python -m pip install ruff==0.16.1
+          ruff check app --select F821,E722,F811 --output-format=github
+
+      - name: Bandit (HIGH severity, blocking)
+        run: |
+          python -m pip install bandit
+          python -m bandit -q -r app -lll
+
+      - name: Registry census (B04 — advertised blocks must resolve)
+        run: python scripts/census_registry.py
+
+      - name: Silent-return twin (B07)
+        run: python scripts/scan_exception_pass.py
+
+      - name: pip-audit (fail-closed; dated notes only, never a bare ignore)
+        # Linux resolve of requirements.txt. Remaining advisories must have
+        # a dated registry note + test twin. A published fix_versions list
+        # makes the note stale. Do not add a bare ignore flag.
+        run: |
+          python -m pip install pip-audit
+          python scripts/dep_audit.py --python
+
+      - name: Run every test file
+        # REPORT-ONLY, by owner decision (2026-09-19) -- this STEP, not the
+        # job. The Store is a shelf of blocks: they do not run here, they are
+        # cloned into a generated platform, configured there and tested there,
+        # by that platform's own suite and by the Store gate's acceptance run
+        # in Docker. So a red block test reports but does not block a merge.
+        # The steps above it in this job -- ruff, bandit, the registry census
+        # and the fail-closed dependency audit -- are about whether a block is
+        # SAFE to clone, and they still block. That is why this is step-level:
+        # a job-level continue-on-error would have un-gated the audit too
+        # (tests/test_dep_audit.py pins exactly that).
+        continue-on-error: true
+        # pytest-timeout turns a deadlock into a named failure instead of
+        # burning the job cap with no last-test line. Main's pytest step is
+        # ~45s; 90s per test is headroom, not a skip.
+        #
+        # PYTHONUNBUFFERED: the previous run died at the 25m cap with its last
+        # visible line at 16%, which is ambiguous -- buffered stdout means the
+        # last FLUSHED line is not necessarily the last line RUN. Unbuffered,
+        # the final line before any kill is the real one, so a hang names
+        # itself instead of being guessed at.
+        env:
+          PYTHONUNBUFFERED: "1"
+        run: |
+          python -m pip install pytest-timeout==2.4.0
+          # --timeout-method=thread, not signal. The signal method raises in
+          # the main thread, and a test hung inside asyncio.run() cannot act
+          # on it: asyncio.run's own cleanup joins the to_thread worker, so
+          # the timeout exception queues up behind the very hang it was
+          # meant to report. Two runs burned their whole job cap (25m, then
+          # 45m) on tests/core/test_backup_scheduler.py with --timeout=90
+          # armed and silent. The thread method dumps EVERY thread's stack
+          # and hard-exits, so a hang costs 90s and names its line.
+          # faulthandler_timeout is the same dump from the interpreter
+          # itself, in case the plugin's timer thread is the one starved.
+          # -rs: print the skip summary with reasons. A suite can report
+          # "green" while a whole harvested file is behind an importorskip
+          # for a dependency nobody declared -- which is exactly what
+          # tests/blocks/test_clash_resolver.py and test_geometry_engine.py
+          # did until trimesh was pinned. An unread skip is a fake test count,
+          # so the reasons go in the log where a reviewer can count them.
+          #
+          # -x REMOVED. It defeated this job's entire stated purpose. Run
+          # 35504322136: the step stopped at the FIRST failure --
+          # test_clash_resolver.py, 5% in, 153 tests of the suite executed --
+          # and continue-on-error turned that red into a green check. The job
+          # written so that "green" would stop meaning "green on a fifth of
+          # the suite" reported green on a twentieth of it, and printed no
+          # skip summary at all because -x exits before pytest writes one.
+          # Report-only means report ALL of it; --timeout=90 (not -x) is what
+          # keeps a hang from eating the job cap.
+          pytest -v -rs tests/ --timeout=90 --timeout-method=thread             -o faulthandler_timeout=75 --tb=short
+
+  lockfile-consistency:
+    # WHY THIS EXISTS
+    # requirements.txt and frontend/package.json each have a lock. A PR
+    # that bumps a pin and leaves the lock untouched installs a graph
+    # nobody resolved. This job is required: continue-on-error would
+    # make it a skip. Mutation tests apply synthetic diffs so the gate
+    # cannot pass by never seeing a dirty tree.
+    name: Lockfile consistency (fail-closed)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Pin change without lock delta must fail
+        env:
+          LOCKFILE_BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: python scripts/check_lockfile_consistency.py
+
+      - name: Mutation-test the gate with synthetic diffs
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest
+          pytest -q tests/test_lockfile_consistency.py
+
+  frontend:
+    name: Frontend (tsc + vite build)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install
+        run: npm ci
+
+      - name: Typecheck + build
+        run: npm run build

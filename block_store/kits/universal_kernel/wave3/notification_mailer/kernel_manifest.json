@@ -1,0 +1,10 @@
+{
+  "name": "notification_mailer",
+  "version": "0.1.0",
+  "sha256": "e011dc99f2da63a1cfffcabab63da4f0b592fef9e2e743ba7df5f1675aef6613",
+  "dependencies": [],
+  "provenance": "factory + fork",
+  "acceptance_test": "tests/test_notification_mailer.py",
+  "tier": "premium",
+  "note": "Premium-only; not available in the freemium tier."
+}

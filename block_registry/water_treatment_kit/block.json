@@ -1,0 +1,157 @@
+{
+  "acceptance": [
+    {
+      "check": "INV-WT-AUTH-LIMIT (authority at H1, severity refuse): a compliance limit is governed by regulation and permit \u2014 a design document is not proof",
+      "id": "inv_wt_auth_limit",
+      "status": "refused"
+    },
+    {
+      "check": "INV-WT-CT-QUALIFIERS (qualifier at H3, severity refuse): CT without temperature, pH, disinfectant, organism and log target \u2014 {missing}",
+      "id": "inv_wt_ct_qualifiers",
+      "status": "refused"
+    },
+    {
+      "check": "INV-WT-CONTACT-BASIS (qualifier at H3, severity refuse): contact time without its basis (theoretical/T10/tracer) and the flow it was calculated at",
+      "id": "inv_wt_contact_basis",
+      "status": "refused"
+    },
+    {
+      "check": "INV-WT-DOSE-BASIS (qualifier at H3, severity refuse): dose without as-product/as-active basis and delivered strength",
+      "id": "inv_wt_dose_basis",
+      "status": "refused"
+    },
+    {
+      "check": "INV-WT-LIMIT-QUALIFIER (qualifier at H3, severity refuse): limit without averaging basis, regulation and permit",
+      "id": "inv_wt_limit_qualifier",
+      "status": "refused"
+    },
+    {
+      "check": "INV-WT-CONFLICT-REFUSE (derivation at H3, severity refuse): two sources conflict on a compliance limit \u2014 refuse and report",
+      "id": "inv_wt_conflict_refuse",
+      "status": "refused"
+    },
+    {
+      "check": "INV-WT-ANALYSER-LIVE (currency at H3, severity refuse): compliance value without live analyser confirmation",
+      "id": "inv_wt_analyser_live",
+      "status": "refused"
+    },
+    {
+      "check": "INV-WT-PROVENANCE (provenance at H3, severity refuse): forbidden derivation: {value}",
+      "id": "inv_wt_provenance",
+      "status": "refused"
+    },
+    {
+      "check": "INV-WT-CURRENCY (currency at H4, severity refuse): CT figure from a study that predates {value}",
+      "id": "inv_wt_currency",
+      "status": "refused"
+    },
+    {
+      "check": "INV-WT-CURRENCY-CONTACTTIME (currency at H3, severity refuse): contact time is stale once the tank or a baffle has been modified",
+      "id": "inv_wt_currency_contacttime",
+      "status": "refused"
+    },
+    {
+      "check": "INV-WT-CURRENCY-PERMIT (currency at H3, severity refuse): the permit is stale once it has been renewed or varied",
+      "id": "inv_wt_currency_permit",
+      "status": "refused"
+    },
+    {
+      "check": "INV-WT-CURRENCY-CHEMSTRENGTH (currency at H3, severity refuse): chemical strength is stale after each delivery until the new certificate of analysis is recorded",
+      "id": "inv_wt_currency_chemstrength",
+      "status": "refused"
+    },
+    {
+      "check": "INV-WT-CURRENCY-ANALYSER (currency at H3, severity refuse): the analyser is stale once its calibration has expired",
+      "id": "inv_wt_currency_analyser",
+      "status": "refused"
+    },
+    {
+      "check": "INV-WT-CURRENCY-MANUAL (currency at H3, severity refuse): the operating manual is stale once it has been revised",
+      "id": "inv_wt_currency_manual",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Declarative water treatment reasoning kit on the shared reasoning layer. 14 invariants declared in app/blocks/water_treatment/invariants.yaml across the kinds the portable spec defines (grounding, qualifier, unit_discipline, authority, provenance, currency, scope, derivation, band) and the five hooks (H0 pre-retrieval, H1 ranking, H2 tool-time, H3 answer-time, H4 export-time). Vocabulary in app/blocks/water_treatment/manifest.yaml. Scope refusals classify BEFORE retrieval. Fail closed: a kit that does not parse is DISABLED and refuses every statement rather than passing them through with no invariants. NO INTERVIEW HAS RUN, so every declared figure value is null and the block refuses rather than inventing one (app/blocks/water_treatment/KNOWN_GAPS.md). Measured by tests/blocks/test_reasoning_kits.py.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "4bd19b6c96d9f9abfd4104b257eeef82865106bfcb2ceb675c8a4379353429aa",
+    "block.py": "e9d646716aff79b1d297014c7b979fd83fa42f7be5a8fffc77c736b8e547303b"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/water_treatment_kit:latest",
+    "type": "docker"
+  },
+  "id": "water_treatment_kit",
+  "inputs": [
+    {
+      "description": "the operator question, classified at H0 BEFORE any retrieval",
+      "name": "question",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "description": "figures to gate: quantity, value, unit, origin, source_id, source_class, revision, qualifiers, claim_class, derivations, conditions, steps, bounds, asked_about, span, text",
+      "name": "figures",
+      "required": false,
+      "type": "array"
+    },
+    {
+      "description": "state records by provider name, each {as_of: <epoch>}; an absent provider yields UNKNOWN, never a design-basis fallback",
+      "name": "state",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "description": "events that have happened, matched against the kit's staleness_triggers",
+      "name": "events",
+      "required": false,
+      "type": "array"
+    },
+    {
+      "description": "subset of H0..H4 to run; all five by default, because a partial sweep is a silent coverage gap",
+      "name": "hooks",
+      "required": false,
+      "type": "array"
+    }
+  ],
+  "layer": 3,
+  "name": "water_treatment_kit",
+  "never": [],
+  "outputs": [
+    {
+      "description": "pass | annotated | flagged | refused, with findings, blocked_reason, hooks_run, retrieval_permitted, interview_status, unfilled_figures, unmeasured_invariants, ships and kit_disabled",
+      "name": "verdict",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "FXW9l+sXO4UEqJndUXXmRzWnje/qnZosWO7DTajBlDOng0UTqjS4tPnOuW04mtjv7PvraYUtRy3JppHfMtsQCg==",
+  "tags": [
+    "gate",
+    "kit",
+    "reasoning",
+    "water"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

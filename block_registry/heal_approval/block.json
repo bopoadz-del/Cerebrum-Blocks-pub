@@ -1,0 +1,69 @@
+{
+  "acceptance": [
+    {
+      "check": "a consumed, expired or mismatched approval is refused, never passed",
+      "id": "consume_fail_closed",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "TTL'd one-time heal approval ported from <private-repo> resident_engineer/heal/approval.py: SHA-256 digest over (tenant, action, principal), one-hour TTL, consume-once with replay refusal. Approval store is in-process.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "8c417b1a27fc837ab6f505f25a9936f54f392a9d01df526ffcd3d87f9c965c30",
+    "block.py": "ab8469efb292e5144e22acddf74e286a4f8c1d5f3bf21dcceebe0ca81f561849"
+  },
+  "id": "heal_approval",
+  "inputs": [
+    {
+      "description": "create | consume | digest",
+      "name": "action",
+      "options": [
+        "create",
+        "consume",
+        "digest"
+      ],
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 3,
+  "name": "heal_approval",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Capability result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "zcbgkEovTIZADjA4JqX4JhWSXqjbdTx89YZyVoo6uUWSyGWYlI2odph8UyCTgmGaMxw5K+9vJPRBIDXYuJL9CQ==",
+  "tags": [
+    "governance",
+    "approval",
+    "steward",
+    "resident-engineer"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

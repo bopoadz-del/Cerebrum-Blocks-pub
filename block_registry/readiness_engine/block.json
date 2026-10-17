@@ -1,0 +1,116 @@
+{
+  "acceptance": [
+    {
+      "check": "fails the gate when a required checklist item is unmet",
+      "id": "unmet_checklist",
+      "status": "failed"
+    },
+    {
+      "check": "errors when checklist or state is not well-formed",
+      "id": "malformed_input",
+      "status": "failed"
+    },
+    {
+      "check": "errors on an unknown or missing action",
+      "id": "unknown_action",
+      "status": "failed"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Readiness gate: evaluates a checklist ({id, required}) against a state map and passes only when every required item is satisfied, else fails listing unmet items.",
+  "digests": {
+    "block.json": "ef24e09379392f19cd3f0d37727f3cde6cb70ad9dd7fd038181ce229636d9644",
+    "block.py": "ce87eb8f048c2d2452bea892c1f70afc45bbf6e213a5626ed3a470711c774528"
+  },
+  "execution": {
+    "entrypoint": "block.py",
+    "type": "python"
+  },
+  "id": "readiness_engine",
+  "inputs": [
+    {
+      "default": "evaluate",
+      "description": "evaluate",
+      "name": "action",
+      "options": [
+        "evaluate"
+      ],
+      "required": false,
+      "type": "string"
+    },
+    {
+      "description": "[{id, required}] checklist",
+      "name": "checklist",
+      "required": true,
+      "type": "json"
+    },
+    {
+      "description": "Map of item id -> state",
+      "name": "state",
+      "required": false,
+      "type": "json"
+    }
+  ],
+  "layer": 3,
+  "name": "Readiness Engine",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Capability result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    }
+  ],
+  "requires": [],
+  "signature": "PMAGmSIekeR1euMVgdo1vsm/zFBFot8YD1g8KEWUof8CxMvaFQxbpFOaO7/Fu6hrEFZADHsYhJTfHQe2PW2fDQ==",
+  "tags": [
+    "estate",
+    "private_estate_operations",
+    "steward"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "Action",
+      "name": "action",
+      "options": [
+        "evaluate"
+      ],
+      "widget": "select"
+    },
+    {
+      "label": "Checklist",
+      "name": "checklist",
+      "widget": "json"
+    },
+    {
+      "label": "State",
+      "name": "state",
+      "widget": "json"
+    }
+  ],
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

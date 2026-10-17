@@ -1,0 +1,127 @@
+{
+  "acceptance": [
+    {
+      "check": "INV-AES-AUTH-BRAND-UNIT (authority at H1, severity refuse): neuromodulator units are brand-specific \u2014 {value} is not equivalent without brand",
+      "id": "inv_aes_auth_brand_unit",
+      "status": "refused"
+    },
+    {
+      "check": "INV-AES-DOSE-QUALIFIERS (qualifier at H3, severity refuse): dose missing {missing} \u2014 brand and area required",
+      "id": "inv_aes_dose_qualifiers",
+      "status": "refused"
+    },
+    {
+      "check": "INV-AES-REVERSIBILITY (derivation at H3, severity refuse): reversal proposed for a non-HA product \u2014 {value} is not reversible",
+      "id": "inv_aes_reversibility",
+      "status": "refused"
+    },
+    {
+      "check": "INV-AES-DEVICE-QUALIFIER (qualifier at H3, severity refuse): device setting missing {missing} \u2014 settings are not transferable",
+      "id": "inv_aes_device_qualifier",
+      "status": "refused"
+    },
+    {
+      "check": "INV-AES-HYALURONIDASE-INDICATION (qualifier at H3, severity refuse): hyaluronidase without indication (elective/occlusion) and protocol version",
+      "id": "inv_aes_hyaluronidase_indication",
+      "status": "refused"
+    },
+    {
+      "check": "INV-AES-CONFLICT-REFUSE (derivation at H3, severity refuse): two sources conflict on a dose \u2014 refuse and report",
+      "id": "inv_aes_conflict_refuse",
+      "status": "refused"
+    },
+    {
+      "check": "INV-AES-PROVENANCE (provenance at H3, severity refuse): forbidden derivation: {value}",
+      "id": "inv_aes_provenance",
+      "status": "refused"
+    },
+    {
+      "check": "INV-AES-CURRENCY (currency at H3, severity refuse): protocol currency unverifiable \u2014 refuse",
+      "id": "inv_aes_currency",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Declarative aesthetic reasoning kit on the shared reasoning layer. 8 invariants declared in app/blocks/aesthetic/invariants.yaml across the kinds the portable spec defines (grounding, qualifier, unit_discipline, authority, provenance, currency, scope, derivation, band) and the five hooks (H0 pre-retrieval, H1 ranking, H2 tool-time, H3 answer-time, H4 export-time). Vocabulary in app/blocks/aesthetic/manifest.yaml. Scope refusals classify BEFORE retrieval. Fail closed: a kit that does not parse is DISABLED and refuses every statement rather than passing them through with no invariants. NO INTERVIEW HAS RUN, so every declared figure value is null and the block refuses rather than inventing one (app/blocks/aesthetic/KNOWN_GAPS.md). Measured by tests/blocks/test_reasoning_kits.py.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "c9556b983424faac233d55d65f6319f472560199a03dbd77faa72ad38116c91d",
+    "block.py": "f7e79b952a19d3dda94af989f6a1d212dad9955f2345d98c07af8ffe6c31122e"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/aesthetic_kit:latest",
+    "type": "docker"
+  },
+  "id": "aesthetic_kit",
+  "inputs": [
+    {
+      "description": "the operator question, classified at H0 BEFORE any retrieval",
+      "name": "question",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "description": "figures to gate: quantity, value, unit, origin, source_id, source_class, revision, qualifiers, claim_class, derivations, conditions, steps, bounds, asked_about, span, text",
+      "name": "figures",
+      "required": false,
+      "type": "array"
+    },
+    {
+      "description": "state records by provider name, each {as_of: <epoch>}; an absent provider yields UNKNOWN, never a design-basis fallback",
+      "name": "state",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "description": "events that have happened, matched against the kit's staleness_triggers",
+      "name": "events",
+      "required": false,
+      "type": "array"
+    },
+    {
+      "description": "subset of H0..H4 to run; all five by default, because a partial sweep is a silent coverage gap",
+      "name": "hooks",
+      "required": false,
+      "type": "array"
+    }
+  ],
+  "layer": 3,
+  "name": "aesthetic_kit",
+  "never": [],
+  "outputs": [
+    {
+      "description": "pass | annotated | flagged | refused, with findings, blocked_reason, hooks_run, retrieval_permitted, interview_status, unfilled_figures, unmeasured_invariants, ships and kit_disabled",
+      "name": "verdict",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "UJrxyUeXz5jWcXZqJ9btxxmmidjqIT/OWbNLMlB2xt9s3dnCXF0Z01IlR9JCfGbh1U0Pixl4fYKX4PaaehW7Dg==",
+  "tags": [
+    "aesthetic",
+    "gate",
+    "kit",
+    "reasoning"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

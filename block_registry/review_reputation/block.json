@@ -1,0 +1,121 @@
+{
+  "acceptance": [
+    {
+      "check": "errors on an unknown or missing action",
+      "id": "unknown_action",
+      "status": "failed"
+    },
+    {
+      "check": "refuses or errors when a required input is absent",
+      "id": "missing_required_input",
+      "status": "failed"
+    },
+    {
+      "check": "control-delete mutation turns the block's tests red",
+      "id": "control_delete",
+      "status": "failed"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Deterministic two-sided reputation scoring on top of the review block: recency-decayed weighted ratings, volume-confidence smoothing, and rule-based fraud weighting (duplicate comments, same-pair floods, rating bursts).",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "c808b0ae2a0deaaf8a2484da356a62d2eeaab4d81b82785b5edf95591885b3be",
+    "block.py": "aab41e19fc15af78ba450717e3ecda4ab5fdb800be220bc6dea6b29468e76b44"
+  },
+  "execution": {
+    "entrypoint": "block.py",
+    "image": "ghcr.io/cerebrum-blocks/review_reputation:latest",
+    "type": "python"
+  },
+  "id": "review_reputation",
+  "inputs": [
+    {
+      "description": "JSON payload for the selected operation",
+      "name": "input",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "default": "submit",
+      "description": "Reputation operation",
+      "name": "operation",
+      "options": [
+        "submit",
+        "score",
+        "aggregate",
+        "fraud_weight"
+      ],
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 3,
+  "name": "Review Reputation",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Reputation operation result (submission verdict, score, aggregate, fraud weighting)",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [
+      "hashlib",
+      "math",
+      "typing"
+    ],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    }
+  ],
+  "requires": [
+    "review"
+  ],
+  "signature": "BAHX56ItbnwJBuGnOQWBlNXI/IB2KWuFeQKNQwU+Jh7MDMAyfrvH0oSLUxIfPEYuI3zMxwHbjqCXqMUbqqPzCg==",
+  "tags": [
+    "domain",
+    "marketplace",
+    "reputation",
+    "reviews",
+    "deterministic"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "JSON payload for the selected operation",
+      "name": "input",
+      "widget": "json"
+    },
+    {
+      "label": "Operation",
+      "name": "operation",
+      "options": [
+        "submit",
+        "score",
+        "aggregate",
+        "fraud_weight"
+      ],
+      "widget": "select"
+    }
+  ],
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

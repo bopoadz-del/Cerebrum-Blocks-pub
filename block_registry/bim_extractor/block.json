@@ -1,0 +1,150 @@
+{
+  "acceptance": [],
+  "author": "Cerebrum Team",
+  "description": "Extract building elements, quantities, and clash report from IFC BIM models",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "67d8c0b0da528e8373955f6af63641cfaa6bdc21fb85e261a3b6fd059c8cac3e",
+    "block.py": "e715b8f4832f1760b89c94f818f76b4e7cf9ec14547555a756d6d6e36bc5ec02"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/bim_extractor:latest",
+    "type": "docker"
+  },
+  "id": "bim_extractor",
+  "inputs": [
+    {
+      "description": "Upload IFC BIM model...",
+      "name": "input",
+      "required": false,
+      "type": "file"
+    },
+    {
+      "default": true,
+      "description": "Configuration parameter: extract_properties",
+      "name": "extract_properties",
+      "required": false,
+      "type": "boolean"
+    },
+    {
+      "default": true,
+      "description": "Configuration parameter: run_clash_detection",
+      "name": "run_clash_detection",
+      "required": false,
+      "type": "boolean"
+    },
+    {
+      "default": 10.0,
+      "description": "Configuration parameter: clash_tolerance_mm",
+      "name": "clash_tolerance_mm",
+      "required": false,
+      "type": "number"
+    },
+    {
+      "default": 10000,
+      "description": "Configuration parameter: max_elements",
+      "name": "max_elements",
+      "required": false,
+      "type": "number"
+    }
+  ],
+  "layer": 3,
+  "name": "Bim Extractor",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Elements",
+      "name": "building_elements",
+      "type": "list"
+    },
+    {
+      "description": "Quantities",
+      "name": "quantities",
+      "type": "json"
+    },
+    {
+      "description": "Clashes",
+      "name": "clash_report",
+      "type": "json"
+    },
+    {
+      "description": "Total Elements",
+      "name": "element_count",
+      "type": "number"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "file",
+      "scope": "local.read"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    }
+  ],
+  "requires": [],
+  "signature": "+U2aOwFjYWnd8jXqMVena8OfvjZbIglxRDunSCGNpAATRaVdzK2gbrFhMnDQFbH2PC9Sdf3dR95oKdDEl/ixBQ==",
+  "tags": [
+    "domain",
+    "construction",
+    "bim",
+    "ifc",
+    "quantities",
+    "clash"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "Upload IFC BIM model...",
+      "name": "input",
+      "widget": "file"
+    },
+    {
+      "label": "Extract Properties",
+      "name": "extract_properties",
+      "widget": "toggle"
+    },
+    {
+      "label": "Run Clash Detection",
+      "name": "run_clash_detection",
+      "widget": "toggle"
+    },
+    {
+      "label": "Clash Tolerance Mm",
+      "name": "clash_tolerance_mm",
+      "widget": "number"
+    },
+    {
+      "label": "Max Elements",
+      "name": "max_elements",
+      "widget": "number"
+    }
+  ],
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    },
+    {
+      "kind": "file",
+      "scope": "local.write"
+    },
+    {
+      "kind": "file",
+      "scope": "temp"
+    }
+  ]
+}

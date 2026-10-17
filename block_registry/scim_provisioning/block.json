@@ -1,0 +1,76 @@
+{
+  "acceptance": [
+    {
+      "check": "a provider without an HTTPS base URL is refused, not registered",
+      "id": "https_required",
+      "status": "refused"
+    },
+    {
+      "check": "bearer auth without a token is refused, not registered",
+      "id": "token_required",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "SCIM 2.0 provider registry ported from Cerebrum enterprise/scim.py: auth_type bearer/oauth, provider tokens stored as SHA-256 hashes (the donor's plaintext column is deliberately not ported), sync status tracking, user upsert attribute mapping. Store is in-process.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "3ccfa790a0131f5a08eaa720b1679d1701a41867c07b5bd4688f61dea66fec7d",
+    "block.py": "e7f23e7db3462e85645f65db1bee24bbed96f7847f66c540d545abb574fce72d"
+  },
+  "id": "scim_provisioning",
+  "inputs": [
+    {
+      "description": "register | record_sync | upsert_user | list",
+      "name": "action",
+      "options": [
+        "register",
+        "record_sync",
+        "upsert_user",
+        "list"
+      ],
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 3,
+  "name": "scim_provisioning",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Capability result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "mGD6a9bh3wqaSi+I0kvJDZDApknhj29TS81yyBh9DoUxrSyqQvz5ivrN6suMbCrzwK2anjFpoX8XbWhl5IDIAA==",
+  "tags": [
+    "scim",
+    "enterprise",
+    "auth",
+    "directory-sync",
+    "cerebrum"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

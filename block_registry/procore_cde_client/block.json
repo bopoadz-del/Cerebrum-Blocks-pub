@@ -1,0 +1,25 @@
+{
+  "acceptance": [],
+  "description": "Read-only Procore CDE client implementing The_Fork's CdeClient read protocol. Unconfigured calls make no HTTP request; post and download refuse. Not a live certified Procore login.",
+  "digests": {
+    "block.json": "bd3a4da8e3659b221c8fe20ddc07a2866cfa4ee4b99661c6404038084b5a43ef",
+    "block.py": "a93174ed21121d6c08d3fdbcec8959b4dd0371d062ba83c321e24e4e190c17e5"
+  },
+  "id": "procore_cde_client",
+  "name": "Procore CDE Client",
+  "never": [],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [
+      "urllib.request"
+    ],
+    "network": true
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [],
+  "signature": "fE41cfIaX00VR5h1Yz4KV47CXutLiI9yXuO6q4Y9iU937r0CqLl5oXQ1DCXRkkUxyhVQ6sSgtUsOtF9i1g4GAQ==",
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": []
+}

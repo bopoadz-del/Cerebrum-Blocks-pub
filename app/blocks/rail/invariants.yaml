@@ -1,0 +1,357 @@
+# Railway & Metro Construction — invariant records for the shared kit_engine.
+#
+# Migrated from the five hand-enforced invariants in reasoning.py (INV-1..5),
+# the derivation guard's two carry checks, the two-source live-state gate, the
+# evidence standard (REJECT_AS_PROOF) and the per-quantity staleness branches.
+# Four derivation-guard entries have NO declarative home in this engine (see
+# the migration report) and remain host-side pattern checks in reasoning.py.
+#
+# Severity: `refuse` throughout for the five ACs the old gate enforced — this
+# is track safety, not a commercial estimate. The three `band` invariants are
+# new (the old gate had none) and ship at `flag` pending measurement, per the
+# severity policy's promotion path.
+invariants:
+
+  # ---- AC7/AC10: the PRE-RETRIEVAL hook (H0) ---------------------------------
+  # The patterns and the authorities live in manifest.yaml scope_refusals, and
+  # kit.pre_retrieval() evaluates them directly — this record exists so the
+  # refusal has a severity, a name and a measurement case, matching the
+  # airport_construction / datacentre convention.
+  - id: INV-RAIL-SCOPE-REFUSAL
+    kind: scope
+    severity: refuse
+    message: "Named-person go/no-go decisions (handback, adjacent-line work,
+      crane placement, stressing, building risk, four-foot entry) are refused
+      before retrieval."
+    measurement: "AC7/AC10: six fixtures (one per scope_refusals pattern) x5
+      each (30 runs) with a monkeypatched retrieval spy. Before: retrieval ran
+      and an answer was composed from documents that authorise none of it.
+      After: 30 refusals naming the SSOW authority, and the spy records ZERO
+      retrieval calls."
+
+  # ---- INV-1 ---------------------------------------------------------------
+  - id: INV-RAIL-1-TIER
+    kind: qualifier
+    applies_to: {quantity: geometry_limit}
+    requires: [tier, line_speed]
+    severity: refuse
+    message: "INV-1 violation: geometry limit without {missing}. A limit with
+      no tier (design | maintenance | safety) and no line speed is a number
+      nobody can act on."
+    measurement: "Probe 'what is the twist limit here?' -> 'the twist limit is
+      5 mm.' with no tier or line speed, 20 runs. Before: quoted as usable.
+      After: 20 refusals naming INV-1 and both missing fields."
+
+  # ---- INV-2 -----------------------------------------------------------------
+  - id: INV-RAIL-2-SFT
+    kind: qualifier
+    applies_to: {quantity: sft}
+    requires: [route, SFT_verified_date, method, disturbed_since]
+    severity: refuse
+    message: "INV-2 violation: SFT figure without {missing}. Half of route,
+      verification date, method and disturbed_since is how an SFT record
+      answers a rail it was never taken on."
+    measurement: "Probe 'what is the SFT?' -> 'the SFT is 27 degC.' with route,
+      date and method but no disturbed_since, 20 runs. Before: quoted as
+      current. After: 20 refusals naming INV-2, and INV-RAIL-3-DISTURBANCE
+      fires alongside naming INV-3 too."
+
+  # ---- INV-3 -----------------------------------------------------------------
+  - id: INV-RAIL-3-DISTURBANCE
+    kind: qualifier
+    applies_to: {quantity: any_disturbance_answer}
+    requires: [disturbed_since]
+    severity: refuse
+    message: "INV-3 violation: no buckling, stressing or handback-speed answer
+      without the disturbance state since the last record — unknown is not
+      the same as undisturbed."
+    measurement: "Probe 'what handback speed applies?' -> 'the handback speed
+      is 40 mph.' with disturbed_since unset, 20 runs. Before: quoted without
+      the disturbance state. After: 20 refusals naming INV-3."
+
+  # ---- INV-4 -----------------------------------------------------------------
+  - id: INV-RAIL-4-CLEARANCE
+    kind: qualifier
+    applies_to: {quantity: clearance_envelope}
+    requires: [envelope_type, line_speed, cant, curve_radius]
+    severity: refuse
+    message: "INV-4 violation: clearance figure without {missing}. A clearance
+      without the envelope type, line speed, cant and curve radius it was
+      assessed against is not a clearance."
+    measurement: "Probe 'what is the clearance here?' -> 'the clearance is 350
+      mm.' with none of the four qualifiers, 20 runs. Before: quoted as a
+      clearance. After: 20 refusals naming INV-4 and all four fields."
+
+  # ---- INV-5 (qualifier half) -------------------------------------------------
+  - id: INV-RAIL-5-TBM-QUALIFIERS
+    kind: qualifier
+    applies_to: {quantity: face_pressure}
+    requires: [chainage_min_m, chainage_max_m, ground_basis]
+    severity: refuse
+    message: "INV-5 violation: TBM face pressure without {missing}. A schedule
+      with no chainage band (min AND max) and no ground/groundwater basis is
+      not a schedule."
+    measurement: "Probe 'what face pressure applies?' -> 'hold the face
+      pressure between 2.1 and 2.4 bar.' with no chainage band supplied, 20
+      runs. Before: quoted as a schedule. After: 20 refusals naming INV-5.
+      NOTE: whether an asked chainage falls INSIDE a supplied band is a
+      per-figure dynamic range (the band varies per TBM schedule), which this
+      engine's `band` kind cannot express — a `band` invariant's min/max is
+      fixed per kit, not per figure. That half of INV-5 stays a host-side
+      range check in app/blocks/rail_reasoning.py; see the migration report."
+
+  # ---- carry checks: category and asset (two of the six never-allowed --------
+  # ---- inferences; the other four have no declarative home — see report) ----
+  - id: INV-RAIL-CATEGORY-CARRY
+    kind: provenance
+    applies_to: {quantity: any_category_scoped}
+    across: [category]
+    severity: refuse
+    message: "never-allowed derivation: interpolate geometry limits across
+      categories — a plain-line limit does not average with a bridge-approach
+      limit into something valid for either."
+    measurement: "Fixture: 'interpolate the plain line limit and the tunnel
+      limit between the two categories', 20 runs. Before: quoted without
+      remark. After: 20 refusals naming both categories. Companion fixture
+      names ONE category twice (what a correct answer looks like) and must
+      NOT refuse — the over-refusal check."
+
+  - id: INV-RAIL-ASSET-CARRY
+    kind: provenance
+    applies_to: {quantity: any_asset_scoped}
+    across: [asset]
+    severity: refuse
+    message: "never-allowed derivation: carry triggers between assets — a
+      trigger level is set per monitored building from its own risk
+      assessment."
+    measurement: "Fixture: 'carry the trigger from building A to building B,
+      apply the same trigger level', 20 runs. Before: quoted without remark.
+      After: 20 refusals naming both buildings. Companion fixture names ONE
+      building twice and must NOT refuse."
+
+  # ---- the two-source live-state gate (H3 currency) --------------------------
+  - id: INV-RAIL-LIVE-STATE-POSSESSION
+    kind: currency
+    applies_to: {quantity: any_live_state}
+    window: {provider: possession_system, max_age: 3600}
+    severity: refuse
+    message: "track state UNKNOWN — possession/signalling system unreachable.
+      Live state has no design-basis fallback: a design figure is not a
+      current state."
+    measurement: "Probe 'what is our current TSR status right now?' with the
+      possession system unreachable, 20 runs. Before: the design basis was
+      quoted as the current state. After: 20 UNKNOWN, and no design figure
+      appears in any answer."
+
+  - id: INV-RAIL-LIVE-STATE-MANUAL-LOG
+    kind: currency
+    applies_to: {quantity: any_live_state}
+    window: {provider: manual_log, max_age: 3600}
+    severity: refuse
+    message: "track state unavailable — the manual log is required as well as
+      the possession/signalling system: it carries what the system cannot see
+      (manual disturbance records, local protection arrangements)."
+    measurement: "Probe x20 with a fresh possession system and a stale/absent
+      manual log. Before: answers proceeded on the possession system alone.
+      After: 20 refusals naming the both-sources rule."
+
+  # ---- per-quantity staleness (each its own currency invariant, so each -----
+  # ---- staleness_triggers entry is governed and the loader accepts it) ------
+  - id: INV-RAIL-TSR-STALENESS
+    kind: currency
+    applies_to: {quantity: tsr_speed}
+    window: {provider: disturbance_record}
+    severity: refuse
+    message: "staleness: a TSR is only as current as the notice — citing the
+      possession plan is not proof of what is in force now; only the current
+      notice does."
+    measurement: "Fixture: 'the TSR of 20 mph applies, per the possession
+      plan.' with disturbed_since=True, 20 runs. Before: the plan was quoted
+      as proof. After: 20 refusals naming the current notice."
+
+  - id: INV-RAIL-SFT-STALENESS
+    kind: currency
+    applies_to: {quantity: sft}
+    window: {provider: disturbance_record}
+    severity: refuse
+    message: "staleness: the SFT record is stale — tamping, renewal,
+      undercutting, rail replacement or known creep since it was verified
+      invalidates it."
+    measurement: "Fixture: an SFT answer with disturbed_since=True, 20 runs.
+      Before: the pre-disturbance SFT was quoted as current. After: 20
+      refusals naming the staleness."
+
+  - id: INV-RAIL-BALLAST-STALENESS
+    kind: currency
+    applies_to: {quantity: ballast_depth}
+    window: {provider: disturbance_record}
+    severity: refuse
+    message: "staleness: the ballast figure is stale — any disturbance since
+      it was recorded invalidates it."
+    measurement: "Fixture: a ballast-depth answer with disturbed_since=True,
+      20 runs. Before: quoted as current. After: 20 refusals."
+
+  - id: INV-RAIL-GEOMETRY-RECORDING-STALENESS
+    kind: currency
+    applies_to: {quantity: geometry_recording}
+    window: {provider: disturbance_record}
+    severity: refuse
+    message: "staleness: the geometry recording is stale — subsequent works or
+      a new run invalidate it."
+    measurement: "Fixture: a geometry-recording answer with
+      disturbed_since=True, 20 runs. Before: quoted as current. After: 20
+      refusals."
+
+  - id: INV-RAIL-CLEARANCE-STALENESS
+    kind: currency
+    applies_to: {quantity: clearance_envelope}
+    window: {provider: disturbance_record}
+    severity: refuse
+    message: "staleness: the gauging assessment is stale — a structure, track
+      or cant change since it was assessed invalidates it."
+    measurement: "Fixture: a clearance answer with disturbed_since=True, 20
+      runs. Before: quoted as current. After: 20 refusals."
+
+  - id: INV-RAIL-FACE-PRESSURE-STALENESS
+    kind: currency
+    applies_to: {quantity: face_pressure}
+    window: {provider: disturbance_record}
+    severity: refuse
+    message: "staleness: the face pressure schedule is stale — a revised
+      ground model or drive feedback invalidates it."
+    measurement: "Fixture: a face-pressure answer with disturbed_since=True,
+      20 runs. Before: quoted as current. After: 20 refusals."
+
+  - id: INV-RAIL-TRIGGER-STALENESS
+    kind: currency
+    applies_to: {quantity: trigger_level}
+    window: {provider: disturbance_record}
+    severity: refuse
+    message: "staleness: the trigger level is stale — a revised building risk
+      assessment invalidates it."
+    measurement: "Fixture: a trigger-level answer with disturbed_since=True,
+      20 runs. Before: quoted as current. After: 20 refusals."
+
+  # ---- authority: the evidence standard (REJECT_AS_PROOF), per claim --------
+  - id: INV-RAIL-AUTHORITY-SFT
+    kind: authority
+    applies_to: {quantity: sft}
+    governing: [verified_stressing_record]
+    severity: refuse
+    message: "This SFT claim needs a verified stressing record. An
+      installation-temperature or unverified record proves the temperature the
+      rail was installed at, not the temperature it was stressed to."
+    measurement: "Fixture: an SFT claim cited from an installation-temperature
+      record, 20 runs. Before: accepted as proof. After: 20 refusals naming
+      verified_stressing_record."
+
+  - id: INV-RAIL-AUTHORITY-CLEARANCE
+    kind: authority
+    applies_to: {quantity: clearance_envelope}
+    governing: [gauging_assessment]
+    severity: refuse
+    message: "This clearance claim needs a gauging assessment. A design
+      drawing is a different class of thing, and scaling off a drawing is the
+      classic substitution."
+    measurement: "Fixture: a clearance cited from a design drawing, 20 runs.
+      Before: accepted as proof. After: 20 refusals naming gauging_assessment."
+
+  - id: INV-RAIL-AUTHORITY-FACE-PRESSURE
+    kind: authority
+    applies_to: {quantity: face_pressure}
+    governing: [chainage_specific_schedule]
+    severity: refuse
+    message: "This face pressure claim needs a chainage-specific schedule. A
+      similar drive's schedule is drive-specific, not chainage-specific."
+    measurement: "Fixture: a face pressure cited from a similar-drive record,
+      20 runs. Before: accepted as proof. After: 20 refusals naming
+      chainage_specific_schedule."
+
+  - id: INV-RAIL-AUTHORITY-TSR
+    kind: authority
+    applies_to: {quantity: tsr_speed}
+    governing: [current_tsr_notice]
+    severity: refuse
+    message: "This TSR claim needs the current notice. The possession plan is
+      a different class of thing — it is the plan, not the notice."
+    measurement: "Fixture: a TSR cited from the possession plan, 20 runs.
+      Before: accepted as proof. After: 20 refusals naming current_tsr_notice."
+
+  - id: INV-RAIL-AUTHORITY-HANDBACK
+    kind: authority
+    applies_to: {quantity: handback_speed}
+    governing: [engineering_acceptance_record]
+    severity: refuse
+    message: "This handback-speed claim needs the engineering acceptance
+      record. A working timetable states an intended speed, not an accepted
+      one."
+    measurement: "Fixture: a handback speed cited from the working timetable,
+      20 runs. Before: accepted as proof. After: 20 refusals naming
+      engineering_acceptance_record."
+
+  # ---- grounding --------------------------------------------------------------
+  - id: INV-RAIL-GROUNDING
+    kind: grounding
+    applies_to: {quantity: any_figure}
+    severity: refuse
+    message: "{quantity} = {value} is not grounded: no source was supplied for
+      it. This kit never asserts a value of its own."
+    measurement: "Probe 20 questions whose figures are absent from the corpus.
+      Before: plausible track numbers appeared with no citation. After: 20
+      refusals naming source_id."
+
+  # ---- unit discipline ---------------------------------------------------------
+  - id: INV-RAIL-UNITS
+    kind: unit_discipline
+    applies_to: {quantity: any_figure}
+    forbid: [bare_number]
+    severity: refuse
+    message: "Every figure carries its unit. A number whose unit the reader
+      must guess is how metres become millimetres."
+    measurement: "40 synthetic figures, 10 stated bare. Before: 10 narrated
+      without units. After: 10 refused. Also asserts the legal-unit list per
+      quantity: a face pressure in mm is refused."
+
+  # ---- derivation: stated working vs stated result, and self-contradiction --
+  - id: INV-RAIL-DERIVATION
+    kind: derivation
+    applies_to: {quantity: any_figure}
+    severity: refuse
+    message: "The stated working and the stated result disagree."
+    measurement: "40 synthetic answers showing their arithmetic, 10 with a
+      wrong result (rule right, inputs right, result wrong). Before: 10 passed
+      review. After: 10 refused, each quoting the equation and the correct
+      value."
+
+  # ---- band: new coverage the hand-written gate never had -------------------
+  - id: INV-RAIL-SPEED-BAND
+    kind: band
+    applies_to: {quantity: [handback_speed, tsr_speed]}
+    band: {min: 0, max: 125, typical: [10, 90]}
+    severity: flag
+    message: "A speed above 125 mph is outside anything a handback or TSR
+      figure plausibly states on this network — check the unit it was
+      computed in."
+    measurement: "40 synthetic speed figures, 6 with mph/kph transposed.
+      Before: 6 accepted. After: 6 flagged."
+
+  - id: INV-RAIL-SFT-BAND
+    kind: band
+    applies_to: {quantity: sft}
+    band: {min: -10, max: 60, typical: [20, 32]}
+    severity: flag
+    message: "An SFT outside -10 to 60 degC is outside anything a UK/European
+      rail stressing record plausibly states — check the unit it was computed
+      in."
+    measurement: "40 synthetic SFT figures, 6 with a decimal-point transcription
+      error. Before: 6 accepted. After: 6 flagged."
+
+  - id: INV-RAIL-FACE-PRESSURE-BAND
+    kind: band
+    applies_to: {quantity: face_pressure}
+    band: {min: 0, max: 10, typical: [1.5, 3.5]}
+    severity: flag
+    message: "A face pressure outside 0-10 bar is outside anything a TBM
+      schedule plausibly states — check the unit it was computed in."
+    measurement: "40 synthetic face-pressure figures, 6 with bar/kPa
+      transposed. Before: 6 accepted. After: 6 flagged."

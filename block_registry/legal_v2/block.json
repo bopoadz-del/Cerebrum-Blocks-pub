@@ -1,0 +1,113 @@
+{
+  "acceptance": [],
+  "author": "Cerebrum Team",
+  "description": "Legal document analysis with typed input/output \u2014 extracts entities, clauses, risks, and compliance flags from contracts and pleadings",
+  "digests": {
+    "block.json": "e685ccae1afcb95cb368b574ab1ef5a00f40c6d0780668e914bde65c4a7ff132",
+    "block.py": "500050a84db8562e16f3736631be8902e6daef93211d51ac93c0a94833b11293"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/legal_v2:latest",
+    "type": "docker"
+  },
+  "id": "legal_v2",
+  "inputs": [
+    {
+      "description": "Paste legal document text...",
+      "name": "input",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": 0.85,
+      "description": "Configuration parameter: confidence_threshold",
+      "name": "confidence_threshold",
+      "required": false,
+      "type": "number"
+    },
+    {
+      "default": "contract",
+      "description": "Configuration parameter: document_type",
+      "name": "document_type",
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 3,
+  "name": "Legal v2",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Entities",
+      "name": "entities",
+      "type": "object"
+    },
+    {
+      "description": "Legal analysis",
+      "name": "legal_analysis",
+      "type": "object"
+    },
+    {
+      "description": "Compliance flags",
+      "name": "compliance_flags",
+      "type": "object"
+    },
+    {
+      "description": "Risk scores",
+      "name": "risk_scores",
+      "type": "object"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    }
+  ],
+  "requires": [],
+  "signature": "eRjDqxn8lIJG17c8idgyUYedK4zx/1OmmmcLbBWFvVOcYmaAKDtIa3hk2/nf/DDeE1mS7Z09psa5T42Zkzs+BQ==",
+  "tags": [
+    "domain",
+    "legal",
+    "law",
+    "documents",
+    "typed",
+    "v2"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "Paste legal document text...",
+      "name": "input",
+      "widget": "textarea"
+    },
+    {
+      "label": "Confidence Threshold",
+      "name": "confidence_threshold",
+      "widget": "number"
+    },
+    {
+      "label": "Document Type",
+      "name": "document_type",
+      "widget": "text"
+    }
+  ],
+  "version": "2.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

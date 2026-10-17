@@ -1,0 +1,2 @@
+# Force LF line endings so kernel_manifest.json sha256 values stay stable.
+* text eol=lf

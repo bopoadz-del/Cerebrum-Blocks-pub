@@ -1,0 +1,51 @@
+{
+  "acceptance": [],
+  "author": "Cerebrum Team",
+  "description": "Retail document analysis with typed input/output \u2014 deterministic regex + math (entities, metrics, compliance flags, risk scores). No LLM, no external APIs.",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "19d3d165c0b9dd7544ed92b730a1d79f85181f1b757b5f135a87761c4d80d85e",
+    "block.py": "cf19f240b66e1e7e7331977bc8e25b7705ed372f5ff567314592e0a86bae7bbb"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/retail_v2:latest",
+    "type": "docker"
+  },
+  "id": "retail_v2",
+  "inputs": [
+    {
+      "description": "Document text (TextContent) to analyse for retail entities, metrics, compliance flags and risk scores",
+      "name": "input",
+      "required": false,
+      "type": "json"
+    }
+  ],
+  "layer": 3,
+  "name": "Retail V2",
+  "never": [],
+  "outputs": {
+    "result": {
+      "description": "RetailAnalysis: entities, metrics, compliance flags, risk scores",
+      "type": "json"
+    }
+  },
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [],
+  "signature": "gWj9vSr2A3q/B7Sheb8yIIRR9BfGeEAewAx012+OQ2tvGksI0UovieYujgMAJeV6BGkfxJqDRYaIFLIFwNIeAg==",
+  "tags": [
+    "domain",
+    "retail",
+    "documents",
+    "analysis",
+    "deterministic"
+  ],
+  "trust_tier": "platform",
+  "version": "2.0",
+  "writes": []
+}

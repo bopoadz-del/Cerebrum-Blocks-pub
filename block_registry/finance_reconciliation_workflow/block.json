@@ -1,0 +1,75 @@
+{
+  "acceptance": [
+    {
+      "check": "bank_vs_ledger/intercompany runs are refused with the donor honest-reconciliation message and the run status fails",
+      "id": "unsupported_run_type_refused",
+      "status": "refused"
+    },
+    {
+      "check": "processing a run already completed is refused (state machine)",
+      "id": "reprocess_completed_refused",
+      "status": "refused"
+    },
+    {
+      "check": "create_run with a run_type outside the closed set fails loud",
+      "id": "invalid_run_type_failed",
+      "status": "failed"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "real: reconciliation run/exception state machine ported from <private-repo> backend/app/reconciliation/service.py. pending->processing->completed/failed across run_type in {actuals_vs_budget, actuals_vs_forecast, bank_vs_ledger, intercompany}; unsupported run types fail the run honestly; per-scope tolerance rules; Decimal control totals; idempotent open-exception dedup; block-level variances merged from the Store finance_reconciliation block. In-process store.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "a8b71547f3687a53d993aa2eae9cadf8a8d939bb613cce448819312df8a76499",
+    "block.py": "02081f21169622810b6b97b456d11bc2cad5199d715b40b9fa41fd1ac5169943"
+  },
+  "id": "finance_reconciliation_workflow",
+  "inputs": [
+    {
+      "description": "action + run_id + records",
+      "name": "input",
+      "type": "json"
+    }
+  ],
+  "layer": 3,
+  "name": "finance_reconciliation_workflow",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Capability result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "/noEJbtp1XjNLtSdYkcJRWXFjK9LPcwPyMZlIVcfwQ2wtZm0RezZxmPN4y3JNzLu2RWnXPCPbWzEFLkqV7sRAA==",
+  "tags": [
+    "finance",
+    "reconciliation",
+    "workflow",
+    "state-machine",
+    "exceptions",
+    "finance_ops"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

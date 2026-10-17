@@ -1,0 +1,152 @@
+{
+  "acceptance": [
+    {
+      "check": "INV-OM-BAND (band at H3, severity refuse): lay tension / strain / stress is a band \u2014 return both min and max from the same analysis; {missing} missing",
+      "id": "inv_om_band",
+      "status": "refused"
+    },
+    {
+      "check": "INV-OM-STATIC-DYNAMIC (qualifier at H3, severity refuse): allowable missing {missing} \u2014 a static value applied to a dynamic condition is wrong in the unsafe direction",
+      "id": "inv_om_static_dynamic",
+      "status": "refused"
+    },
+    {
+      "check": "INV-OM-SPREAD-TYPE (qualifier at H3, severity refuse): envelope figure missing spread_type \u2014 an S-lay limit is not a J-lay limit",
+      "id": "inv_om_spread_type",
+      "status": "refused"
+    },
+    {
+      "check": "INV-OM-CAPABILITY-LIVE (derivation at H3, severity refuse): DP capability without failure case and current equipment state is not a capability statement",
+      "id": "inv_om_capability_live",
+      "status": "refused"
+    },
+    {
+      "check": "INV-OM-FORECAST-WINDOW (qualifier at H3, severity refuse): forecast does not cover operation + contingency \u2014 {missing}",
+      "id": "inv_om_forecast_window",
+      "status": "refused"
+    },
+    {
+      "check": "INV-OM-PROVENANCE (provenance at H3, severity refuse): figure carried across spread, vessel or depth-band boundary",
+      "id": "inv_om_provenance",
+      "status": "refused"
+    },
+    {
+      "check": "INV-OM-CURRENCY-ANALYSIS (currency at H3, severity refuse): installation analysis is stale \u2014 {value} has occurred since it was issued",
+      "id": "inv_om_currency_analysis",
+      "status": "refused"
+    },
+    {
+      "check": "INV-OM-SCOPE-GO (scope at H0, severity refuse): go/no-go is a named-person decision",
+      "id": "inv_om_scope_go",
+      "status": "refused"
+    },
+    {
+      "check": "INV-OM-UNIT-TENSION (unit_discipline at H2, severity refuse): tension unit family ambiguous or mixed",
+      "id": "inv_om_unit_tension",
+      "status": "refused"
+    },
+    {
+      "check": "INV-OM-CURRENCY-DP (currency at H3, severity refuse): DP capability is stale once a thruster, generator or reference has failed",
+      "id": "inv_om_currency_dp",
+      "status": "refused"
+    },
+    {
+      "check": "INV-OM-CURRENCY-CRANE (currency at H3, severity refuse): SWL and MBR are stale once configuration, boom, radius or pipe spec changed",
+      "id": "inv_om_currency_crane",
+      "status": "refused"
+    },
+    {
+      "check": "INV-OM-CURRENCY-FORECAST (currency at H3, severity refuse): a forecast figure is current only until the next issue",
+      "id": "inv_om_currency_forecast",
+      "status": "refused"
+    },
+    {
+      "check": "INV-OM-CURRENCY-STINGER (currency at H3, severity refuse): the as-set stinger is stale after any roller adjustment; nominal is not as-set",
+      "id": "inv_om_currency_stinger",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Declarative offshore marine reasoning kit on the shared reasoning layer. 13 invariants declared in app/blocks/offshore_marine/invariants.yaml across the kinds the portable spec defines (grounding, qualifier, unit_discipline, authority, provenance, currency, scope, derivation, band) and the five hooks (H0 pre-retrieval, H1 ranking, H2 tool-time, H3 answer-time, H4 export-time). Vocabulary in app/blocks/offshore_marine/manifest.yaml. Scope refusals classify BEFORE retrieval. Fail closed: a kit that does not parse is DISABLED and refuses every statement rather than passing them through with no invariants. NO INTERVIEW HAS RUN, so every declared figure value is null and the block refuses rather than inventing one (app/blocks/offshore_marine/KNOWN_GAPS.md). Measured by tests/blocks/test_reasoning_kits.py.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "4f6cd7934557d2b3840782d7d67b74442d49fee293e3a7a8f0c617739c49dc20",
+    "block.py": "6c2df4ae847576e3215956ec06263c948a3a6f049b2723d3abcdb6e67e1b4392"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/offshore_marine_kit:latest",
+    "type": "docker"
+  },
+  "id": "offshore_marine_kit",
+  "inputs": [
+    {
+      "description": "the operator question, classified at H0 BEFORE any retrieval",
+      "name": "question",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "description": "figures to gate: quantity, value, unit, origin, source_id, source_class, revision, qualifiers, claim_class, derivations, conditions, steps, bounds, asked_about, span, text",
+      "name": "figures",
+      "required": false,
+      "type": "array"
+    },
+    {
+      "description": "state records by provider name, each {as_of: <epoch>}; an absent provider yields UNKNOWN, never a design-basis fallback",
+      "name": "state",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "description": "events that have happened, matched against the kit's staleness_triggers",
+      "name": "events",
+      "required": false,
+      "type": "array"
+    },
+    {
+      "description": "subset of H0..H4 to run; all five by default, because a partial sweep is a silent coverage gap",
+      "name": "hooks",
+      "required": false,
+      "type": "array"
+    }
+  ],
+  "layer": 3,
+  "name": "offshore_marine_kit",
+  "never": [],
+  "outputs": [
+    {
+      "description": "pass | annotated | flagged | refused, with findings, blocked_reason, hooks_run, retrieval_permitted, interview_status, unfilled_figures, unmeasured_invariants, ships and kit_disabled",
+      "name": "verdict",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "mE7L9KumDaXpLWP8gg/pVHOCzZR+XntnyMVotlKbMbjiSGzCOsp7wzSP7efOGXygB4mhnE54+pzwl8rCvKMrCQ==",
+  "tags": [
+    "gate",
+    "kit",
+    "offshore",
+    "reasoning"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

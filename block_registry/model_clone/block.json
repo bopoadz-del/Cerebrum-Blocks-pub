@@ -1,0 +1,81 @@
+{
+  "acceptance": [
+    {
+      "check": "an unknown action is refused, not silently accepted",
+      "id": "unknown_action",
+      "status": "refused"
+    },
+    {
+      "check": "an empty payload without required arguments is refused, not faked",
+      "id": "missing_arguments",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Applies approved moves to a copy of the IFC model (never the original) via ifc_copy, with optional Speckle streaming.",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "3d477595e0dd2f8284ab7cbab0c2c601fca8a254e3ac3ba8fc96b1861126bd2b",
+    "block.py": "d8c38f5720d239e1114bcea3cfcab89240ba461dd1b1a83b4e22bbc84cef510b"
+  },
+  "id": "model_clone",
+  "inputs": [
+    {
+      "description": "apply | write_change_set | backend",
+      "name": "action",
+      "options": [
+        "apply",
+        "write_change_set",
+        "backend"
+      ],
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 3,
+  "name": "Model Clone",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Capability result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": true,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "file",
+      "scope": "local.read"
+    }
+  ],
+  "requires": [],
+  "signature": "B2h9BlgW4MSNxjVof5tz3gwxkbN7HhDQxmTTtwyaRAPLG8kWYF5GV5XbgrVFvQSOy1FcuKRotybtJVKPLE90DA==",
+  "tags": [
+    "mep",
+    "construction",
+    "coordination"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    },
+    {
+      "kind": "file",
+      "scope": "local.write"
+    }
+  ]
+}

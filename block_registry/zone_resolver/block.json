@@ -1,0 +1,90 @@
+{
+  "acceptance": [
+    {
+      "check": "a candidate run through fewer than the full declared monitor set is refused before any attempt is spent",
+      "id": "missing_monitor",
+      "status": "refused"
+    },
+    {
+      "check": "a candidate carrying no monitor verdicts at all is refused",
+      "id": "no_monitors",
+      "status": "refused"
+    },
+    {
+      "check": "a candidate move vector that is not exactly three numbers is refused",
+      "id": "vector_not_3d",
+      "status": "refused"
+    },
+    {
+      "check": "resolve without a clash object is refused",
+      "id": "no_clash",
+      "status": "refused"
+    },
+    {
+      "check": "a clash whose owner is neither zone nor coordinator is refused",
+      "id": "unknown_owner",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "real (clone of <private-repo> app/agents/zone_resolver.py ZoneResolver): per-zone clash resolution with the donor's discipline - kit resolution order, every candidate runs ALL monitors (a candidate missing a declared monitor's verdict is refused), clean-sweep commit with verified vs verified_conditional separation, three-attempt cap escalating with named objections, and boundary-owned clashes handed to the coordinator, never committed on this zone's branch. The monitors themselves are the product's; this block enforces the resolver contract. In-process.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "247bdf43c166abfbb966fb84939a228840561ce3f6d27cbae926879ab57c44f5",
+    "block.py": "ce00e7c28009b2c8eda040b79ed23370a9f45c9ffd49d08ec999b5f216e22f02"
+  },
+  "id": "zone_resolver",
+  "inputs": [
+    {
+      "description": "resolve | run | committed",
+      "name": "action",
+      "options": [
+        "resolve",
+        "run",
+        "committed"
+      ],
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 3,
+  "name": "zone_resolver",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Capability result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "DrA0uhoFEDmLuBam+cArHgf8QkFz+cH3nLm4aTgAqbzP4V98kM0GyKssC7V1tAI21HFhZC2hcj1dmmuYmfzwCg==",
+  "tags": [
+    "bim",
+    "coordination",
+    "resolver",
+    "multi-zone",
+    "bim-manager"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

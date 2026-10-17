@@ -1,0 +1,167 @@
+{
+  "acceptance": [
+    {
+      "check": "INV-APC-AUTH-OLS (authority at H1, severity refuse): OLS/declared-distance figure governed by ICAO Annex 14 \u2014 a lesser source is not acceptable proof",
+      "id": "inv_apc_auth_ols",
+      "status": "refused"
+    },
+    {
+      "check": "INV-APC-OLS-QUALIFIERS (qualifier at H3, severity refuse): OLS figure missing {missing}",
+      "id": "inv_apc_ols_qualifiers",
+      "status": "refused"
+    },
+    {
+      "check": "INV-APC-DECLARED-DISTANCE (qualifier at H3, severity refuse): declared distance missing {missing}",
+      "id": "inv_apc_declared_distance",
+      "status": "refused"
+    },
+    {
+      "check": "INV-APC-SAFETY-AREA (qualifier at H3, severity refuse): safety area missing {missing}",
+      "id": "inv_apc_safety_area",
+      "status": "refused"
+    },
+    {
+      "check": "INV-APC-PCN (qualifier at H3, severity refuse): PCN/ACR missing {missing}",
+      "id": "inv_apc_pcn",
+      "status": "refused"
+    },
+    {
+      "check": "INV-APC-UNITS-DATUM (unit_discipline at H2, severity refuse): units ambiguous \u2014 aviation works in feet, construction in metres",
+      "id": "inv_apc_units_datum",
+      "status": "refused"
+    },
+    {
+      "check": "INV-APC-WGS84 (unit_discipline at H2, severity refuse): position without WGS-84 confirmation",
+      "id": "inv_apc_wgs84",
+      "status": "refused"
+    },
+    {
+      "check": "INV-APC-MAGNETIC (unit_discipline at H2, severity refuse): bearing without magnetic/true basis \u2014 runway designator is magnetic",
+      "id": "inv_apc_magnetic",
+      "status": "refused"
+    },
+    {
+      "check": "INV-APC-PROVENANCE (provenance at H3, severity refuse): forbidden derivation: {value}",
+      "id": "inv_apc_provenance",
+      "status": "refused"
+    },
+    {
+      "check": "INV-APC-CURRENCY (currency at H3, severity refuse): declared distance stale on {value}",
+      "id": "inv_apc_currency",
+      "status": "refused"
+    },
+    {
+      "check": "INV-APC-CURRENCY-OLS-GEOMETRY (currency at H3, severity refuse): OLS geometry is stale once an obstacle change or a safeguarding revision has happened",
+      "id": "inv_apc_currency_ols_geometry",
+      "status": "refused"
+    },
+    {
+      "check": "INV-APC-CURRENCY-ILS (currency at H3, severity refuse): ILS critical area is stale once a NAVAID change or siting revision has happened",
+      "id": "inv_apc_currency_ils",
+      "status": "refused"
+    },
+    {
+      "check": "INV-APC-CURRENCY-RSA (currency at H3, severity refuse): the runway safety area limit is stale once the runway category has changed",
+      "id": "inv_apc_currency_rsa",
+      "status": "refused"
+    },
+    {
+      "check": "INV-APC-CURRENCY-PCN (currency at H3, severity refuse): PCN is stale once its pavement evaluation interval has elapsed",
+      "id": "inv_apc_currency_pcn",
+      "status": "refused"
+    },
+    {
+      "check": "INV-APC-CURRENCY-AGL (currency at H3, severity refuse): AGL serviceability is stale once a light change or the service interval has passed",
+      "id": "inv_apc_currency_agl",
+      "status": "refused"
+    },
+    {
+      "check": "INV-APC-CURRENCY-PHASING (currency at H3, severity refuse): the phasing plan is stale once it has been revised",
+      "id": "inv_apc_currency_phasing",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Declarative airport construction reasoning kit on the shared reasoning layer. 16 invariants declared in app/blocks/airport_construction/invariants.yaml across the kinds the portable spec defines (grounding, qualifier, unit_discipline, authority, provenance, currency, scope, derivation, band) and the five hooks (H0 pre-retrieval, H1 ranking, H2 tool-time, H3 answer-time, H4 export-time). Vocabulary in app/blocks/airport_construction/manifest.yaml. Scope refusals classify BEFORE retrieval. Fail closed: a kit that does not parse is DISABLED and refuses every statement rather than passing them through with no invariants. NO INTERVIEW HAS RUN, so every declared figure value is null and the block refuses rather than inventing one (app/blocks/airport_construction/KNOWN_GAPS.md). Measured by tests/blocks/test_reasoning_kits.py.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "5b9bc8245ac44a7af6b243be7f0c1108c9ff4456377df2b8113fda86bf418df2",
+    "block.py": "f9dde4a54184cb8c79e8058d6e72127a9d2019077de408324494ccb98bebfeb2"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/airport_construction_kit:latest",
+    "type": "docker"
+  },
+  "id": "airport_construction_kit",
+  "inputs": [
+    {
+      "description": "the operator question, classified at H0 BEFORE any retrieval",
+      "name": "question",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "description": "figures to gate: quantity, value, unit, origin, source_id, source_class, revision, qualifiers, claim_class, derivations, conditions, steps, bounds, asked_about, span, text",
+      "name": "figures",
+      "required": false,
+      "type": "array"
+    },
+    {
+      "description": "state records by provider name, each {as_of: <epoch>}; an absent provider yields UNKNOWN, never a design-basis fallback",
+      "name": "state",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "description": "events that have happened, matched against the kit's staleness_triggers",
+      "name": "events",
+      "required": false,
+      "type": "array"
+    },
+    {
+      "description": "subset of H0..H4 to run; all five by default, because a partial sweep is a silent coverage gap",
+      "name": "hooks",
+      "required": false,
+      "type": "array"
+    }
+  ],
+  "layer": 3,
+  "name": "airport_construction_kit",
+  "never": [],
+  "outputs": [
+    {
+      "description": "pass | annotated | flagged | refused, with findings, blocked_reason, hooks_run, retrieval_permitted, interview_status, unfilled_figures, unmeasured_invariants, ships and kit_disabled",
+      "name": "verdict",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "qvjzHdxIK+vB5yJFah74oUIXaXSKHKQ+nfd5F1zppQM5Gg+RZSVUmO07bqJj9cWAvRJ2VbLC7qGEu2ABCv+NAA==",
+  "tags": [
+    "airport",
+    "gate",
+    "kit",
+    "reasoning"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

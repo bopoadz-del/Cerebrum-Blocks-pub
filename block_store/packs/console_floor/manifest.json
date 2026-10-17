@@ -1,0 +1,15 @@
+{
+  "schema": "store_pack.v1",
+  "id": "console_floor",
+  "type": "pack",
+  "name": "Product Console Floor",
+  "version": "1.0.0",
+  "description": "The default console and boot floor for factory-emitted products: one UI that drives capabilities discovered from GET /v1/capabilities, shows the authority label every answer carries, and boots with alembic-first ordering on a mounted disk.",
+  "author": "Cerebrum Team",
+  "tags": ["floor", "console", "deploy", "pilot"],
+  "console": "console/index.html",
+  "entrypoint": "scripts/entrypoint.sh",
+  "release_gate": "scripts/release_gate.py",
+  "dockerfile": "Dockerfile",
+  "publisher_id": "cerebrum_platform"
+}

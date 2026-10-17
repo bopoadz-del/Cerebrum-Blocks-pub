@@ -1,0 +1,23 @@
+{
+  "acceptance": [],
+  "description": "Tamper-evident evidence chain (FinanceOps port): every record links to its predecessor and verify_chain full-walks the chain naming each violation.",
+  "digests": {
+    "block.json": "6d043fbbff280350cc4f7814a06b8a9a42098c3cd34b661223649dcd4dbcea01",
+    "block.py": "36a8ef2bed26142ba9f0b9b91fa42aa08732a3ac2f5dcb3b94d3df05289c6ad6"
+  },
+  "id": "audit_chain",
+  "name": "Audit Chain",
+  "never": [],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [],
+  "signature": "PaJtIzvrqYtMLb6FzwCW6R4g8rGmmesofF4NHx31KzoWCnPP+d1wEIeJQ7FOU5wZJ8WdHQwRHEBxdIp50O+rDA==",
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": []
+}

@@ -1,0 +1,79 @@
+{
+  "acceptance": [
+    {
+      "check": "image input (run_ocr/score_tickers) is refused because the vision backends are not ported",
+      "id": "image_refused",
+      "status": "refused"
+    },
+    {
+      "check": "extract without text is refused",
+      "id": "text_required",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Ticker extraction with domain confusion correction ported from <private-repo> src/services/ocr.ts (real): four-pass extraction ($cashtag, structural ticker-above-company-name, always-on fallback, known-pattern), KNOWN_TICKER_CORRECTIONS and OCR_CONFUSION tables, DP levenshtein fuzzy matching (distance <= 1, donor universe order) and a correction log on every result. VALID_TICKERS vendored from the donor data/stock_universe.json. The Cloud Vision / Tesseract backends and scoreTickers are NOT ported: image input is refused, never faked. NEVER the backtest.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "5d6d3c6e875e2873b24da9bba8d072cd35662cb837645c3ef5f77febc35a5add",
+    "block.py": "91253599e1037223950ef1c0708414bf045501a46298d1eebdc339aa8d470c05"
+  },
+  "id": "ticker_ocr_fuzzy",
+  "inputs": [
+    {
+      "description": "extract | validate | fuzzy | universe | run_ocr | score_tickers",
+      "name": "action",
+      "options": [
+        "extract",
+        "validate",
+        "fuzzy",
+        "universe",
+        "run_ocr",
+        "score_tickers"
+      ],
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 3,
+  "name": "ticker_ocr_fuzzy",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Capability result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "BEAnp1o3oXVoWPHyXTGqpLn425R0Y05WcCpRiERA76LxLiz4B72qfgbc3uSbOhecVEf0ZqgYjkMrh5alPKolAA==",
+  "tags": [
+    "ocr",
+    "vision",
+    "fuzzy",
+    "tickers",
+    "finance",
+    "<private-repo>"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

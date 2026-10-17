@@ -1,0 +1,67 @@
+{
+  "acceptance": [
+    {
+      "check": "a claim without evidence is refused, never answered",
+      "id": "unevidenced_refused",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Evidence-or-refuse gate ported from <private-repo>'s refusal pattern: every claim in an answer must carry evidence; a claim with no evidence is refused, and the answer is allowed only when all claims are evidenced.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "a54e984c66e414b1628aa263cd113e683d49471eb8ab3f50e88caa69f042da3e",
+    "block.py": "f6d2faaa39f84003babae3705d465471c59855a733813ff73dd6df42d94bd476"
+  },
+  "id": "evidence_or_refuse",
+  "inputs": [
+    {
+      "description": "judge",
+      "name": "action",
+      "options": [
+        "judge"
+      ],
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 3,
+  "name": "evidence_or_refuse",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Capability result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "neooXhvtEwdaVEU5ik6VBNP2RUkuibyj1OgTJQpVzI7lw5kORptx85PhL0+YLzY9W7xSpeRe+aerIM0XxRRoBQ==",
+  "tags": [
+    "evidence",
+    "grounding",
+    "refusal",
+    "<private-repo>"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

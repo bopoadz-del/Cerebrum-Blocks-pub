@@ -1,0 +1,80 @@
+{
+  "acceptance": [
+    {
+      "check": "an unknown action is refused, not silently accepted",
+      "id": "unknown_action",
+      "status": "refused"
+    },
+    {
+      "check": "an empty payload without required arguments is refused, not faked",
+      "id": "missing_arguments",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Exports findings to a BCF 2.1 zip (markup XML + viewpoints when provided) and validates a produced zip.",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "11bf98e1663022426bcc21984ab968ac9fa023c68fb826f188dbdab3e825c6a3",
+    "block.py": "62ea52e80e609632892f02474a2c00d90038bde4a2ce269372872ebb36033e81"
+  },
+  "id": "bcf_export",
+  "inputs": [
+    {
+      "description": "export | validate",
+      "name": "action",
+      "options": [
+        "export",
+        "validate"
+      ],
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 3,
+  "name": "BCF Export",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Capability result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": true,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "file",
+      "scope": "local.read"
+    }
+  ],
+  "requires": [],
+  "signature": "EvShCyKI1jRGxaCH556GEdOLm5ORDaKGYGASVWgJaeT/gd5CutbHZ279b6DCjYhdNAwXJGPlVKmCholPpZ4sCg==",
+  "tags": [
+    "mep",
+    "construction",
+    "coordination"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    },
+    {
+      "kind": "file",
+      "scope": "local.write"
+    }
+  ]
+}

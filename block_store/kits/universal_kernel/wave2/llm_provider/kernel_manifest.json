@@ -1,0 +1,10 @@
+{
+  "name": "llm_provider",
+  "version": "0.1.0",
+  "sha256": "6377de22b9ec914634f168cd11fb48384c1730739439478d180813c8beffb2f8",
+  "dependencies": [],
+  "provenance": "fork+factory",
+  "acceptance_test": "tests/test_llm_provider.py",
+  "tier": "premium",
+  "note": "Premium-only; not available in the freemium tier."
+}

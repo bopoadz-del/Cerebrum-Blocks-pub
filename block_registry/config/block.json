@@ -1,0 +1,133 @@
+{
+  "acceptance": [
+    {
+      "check": "errors on an unknown or missing action",
+      "id": "unknown_action",
+      "status": "failed"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "5d84232a7211bbe0f10fa21512e28e30622b04740c3e4e4a990710063d8f227c",
+    "block.py": "d8cf6be4f0d340e69a4ef55c6065c572931b821dd233800235e2093b54e6ed73"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/config:latest",
+    "type": "docker"
+  },
+  "id": "config",
+  "inputs": [
+    {
+      "description": "Config key/value payload",
+      "name": "input",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "default": "get",
+      "description": "Action",
+      "name": "action",
+      "options": [
+        "get",
+        "get_all",
+        "set"
+      ],
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": "config/blocks.json",
+      "description": "Configuration parameter: config_file",
+      "name": "config_file",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": "CEREBRUM_",
+      "description": "Configuration parameter: env_prefix",
+      "name": "env_prefix",
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 0,
+  "name": "Config",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "env",
+      "scope": "process"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    },
+    {
+      "kind": "llm",
+      "scope": "provider"
+    }
+  ],
+  "requires": [
+    "hal"
+  ],
+  "signature": "dG5FziaLsLGOi85sRlW3TduiXVnc0oRoZrsiKsXZVlHQ0VuNlgIn4wJ+ircdSSqHcdh3C5ybnrSTwKH+od70Cg==",
+  "tags": [
+    "infrastructure",
+    "core"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "Config key/value payload",
+      "name": "input",
+      "widget": "json"
+    },
+    {
+      "label": "Action",
+      "name": "action",
+      "options": [
+        "get",
+        "get_all",
+        "set"
+      ],
+      "widget": "select"
+    },
+    {
+      "label": "Config File",
+      "name": "config_file",
+      "widget": "text"
+    },
+    {
+      "label": "Env Prefix",
+      "name": "env_prefix",
+      "widget": "text"
+    }
+  ],
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

@@ -1,0 +1,152 @@
+{
+  "acceptance": [
+    {
+      "check": "INV-PS-AUTH-CURVE (authority at H1, severity refuse): a curve or surge figure is governed by the datasheet for THIS trim \u2014 a generic model curve is not proof",
+      "id": "inv_ps_auth_curve",
+      "status": "refused"
+    },
+    {
+      "check": "INV-PS-NPSH-MARGIN (qualifier at H3, severity refuse): NPSHr is a 3% head-drop value, not a safe limit \u2014 required margin must travel with it",
+      "id": "inv_ps_npsh_margin",
+      "status": "refused"
+    },
+    {
+      "check": "INV-PS-NPSHA-CASE (qualifier at H3, severity refuse): NPSHa without design/worst-case basis \u2014 worst case is the one that matters",
+      "id": "inv_ps_npsha_case",
+      "status": "refused"
+    },
+    {
+      "check": "INV-PS-PROTECTION-LIVE (derivation at H3, severity refuse): protection setpoint answer without stating whether the protection is currently in service",
+      "id": "inv_ps_protection_live",
+      "status": "refused"
+    },
+    {
+      "check": "INV-PS-POR-AOR (qualifier at H3, severity refuse): operating region without POR/AOR named and what authorises AOR",
+      "id": "inv_ps_por_aor",
+      "status": "refused"
+    },
+    {
+      "check": "INV-PS-BAND-FLOW (band at H2, severity refuse): flow window is a band \u2014 return both sides",
+      "id": "inv_ps_band_flow",
+      "status": "refused"
+    },
+    {
+      "check": "INV-PS-PROVENANCE (provenance at H3, severity refuse): forbidden derivation: {value}",
+      "id": "inv_ps_provenance",
+      "status": "refused"
+    },
+    {
+      "check": "INV-PS-CURRENCY (currency at H3, severity refuse): curve or surge study stale on {value}",
+      "id": "inv_ps_currency",
+      "status": "refused"
+    },
+    {
+      "check": "INV-PS-CURRENCY-SURGE (currency at H3, severity refuse): the surge study is stale once the pump, valve closure time, main or air vessel configuration has changed",
+      "id": "inv_ps_currency_surge",
+      "status": "refused"
+    },
+    {
+      "check": "INV-PS-CURRENCY-NPSHA (currency at H3, severity refuse): NPSHa is stale once seasonal temperature, level regime or screen fouling has changed the process conditions it was computed from",
+      "id": "inv_ps_currency_npsha",
+      "status": "refused"
+    },
+    {
+      "check": "INV-PS-CURRENCY-PROTECTION (currency at H3, severity refuse): protection setpoints are stale once SCADA has changed",
+      "id": "inv_ps_currency_protection",
+      "status": "refused"
+    },
+    {
+      "check": "INV-PS-CURRENCY-EFFICIENCY (currency at H3, severity refuse): efficiency is stale once wear has accrued since the last test",
+      "id": "inv_ps_currency_efficiency",
+      "status": "refused"
+    },
+    {
+      "check": "INV-PS-CURRENCY-WETWELL (currency at H3, severity refuse): wet well volume is stale once siltation has occurred since the last survey",
+      "id": "inv_ps_currency_wetwell",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Declarative pump station reasoning kit on the shared reasoning layer. 13 invariants declared in app/blocks/pump_station/invariants.yaml across the kinds the portable spec defines (grounding, qualifier, unit_discipline, authority, provenance, currency, scope, derivation, band) and the five hooks (H0 pre-retrieval, H1 ranking, H2 tool-time, H3 answer-time, H4 export-time). Vocabulary in app/blocks/pump_station/manifest.yaml. Scope refusals classify BEFORE retrieval. Fail closed: a kit that does not parse is DISABLED and refuses every statement rather than passing them through with no invariants. NO INTERVIEW HAS RUN, so every declared figure value is null and the block refuses rather than inventing one (app/blocks/pump_station/KNOWN_GAPS.md). Measured by tests/blocks/test_reasoning_kits.py.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "90f0a523627d07bf886cb82654ed6f1a3b9f2ff777b2b58fa0e2f0da73d690ac",
+    "block.py": "d1ed46d21ea0770bc5a98378f7260e54f575ffd2c294d5d14b0724316fcd8b31"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/pump_station_kit:latest",
+    "type": "docker"
+  },
+  "id": "pump_station_kit",
+  "inputs": [
+    {
+      "description": "the operator question, classified at H0 BEFORE any retrieval",
+      "name": "question",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "description": "figures to gate: quantity, value, unit, origin, source_id, source_class, revision, qualifiers, claim_class, derivations, conditions, steps, bounds, asked_about, span, text",
+      "name": "figures",
+      "required": false,
+      "type": "array"
+    },
+    {
+      "description": "state records by provider name, each {as_of: <epoch>}; an absent provider yields UNKNOWN, never a design-basis fallback",
+      "name": "state",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "description": "events that have happened, matched against the kit's staleness_triggers",
+      "name": "events",
+      "required": false,
+      "type": "array"
+    },
+    {
+      "description": "subset of H0..H4 to run; all five by default, because a partial sweep is a silent coverage gap",
+      "name": "hooks",
+      "required": false,
+      "type": "array"
+    }
+  ],
+  "layer": 3,
+  "name": "pump_station_kit",
+  "never": [],
+  "outputs": [
+    {
+      "description": "pass | annotated | flagged | refused, with findings, blocked_reason, hooks_run, retrieval_permitted, interview_status, unfilled_figures, unmeasured_invariants, ships and kit_disabled",
+      "name": "verdict",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "zNNobVor6HoJKCb1bLxf//Z8PvN5MRRttJ53ZTPC3QTtXYYiCgGyssAS77/6eDqc6qAK7uBJn9WM9QKvEItvCQ==",
+  "tags": [
+    "gate",
+    "kit",
+    "pump",
+    "reasoning"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

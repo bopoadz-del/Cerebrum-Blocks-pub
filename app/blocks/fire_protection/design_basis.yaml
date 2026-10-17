@@ -1,0 +1,157 @@
+# Fire protection & firefighting systems — design basis figures.
+#
+# Moved out of manifest.yaml so manifest.yaml can hold the portable vocabulary
+# shape the shared kit_engine evaluator expects. This file is unchanged
+# content: the same source of truth, the same eleven figures, the same
+# MANDATORY_QUALIFIERS on every one of them.
+#
+# Source of truth: the domain encoding sheet for Fire Protection & Firefighting
+# Systems. NO INTERVIEW HAS RUN. Every `value` below is null on purpose and
+# stays null until the interview fills it; see KNOWN_GAPS.md.
+#
+# A null value is legal. A MISSING QUALIFIER IS NOT: FireProtectionBasis
+# refuses any figure that does not carry every key in MANDATORY_QUALIFIERS, at
+# load time, naming the figure and the keys it lacks. A half-qualified figure
+# is how an unclassified density table ends up answering a classified
+# question.
+#
+# design_area_basis is part of the identity of a density figure, not a label
+# on it: most_remote and most_demanding are never interchangeable, and a
+# figure filled under one does not answer a question under the other.
+source: "domain encoding sheet, Fire Protection & Firefighting Systems"
+scope: "building- and system-specific — never carry to another building, tenant or code edition"
+interview_status: "not run — every value is null (KNOWN_GAPS.md)"
+
+design_basis:
+  # ---- sprinkler design density (INV-FP-2: design_area_basis; INV-FP-4: full bundle) ----
+  design_density_light_hazard_gpm_ft2:
+    value: null
+    unit: "gpm/ft2"
+    code_edition: null
+    classification_source: null
+    design_area_basis: most_remote
+    tested_assembly_ref: null
+    in_service: null
+    impairment_log_ref: null
+    source: null
+    date: null
+  design_density_ordinary_hazard_1_gpm_ft2:
+    value: null
+    unit: "gpm/ft2"
+    code_edition: null
+    classification_source: null
+    design_area_basis: most_remote
+    tested_assembly_ref: null
+    in_service: null
+    impairment_log_ref: null
+    source: null
+    date: null
+  design_density_ordinary_hazard_2_gpm_ft2:
+    value: null
+    unit: "gpm/ft2"
+    code_edition: null
+    classification_source: null
+    design_area_basis: most_remote
+    tested_assembly_ref: null
+    in_service: null
+    impairment_log_ref: null
+    source: null
+    date: null
+  design_density_extra_hazard_gpm_ft2:
+    value: null
+    unit: "gpm/ft2"
+    code_edition: null
+    classification_source: null
+    design_area_basis: most_demanding
+    tested_assembly_ref: null
+    in_service: null
+    impairment_log_ref: null
+    source: null
+    date: null
+
+  # ---- design area (the area the density is applied over) -----------------
+  design_area_sqft:
+    value: null
+    unit: "sq_ft"
+    code_edition: null
+    classification_source: null
+    design_area_basis: null
+    tested_assembly_ref: null
+    in_service: null
+    impairment_log_ref: null
+    source: null
+    date: null
+
+  # ---- hydraulic demand (supply: never estimated, always a current test) --
+  required_flow_gpm:
+    value: null
+    unit: gpm
+    code_edition: null
+    classification_source: null
+    design_area_basis: null
+    tested_assembly_ref: null
+    in_service: null
+    impairment_log_ref: null
+    source: null
+    date: null
+  required_pressure_psi:
+    value: null
+    unit: psi
+    code_edition: null
+    classification_source: null
+    design_area_basis: null
+    tested_assembly_ref: null
+    in_service: null
+    impairment_log_ref: null
+    source: null
+    date: null
+
+  # ---- fire pump (in_service is live; a design record is not proof of it) -
+  fire_pump_rated_flow_gpm:
+    value: null
+    unit: gpm
+    code_edition: null
+    classification_source: null
+    design_area_basis: null
+    tested_assembly_ref: null
+    in_service: null
+    impairment_log_ref: null
+    source: null
+    date: null
+  fire_pump_rated_pressure_psi:
+    value: null
+    unit: psi
+    code_edition: null
+    classification_source: null
+    design_area_basis: null
+    tested_assembly_ref: null
+    in_service: null
+    impairment_log_ref: null
+    source: null
+    date: null
+
+  # ---- standpipe -----------------------------------------------------------
+  standpipe_flow_gpm:
+    value: null
+    unit: gpm
+    code_edition: null
+    classification_source: null
+    design_area_basis: null
+    tested_assembly_ref: null
+    in_service: null
+    impairment_log_ref: null
+    source: null
+    date: null
+
+  # ---- fire rating (INV-FP-5: the tested assembly, never the product alone) --
+  fire_rating_hours_corridor_wall:
+    value: null
+    unit: hours
+    code_edition: null
+    classification_source: null
+    design_area_basis: null
+    tested_assembly_ref: null
+    in_service: null
+    impairment_log_ref: null
+    source: null
+    date: null

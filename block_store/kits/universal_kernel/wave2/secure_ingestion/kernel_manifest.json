@@ -1,0 +1,10 @@
+{
+  "name": "secure_ingestion",
+  "version": "0.1.0",
+  "sha256": "6d4718e73c0c49c280cffa435b53cc31151545a59fc123f7fe8e99c6a88a9d38",
+  "dependencies": [],
+  "provenance": "fork",
+  "acceptance_test": "tests/test_secure_ingestion.py",
+  "tier": "premium",
+  "note": "Premium-only; not available in the freemium tier."
+}

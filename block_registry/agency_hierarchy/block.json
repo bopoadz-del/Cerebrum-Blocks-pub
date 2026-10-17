@@ -1,0 +1,112 @@
+{
+  "acceptance": [
+    {
+      "check": "refuses or errors when a required input is absent",
+      "id": "missing_required_input",
+      "status": "refused"
+    },
+    {
+      "check": "errors on an unknown or missing action",
+      "id": "unknown_action",
+      "status": "failed"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Insurance agency hierarchy Store block for agent, agency, MGA/FMO, and carrier distribution trees",
+  "digests": {
+    "block.json": "bf979ecbcc05ee2473b531229f64bfd3284828e5f7f2915ae3246dcdadfa0092",
+    "block.py": "ff5a020fefe4ee5ca76708fbd1d0e6fdbe0951fb40c5007966f32a001f7b439e"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/agency_hierarchy:latest",
+    "type": "docker"
+  },
+  "id": "agency_hierarchy",
+  "inputs": [
+    {
+      "description": "JSON payload for the selected operation",
+      "name": "input",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "default": "validate_hierarchy",
+      "description": "Operation",
+      "name": "operation",
+      "options": [
+        "upsert_node",
+        "get_subtree",
+        "path_to_root",
+        "validate_hierarchy"
+      ],
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 3,
+  "name": "Agency Hierarchy",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Hierarchy operation result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    }
+  ],
+  "requires": [],
+  "signature": "Z+FuwOOeAfjpRvTNeQJYVB6qr0MFD9/YMISTB1PAV+G8l1NWbkIZDVKhOAAj6/2yvpa2ggQOcyzOZH+eBFM0Dw==",
+  "tags": [
+    "domain",
+    "insurance",
+    "agency",
+    "producer",
+    "store"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "JSON payload for the selected operation",
+      "name": "input",
+      "widget": "json"
+    },
+    {
+      "label": "Operation",
+      "name": "operation",
+      "options": [
+        "upsert_node",
+        "get_subtree",
+        "path_to_root",
+        "validate_hierarchy"
+      ],
+      "widget": "select"
+    }
+  ],
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    },
+    {
+      "kind": "database",
+      "scope": "vector"
+    }
+  ]
+}

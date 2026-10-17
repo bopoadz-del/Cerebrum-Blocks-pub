@@ -1,0 +1,162 @@
+{
+  "acceptance": [
+    {
+      "check": "INV-AVO-AUTH-WEIGHT (authority at H1, severity refuse): weight or performance figure governed by AFM \u2014 {value} from a lesser class is not acceptable proof",
+      "id": "inv_avo_auth_weight",
+      "status": "refused"
+    },
+    {
+      "check": "INV-AVO-WEIGHT-QUALIFIERS (qualifier at H3, severity refuse): weight/performance figure missing {missing}",
+      "id": "inv_avo_weight_qualifiers",
+      "status": "refused"
+    },
+    {
+      "check": "INV-AVO-FUEL-QUALIFIERS (qualifier at H3, severity refuse): fuel minimum missing {missing}",
+      "id": "inv_avo_fuel_qualifiers",
+      "status": "refused"
+    },
+    {
+      "check": "INV-AVO-FDP-QUALIFIERS (qualifier at H3, severity refuse): FDP/rest figure missing {missing}",
+      "id": "inv_avo_fdp_qualifiers",
+      "status": "refused"
+    },
+    {
+      "check": "INV-AVO-RATE-QUALIFIERS (qualifier at H3, severity flag): rate figure missing {missing} \u2014 a rate without station and shift is not actionable",
+      "id": "inv_avo_rate_qualifiers",
+      "status": "partial"
+    },
+    {
+      "check": "INV-AVO-DELAY-PHASE (qualifier at H3, severity flag): delay cost without phase \u2014 gate, taxi and airborne are different numbers",
+      "id": "inv_avo_delay_phase",
+      "status": "partial"
+    },
+    {
+      "check": "INV-AVO-REGISTRATION (provenance at H3, severity refuse): forbidden derivation: {value}",
+      "id": "inv_avo_registration",
+      "status": "refused"
+    },
+    {
+      "check": "INV-AVO-CURRENCY (currency at H3, severity refuse): manual, contract or NOTAM stale on {value}",
+      "id": "inv_avo_currency",
+      "status": "refused"
+    },
+    {
+      "check": "INV-AVO-CURRENCY-WEIGHT-LIMITS (currency at H3, severity refuse): weight limits are stale once the configuration changed or the AFM was revised",
+      "id": "inv_avo_currency_weight_limits",
+      "status": "refused"
+    },
+    {
+      "check": "INV-AVO-CURRENCY-PERFORMANCE (currency at H3, severity refuse): performance data is stale once the AFM was revised or the runway changed",
+      "id": "inv_avo_currency_performance",
+      "status": "refused"
+    },
+    {
+      "check": "INV-AVO-CURRENCY-MEL (currency at H3, severity refuse): an MEL interval is stale once it has expired",
+      "id": "inv_avo_currency_mel",
+      "status": "refused"
+    },
+    {
+      "check": "INV-AVO-CURRENCY-DUTY (currency at H3, severity refuse): duty limits are stale once the FTL authority or the FTL scheme changed",
+      "id": "inv_avo_currency_duty",
+      "status": "refused"
+    },
+    {
+      "check": "INV-AVO-CURRENCY-CONTRACT-RATE (currency at H3, severity refuse): a contract rate is stale once the contract has been renewed",
+      "id": "inv_avo_currency_contract_rate",
+      "status": "refused"
+    },
+    {
+      "check": "INV-AVO-CURRENCY-FUEL-PRICE (currency at H3, severity refuse): a fuel price is stale once the contract or index it is drawn from has moved",
+      "id": "inv_avo_currency_fuel_price",
+      "status": "refused"
+    },
+    {
+      "check": "INV-AVO-CURRENCY-COMPENSATION (currency at H3, severity refuse): a compensation figure is stale once the regime governing it has changed",
+      "id": "inv_avo_currency_compensation",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Declarative aviation ops reasoning kit on the shared reasoning layer. 15 invariants declared in app/blocks/aviation_ops/invariants.yaml across the kinds the portable spec defines (grounding, qualifier, unit_discipline, authority, provenance, currency, scope, derivation, band) and the five hooks (H0 pre-retrieval, H1 ranking, H2 tool-time, H3 answer-time, H4 export-time). Vocabulary in app/blocks/aviation_ops/manifest.yaml. Scope refusals classify BEFORE retrieval. Fail closed: a kit that does not parse is DISABLED and refuses every statement rather than passing them through with no invariants. NO INTERVIEW HAS RUN, so every declared figure value is null and the block refuses rather than inventing one (app/blocks/aviation_ops/KNOWN_GAPS.md). Measured by tests/blocks/test_reasoning_kits.py.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "8620be460c0806d86d48335d7c596c6aff11b3051ad31b0e4723df70a3cb7859",
+    "block.py": "5e3514fdfee92d83199f0a5bf575440016a17aa20a15c4c4d96ca578ef5d0fe2"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/aviation_ops_kit:latest",
+    "type": "docker"
+  },
+  "id": "aviation_ops_kit",
+  "inputs": [
+    {
+      "description": "the operator question, classified at H0 BEFORE any retrieval",
+      "name": "question",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "description": "figures to gate: quantity, value, unit, origin, source_id, source_class, revision, qualifiers, claim_class, derivations, conditions, steps, bounds, asked_about, span, text",
+      "name": "figures",
+      "required": false,
+      "type": "array"
+    },
+    {
+      "description": "state records by provider name, each {as_of: <epoch>}; an absent provider yields UNKNOWN, never a design-basis fallback",
+      "name": "state",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "description": "events that have happened, matched against the kit's staleness_triggers",
+      "name": "events",
+      "required": false,
+      "type": "array"
+    },
+    {
+      "description": "subset of H0..H4 to run; all five by default, because a partial sweep is a silent coverage gap",
+      "name": "hooks",
+      "required": false,
+      "type": "array"
+    }
+  ],
+  "layer": 3,
+  "name": "aviation_ops_kit",
+  "never": [],
+  "outputs": [
+    {
+      "description": "pass | annotated | flagged | refused, with findings, blocked_reason, hooks_run, retrieval_permitted, interview_status, unfilled_figures, unmeasured_invariants, ships and kit_disabled",
+      "name": "verdict",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "vMuMsnv7r1oH7EiM8QNSTc/+3YucHNxSELnWMevQ/fhmPaqavkiOIaD8AIntsSDUvEKX8HWF6fdn43sGuDBtBw==",
+  "tags": [
+    "aviation",
+    "gate",
+    "kit",
+    "reasoning"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

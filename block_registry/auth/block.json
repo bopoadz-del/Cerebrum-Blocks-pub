@@ -1,0 +1,157 @@
+{
+  "acceptance": [
+    {
+      "check": "errors on an unknown or missing action",
+      "id": "unknown_action",
+      "status": "failed"
+    },
+    {
+      "check": "fails loud when a required credential or key is absent",
+      "id": "missing_credential",
+      "status": "failed"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "07b1495c2a30d3490b142c1a287f8732ff58be52afb65e24cc7efd3df888ba43",
+    "block.py": "b85baf8696971c3fa3771cef7e7ad91d29068a52547a7fcb01985338a88ae21b"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/auth:latest",
+    "type": "docker"
+  },
+  "id": "auth",
+  "inputs": [
+    {
+      "description": "JSON payload for the selected action",
+      "name": "input",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "default": "validate",
+      "description": "Action",
+      "name": "action",
+      "options": [
+        "validate",
+        "check_rate_limit",
+        "check_permission",
+        "create_key",
+        "revoke_key",
+        "rotate_key",
+        "get_usage",
+        "list_keys"
+      ],
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": null,
+      "description": "Configuration parameter: master_key",
+      "name": "master_key",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": 100,
+      "description": "Configuration parameter: rate_limit_default",
+      "name": "rate_limit_default",
+      "required": false,
+      "type": "number"
+    },
+    {
+      "default": 3600,
+      "description": "Configuration parameter: rate_limit_window",
+      "name": "rate_limit_window",
+      "required": false,
+      "type": "number"
+    }
+  ],
+  "layer": 1,
+  "name": "Auth",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Authorized",
+      "name": "authorized",
+      "type": "boolean"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "env",
+      "scope": "process"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    }
+  ],
+  "requires": [
+    "memory"
+  ],
+  "signature": "JvAyEQbLrQ+TObUJ5b0DgoGR3OTxuZS3rCUVFCvWb2DK74JJU2L4tGHYC8hllzMiAfWRo42BbeSnMnllA1s7Dg==",
+  "tags": [
+    "security",
+    "auth",
+    "core"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "JSON payload for the selected action",
+      "name": "input",
+      "widget": "json"
+    },
+    {
+      "label": "Action",
+      "name": "action",
+      "options": [
+        "validate",
+        "check_rate_limit",
+        "check_permission",
+        "create_key",
+        "revoke_key",
+        "rotate_key",
+        "get_usage",
+        "list_keys"
+      ],
+      "widget": "select"
+    },
+    {
+      "label": "Master Key",
+      "name": "master_key",
+      "widget": "text"
+    },
+    {
+      "label": "Rate Limit Default",
+      "name": "rate_limit_default",
+      "widget": "number"
+    },
+    {
+      "label": "Rate Limit Window",
+      "name": "rate_limit_window",
+      "widget": "number"
+    }
+  ],
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

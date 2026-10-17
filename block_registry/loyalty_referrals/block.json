@@ -1,0 +1,118 @@
+{
+  "acceptance": [
+    {
+      "check": "errors on an unknown or missing action",
+      "id": "unknown_action",
+      "status": "failed"
+    },
+    {
+      "check": "refuses or errors when a required input is absent",
+      "id": "missing_required_input",
+      "status": "failed"
+    },
+    {
+      "check": "control-delete mutation turns the block's tests red",
+      "id": "control_delete",
+      "status": "failed"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Deterministic marketplace loyalty: two-sided referral credits with capped uses per referrer, sequence-based expiry, FIFO redemption against purchases, and a fully auditable ledger in exact Decimal money math.",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "059931011503f4331603f29563ddf397e50bea89b8771118205a4293e1ded50d",
+    "block.py": "e95a25f3521b54277e0380310ec75a14680ef2ef24246aca80b65cb74c5a51c1"
+  },
+  "execution": {
+    "entrypoint": "block.py",
+    "image": "ghcr.io/cerebrum-blocks/loyalty_referrals:latest",
+    "type": "python"
+  },
+  "id": "loyalty_referrals",
+  "inputs": [
+    {
+      "description": "JSON payload for the selected operation",
+      "name": "input",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "default": "referral",
+      "description": "Loyalty operation",
+      "name": "operation",
+      "options": [
+        "referral",
+        "issue_credit",
+        "redeem",
+        "balance"
+      ],
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 3,
+  "name": "Loyalty Referrals",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Loyalty operation result (referral grant, issued credit, redemption with applied rows, balance)",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [
+      "decimal",
+      "typing"
+    ],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    }
+  ],
+  "requires": [],
+  "signature": "1c+mTYxic6lwD+0XS/sszJlcJDuhXKdp0UTx0kKEWp6spg2zFN0JvnkuKLm87ivKs+/0eKFOPTCIxjzdIr/OAg==",
+  "tags": [
+    "domain",
+    "marketplace",
+    "loyalty",
+    "referrals",
+    "deterministic"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "JSON payload for the selected operation",
+      "name": "input",
+      "widget": "json"
+    },
+    {
+      "label": "Operation",
+      "name": "operation",
+      "options": [
+        "referral",
+        "issue_credit",
+        "redeem",
+        "balance"
+      ],
+      "widget": "select"
+    }
+  ],
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

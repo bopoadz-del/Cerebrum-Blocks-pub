@@ -1,0 +1,86 @@
+kit: dental
+version: 1
+serves_verticals: [dental]
+hooks_used: [H0, H1, H2, H3]
+
+quantities:
+  anaesthetic_mrd:        {units: [mg_per_kg],  aliases: [maximum_recommended_dose]}
+  mg_per_cartridge:       {units: [mg]}
+  emergency_drug_dose:    {units: [mg, mL]}
+  radiography_setting:    {units: [kV, mA, s]}
+  autoclave_hold_time:    {units: [min]}
+  autoclave_temperature:  {units: [degC]}
+  implant_torque:         {units: [Ncm]}
+  drill_speed:            {units: [rpm]}
+
+  # Correction 5: staleness_triggers below keys medical_history. It is not a
+  # figure the model states a value for -- it is an artifact (a record) that
+  # a staleness event invalidates. A staleness trigger keyed on something the
+  # manifest never declares as a quantity is a load failure, so it is
+  # declared here, unitless, purely so the trigger has something to be keyed
+  # on. (INV-DEN-CURRENCY below applies to `any` quantity, so this is already
+  # governed once declared -- no new currency invariant needed.)
+  medical_history:        {units: [—]}
+
+qualifier_fields:
+  agent:                  {type: string}
+  concentration_pct:      {type: number}
+  cartridge_volume_mL:    {type: number}
+  with_vaso:              {type: bool}
+  adult_or_paediatric:    {type: enum,   values: [adult, paediatric]}
+  source_kind:            {type: enum,   values: [regulator, SPC, textbook, protocol]}
+  source_edition_year:    {type: string}
+  protocol_version:       {type: string}
+  protocol_approved_date: {type: date}
+  implant_system:         {type: string}
+  weight_kg:              {type: number}
+  weight_source:          {type: enum,   values: [measured, parent_reported, estimated]}
+
+source_classes:
+  regulator:              {rank: 1}
+  SPC:                    {rank: 2, reject_as_proof: [other_brand_spc]}
+  manufacturer_ifu:       {rank: 3}
+  clinical_guideline:     {rank: 4}
+  practice_protocol:      {rank: 5, reject_as_proof: [unversioned, no_approval_date]}
+  textbook:               {rank: 6, reject_as_proof: [superseded_edition, unspecified_edition]}
+  course_material:        {rank: 7}
+  clinician_preference:   {rank: 8}
+
+  # Correction 1: SPC rejects other_brand_spc; practice_protocol rejects
+  # unversioned and no_approval_date; textbook rejects superseded_edition and
+  # unspecified_edition. Each rejected class must itself be declared, or the
+  # rule could never fire. Ranked below every governing class above.
+  other_brand_spc:        {rank: 9}
+  unversioned:            {rank: 9}
+  no_approval_date:       {rank: 9}
+  superseded_edition:     {rank: 9}
+  unspecified_edition:    {rank: 9}
+
+state_providers:
+  protocol_current:       {kind: revision, max_age: event}
+  emergency_kit_expiry:   {kind: revision, max_age: event}
+  medical_history_current: {kind: revision, max_age: event}
+
+staleness_triggers:
+  anaesthetic_mrd:        [textbook_new_edition, regulator_update, SPC_update]
+  mg_per_cartridge:       [concentration_change, cartridge_volume_change]
+  emergency_drug_dose:    [resuscitation_guideline_update]
+  autoclave_hold_time:    [validation_interval]
+  medical_history:        [visit_without_update]
+  implant_torque:         [implant_system_change]
+
+scope_refusals:
+  - pattern: "how much should I give this patient"
+    authority: "treating clinician — clinical decision"
+  - pattern: "is this patient fit for treatment"
+    authority: "clinical assessment"
+  - pattern: "can I treat despite this (history|condition|contraindication)"
+    authority: "clinical director / medical liaison"
+  - pattern: "what's causing this (pain|symptom)"
+    authority: "examination — clinical diagnosis"
+  - pattern: "is this radiograph normal"
+    authority: "clinician review"
+
+spec_extensions:
+  claim_class:            true
+  same_source:            true

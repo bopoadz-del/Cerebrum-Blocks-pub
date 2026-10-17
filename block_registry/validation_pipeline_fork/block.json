@@ -1,0 +1,94 @@
+{
+  "acceptance": [
+    {
+      "check": "validation with no value and no claim is refused - there is nothing to validate",
+      "id": "no_input",
+      "status": "refused"
+    },
+    {
+      "check": "a boolean masquerading as a numeric fails the syntactic stage loudly",
+      "id": "bool_fails",
+      "status": "failed"
+    },
+    {
+      "check": "a non-numeric value fails the syntactic stage loudly",
+      "id": "non_numeric_fails",
+      "status": "failed"
+    },
+    {
+      "check": "a unit string Pint cannot parse fails the dimensional stage loudly",
+      "id": "unknown_unit_fails",
+      "status": "failed"
+    },
+    {
+      "check": "a value far outside its empirical range under strict=True fails the empirical stage loudly",
+      "id": "strict_range_fails",
+      "status": "failed"
+    },
+    {
+      "check": "a duration exceeding the available weeks fails the operational stage loudly",
+      "id": "schedule_impossible_fails",
+      "status": "failed"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "real (clone of The_Fork app/blocks/validation_pipeline.py + config/empirical_ranges.json): runnable 5-stage validation (syntactic / dimensional / physical / empirical / operational) for numeric results, with Pint dimensional analysis and file-backed empirical ranges. Returns per-stage pass/fail plus an overall verdict so the agent can refuse to report numbers that failed validation. Envelope status is ok/failed/refused per the overall verdict - a failed validation is never returned as ok.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "c575436dbfdc8d48cb4cb2726a45fee3b3affff4a46f4e730dc8e37a91ff4e23",
+    "block.py": "dcbc15229e5f8a0ef7a3f4bc17f93f002d60b14ec103e3734c5bd1a2d20a1d17"
+  },
+  "id": "validation_pipeline_fork",
+  "inputs": [
+    {
+      "description": "validate (default): {value, unit?, context?} or a prose claim",
+      "name": "action",
+      "options": [
+        "validate"
+      ],
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 3,
+  "name": "validation_pipeline_fork",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Capability result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "HZlcWTy7ZkQv1O8sEi6b2nT58+K/OKEWykVRjwhZDz6P3Ik1TjGLQeIX15qcQI9UOfk0iAOUDJMpgllIMMXgDA==",
+  "tags": [
+    "construction",
+    "validation",
+    "reasoning",
+    "pint",
+    "units",
+    "the-fork"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

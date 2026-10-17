@@ -1,0 +1,94 @@
+{
+  "acceptance": [
+    {
+      "check": "an election with no ranked (filename, chunk_text) pairs is refused, never guessed",
+      "id": "elect_empty_pool",
+      "status": "refused"
+    },
+    {
+      "check": "a named contract id that matches no document in the pool is refused (fail closed), never filled with another year's files",
+      "id": "fence_named_miss",
+      "status": "refused"
+    },
+    {
+      "check": "a fence with no doc pool to filter is refused",
+      "id": "fence_empty_pool",
+      "status": "refused"
+    },
+    {
+      "check": "coverage without an explicit [indexed, total] pair is refused; live counts need the unported vector-store stack and are never invented",
+      "id": "coverage_without_counts",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "real (clone of The_Fork app/core/rag/retriever.py + app/core/rag/coverage_honesty.py + app/core/contract_data_chunks.py): named-contract fencing (extract_contract_doc_ids / filename_matches_named_contracts, fail closed to empty) and the answer-bearing-contract election (elect_answer_bearing_contract with its full rescue-predicate closure), plus the coverage-honesty rule: on a partial index the model may not say 'does not exist', only 'not found in the N indexed'. Retrieval corpus/embedder not ported.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "8e3bdf5167676f289fc9665a4eba2ebcad5371873be88ba0c9e3784da69ce615",
+    "block.py": "e83fc74dc5a9802ad4f336d885503e642b5ad9e416c0602fcd44cff13dde8054"
+  },
+  "id": "contract_retrieval",
+  "inputs": [
+    {
+      "description": "elect | fence | coverage | contract_ids",
+      "name": "action",
+      "options": [
+        "elect",
+        "fence",
+        "coverage",
+        "contract_ids"
+      ],
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 3,
+  "name": "contract_retrieval",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Capability result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "b0SX+Il32PEZltlr9jKOP7uTDt/T8Ejdh8OF2wmtwnJj8+BW9UfF4Dib81vopnPUl1uz/R5Kd41S3P6LWm+2BQ==",
+  "tags": [
+    "rag",
+    "retrieval",
+    "contract",
+    "coverage-honesty",
+    "construction",
+    "the-fork"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "verticals": [
+    "construction",
+    "interior_design",
+    "architecture",
+    "facility_management",
+    "facilities_management"
+  ],
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

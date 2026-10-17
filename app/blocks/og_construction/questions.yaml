@@ -1,0 +1,625 @@
+# GENERATED from docs/kit_questions/og_construction.md by scripts/import_kit_questions.py — do not hand-edit.
+# Edit the markdown sheet and re-run. The sheet is the record of what the domain
+# owner actually asked for; this file is only its machine-readable form.
+#
+# gate: true  -> [GATE]. The platform refuses anything needing it until answered.
+# gate: false -> [GAP].  Experience worth having; does not block.
+# gate: null  -> the sheet marked neither. Treated as GATING, because a question
+#                whose class cannot be read must block rather than pass.
+#
+# There is deliberately NO answer slot in this file. Answers are per-platform and
+# per-client; this kit is a signed Store block shared by every customer.
+kit: og_construction
+source_document: docs/kit_questions/og_construction.md
+title: 'Oil & Gas Construction — Questions I Cannot Answer'
+answer_format:
+  - 'value'
+  - 'unit'
+  - 'system / tag'
+  - 'facility'
+  - 'source'
+  - 'date'
+sections:
+  '1':
+    title: 'Brownfield access economics'
+  '2':
+    title: 'Discipline rates'
+  '3':
+    title: 'Pressure testing'
+  '4':
+    title: 'Welding, NDT and materials'
+  '5':
+    title: 'Hazardous area and electrical'
+  '6':
+    title: 'Structural, fireproofing and layout'
+  '7':
+    title: 'Commissioning and handover'
+  '8':
+    title: 'Brownfield decision'
+  '9':
+    title: 'Evidence standard'
+  '10':
+    title: 'Never-estimate'
+  '11':
+    title: 'May-estimate'
+  '12':
+    title: 'Refusals'
+  '13':
+    title: 'Live state'
+  '14':
+    title: 'Precedence'
+  '15':
+    title: 'Unit-confusion history'
+  '16':
+    title: 'Incidents'
+  '17':
+    title: 'The five questions'
+questions:
+  - id: '1.1'
+    section: '1'
+    gate: true
+    covers: [isolation, pressure]
+    text: >-
+      Your effective tool time as a fraction of a 12-hour shift in a live plant, and what
+      consumes the rest — permit wait, gas test, isolation, SIMOPS, breaks.
+  - id: '1.2'
+    section: '1'
+    gate: true
+    text: >-
+      What causes a permit refusal or revocation mid-shift on your sites — process upset,
+      gas detection, adjacent activity, wind direction — and what each costs you.
+  - id: '1.3'
+    section: '1'
+    gate: true
+    text: >-
+      Your turnaround critical path composition, and the proportion of scope that is
+      discovery work found on opening.
+  - id: '1.4'
+    section: '1'
+    gate: true
+    text: >-
+      What operations lose per hour when your work extends a shutdown — your number, or the
+      facility's stated deferment figure.
+  - id: '1.5'
+    section: '1'
+    gate: true
+    covers: [isolation, pressure]
+    text: >-
+      Your cost set — permit issue wait, gas test and re-test time, isolation setup and
+      verification, fire watch per shift, standby crew waiting on permit, shutdown window
+      length, cost of one day of turnaround overrun, hot work moratorium periods, SIMOPS
+      coordination overhead.
+  - id: '2.1'
+    section: '2'
+    gate: true
+    covers: [pressure]
+    text: >-
+      Your rates per item — carbon steel piping, stainless/alloy, large-bore spool
+      fabrication, small-bore tubing, pipe supports (standard and engineered), butt weld by
+      size and schedule, socket/branch weld, alloy/exotic weld, PWHT, RT/UT/PT/MT, PMI,
+      hydrotest per system, pressure vessel set and align, rotating equipment
+      set/align/grout, tank erection, structural steel, fireproofing, cable tray and
+      support, cable pulling and termination, Ex equipment installation and certification,
+      instrument install and loop check, insulation and cladding, painting/coating by
+      system, cathodic protection, pipeline welding and lowering-in, trenchless crossing.
+  - id: '2.2'
+    section: '2'
+    gate: true
+    text: >-
+      Which items are permit-constrained rather than resource-constrained on your
+      brownfield work.
+  - id: '2.3'
+    section: '2'
+    gate: true
+    text: >-
+      Which have long lead times that govern your programme — your vessels, exotic alloys,
+      large valves, Ex equipment, rotating equipment.
+  - id: '2.4'
+    section: '2'
+    gate: true
+    text: >-
+      Your rework rate on welds by discipline, and what a repair weld costs including NDT
+      and PWHT.
+  - id: '3.1'
+    section: '3'
+    gate: true
+    covers: [pressure, test_pressure]
+    text: >-
+      Your specification's design pressure, MAWP, hydrostatic test pressure, pneumatic test
+      pressure, leak test pressure, and operating pressure for each system type — with the
+      specification clause for each.
+  - id: '3.2'
+    section: '3'
+    gate: true
+    covers: [pressure, test_pressure]
+    text: >-
+      Your basis for hydrostatic test pressure — multiple of design, multiple of MAWP,
+      specific code clause — confirmed for your specifications, not assumed.
+  - id: '3.3'
+    section: '3'
+    gate: true
+    covers: [isolation]
+    text: >-
+      Your rule for a system with mixed-rated components — lowest-rated, spec break, or
+      isolation — as actually practised.
+  - id: '3.4'
+    section: '3'
+    gate: true
+    covers: [pressure]
+    text: >-
+      Your pneumatic test authorisation — when permitted, exclusion radius, stored energy
+      calculation, who authorises.
+  - id: '3.5'
+    section: '3'
+    gate: true
+    text: >-
+      Your hold time, temperature limit, acceptance criterion.
+  - id: '3.6'
+    section: '3'
+    gate: true
+    covers: [pressure]
+    text: >-
+      What must be isolated, removed or restrained before test on your systems — relief
+      valves, instruments, expansion joints, spring hangers — as your procedure states it.
+  - id: '3.7'
+    section: '3'
+    gate: true
+    covers: [pressure]
+    text: >-
+      Your test medium requirements — water quality, chloride limits for stainless, drying,
+      disposal.
+  - id: '3.8'
+    section: '3'
+    gate: true
+    covers: [pressure, test_pressure]
+    text: >-
+      Your maximum allowable test pressure per component or system, beyond which damage not
+      proof occurs.
+  - id: '4.1'
+    section: '4'
+    gate: true
+    covers: [WPS]
+    text: >-
+      Your WPS/PQR coverage per joint type, and welder qualification and continuity
+      tracking as practised.
+  - id: '4.2'
+    section: '4'
+    gate: true
+    covers: [WPS]
+    text: >-
+      Your preheat, interpass and PWHT requirements per material and thickness, from your
+      WPS.
+  - id: '4.3'
+    section: '4'
+    gate: true
+    text: >-
+      Your consumable control — storage, baking, issue — as practised.
+  - id: '4.4'
+    section: '4'
+    gate: true
+    covers: [ndt_extent]
+    text: >-
+      Your NDT extent by service class, and how a line's class is established on your
+      projects.
+  - id: '4.5'
+    section: '4'
+    gate: true
+    text: >-
+      Your NDT acceptance criteria and hardness limits for sour service — your
+      specification values.
+  - id: '4.6'
+    section: '4'
+    gate: true
+    text: >-
+      Your PMI requirement and extent, and ferrite limits for duplex if applicable.
+  - id: '4.7'
+    section: '4'
+    gate: true
+    text: >-
+      Your hydrogen bake-out requirement.
+  - id: '4.8'
+    section: '4'
+    gate: true
+    text: >-
+      Your weld repair limits — how many times — and your tracking of repairs.
+  - id: '4.9'
+    section: '4'
+    gate: true
+    text: >-
+      Your traceability requirement from material certificate to installed position.
+  - id: '5.1'
+    section: '5'
+    gate: true
+    text: >-
+      Which classification system applies on your projects — IEC Zones, NEC Divisions, or
+      both — and where they meet.
+  - id: '5.2'
+    section: '5'
+    gate: true
+    covers: [HAC]
+    text: >-
+      Your zone definitions, permitted equipment protection, gas groups, temperature
+      classes — from your HAC package, not the standard.
+  - id: '5.3'
+    section: '5'
+    gate: true
+    text: >-
+      Temporary construction equipment — what is permitted in each zone on your sites
+      (generators, lighting, welding sets, compressors, hand tools, radios, phones,
+      vehicles), who assesses, who approves.
+  - id: '5.4'
+    section: '5'
+    gate: true
+    text: >-
+      Your process for capturing classification changes during construction — brownfield
+      gap assessment, who owns it, how often re-run.
+  - id: '5.5'
+    section: '5'
+    gate: true
+    text: >-
+      How your Ex register is maintained during construction, and how an installed item's
+      certificate is verified against its zone.
+  - id: '5.6'
+    section: '5'
+    gate: true
+    text: >-
+      Your earthing, bonding, static control requirements, and what must never be
+      disconnected.
+  - id: '5.7'
+    section: '5'
+    gate: true
+    text: >-
+      Your gas detection arrangements during construction — fixed and portable, alarm
+      levels, who monitors.
+  - id: '6.1'
+    section: '6'
+    gate: true
+    text: >-
+      Your fireproofing extent, rating by member, material and thickness.
+  - id: '6.2'
+    section: '6'
+    gate: true
+    text: >-
+      Your blast ratings for buildings and enclosures, and what invalidates them during
+      construction.
+  - id: '6.3'
+    section: '6'
+    gate: true
+    text: >-
+      Your minimum spacing — equipment, tanks, roads — and which of these are regulatory vs
+      good practice on your projects.
+  - id: '6.4'
+    section: '6'
+    gate: true
+    text: >-
+      Your escape route, access for firefighting, bunding, drainage segregation, vent and
+      relief discharge, platform and ladder access requirements as specified.
+  - id: '7.1'
+    section: '7'
+    gate: true
+    covers: [pressure]
+    text: >-
+      Your stage definitions — construction complete, mechanical completion,
+      pre-commissioning, system handover, commissioning, ready for start-up, first
+      hydrocarbon in, performance test — as your contracts use them, and what may not
+      proceed before each.
+  - id: '7.2'
+    section: '7'
+    gate: true
+    text: >-
+      Your punch list classification, and which categories permit progression.
+  - id: '7.3'
+    section: '7'
+    gate: true
+    text: >-
+      Your nitrogen purge and inerting target oxygen levels, and asphyxiation controls as
+      practised.
+  - id: '7.4'
+    section: '7'
+    gate: true
+    text: >-
+      Your first-fill and chemical cleaning sequence, and what must be verified before each
+      step.
+  - id: '7.5'
+    section: '7'
+    gate: true
+    text: >-
+      Your point at which the facility becomes live and construction rules change to
+      operations rules, and who declares it.
+  - id: '7.6'
+    section: '7'
+    gate: true
+    text: >-
+      Your PSSR requirement and what must be closed before it passes.
+  - id: '8.1'
+    section: '8'
+    gate: true
+    text: >-
+      Your priority order when weighing a tie-in or modification.
+  - id: '8.2'
+    section: '8'
+    gate: true
+    covers: [isolation]
+    text: >-
+      What makes each option impossible on your sites — hot tap/online tie-in, tie-in
+      during planned shutdown, during partial isolation, hot work in classified area, cold
+      work only, temporary bypass, defer to turnaround, lifting over live plant, SIMOPS
+      with operations running.
+  - id: '8.3'
+    section: '8'
+    gate: true
+    covers: [pressure]
+    text: >-
+      Your hard limits that can never be traded, whatever the schedule pressure.
+  - id: '8.4'
+    section: '8'
+    gate: true
+    covers: [isolation, pressure]
+    text: >-
+      Your authority matrix — issue hot work permit, break containment, accept isolation,
+      enter confined space, lift over live equipment, bring temporary equipment into
+      classified area, reclassify an area, extend a gas-free certificate, pressure test,
+      perform pneumatic test, downgrade punch item, declare mechanical completion,
+      introduce hydrocarbons.
+  - id: '9.1'
+    section: '9'
+    gate: true
+    covers: [isolation, isolation_boundary, ndt_extent, pressure, test_pressure]
+    text: >-
+      Per figure class — design pressure/MAWP, test pressure, hazard zone, Ex suitability,
+      preheat/PWHT, NDT extent, isolation boundary, gas-free status — what your
+      organisation accepts as proof, and what it rejects even if it states the number.
+  - id: '9.2'
+    section: '9'
+    gate: true
+    covers: [HAC, WPS, isolation, pressure]
+    text: >-
+      Minimum acceptable citation per source type — code (edition and clause), project
+      specification (revision), P&ID (revision and status), datasheet/U-1A, WPS/PQR, HAC
+      drawing and zone schedule (with gap assessment date), Ex certificate (with gas group,
+      temp class, EPL, conditions), isolation certificate, gas test record.
+  - id: '9.3'
+    section: '9'
+    gate: true
+    covers: [HAC, ndt_extent, pressure, test_pressure]
+    text: >-
+      Mandatory qualifiers your organisation requires — pressure (which pressure, gauge or
+      absolute, location), test pressure (medium, basis, lowest-rated), zone (HAC rev, gap
+      assessment date, temporary equipment accounted), Ex rating, preheat, NDT extent,
+      gas-free.
+  - id: '9.4'
+    section: '9'
+    gate: true
+    covers: [WPS, pressure, test_pressure]
+    text: >-
+      Your derivation rules — calculating test pressure from design or MAWP, unit
+      conversions, interpolating preheat, interpolating WPS across material groups,
+      inferring zone from distance, inferring Ex from nameplate, carrying test pressure
+      from adjacent system, carrying WPS from another project, extending gas-free by
+      elapsed time — allowed or not on your projects.
+  - id: '9.5'
+    section: '9'
+    gate: true
+    covers: [HAC, WPS, isolation, pressure]
+    text: >-
+      Your staleness rules per figure — gas-free certificate, HAC drawing/zone, P&ID data,
+      isolation certificate, WPS/welder qualification, test record, punch list status —
+      valid for how long, stale immediately on what.
+  - id: '9.5.2'
+    section: '9'
+    gate: true
+    covers: [isolation, pressure]
+    text: >-
+      Confirm the live-state rule — no answer about hot work, entry, or ignition risk
+      without current gas test, isolation and classification state.
+  - id: '9.6'
+    section: '9'
+    gate: true
+    covers: [HAC, pressure]
+    text: >-
+      Your conflict resolution — code vs specification (stricter and looser), P&ID vs
+      datasheet, design vs as-built, HAC drawing vs physical site.
+  - id: '9.7'
+    section: '9'
+    gate: false
+    text: >-
+      Partial-evidence disclosure wording per situation, and which figures must never be
+      offered as estimates — confirmed explicitly against your Section 10 list.
+  - id: '10.1'
+    section: '10'
+    gate: true
+    covers: [isolation, ndt_extent, pressure, test_pressure]
+    text: >-
+      Which figures your organisation treats as absolute — design pressure, MAWP,
+      hydrostatic and pneumatic test pressures, pneumatic exclusion radii, maximum
+      allowable test pressure, hazard zones, gas groups and temperature classes, Ex
+      protection levels and certificate conditions, hot work gas test limits, confined
+      space limits (O₂, LEL, H₂S), nitrogen purge oxygen targets, isolation boundaries and
+      double-block-and-bleed requirements, preheat/interpass/PWHT, hardness limits for sour
+      service, NDT extent and acceptance, minimum equipment and tank spacing, fireproofing
+      ratings and thicknesses, blast ratings, bunding volumes, relief and vent discharge
+      locations, lifting radii over live plant.
+  - id: '10.2'
+    section: '10'
+    gate: false
+    text: >-
+      Which of the above have caught you out, and how.
+  - id: '11.1'
+    section: '11'
+    gate: false
+    text: >-
+      Figures you accept as estimates — weld count per system, expected tool time per
+      shift, turnaround duration — and the exact wording you want attached.
+  - id: '12.1'
+    section: '12'
+    gate: true
+    covers: [isolation, pressure]
+    text: >-
+      Your list of questions that must be refused outright — hot work, isolation adequacy,
+      temporary equipment in plot, pressure test to a value, readiness for hydrocarbons,
+      punch item downgrade, confined space entry — and what the system should say instead.
+  - id: '13.1'
+    section: '13'
+    gate: true
+    text: >-
+      Your permit types, and what must be verified before each is issued.
+  - id: '13.2'
+    section: '13'
+    gate: true
+    text: >-
+      Your bidirectional link between permits and isolations — as it actually works.
+  - id: '13.3'
+    section: '13'
+    gate: true
+    covers: [pressure]
+    text: >-
+      Your gas test validity period, what breaks it, who re-tests, and what happens across
+      meal breaks and shift changes.
+  - id: '13.4'
+    section: '13'
+    gate: true
+    text: >-
+      Your process for recording classification changes when construction creates new
+      release points or introduces temporary equipment.
+  - id: '13.5'
+    section: '13'
+    gate: true
+    text: >-
+      Your SIMOPS reconciliation process — single permit office per asset, or per
+      discipline.
+  - id: '13.6'
+    section: '13'
+    gate: true
+    covers: [isolation]
+    text: >-
+      Where live state lives — expired gas-free, altered isolation, temporary equipment
+      changing a zone — and whether it is linked to anything a system could read.
+  - id: '13.7'
+    section: '13'
+    gate: false
+    text: >-
+      Your shift handover record, and what must never be lost across it.
+  - id: '14.1'
+    section: '14'
+    gate: true
+    covers: [HAC, WPS, pressure]
+    text: >-
+      Your ranking, highest first — national regulation, design code, certified design
+      dossier/U-1A, project specification, approved MOC, as-built P&ID, equipment
+      datasheet, HAC package and Ex register, approved WPS, construction procedure, site
+      instruction, vendor advice.
+  - id: '14.2'
+    section: '14'
+    gate: true
+    text: >-
+      When your project specification is stricter than the code — which governs. When it is
+      looser.
+  - id: '14.3'
+    section: '14'
+    gate: true
+    text: >-
+      When P&ID and datasheet disagree on your projects — which governs.
+  - id: '14.4'
+    section: '14'
+    gate: true
+    text: >-
+      How an approved MOC propagates on your projects — which documents must be updated,
+      and how a missed one is detected.
+  - id: '14.5'
+    section: '14'
+    gate: false
+    text: >-
+      Which figures are tag-specific on your projects and never applied to an apparently
+      identical item.
+  - id: '14.6'
+    section: '14'
+    gate: false
+    text: >-
+      Which figures are facility-specific and never carried from a sister project.
+  - id: '15.1'
+    section: '15'
+    gate: false
+    text: >-
+      Where a gauge vs absolute error has occurred on your projects.
+  - id: '15.2'
+    section: '15'
+    gate: false
+    covers: [pressure, test_pressure]
+    text: >-
+      Where a design pressure used as test pressure error has occurred, or nearly.
+  - id: '15.3'
+    section: '15'
+    gate: false
+    text: >-
+      Where a %LEL vs %vol confusion has occurred on yours.
+  - id: '15.4'
+    section: '15'
+    gate: false
+    text: >-
+      Where schedule vs wall thickness has caused a problem on yours.
+  - id: '16.1'
+    section: '16'
+    gate: false
+    text: >-
+      A figure taken from a superseded document or pre-MOC revision.
+  - id: '16.2'
+    section: '16'
+    gate: false
+    covers: [pressure]
+    text: >-
+      A test performed at the wrong pressure, or with the wrong medium.
+  - id: '16.3'
+    section: '16'
+    gate: false
+    text: >-
+      A limit correct for one tag, line or system and wrong for another.
+  - id: '16.4'
+    section: '16'
+    gate: false
+    covers: [pressure]
+    text: >-
+      Hot work done on a stale or absent gas test.
+  - id: '16.5'
+    section: '16'
+    gate: false
+    covers: [isolation]
+    text: >-
+      An isolation believed adequate that was not.
+  - id: '16.6'
+    section: '16'
+    gate: false
+    text: >-
+      Temporary equipment in an area it should not have been.
+  - id: '16.7'
+    section: '16'
+    gate: false
+    covers: [WPS]
+    text: >-
+      A weld completed outside its WPS — preheat, thickness, material, or PWHT missed.
+  - id: '16.8'
+    section: '16'
+    gate: false
+    text: >-
+      A punch item downgraded to unblock a milestone, and what followed.
+  - id: '16.9'
+    section: '16'
+    gate: false
+    text: >-
+      A nitrogen or inert-gas near-miss.
+  - id: '16.10'
+    section: '16'
+    gate: false
+    covers: [pressure]
+    text: >-
+      A unit confusion — pressure, concentration, thickness.
+  - id: '16.11'
+    section: '16'
+    gate: false
+    text: >-
+      What an engineer new to a live hydrocarbon plant most commonly gets wrong in their
+      first six months.
+  - id: '17.1'
+    section: '17'
+    gate: false
+    text: >-
+      Five things you'd ask a system per shift and trust completely.

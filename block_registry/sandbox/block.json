@@ -1,0 +1,177 @@
+{
+  "acceptance": [
+    {
+      "check": "refuses or errors when a required input is absent",
+      "id": "missing_required_input",
+      "status": "refused"
+    },
+    {
+      "check": "errors on an unknown or missing action",
+      "id": "unknown_action",
+      "status": "failed"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "default_config": {
+    "allowed_modules": [
+      "math",
+      "random",
+      "datetime",
+      "json",
+      "re",
+      "string",
+      "collections"
+    ],
+    "auto_kill": true,
+    "default_level": "strict",
+    "filesystem_readonly": true,
+    "max_cpu_time": 5,
+    "max_memory_mb": 512,
+    "network_allowed": false
+  },
+  "description": "Secure code execution isolation with memory limits, CPU limits, and sandbox policies",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "58301cf8dbd64a645557baca753ebc9e633674d5791ee28a696966d1443e58c4",
+    "block.py": "a9242fc174eb2f177d836019405304fd3b16906d850eca4bdbf6079c2da0a9fe"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/sandbox:latest",
+    "type": "docker"
+  },
+  "id": "sandbox",
+  "inputs": [
+    {
+      "description": "Sandbox action",
+      "name": "action",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "description": "Code to execute",
+      "name": "code",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": "python",
+      "description": "Execution language",
+      "name": "language",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": "default",
+      "description": "Sandbox policy name",
+      "name": "policy",
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 1,
+  "name": "Sandbox",
+  "never": [
+    {
+      "kind": "network",
+      "scope": "guest_code_outbound"
+    },
+    {
+      "kind": "subprocess",
+      "scope": "eval_exec"
+    }
+  ],
+  "outputs": [
+    {
+      "description": "Execution result",
+      "name": "result",
+      "type": "json"
+    },
+    {
+      "description": "Captured stdout",
+      "name": "stdout",
+      "type": "string"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "file",
+      "scope": "local.read"
+    },
+    {
+      "kind": "env",
+      "scope": "process"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    },
+    {
+      "kind": "network",
+      "scope": "http.outbound"
+    }
+  ],
+  "requires": [
+    "memory",
+    "config"
+  ],
+  "signature": "csLimZdS+kZX86AnK8H5/yQ3JFJHSUBecIkxxGPgQLhqjKwz34k25gtf/rg54enS5GiP4hYzMDtPHMG/F9DzCQ==",
+  "tags": [
+    "security",
+    "isolation",
+    "sandbox",
+    "enterprise"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "Action",
+      "name": "action",
+      "widget": "select"
+    },
+    {
+      "label": "Code to execute",
+      "name": "code",
+      "widget": "textarea"
+    },
+    {
+      "label": "Language",
+      "name": "language",
+      "widget": "select"
+    },
+    {
+      "label": "Policy",
+      "name": "policy",
+      "widget": "text"
+    }
+  ],
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    },
+    {
+      "kind": "file",
+      "scope": "local.write"
+    },
+    {
+      "kind": "file",
+      "scope": "temp"
+    },
+    {
+      "kind": "subprocess",
+      "scope": "local"
+    }
+  ]
+}

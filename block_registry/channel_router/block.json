@@ -1,0 +1,43 @@
+{
+  "acceptance": [
+    {
+      "check": "errors on an unknown or missing action",
+      "id": "unknown_action",
+      "status": "failed"
+    }
+  ],
+  "description": "Explainable insurance channel routing for agency, direct, MGA, and partner channels.",
+  "digests": {
+    "block.json": "139968c48425232dc263de9b1e9e7cb0768070eaa855b0fac7547c6bb0a11d7f",
+    "block.py": "b81c50c6cd1fc714ec94366ad131a4df4b0fd0e49faa814b94274ff6f6231ab8"
+  },
+  "id": "channel_router",
+  "name": "Channel Router",
+  "never": [],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    }
+  ],
+  "signature": "PkueQPd9O2bLQepuobgVc3+bNhVYFPhYnRWpRVrdOwx1ywMY0lMROccvPM2f6KVX0/aHD9HSKpv0fr1SFufaAw==",
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

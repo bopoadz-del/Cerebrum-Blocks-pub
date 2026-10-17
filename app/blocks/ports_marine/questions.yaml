@@ -1,0 +1,195 @@
+# GENERATED from docs/kit_questions/ports_marine.md by scripts/import_kit_questions.py — do not hand-edit.
+# Edit the markdown sheet and re-run. The sheet is the record of what the domain
+# owner actually asked for; this file is only its machine-readable form.
+#
+# gate: true  -> [GATE]. The platform refuses anything needing it until answered.
+# gate: false -> [GAP].  Experience worth having; does not block.
+# gate: null  -> the sheet marked neither. Treated as GATING, because a question
+#                whose class cannot be read must block rather than pass.
+#
+# There is deliberately NO answer slot in this file. Answers are per-platform and
+# per-client; this kit is a signed Store block shared by every customer.
+kit: ports_marine
+source_document: docs/kit_questions/ports_marine.md
+title: 'Ports & Marine — Questions I Cannot Answer'
+answer_format:
+  - 'value'
+  - 'unit'
+  - 'asset / berth'
+  - 'source document'
+  - 'revision'
+  - 'date'
+sections:
+  'A':
+    title: 'Figures that must never be guessed'
+  'B':
+    title: 'Figures that may be estimated'
+  'C':
+    title: 'Questions the system must refuse outright'
+  'D':
+    title: 'Source authority and precedence'
+  'E':
+    title: 'Units and confusion traps'
+  'F':
+    title: 'What has actually gone wrong'
+  'G':
+    title: 'Authority and confirmation'
+  'H':
+    title: 'Regulatory anchors'
+  'I':
+    title: 'The five questions'
+questions:
+  - id: 'A.1'
+    section: 'A'
+    gate: true
+    text: >-
+      Quay / berth structural limits — your quay wall design load (kN/m²), deck loading
+      limits, any areas with reduced capacity, and the design dossier or as-built that
+      holds them.
+  - id: 'A.2'
+    section: 'A'
+    gate: true
+    text: >-
+      Declared depths and tidal windows — your berth depths, chart datum basis, latest
+      hydrographic survey date and by whom, and any berths with seasonal or conditional
+      depth.
+  - id: 'A.3'
+    section: 'A'
+    gate: true
+    covers: [wheel_load]
+    text: >-
+      Crane rail and wheel loads — your crane rail loading limits (kN/m), wheel load
+      limits, and the crane/quay design documents that state them.
+  - id: 'A.4'
+    section: 'A'
+    gate: true
+    covers: [fender_energy]
+    text: >-
+      Bollard and fender capacities — your bollard safe working loads (tonnes), fender
+      energy absorption and reaction limits, and the certification for each.
+  - id: 'A.5'
+    section: 'A'
+    gate: true
+    covers: [stack_height]
+    text: >-
+      Container stacking and wind limits — your stack height limits by tier and by area,
+      wind speed thresholds that trigger action, and where these are written.
+  - id: 'A.6'
+    section: 'A'
+    gate: true
+    text: >-
+      Mooring analysis limits — your allowable mooring line loads, environmental limits for
+      mooring, and any berth-specific restrictions.
+  - id: 'A.7'
+    section: 'A'
+    gate: true
+    text: >-
+      Dredging tolerances — your permitted dredge depth, tolerance, and the regulatory or
+      design basis.
+  - id: 'A.8'
+    section: 'A'
+    gate: true
+    text: >-
+      Any other figure on your terminal where a wrong value causes structural failure,
+      grounding, mooring failure, or toppling — list them with their authoritative source.
+  - id: 'B.1'
+    section: 'B'
+    gate: false
+    text: >-
+      Your list. Typical candidates: berth productivity rates, expected turnaround times,
+      seasonal congestion, planning-level vessel sizes. Confirm which you accept as
+      estimates, and the disclosure wording.
+  - id: 'C.1'
+    section: 'C'
+    gate: true
+    text: >-
+      Your refusal list. Likely candidates: is it safe to berth this vessel, can this crane
+      lift this load, is this berth available, is the depth adequate today, can we stack
+      higher. State each and what the system should say instead.
+  - id: 'D.1'
+    section: 'D'
+    gate: true
+    text: >-
+      Your ranking, highest first — flag / port state regulation, classification society,
+      terminal design dossier, as-built drawings, operating manual, berth-specific
+      procedure, harbour master instruction, shift instruction. Your order.
+  - id: 'D.2'
+    section: 'D'
+    gate: true
+    text: >-
+      Revision currency — how someone on your terminal knows a document is the current
+      revision, and what happens when a superseded one is used.
+  - id: 'D.3'
+    section: 'D'
+    gate: true
+    text: >-
+      Figures where a local or project-specific value overrides the standard on your
+      terminal — list them.
+  - id: 'D.4'
+    section: 'D'
+    gate: true
+    text: >-
+      Figures that must never be applied outside their specific context — berth, asset,
+      vessel class, product — on your terminal.
+  - id: 'E.1'
+    section: 'E'
+    gate: false
+    text: >-
+      Your unit-confusion history — tonnes vs kN vs kips, metres vs feet, chart datum vs
+      berth datum, TEU vs boxes, GMT vs local, MHWS vs LAT.
+  - id: 'E.2'
+    section: 'E'
+    gate: false
+    text: >-
+      Any case where a decimal, comma, or thousands separator caused trouble.
+  - id: 'F.1'
+    section: 'F'
+    gate: false
+    text: >-
+      A time a figure came from the wrong source or the wrong revision.
+  - id: 'F.2'
+    section: 'F'
+    gate: false
+    text: >-
+      A time a number was right but applied to the wrong context (wrong berth, wrong crane,
+      wrong vessel class, wrong tide state).
+  - id: 'F.3'
+    section: 'F'
+    gate: false
+    text: >-
+      A time someone assumed a figure because it "looked normal".
+  - id: 'F.4'
+    section: 'F'
+    gate: false
+    text: >-
+      What a junior marine engineer most commonly gets wrong in their first year on your
+      terminal.
+  - id: 'G.1'
+    section: 'G'
+    gate: true
+    text: >-
+      Which questions require a named person's sign-off before the answer is acted on, on
+      your terminal.
+  - id: 'G.2'
+    section: 'G'
+    gate: true
+    text: >-
+      Who may accept a figure for use — by role, not name.
+  - id: 'G.3'
+    section: 'G'
+    gate: true
+    text: >-
+      Figures requiring two independent sources before use on your terminal.
+  - id: 'H.1'
+    section: 'H'
+    gate: true
+    text: >-
+      Your rule-and-figure list against the regulation, standard, or manual that anchors
+      each — ISPS, SOLAS, MARPOL, IMDG, local port state, classification society rules,
+      terminal design standards, national port regulations. Give what you have; partial is
+      fine.
+  - id: 'I.1'
+    section: 'I'
+    gate: false
+    text: >-
+      Five things you'd ask a system per shift on your terminal and trust completely.

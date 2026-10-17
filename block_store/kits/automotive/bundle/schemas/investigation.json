@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AutomotiveInvestigation",
+  "type": "object",
+  "required": ["record_type", "investigation_number", "summary", "source_url"],
+  "properties": {
+    "record_type": { "const": "investigation" },
+    "investigation_number": { "type": "string" },
+    "status": { "type": ["string", "null"] },
+    "type": { "type": ["string", "null"] },
+    "make": { "type": ["string", "null"] },
+    "model": { "type": ["string", "null"] },
+    "model_year_range": { "type": ["string", "null"] },
+    "component": { "type": ["string", "null"] },
+    "opening_date": { "type": ["string", "null"] },
+    "closing_date": { "type": ["string", "null"] },
+    "summary": { "type": "string" },
+    "source_url": { "type": "string", "format": "uri" },
+    "source_family": { "const": "investigation" }
+  }
+}

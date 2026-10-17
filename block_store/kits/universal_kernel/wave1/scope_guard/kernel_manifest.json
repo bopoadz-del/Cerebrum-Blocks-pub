@@ -1,0 +1,10 @@
+{
+  "name": "scope_guard",
+  "version": "0.1.0",
+  "sha256": "c457d9a61b21d0f1155b0abc0fbd41d38d4c518600d9666fbfedc686af1a6d55",
+  "dependencies": [],
+  "provenance": "fork",
+  "acceptance_test": "tests/test_scope_guard.py",
+  "tier": "premium",
+  "note": "Premium-only; not available in the freemium tier."
+}

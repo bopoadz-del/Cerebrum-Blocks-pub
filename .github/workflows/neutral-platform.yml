@@ -1,0 +1,73 @@
+name: neutral-platform
+
+on:
+  push:
+    paths:
+      - "app/reasoning_kernel/**"
+      - "domain_packs/equipment_maintenance/**"
+      - "neutral_platform/**"
+      - ".github/workflows/neutral-platform.yml"
+  pull_request:
+    paths:
+      - "app/reasoning_kernel/**"
+      - "domain_packs/equipment_maintenance/**"
+      - "neutral_platform/**"
+
+jobs:
+  kernel-and-e2e:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: neutral
+          POSTGRES_PASSWORD: ci-${{ github.run_id }}
+          POSTGRES_DB: neutral
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U neutral"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: |
+          pip install -r neutral_platform/requirements.txt
+      - name: Kernel test suite
+        run: |
+          python -m pytest tests/core/test_reasoning_kernel.py tests/core/test_reasoning_kernel_slice.py tests/core/test_reasoning_kernel_pack.py tests/core/test_reasoning_kernel_packs.py -q
+      - name: Neutral platform E2E (SQLite)
+        run: |
+          python -m pytest neutral_platform/tests/test_oracles.py neutral_platform/tests/test_e2e_flow.py -q
+      - name: Neutral platform E2E (PostgreSQL)
+        env:
+          NEUTRAL_DB_URL: postgresql+psycopg2://neutral:ci-${{ github.run_id }}@localhost:5432/neutral
+        run: |
+          python -m pytest neutral_platform/tests/test_postgres.py -q -rs
+
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build the neutral platform image
+        run: |
+          docker build -t neutral-platform:ci -f neutral_platform/Dockerfile .
+      - name: Smoke the image against PostgreSQL
+        run: |
+          # per-run throwaway values, generated here, never in the workflow text
+          NP_DB_PW="$(openssl rand -hex 16)"
+          NP_SECRET="$(openssl rand -hex 32)"
+          docker network create np-net
+          docker run -d --network np-net --name np-db -e POSTGRES_USER=neutral -e POSTGRES_PASSWORD="$NP_DB_PW" -e POSTGRES_DB=neutral postgres:16
+          sleep 8
+          docker run --rm --network np-net -e NEUTRAL_DB_URL=postgresql+psycopg2://neutral@np-db:5432/neutral -e PGPASSWORD="$NP_DB_PW" -e NEUTRAL_AUTH_SECRET="$NP_SECRET" neutral-platform:ci python -c "from neutral_platform.neutral_app.main import app; print('import ok')"
+          docker run -d --network np-net --name np-app -p 8000:8000 -e NEUTRAL_DB_URL=postgresql+psycopg2://neutral@np-db:5432/neutral -e PGPASSWORD="$NP_DB_PW" -e NEUTRAL_AUTH_SECRET="$NP_SECRET" neutral-platform:ci
+          sleep 6
+          curl -fsS http://localhost:8000/health
+          TOKEN=$(curl -fsS -X POST http://localhost:8000/login -H 'Content-Type: application/json' -d '{"user_id":"u_alice"}' | python -c "import sys,json; print(json.load(sys.stdin)['token'])")
+          curl -fsS -X POST http://localhost:8000/inspections -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"equipment_id":"EQ-CI-1","condition":"poor","likelihood":4,"consequence":4,"hours_since_service":520,"service_interval_hours":500,"equipment_class":"pump"}'

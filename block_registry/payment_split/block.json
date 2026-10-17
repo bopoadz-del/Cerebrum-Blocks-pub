@@ -1,0 +1,195 @@
+{
+  "acceptance": [
+    {
+      "check": "errors on an unknown or missing action",
+      "id": "unknown_action",
+      "status": "failed"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "cdc1831c0d532e976bab68f8d8c8a7db3ef50c3d1cade700f9f9eea2796c9a1e",
+    "block.py": "0765c1e93286662cb237fafcf3406bab9044ce268d8164012cb04135cb9b734e"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/payment_split:latest",
+    "type": "docker"
+  },
+  "id": "payment_split",
+  "inputs": [
+    {
+      "description": "JSON payload for the selected action",
+      "name": "input",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "default": "calculate_split",
+      "description": "Action",
+      "name": "action",
+      "options": [
+        "calculate_split",
+        "process_sale",
+        "process_payout",
+        "register_creator",
+        "update_creator",
+        "revenue_report",
+        "creator_dashboard",
+        "transfer_ownership",
+        "get_transaction",
+        "list_transactions",
+        "hold_funds",
+        "release_hold"
+      ],
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": 20,
+      "description": "Configuration parameter: platform_fee_percent",
+      "name": "platform_fee_percent",
+      "required": false,
+      "type": "number"
+    },
+    {
+      "default": 5,
+      "description": "Configuration parameter: referral_bonus_percent",
+      "name": "referral_bonus_percent",
+      "required": false,
+      "type": "number"
+    },
+    {
+      "default": "monthly",
+      "description": "Configuration parameter: payout_schedule",
+      "name": "payout_schedule",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": 5000,
+      "description": "Configuration parameter: minimum_payout_cents",
+      "name": "minimum_payout_cents",
+      "required": false,
+      "type": "number"
+    },
+    {
+      "default": 14,
+      "description": "Configuration parameter: hold_period_days",
+      "name": "hold_period_days",
+      "required": false,
+      "type": "number"
+    },
+    {
+      "default": true,
+      "description": "Configuration parameter: stripe_connect_enabled",
+      "name": "stripe_connect_enabled",
+      "required": false,
+      "type": "boolean"
+    }
+  ],
+  "layer": 5,
+  "name": "Payment Split",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    }
+  ],
+  "requires": [
+    "billing",
+    "team",
+    "database"
+  ],
+  "signature": "fpAWWnwsmu4FPsBFZUcyvCN2D79BTl/z7CmgSVi97l6wUTGEZIwp5JabUWsx/PZOwjClLvNKZ8LkuEnUPfFyAQ==",
+  "tags": [
+    "store",
+    "payments",
+    "marketplace",
+    "revenue"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "JSON payload for the selected action",
+      "name": "input",
+      "widget": "json"
+    },
+    {
+      "label": "Action",
+      "name": "action",
+      "options": [
+        "calculate_split",
+        "process_sale",
+        "process_payout",
+        "register_creator",
+        "update_creator",
+        "revenue_report",
+        "creator_dashboard",
+        "transfer_ownership",
+        "get_transaction",
+        "list_transactions",
+        "hold_funds",
+        "release_hold"
+      ],
+      "widget": "select"
+    },
+    {
+      "label": "Platform Fee Percent",
+      "name": "platform_fee_percent",
+      "widget": "number"
+    },
+    {
+      "label": "Referral Bonus Percent",
+      "name": "referral_bonus_percent",
+      "widget": "number"
+    },
+    {
+      "label": "Payout Schedule",
+      "name": "payout_schedule",
+      "widget": "text"
+    },
+    {
+      "label": "Minimum Payout Cents",
+      "name": "minimum_payout_cents",
+      "widget": "number"
+    },
+    {
+      "label": "Hold Period Days",
+      "name": "hold_period_days",
+      "widget": "number"
+    },
+    {
+      "label": "Stripe Connect Enabled",
+      "name": "stripe_connect_enabled",
+      "widget": "toggle"
+    }
+  ],
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

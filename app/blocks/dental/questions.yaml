@@ -1,0 +1,570 @@
+# GENERATED from docs/kit_questions/dental.md by scripts/import_kit_questions.py — do not hand-edit.
+# Edit the markdown sheet and re-run. The sheet is the record of what the domain
+# owner actually asked for; this file is only its machine-readable form.
+#
+# gate: true  -> [GATE]. The platform refuses anything needing it until answered.
+# gate: false -> [GAP].  Experience worth having; does not block.
+# gate: null  -> the sheet marked neither. Treated as GATING, because a question
+#                whose class cannot be read must block rather than pass.
+#
+# There is deliberately NO answer slot in this file. Answers are per-platform and
+# per-client; this kit is a signed Store block shared by every customer.
+kit: dental
+source_document: docs/kit_questions/dental.md
+title: 'Dental Clinics — Questions I Cannot Answer'
+answer_format:
+  - 'value'
+  - 'unit'
+  - 'agent / item'
+  - 'adult or paediatric'
+  - 'protocol version'
+  - 'source'
+  - 'date'
+sections:
+  '1':
+    title: 'Local anaesthetic catalogue'
+  '2':
+    title: 'Emergency drugs and equipment'
+  '3':
+    title: 'Radiography'
+  '4':
+    title: 'Decontamination and infection control'
+  '5':
+    title: 'Implants and surgical'
+  '6':
+    title: 'Materials'
+  '7':
+    title: 'Practice economics'
+  '8':
+    title: 'Dosing and calculation rules'
+  '9':
+    title: 'Medical history and contraindications'
+  '10':
+    title: 'Emergency protocols'
+  '11':
+    title: 'Evidence standard'
+  '12':
+    title: 'Never-estimate'
+  '13':
+    title: 'May-estimate'
+  '14':
+    title: 'Refusals'
+  '15':
+    title: 'Precedence'
+  '16':
+    title: 'Unit-confusion history'
+  '17':
+    title: 'Incidents'
+  '18':
+    title: 'The five questions'
+questions:
+  - id: '1.1'
+    section: '1'
+    gate: true
+    covers: [mg_per_cartridge]
+    text: >-
+      For each agent you stock (lidocaine, articaine, mepivacaine plain and with vaso,
+      prilocaine, bupivacaine, other) — concentration, vasoconstrictor and ratio, cartridge
+      volume you stock, mg per cartridge as you calculate it, adult MRD (mg/kg), absolute
+      cap (mg), paediatric MRD (mg/kg), minimum age, source — the source recorded as a
+      specific figure (regulator / SPC / textbook edition + year / your own protocol).
+  - id: '1.2'
+    section: '1'
+    gate: true
+    text: >-
+      Your cartridge volume rule — do you calculate on labelled 1.8 mL or on deliverable
+      volume after dead space — and where that rule is written.
+  - id: '1.3'
+    section: '1'
+    gate: true
+    text: >-
+      Whether your protocol states that the same cartridge volume carries different mg
+      loads at different concentrations (2% / 3% / 4%) — and where.
+  - id: '1.4'
+    section: '1'
+    gate: true
+    text: >-
+      For each agent — whether the vasoconstrictor can become the limiting factor before
+      the anaesthetic, and for which patient groups.
+  - id: '1.5'
+    section: '1'
+    gate: true
+    text: >-
+      Your multi-agent cumulative rule — how doses are added across agents in a session,
+      and who tracks the cumulative total.
+  - id: '1.6'
+    section: '1'
+    gate: true
+    text: >-
+      Your rounding rule — cartridge counts down always, and where it is written.
+  - id: '1.7'
+    section: '1'
+    gate: true
+    text: >-
+      The source question — where your MRD values come from, in each case. If a textbook,
+      the edition and year. If a regulator, the specific publication. If a practice
+      protocol, its version and approval date.
+  - id: '2.1'
+    section: '2'
+    gate: true
+    text: >-
+      Your emergency kit inventory — presentation, adult dose, paediatric dose, route,
+      location, expiry check frequency and by whom, and the source of each dose.
+  - id: '2.2'
+    section: '2'
+    gate: true
+    text: >-
+      Who checks the emergency kit, how often, where recorded — as practised, not as
+      policy.
+  - id: '2.3'
+    section: '2'
+    gate: true
+    text: >-
+      Which staff are trained to administer which item, and how the currency of training is
+      tracked.
+  - id: '3.1'
+    section: '3'
+    gate: true
+    text: >-
+      Your machine-specific exposure parameters — kV, mA, exposure times for bitewing,
+      periapical, OPG, CBCT, collimation — adult and paediatric — as your practice sets
+      them for your machines.
+  - id: '3.2'
+    section: '3'
+    gate: true
+    text: >-
+      Your justification protocol — who authorises an exposure, and on what grounds.
+  - id: '3.3'
+    section: '3'
+    gate: true
+    text: >-
+      Your recall/interval rules for routine radiographs by caries risk — your practice's
+      rule.
+  - id: '3.4'
+    section: '3'
+    gate: true
+    text: >-
+      Your dose audit process, and what triggers a review.
+  - id: '3.5'
+    section: '3'
+    gate: true
+    text: >-
+      Which exposures require a different paediatric protocol on your machines, and how
+      that is enforced at the machine.
+  - id: '4.1'
+    section: '4'
+    gate: true
+    text: >-
+      Your autoclave cycle parameters as set on your machines — temperature, hold time,
+      pressure, vacuum/non-vacuum selection — for each cycle type you use.
+  - id: '4.2'
+    section: '4'
+    gate: true
+    text: >-
+      Your daily test (steam penetration / leak), periodic validation regime, and where the
+      records live.
+  - id: '4.3'
+    section: '4'
+    gate: true
+    text: >-
+      Your waterline disinfection regime, and the microbial limit you work to.
+  - id: '4.4'
+    section: '4'
+    gate: true
+    text: >-
+      Your ultrasonic bath test regime, and handpiece lubrication/sterilisation protocol.
+  - id: '4.5'
+    section: '4'
+    gate: true
+    text: >-
+      What makes a cycle fail on your machines, and what happens to the load if it does.
+  - id: '4.6'
+    section: '4'
+    gate: true
+    text: >-
+      Who may release a load for use, and what they must check.
+  - id: '4.7'
+    section: '4'
+    gate: true
+    text: >-
+      How instrument traceability to patient is maintained in your practice — the actual
+      record system.
+  - id: '5.1'
+    section: '5'
+    gate: true
+    covers: [drill_speed]
+    text: >-
+      Which implant systems you use, and — per system — the drilling sequence by bone
+      density, drill speed, irrigation requirement, minimum and maximum insertion torque,
+      abutment screw torque, healing periods (maxilla, mandible), minimum bone dimensions,
+      safety margins to nerve/sinus/adjacent root.
+  - id: '5.2'
+    section: '5'
+    gate: true
+    text: >-
+      Whether your protocol states that torque values and drill protocols are not
+      transferable between implant systems — and where it says so.
+  - id: '5.3'
+    section: '5'
+    gate: true
+    text: >-
+      Your absolute anatomical limits as your clinicians set them — proximity to IAN,
+      mental foramen, maxillary sinus, adjacent roots.
+  - id: '5.4'
+    section: '5'
+    gate: true
+    text: >-
+      Your mandatory imaging before placement, and who reads it.
+  - id: '6.1'
+    section: '6'
+    gate: true
+    text: >-
+      Per material — working time, setting time, storage, mix ratio — as your practice uses
+      them (which is IFU-derived, but the point is which products you stock and which IFU
+      version is current in your practice).
+  - id: '6.2'
+    section: '6'
+    gate: true
+    text: >-
+      Which materials your practice has flagged as technique-sensitive in a way that
+      changes outcome if protocol is not followed exactly.
+  - id: '7.1'
+    section: '7'
+    gate: true
+    text: >-
+      Your fee schedule per item — examination/consultation, scale and polish, direct
+      restoration, endo anterior, endo molar, extraction simple, extraction surgical,
+      crown, bridge, implant surgical, implant restorative, ortho course, whitening,
+      hygiene, emergency/out-of-hours.
+  - id: '7.2'
+    section: '7'
+    gate: true
+    text: >-
+      Your chair time per procedure — booked vs actual — and which procedures routinely
+      overrun, by how much.
+  - id: '7.3'
+    section: '7'
+    gate: true
+    text: >-
+      Your lab costs and turnaround by item, and which lab work is on the critical path for
+      an appointment.
+  - id: '7.4'
+    section: '7'
+    gate: true
+    text: >-
+      Your materials cost as a percentage of fee, by procedure type.
+  - id: '7.5'
+    section: '7'
+    gate: true
+    text: >-
+      Your recall intervals by risk category — and whether the clinical interval differs
+      from the commercial recall. If yes, confirm the clinical interval always wins.
+  - id: '7.6'
+    section: '7'
+    gate: true
+    text: >-
+      Your failure and remake rates by procedure, and who bears the cost.
+  - id: '8.1'
+    section: '8'
+    gate: true
+    text: >-
+      For each rule — weight-based maximum adult, weight-based maximum paediatric, absolute
+      cap per appointment, which limit applies when both bind, multi-agent cumulative rule,
+      vasoconstrictor limit healthy, vasoconstrictor limit cardiac, rounding rule, weight
+      source (measured / estimated / stated), obese or low-weight adjustment, minimum age
+      by agent — your protocol, source, and approving person, and whether the source is
+      external or internal.
+  - id: '8.2'
+    section: '8'
+    gate: true
+    text: >-
+      How patient weight is obtained for paediatric dosing on your practice — measured,
+      parent-reported, or estimated — and how this is recorded.
+  - id: '8.3'
+    section: '8'
+    gate: true
+    text: >-
+      Whether the calculation is done manually, by chart, by nomogram, or by tool, and what
+      the cross-check is.
+  - id: '8.4'
+    section: '8'
+    gate: true
+    text: >-
+      Who verifies the dose before administration in a paediatric case on your practice.
+  - id: '8.5'
+    section: '8'
+    gate: true
+    covers: [mg_per_cartridge]
+    text: >-
+      Whether the system may perform the mg/kg chain for your practice, and — if yes —
+      whether it must show every step (weight, mg/kg used, total mg, mg per cartridge,
+      cartridges, rounding). (Recommend yes to both. Confirm.)
+  - id: '9.1'
+    section: '9'
+    gate: true
+    text: >-
+      Per category (cardiac/recent MI, anticoagulation, bisphosphonates/antiresorptives
+      MRONJ, head/neck radiotherapy, uncontrolled diabetes, pregnancy, known drug allergy,
+      latex allergy, methaemoglobinaemia risk, immunosuppression, prosthetic
+      joint/endocarditis risk, epilepsy, under-16/consent) — your absolute
+      contraindications, relative items, and what each requires — with the source.
+  - id: '9.2'
+    section: '9'
+    gate: true
+    text: >-
+      Which require medical practitioner liaison before treatment, and who initiates it on
+      your practice.
+  - id: '9.3'
+    section: '9'
+    gate: true
+    text: >-
+      Which require a prescriber or principal sign-off.
+  - id: '9.4'
+    section: '9'
+    gate: true
+    text: >-
+      Your antibiotic prophylaxis rule, and which guideline your practice follows.
+  - id: '9.5'
+    section: '9'
+    gate: true
+    covers: [medical_history]
+    text: >-
+      How medical history is updated and re-verified on your practice — the actual
+      frequency and record.
+  - id: '10.1'
+    section: '10'
+    gate: true
+    text: >-
+      Per emergency (anaphylaxis, LA toxicity, vasovagal syncope, hypoglycaemia, angina/MI,
+      asthma, seizure, airway obstruction, haemorrhage, needlestick) — protocol location,
+      sequence, who is called, and the escalation trigger.
+  - id: '10.2'
+    section: '10'
+    gate: true
+    text: >-
+      Your responsible clinician on call, and your out-of-hours route.
+  - id: '10.3'
+    section: '10'
+    gate: true
+    text: >-
+      How an adverse event is documented and reported on your practice, and to whom.
+  - id: '11.1'
+    section: '11'
+    gate: true
+    covers: [anaesthetic_mrd, emergency_drug_dose, implant_torque, mg_per_cartridge, radiography_setting]
+    text: >-
+      Per figure class — anaesthetic MRD, mg per cartridge, emergency drug dose,
+      radiography setting, autoclave parameters, implant torque, prophylaxis regimen,
+      material handling — what your practice accepts as proof, and what it rejects even if
+      it states the number.
+  - id: '11.2'
+    section: '11'
+    gate: true
+    text: >-
+      Minimum acceptable citation per source type on your practice — regulator, SPC,
+      manufacturer IFU, clinical guideline, textbook (edition and year), practice protocol
+      (version and approval date), equipment manual.
+  - id: '11.3'
+    section: '11'
+    gate: true
+    covers: [implant_torque, mg_per_cartridge, radiography_setting]
+    text: >-
+      Mandatory qualifiers your practice requires — anaesthetic dose, mg per cartridge,
+      implant torque, radiography setting, autoclave parameters — with
+      agent+concentration+cartridge+vaso+adult/paediatric for dosing, and system-specific
+      for torque.
+  - id: '11.4'
+    section: '11'
+    gate: true
+    text: >-
+      Your derivation rules — mg/kg × weight → total mg, total mg → cartridges, % → mg/mL,
+      cartridge volume conversion (1.8 → 2.2), summing across agents, scaling adult dose
+      for child, carrying torque between systems, estimating weight — allowed or not on
+      your practice.
+  - id: '11.4.2'
+    section: '11'
+    gate: true
+    text: >-
+      Confirm your step-visibility rule — must the system show every step of the mg/kg
+      chain if it performs it?
+  - id: '11.5'
+    section: '11'
+    gate: true
+    covers: [medical_history]
+    text: >-
+      Your staleness rules per figure — practice protocol, textbook MRD, SPC/IFU figure,
+      autoclave validation, radiography QA, medical history, emergency drug stock — valid
+      for how long, stale immediately on what.
+  - id: '11.5.1'
+    section: '11'
+    gate: true
+    text: >-
+      How your practice knows a protocol is current — version field, approval date,
+      register — or whether it depends on a person knowing.
+  - id: '11.5.2'
+    section: '11'
+    gate: true
+    text: >-
+      Confirm the currency rule — does the system refuse or warn when it cannot verify a
+      protocol is current on your practice?
+  - id: '11.6'
+    section: '11'
+    gate: true
+    text: >-
+      Your conflict rule — when SPC and textbook differ on MRD, when regulator and
+      manufacturer differ, when your practice protocol is more conservative than the SPC
+      (and less) — which governs, and whether the system refuses and reports when sources
+      conflict on a dose.
+  - id: '11.6.3'
+    section: '11'
+    gate: true
+    text: >-
+      Confirm the dose-conflict rule — always refuse and report, never pick.
+  - id: '11.7'
+    section: '11'
+    gate: false
+    text: >-
+      Partial-evidence disclosure wording per situation, and which figures must never be
+      offered as estimates — confirmed against your Section 12 list, likely including every
+      dosing figure.
+  - id: '12.1'
+    section: '12'
+    gate: true
+    covers: [drill_speed, implant_torque, mg_per_cartridge]
+    text: >-
+      Which figures your practice treats as absolute — anaesthetic MRDs and absolute caps,
+      mg per cartridge by agent and concentration, vasoconstrictor limits, paediatric
+      weight-based doses and minimum ages, emergency drug doses, radiography exposure
+      parameters, autoclave cycle parameters and validation criteria, waterline microbial
+      limits, implant torque/drill speed/anatomical safety margins, prophylaxis regimens,
+      material mix ratios and setting times.
+  - id: '12.2'
+    section: '12'
+    gate: false
+    text: >-
+      Which of the above have caught you out, and how.
+  - id: '13.1'
+    section: '13'
+    gate: false
+    text: >-
+      Figures you accept as estimates — appointment duration, lab turnaround, restoration
+      longevity — and the exact wording you want attached.
+  - id: '14.1'
+    section: '14'
+    gate: true
+    text: >-
+      Your list of questions the system must refuse outright — how much should I give this
+      patient, is this patient fit for treatment, can I treat despite this history, what's
+      causing this pain, is this radiograph normal — and what it should say instead.
+  - id: '14.1.1'
+    section: '14'
+    gate: true
+    text: >-
+      Confirm the named-patient rule — does the system ever answer about a specific named
+      patient, or only about protocols, products and parameters in general?
+  - id: '15.1'
+    section: '15'
+    gate: true
+    text: >-
+      Your ranking, highest first — national regulator (SFDA/DHA/MOH/GDC), SPC/product
+      licence, manufacturer IFU, national clinical guideline, professional body guidance,
+      practice protocol, textbook, course material, clinician preference.
+  - id: '15.2'
+    section: '15'
+    gate: true
+    text: >-
+      When your practice protocol is more conservative than the SPC — which governs. When
+      it is less conservative.
+  - id: '15.3'
+    section: '15'
+    gate: true
+    text: >-
+      Which protocols on your practice exist only internally, with no external standard
+      behind them.
+  - id: '15.4'
+    section: '15'
+    gate: true
+    text: >-
+      How a protocol is versioned, approved and communicated on your practice, and how a
+      clinician knows they have the current one.
+  - id: '15.5'
+    section: '15'
+    gate: true
+    text: >-
+      Which figures on your practice are clinician-specific — permitted only at certain
+      experience or certification levels (implants, sedation, oral surgery, orthodontics).
+  - id: '15.6'
+    section: '15'
+    gate: true
+    text: >-
+      Which figures are equipment-specific on your practice and never carried between
+      machines or systems.
+  - id: '16.1'
+    section: '16'
+    gate: false
+    text: >-
+      Where a cartridge count confusion has occurred in your practice — right count, wrong
+      agent or concentration.
+  - id: '16.2'
+    section: '16'
+    gate: false
+    text: >-
+      Where a kg vs lb error has occurred or nearly occurred on yours.
+  - id: '16.3'
+    section: '16'
+    gate: false
+    text: >-
+      Where a vasoconstrictor ratio has been misread on yours.
+  - id: '16.4'
+    section: '16'
+    gate: false
+    text: >-
+      Where an Ncm vs N·m torque error has occurred on yours.
+  - id: '17.1'
+    section: '17'
+    gate: false
+    text: >-
+      A figure taken from the wrong source — superseded edition, wrong system, course
+      handout.
+  - id: '17.2'
+    section: '17'
+    gate: false
+    text: >-
+      A dose or setting correct for one agent, concentration, age group or system and wrong
+      for another.
+  - id: '17.3'
+    section: '17'
+    gate: false
+    text: >-
+      A time someone assumed a figure because it "looked normal".
+  - id: '17.4'
+    section: '17'
+    gate: false
+    text: >-
+      A weight that was estimated rather than measured, and what followed.
+  - id: '17.5'
+    section: '17'
+    gate: false
+    covers: [medical_history]
+    text: >-
+      A medical history item missed or not re-checked.
+  - id: '17.6'
+    section: '17'
+    gate: false
+    text: >-
+      A sterilisation cycle failure and how it was caught — or wasn't.
+  - id: '17.7'
+    section: '17'
+    gate: false
+    text: >-
+      A near-miss on a cartridge count or concentration.
+  - id: '17.8'
+    section: '17'
+    gate: false
+    text: >-
+      What a newly qualified dentist most commonly gets wrong in their first year.
+  - id: '18.1'
+    section: '18'
+    gate: false
+    text: >-
+      Five things you'd ask a system per clinical day and trust completely.

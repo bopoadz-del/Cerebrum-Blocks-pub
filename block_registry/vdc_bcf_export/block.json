@@ -1,0 +1,23 @@
+{
+  "acceptance": [],
+  "description": "BCF 2.1 zip export (Cerebrum VDC port): camera offset, zip layout, markup XML. Snapshot bytes only when supplied.",
+  "digests": {
+    "block.json": "f7104a7aabf7af6425566d2b5de051910cedef3800e1b68c4a3e180b2a314fc5",
+    "block.py": "af418c9c0195e6a60db8b60c10f192c40566213e1090b20382cfdc5fee0f9afd"
+  },
+  "id": "vdc_bcf_export",
+  "name": "VDC BCF Export",
+  "never": [],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [],
+  "signature": "l0V0wxEp57OAAt5PM1/HNzvFVAFDFGEQ+ATlraZBTbIyJPU34G9CkoVIw2CIaTgr7rOtnhI+IuLyer+5/Rg3Ag==",
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": []
+}

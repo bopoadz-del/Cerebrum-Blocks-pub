@@ -1,0 +1,197 @@
+# Railway & Metro Construction reasoning layer — track/civils design basis.
+#
+# Source of truth: the domain encoding sheet for Railway & Metro Construction.
+# NO INTERVIEW HAS RUN. Every `value` below is null on purpose and stays null
+# until the interview fills it; see KNOWN_GAPS.md.
+#
+# A null value is legal. A MISSING QUALIFIER IS NOT: TrackBasis (reasoning.py)
+# refuses any figure that does not carry every key in MANDATORY_QUALIFIERS, at
+# load time, naming the figure and the keys it lacks. A half-qualified figure
+# is how a maintenance-tier limit ends up answering a safety-tier question.
+#
+# This file is read ONLY for interview/provenance bookkeeping (TrackBasis:
+# interview_status, unfilled()). It is not consulted by the gate itself — the
+# gate is app/blocks/rail/manifest.yaml + invariants.yaml, evaluated by the
+# shared kit_engine. Moved out of manifest.yaml so the kit_engine's manifest
+# loader (app/blocks/kit_engine/manifest.py) sees only the portable vocabulary
+# shape it knows how to parse.
+#
+# category is part of the identity of every geometry figure, not a label on
+# it:
+#   plain_line              running line, ballasted or slab track
+#   switches_and_crossings  turnouts, crossings — different limits, same units
+#   bridge_approach         transition zone, stiffness change
+#   tunnel                  bored or cut-and-cover, TBM-adjacent
+# Nothing interpolates between them (INV-RAIL-CATEGORY-CARRY, invariants.yaml).
+source: "domain encoding sheet, Railway & Metro Construction"
+scope: "route- and line-specific — never carry a figure to another route, line, category or asset"
+interview_status: "not run — every value is null (KNOWN_GAPS.md)"
+
+design_basis:
+  # ---- track geometry limits (INV-1: tier AND line_speed, or nothing) -----
+  twist_limit_mm:
+    value: null
+    unit: mm
+    route: null
+    line: null
+    category: plain_line
+    tier: null
+    SFT_verified_date: null
+    method: null
+    disturbed_since: null
+    envelope_type: null
+    line_speed: null
+    source: null
+    revision: null
+    date: null
+  cant_deficiency_limit_mm:
+    value: null
+    unit: mm
+    route: null
+    line: null
+    category: plain_line
+    tier: null
+    SFT_verified_date: null
+    method: null
+    disturbed_since: null
+    envelope_type: null
+    line_speed: null
+    source: null
+    revision: null
+    date: null
+  alignment_limit_mm:
+    value: null
+    unit: mm
+    route: null
+    line: null
+    category: switches_and_crossings
+    tier: null
+    SFT_verified_date: null
+    method: null
+    disturbed_since: null
+    envelope_type: null
+    line_speed: null
+    source: null
+    revision: null
+    date: null
+
+  # ---- stress-free temperature (INV-2: route, verified date, method, ------
+  # ---- disturbed_since — and INV-3 governs any stressing/buckling answer) -
+  sft_degrees_c:
+    value: null
+    unit: degC
+    route: null
+    line: null
+    category: null
+    tier: safety
+    SFT_verified_date: null
+    method: null
+    disturbed_since: null
+    envelope_type: null
+    line_speed: null
+    source: null
+    revision: null
+    date: null
+
+  # ---- clearance envelope (INV-4: envelope_type, line_speed, cant, --------
+  # ---- curve_radius — cant/curve_radius travel as call-time qualifiers) ---
+  clearance_envelope_mm:
+    value: null
+    unit: mm
+    route: null
+    line: null
+    category: null
+    tier: null
+    SFT_verified_date: null
+    method: null
+    disturbed_since: null
+    envelope_type: null
+    line_speed: null
+    source: null
+    revision: null
+    date: null
+
+  # ---- TBM face pressure (INV-5: chainage band min AND max, ground basis) -
+  face_pressure_bar:
+    value: null
+    unit: bar
+    route: null
+    line: null
+    category: tunnel
+    tier: null
+    SFT_verified_date: null
+    method: null
+    disturbed_since: null
+    envelope_type: null
+    line_speed: null
+    source: null
+    revision: null
+    date: null
+
+  # ---- settlement/movement trigger (never carried between assets) --------
+  trigger_level_mm:
+    value: null
+    unit: mm
+    route: null
+    line: null
+    category: null
+    tier: safety
+    SFT_verified_date: null
+    method: null
+    disturbed_since: null
+    envelope_type: null
+    line_speed: null
+    source: null
+    revision: null
+    date: null
+
+  # ---- handback speed (INV-3: no handback answer without disturbance) ----
+  handback_speed_mph:
+    value: null
+    unit: mph
+    route: null
+    line: null
+    category: plain_line
+    tier: safety
+    SFT_verified_date: null
+    method: null
+    disturbed_since: null
+    envelope_type: null
+    line_speed: null
+    source: null
+    revision: null
+    date: null
+
+  # ---- TSR (only the current notice proves what is in force) -------------
+  tsr_speed_mph:
+    value: null
+    unit: mph
+    route: null
+    line: null
+    category: null
+    tier: safety
+    SFT_verified_date: null
+    method: null
+    disturbed_since: null
+    envelope_type: null
+    line_speed: null
+    source: null
+    revision: null
+    date: null
+
+  # ---- ballast (staleness: any disturbance invalidates the figure) -------
+  ballast_depth_mm:
+    value: null
+    unit: mm
+    route: null
+    line: null
+    category: plain_line
+    tier: maintenance
+    SFT_verified_date: null
+    method: null
+    disturbed_since: null
+    envelope_type: null
+    line_speed: null
+    source: null
+    revision: null
+    date: null

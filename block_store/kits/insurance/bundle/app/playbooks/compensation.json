@@ -1,0 +1,46 @@
+{
+  "id": "insurance_compensation_playbook",
+  "name": "Agency Compensation Operations",
+  "sop": {
+    "purpose": "Calculate and explain agency and producer compensation using deterministic effective-dated schedules.",
+    "steps": [
+      "Collect product type, premium basis, transaction date, producer level, hierarchy path, and chargeback indicators.",
+      "Run agency_commission_engine with the effective schedule for base commission, overrides, renewals, or chargebacks.",
+      "Validate output against commission_formulas.json and the active agency_hierarchy before release.",
+      "Attach calculation inputs, schedule version, override basis, and net commission result to the compensation record."
+    ],
+    "controls": [
+      "Do not pay compensation without an effective schedule and active appointment.",
+      "Require explicit approval for manual rates, hierarchy overrides, or chargeback waivers."
+    ]
+  },
+  "escalation": {
+    "triggers": [
+      "No effective schedule exists for the product, date, or jurisdiction.",
+      "Manual rate differs from configured schedule by more than tolerance.",
+      "Chargeback calculation conflicts with producer status or cancellation reason."
+    ],
+    "path": [
+      "Compensation operations lead",
+      "Finance controller",
+      "Distribution compliance owner"
+    ],
+    "sla": "One business day for payment-blocking issues; three business days for schedule maintenance."
+  },
+  "memory_policy": {
+    "remember": [
+      "Schedule key and version used",
+      "Commission, override, and chargeback result",
+      "Approvals for manual rates or waivers"
+    ],
+    "retrieve": [
+      "Prior calculations for the same policy, producer, and schedule",
+      "Effective hierarchy path and producer appointment history"
+    ],
+    "redact": [
+      "Bank account details",
+      "Producer tax identifiers",
+      "Customer personal data unrelated to compensation"
+    ]
+  }
+}

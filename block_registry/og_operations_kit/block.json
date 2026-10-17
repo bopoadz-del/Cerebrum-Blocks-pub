@@ -1,0 +1,142 @@
+{
+  "acceptance": [
+    {
+      "check": "INV-OGO-AUTH-MAWP (authority at H1, severity refuse): MAWP and PSV set are governed by the design dossier and the datasheet \u2014 a P&ID annotation or a spreadsheet is not proof",
+      "id": "inv_ogo_auth_mawp",
+      "status": "refused"
+    },
+    {
+      "check": "INV-OGO-WHICH-PRESSURE (qualifier at H3, severity refuse): pressure without which-pressure and gauge/absolute \u2014 the classic fatal confusion",
+      "id": "inv_ogo_which_pressure",
+      "status": "refused"
+    },
+    {
+      "check": "INV-OGO-ENVELOPE-TIER (qualifier at H3, severity refuse): envelope figure without alarm/trip/SOL/design tier named",
+      "id": "inv_ogo_envelope_tier",
+      "status": "refused"
+    },
+    {
+      "check": "INV-OGO-SCE-LIVE (derivation at H3, severity refuse): protective-function answer without current override and isolation state",
+      "id": "inv_ogo_sce_live",
+      "status": "refused"
+    },
+    {
+      "check": "INV-OGO-UNITS (unit_discipline at H2, severity refuse): flow or concentration without basis \u2014 standard/normal/actual and %LEL/%vol/ppm are not interchangeable",
+      "id": "inv_ogo_units",
+      "status": "refused"
+    },
+    {
+      "check": "INV-OGO-EXPOSURE-AVERAGING (qualifier at H3, severity refuse): exposure limit without TWA/STEL/ceiling \u2014 averaging changes the number entirely",
+      "id": "inv_ogo_exposure_averaging",
+      "status": "refused"
+    },
+    {
+      "check": "INV-OGO-CITATION-REV (qualifier at H3, severity refuse): figure without document revision and MOC state \u2014 a pre-MOC P&ID is citable and wrong",
+      "id": "inv_ogo_citation_rev",
+      "status": "refused"
+    },
+    {
+      "check": "INV-OGO-PROVENANCE (provenance at H3, severity refuse): forbidden derivation: {value}",
+      "id": "inv_ogo_provenance",
+      "status": "refused"
+    },
+    {
+      "check": "INV-OGO-CURRENCY (currency at H3, severity refuse): figure stale on {value}",
+      "id": "inv_ogo_currency",
+      "status": "refused"
+    },
+    {
+      "check": "INV-OGO-CURRENCY-DOCS (currency at H3, severity refuse): document-controlled record is stale once its trigger event has occurred",
+      "id": "inv_ogo_currency_docs",
+      "status": "refused"
+    },
+    {
+      "check": "INV-OGO-CURRENCY-SCE (currency at H3, severity refuse): safety-critical-element record is stale once its interval or calibration has elapsed",
+      "id": "inv_ogo_currency_sce",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Declarative og operations reasoning kit on the shared reasoning layer. 11 invariants declared in app/blocks/og_operations/invariants.yaml across the kinds the portable spec defines (grounding, qualifier, unit_discipline, authority, provenance, currency, scope, derivation, band) and the five hooks (H0 pre-retrieval, H1 ranking, H2 tool-time, H3 answer-time, H4 export-time). Vocabulary in app/blocks/og_operations/manifest.yaml. Scope refusals classify BEFORE retrieval. Fail closed: a kit that does not parse is DISABLED and refuses every statement rather than passing them through with no invariants. NO INTERVIEW HAS RUN, so every declared figure value is null and the block refuses rather than inventing one (app/blocks/og_operations/KNOWN_GAPS.md). Measured by tests/blocks/test_reasoning_kits.py.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "a03384d598dd7261f59a61bfa3b6aba215d69b9385fa5df6c6c93e97f5b5fb52",
+    "block.py": "ae22676837a634b1764fb18f5f416eb7c76fe9ce3645ee8179ef13a2f436495c"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/og_operations_kit:latest",
+    "type": "docker"
+  },
+  "id": "og_operations_kit",
+  "inputs": [
+    {
+      "description": "the operator question, classified at H0 BEFORE any retrieval",
+      "name": "question",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "description": "figures to gate: quantity, value, unit, origin, source_id, source_class, revision, qualifiers, claim_class, derivations, conditions, steps, bounds, asked_about, span, text",
+      "name": "figures",
+      "required": false,
+      "type": "array"
+    },
+    {
+      "description": "state records by provider name, each {as_of: <epoch>}; an absent provider yields UNKNOWN, never a design-basis fallback",
+      "name": "state",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "description": "events that have happened, matched against the kit's staleness_triggers",
+      "name": "events",
+      "required": false,
+      "type": "array"
+    },
+    {
+      "description": "subset of H0..H4 to run; all five by default, because a partial sweep is a silent coverage gap",
+      "name": "hooks",
+      "required": false,
+      "type": "array"
+    }
+  ],
+  "layer": 3,
+  "name": "og_operations_kit",
+  "never": [],
+  "outputs": [
+    {
+      "description": "pass | annotated | flagged | refused, with findings, blocked_reason, hooks_run, retrieval_permitted, interview_status, unfilled_figures, unmeasured_invariants, ships and kit_disabled",
+      "name": "verdict",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "HnDXSXh8bzzjb9b/jWjJlT57/1czqPrvIQ29Wv9f3Ch1nK67b4hi/T3RZlbdEKicwYyDeE7AsHCN2aRsvUFpCQ==",
+  "tags": [
+    "gate",
+    "kit",
+    "og",
+    "reasoning"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

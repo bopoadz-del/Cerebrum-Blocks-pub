@@ -1,0 +1,78 @@
+{
+  "acceptance": [
+    {
+      "check": "pull on the unconfigured sap_erp honest stub is refused (never fabricates ERP data)",
+      "id": "sap_erp_pull_refused",
+      "status": "refused"
+    },
+    {
+      "check": "pull on store_digital_twin honest stub is refused (never fabricates planogram data)",
+      "id": "digital_twin_pull_refused",
+      "status": "refused"
+    },
+    {
+      "check": "push on the read-only pos connector is refused with error_code read_only",
+      "id": "pos_push_refused",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "honest-stub: enterprise retail connector contract ported from <private-product> backend/app/retailops/integrations/base.py + connectors/*.py. Four mock-functional connectors (pos, inventory_wms, crm_loyalty, supplier_edi) produce deterministic fictional data or use a generic REST endpoint when configured; honest stubs (sap_erp, entra_id, power_bi, store_digital_twin) never fabricate vendor data and raise ConnectorError instead.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "e330e4c8ecb606f33119728d0cefcccd5db9ec19d6d48be8482db0042bdde461",
+    "block.py": "f9596e77e8854e64e8fce07d20bc07a39ec36d2f17db6d3ba173afda3fc6e1f9"
+  },
+  "id": "retail_connectors",
+  "inputs": [
+    {
+      "description": "action + connector_id (+ records/operation/payload)",
+      "name": "input",
+      "type": "json"
+    }
+  ],
+  "layer": 3,
+  "name": "retail_connectors",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Capability result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "TOFI1NezkX0QWEjsB5V4sOzLOIYP1CGqjwkjTohxL+s8WcsoQg95QHRiSp8z74apoJXE5vMW6iEo/D0AcojXAA==",
+  "tags": [
+    "retail",
+    "connector",
+    "integration",
+    "pos",
+    "wms",
+    "erp",
+    "edi",
+    "honest-stub",
+    "<client>"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

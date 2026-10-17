@@ -1,0 +1,164 @@
+{
+  "acceptance": [
+    {
+      "check": "errors on an unknown or missing action",
+      "id": "unknown_action",
+      "status": "failed"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "cfbbe6b660871a4cddcde929ac48d1b95dc0842aee087616f70da114516cc8ff",
+    "block.py": "a706c667d2ee5c4636aeef8d99af6798efb0d1593714c98aac27c0093028381b"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/vector:latest",
+    "type": "docker"
+  },
+  "id": "vector",
+  "inputs": [
+    {
+      "description": "Vector id, embedding, or query",
+      "name": "input",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "default": "add",
+      "description": "Action",
+      "name": "action",
+      "options": [
+        "add",
+        "search",
+        "delete",
+        "get",
+        "count"
+      ],
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": "chroma",
+      "description": "Configuration parameter: backend",
+      "name": "backend",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": "all-MiniLM-L6-v2",
+      "description": "Configuration parameter: embedding_model",
+      "name": "embedding_model",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": "default",
+      "description": "Configuration parameter: collection",
+      "name": "collection",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": "./data/vector",
+      "description": "Configuration parameter: persist_directory",
+      "name": "persist_directory",
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 3,
+  "name": "Vector",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    },
+    {
+      "kind": "database",
+      "scope": "vector"
+    }
+  ],
+  "requires": [
+    "config",
+    "memory"
+  ],
+  "signature": "fTqPm22UDY5uEvI3SaoE7GyGV1U9UeBTe7gS24IXO5iyoUhCuutpSuhoR602qdaHsyeAqY5IfMw9TCCc8I1ZDA==",
+  "tags": [
+    "ai",
+    "vector",
+    "search",
+    "core"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "Vector id, embedding, or query",
+      "name": "input",
+      "widget": "json"
+    },
+    {
+      "label": "Action",
+      "name": "action",
+      "options": [
+        "add",
+        "search",
+        "delete",
+        "get",
+        "count"
+      ],
+      "widget": "select"
+    },
+    {
+      "label": "Backend",
+      "name": "backend",
+      "widget": "text"
+    },
+    {
+      "label": "Embedding Model",
+      "name": "embedding_model",
+      "widget": "text"
+    },
+    {
+      "label": "Collection",
+      "name": "collection",
+      "widget": "text"
+    },
+    {
+      "label": "Persist Directory",
+      "name": "persist_directory",
+      "widget": "text"
+    }
+  ],
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    },
+    {
+      "kind": "database",
+      "scope": "vector"
+    }
+  ]
+}

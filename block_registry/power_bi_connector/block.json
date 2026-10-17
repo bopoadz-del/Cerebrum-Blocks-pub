@@ -1,0 +1,82 @@
+{
+  "acceptance": [
+    {
+      "check": "publish_dataset returns status refused (honest not-implemented stub, never a fabricated publish)",
+      "id": "publish_dataset_refused",
+      "status": "refused"
+    },
+    {
+      "check": "refresh_semantic_model returns status refused (honest not-implemented stub)",
+      "id": "refresh_semantic_model_refused",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "mock-functional \u2014 Power BI connector ported from C:\\Users\\<owner>\\<private-product>\\backend\\app\\retailops\\integrations\\connectors\\power_bi.py (+ mock_data.py, base.py). KPI dataset pull and CSV/XLSX export are real working paths on deterministic fictional rows (never live data); publish_dataset and refresh_semantic_model are honest not-implemented stubs (refused); embed URL is an explicit placeholder. With all RETAILOPS_POWERBI_* configured, test_connection performs a real Azure AD token request and Power BI workspace check.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "12e31d3657bec42491336b975fdf33c29202a2391b2a348999d62691ff030173",
+    "block.py": "5888e1207336e93dd70178c3d441c00b5c9ff626c4e6675f995481a206ce1bc2"
+  },
+  "id": "power_bi_connector",
+  "inputs": [
+    {
+      "description": "status | capabilities | test_connection | pull | normalize | export_csv | export_xlsx | publish_dataset | refresh_semantic_model | get_embed_url",
+      "name": "action",
+      "options": [
+        "status",
+        "capabilities",
+        "test_connection",
+        "pull",
+        "normalize",
+        "export_csv",
+        "export_xlsx",
+        "publish_dataset",
+        "refresh_semantic_model",
+        "get_embed_url"
+      ],
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 2,
+  "name": "power_bi_connector",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Capability result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": true
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "M1W79pF1gqrErYiwIGBDEuf6qL0EN2Rc8odHfuKM+xPWRescNMxLt24XEFX7xJd7UFY2afvbaNQad9TtlI6fBw==",
+  "tags": [
+    "connector",
+    "power-bi",
+    "analytics",
+    "export",
+    "mock-functional"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "id": "insurance_distribution_analytics_playbook",
+  "name": "Distribution Analytics Operations",
+  "sop": {
+    "purpose": "Ingest bordereaux-like carrier feeds and produce distribution performance metrics for agency operations.",
+    "steps": [
+      "Use bordereaux_ingest to normalize CSV or JSON rows into policy, producer, channel, period, premium, and commission fields.",
+      "Run distribution_analytics for summary, benchmark, and trend views across GWP, commission ratio, productivity, and retention proxy.",
+      "Use attrition_scorer and incentive_targeting when producer productivity or retention signals require follow-up action.",
+      "Publish metric assumptions, rejected row counts, benchmark deltas, and recommended workflow next steps."
+    ],
+    "controls": [
+      "Flag analytics based on partial or rejected bordereaux rows as preliminary.",
+      "Require human review before using incentives to change compensation or producer status."
+    ]
+  },
+  "escalation": {
+    "triggers": [
+      "Rejected bordereaux rows exceed tolerance.",
+      "Commission ratio, retention proxy, or productivity materially misses benchmark.",
+      "Attrition or incentive output conflicts with compliance or compensation controls."
+    ],
+    "path": [
+      "Distribution analytics owner",
+      "Operations lead",
+      "Executive distribution sponsor"
+    ],
+    "sla": "Two business days for data quality blockers; one weekly business review cycle for benchmark action plans."
+  },
+  "memory_policy": {
+    "remember": [
+      "Dataset period, source, accepted and rejected counts",
+      "Benchmark set and trend deltas",
+      "Approved action plan and owner"
+    ],
+    "retrieve": [
+      "Prior periods for the same producer, agency, channel, and product line",
+      "Active retention and incentive playbook thresholds"
+    ],
+    "redact": [
+      "Customer identifiers not needed for aggregate analytics",
+      "Raw carrier feed fields outside the normalized metric set",
+      "Individual compensation details unless needed for commission-ratio analysis"
+    ]
+  }
+}

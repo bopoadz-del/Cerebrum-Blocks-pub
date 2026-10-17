@@ -1,0 +1,101 @@
+kit: og_operations
+version: 1
+serves_verticals: [og_operations, oil_gas_operations]
+hooks_used: [H0, H1, H2, H3]
+
+quantities:
+  pressure:               {units: [barg, bara], aliases: [design, mawp, operating]}
+  mawp:                   {units: [barg]}
+  maop:                   {units: [barg]}
+  psv_set:                {units: [barg]}
+  sif_setpoint:           {units: [—]}
+  corrosion_rate:         {units: [mm_year]}
+  remaining_life:         {units: [years]}
+  h2s_limit:              {units: [ppm]}
+  benzene_limit:          {units: [ppm]}
+  co_limit:               {units: [ppm]}
+  flow:                   {units: [Sm3d, Nm3h, MMscfd, m3h]}
+  concentration:          {units: [pctLEL, pctvol, ppm]}
+  mdmt:                   {units: [degC]}
+  esd_closure_time:       {units: [s]}
+  fire_water_demand:      {units: [m3h]}
+
+  # Correction 5: staleness_triggers below keys pid_data, psv_certification,
+  # sif_proof_test, hazop_lopa, operating_procedure and gas_detector. None of
+  # these is a figure the model states a value for — each is an ARTIFACT
+  # (a document, a test, a register entry) that a staleness event invalidates.
+  # A staleness trigger keyed on something the manifest never declares as a
+  # quantity is a load failure (the loader's own check), so each is declared
+  # here, unitless, purely so the trigger has something to be keyed on.
+  pid_data:               {units: [—]}
+  psv_certification:      {units: [—]}
+  sif_proof_test:         {units: [—]}
+  hazop_lopa:             {units: [—]}
+  operating_procedure:    {units: [—]}
+  gas_detector:           {units: [—]}
+
+qualifier_fields:
+  pressure_kind:          {type: enum,   values: [design, mawp, test, operating]}
+  gauge_or_absolute:      {type: enum,   values: [gauge, absolute]}
+  envelope_tier:          {type: enum,   values: [normal, alarm, trip, sol, design]}
+  failure_case:           {type: string}
+  exposure_averaging:     {type: enum,   values: [TWA, STEL, ceiling]}
+  flow_basis:             {type: enum,   values: [standard, normal, actual]}
+  ref_T_C:                {type: string}
+  inspection_date:        {type: date}
+  cml_location:           {type: string}
+  inspection_method:      {type: string}
+  instrument_tag:         {type: string}
+  scE_class:              {type: string}
+
+  # Correction 3: INV-OGO-CITATION-REV requires document_revision and
+  # moc_state; a rule requiring an undeclared field can never fire.
+  document_revision:      {type: string}
+  moc_state:               {type: string}
+
+source_classes:
+  national_regulation:    {rank: 1}
+  design_code:            {rank: 2}
+  design_dossier_u1a:     {rank: 3, reject_as_proof: [pid_annotation, spreadsheet]}
+  as_built_pid:           {rank: 4, reject_as_proof: [pre_moc_revision]}
+  equipment_datasheet:    {rank: 5}
+  hazop_lopa_sil:         {rank: 6}
+  approved_moc:           {rank: 7}
+  operating_procedure:    {rank: 8}
+  shift_instruction:      {rank: 9}
+  vendor_advice:          {rank: 10}
+
+  # Correction 1: design_dossier_u1a rejects pid_annotation and spreadsheet as
+  # proof; as_built_pid rejects pre_moc_revision. A class named in
+  # reject_as_proof that is not itself declared can never fire — the loader
+  # refuses the kit. Ranked below every governing class above.
+  pid_annotation:         {rank: 11}
+  spreadsheet:            {rank: 11}
+  pre_moc_revision:       {rank: 11}
+
+state_providers:
+  override_register:      {kind: status,   max_age: realtime}
+  isolation_register:     {kind: status,   max_age: realtime}
+  permit_register:        {kind: status,   max_age: realtime}
+  sCE_status:              {kind: status,   max_age: realtime}
+
+staleness_triggers:
+  pid_data:               [approved_moc]
+  corrosion_rate:         [inspection_overdue]
+  psv_certification:      [interval_elapsed]
+  sif_proof_test:         [interval_elapsed]
+  hazop_lopa:             [process_change]
+  operating_procedure:    [revision]
+  gas_detector:           [calibration_expiry]
+
+scope_refusals:
+  - pattern: "can we keep running with this"
+    authority: "shift supervisor / operations manager"
+  - pattern: "is it safe to break containment here"
+    authority: "permit office + isolation register"
+  - pattern: "can we bypass this trip"
+    authority: "override procedure + authorising engineer"
+  - pattern: "can we extend this inspection"
+    authority: "inspection authority"
+  - pattern: "is this vessel fit for service"
+    authority: "integrity engineer"

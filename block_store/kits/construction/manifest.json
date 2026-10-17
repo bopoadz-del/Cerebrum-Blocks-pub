@@ -1,0 +1,272 @@
+{
+  "learning_engine_enabled": false,
+  "id": "construction",
+  "name": "Construction AEC Suite",
+  "version": "3.1",
+  "description": "Complete AEC suite: BIM, QA/QC, scheduling, contracts, specs, safety, carbon, procurement, risk. Published from The Fork.",
+  "author": "bopoadz-del",
+  "tags": [
+    "domain",
+    "container",
+    "aec",
+    "construction",
+    "bim"
+  ],
+  "source": {
+    "repo": "https://github.com/bopoadz-del/The_Fork",
+    "ref": "main",
+    "publish_script": "scripts/publish_kit.py"
+  },
+  "container": {
+    "class": "app.containers.construction.ConstructionContainer",
+    "default_chat_prompt": "construction_evm.md"
+  },
+  "blocks": [
+    "pdf",
+    "ocr",
+    "image",
+    "construction_v2",
+    "boq_processor",
+    "spec_analyzer",
+    "sympy_reasoning",
+    "drawing_qto",
+    "primavera_parser",
+    "smart_orchestrator",
+    "jetson_gateway",
+    "formula_executor",
+    "formula_executor_v2",
+    "bim_extractor",
+    "bim",
+    "learning_engine",
+    "recommendation_template",
+    "project_reasoner",
+    "construction_advisor",
+    "historical_benchmark"
+  ],
+  "prompts": [
+    "app/prompts/construction_expert.txt",
+    "app/prompts/construction_evm.md",
+    "app/prompts/reasoner_system.py",
+    "app/prompts/codegen_system.py"
+  ],
+  "data": [
+    "app/data/procedures/procedures_db.json",
+    "app/knowledge/construction_kb.json"
+  ],
+  "core_modules": [
+    "app/core/construction_knowledge.py",
+    "app/core/construction_types.py",
+    "app/core/construction_constants.py",
+    "app/core/plan_executor.py",
+    "app/core/sandbox.py",
+    "app/core/universal_base.py"
+  ],
+  "artifacts": [
+    {
+      "src": "app/containers/construction/__init__.py",
+      "dest": "app/containers/construction/__init__.py"
+    },
+    {
+      "src": "app/containers/construction/boq.py",
+      "dest": "app/containers/construction/boq.py"
+    },
+    {
+      "src": "app/containers/construction/chat.py",
+      "dest": "app/containers/construction/chat.py"
+    },
+    {
+      "src": "app/containers/construction/documents.py",
+      "dest": "app/containers/construction/documents.py"
+    },
+    {
+      "src": "app/containers/construction/helpers.py",
+      "dest": "app/containers/construction/helpers.py"
+    },
+    {
+      "src": "app/containers/construction/qto.py",
+      "dest": "app/containers/construction/qto.py"
+    },
+    {
+      "src": "app/containers/construction/schedule.py",
+      "dest": "app/containers/construction/schedule.py"
+    },
+    {
+      "src": "app/core/construction_knowledge.py",
+      "dest": "app/core/construction_knowledge.py"
+    },
+    {
+      "src": "app/core/construction_types.py",
+      "dest": "app/core/construction_types.py"
+    },
+    {
+      "src": "app/core/construction_constants.py",
+      "dest": "app/core/construction_constants.py"
+    },
+    {
+      "src": "app/core/plan_executor.py",
+      "dest": "app/core/plan_executor.py"
+    },
+    {
+      "src": "app/core/sandbox.py",
+      "dest": "app/core/sandbox.py"
+    },
+    {
+      "src": "app/core/universal_base.py",
+      "dest": "app/core/universal_base.py"
+    },
+    {
+      "src": "app/lib/pm_computations.py",
+      "dest": "app/lib/pm_computations.py"
+    },
+    {
+      "src": "app/schemas/cpm.py",
+      "dest": "app/schemas/cpm.py"
+    },
+    {
+      "src": "app/schemas/execution_plan.py",
+      "dest": "app/schemas/execution_plan.py"
+    },
+    {
+      "src": "app/schemas/project_session.py",
+      "dest": "app/schemas/project_session.py"
+    },
+    {
+      "src": "app/blocks/construction_v2.py",
+      "dest": "app/blocks/construction_v2.py"
+    },
+    {
+      "src": "app/blocks/boq_processor.py",
+      "dest": "app/blocks/boq_processor.py"
+    },
+    {
+      "src": "app/blocks/spec_analyzer.py",
+      "dest": "app/blocks/spec_analyzer.py"
+    },
+    {
+      "src": "app/blocks/sympy_reasoning.py",
+      "dest": "app/blocks/sympy_reasoning.py"
+    },
+    {
+      "src": "app/blocks/drawing_qto.py",
+      "dest": "app/blocks/drawing_qto.py"
+    },
+    {
+      "src": "app/blocks/primavera_parser.py",
+      "dest": "app/blocks/primavera_parser.py"
+    },
+    {
+      "src": "app/blocks/smart_orchestrator.py",
+      "dest": "app/blocks/smart_orchestrator.py"
+    },
+    {
+      "src": "app/blocks/_procedure_routing.py",
+      "dest": "app/blocks/_procedure_routing.py"
+    },
+    {
+      "src": "app/blocks/jetson_gateway.py",
+      "dest": "app/blocks/jetson_gateway.py"
+    },
+    {
+      "src": "app/blocks/formula_executor.py",
+      "dest": "app/blocks/formula_executor.py"
+    },
+    {
+      "src": "app/blocks/formula_executor_v2.py",
+      "dest": "app/blocks/formula_executor_v2.py"
+    },
+    {
+      "src": "app/blocks/bim_extractor.py",
+      "dest": "app/blocks/bim_extractor.py"
+    },
+    {
+      "src": "app/blocks/bim.py",
+      "dest": "app/blocks/bim.py"
+    },
+    {
+      "src": "app/blocks/learning_engine.py",
+      "dest": "app/blocks/learning_engine.py"
+    },
+    {
+      "src": "app/blocks/recommendation_template.py",
+      "dest": "app/blocks/recommendation_template.py"
+    },
+    {
+      "src": "app/blocks/project_reasoner.py",
+      "dest": "app/blocks/project_reasoner.py"
+    },
+    {
+      "src": "app/prompts/construction_expert.txt",
+      "dest": "app/prompts/construction_expert.txt"
+    },
+    {
+      "src": "app/prompts/construction_evm.md",
+      "dest": "app/prompts/construction_evm.md"
+    },
+    {
+      "src": "app/prompts/reasoner_system.py",
+      "dest": "app/prompts/reasoner_system.py"
+    },
+    {
+      "src": "app/prompts/codegen_system.py",
+      "dest": "app/prompts/codegen_system.py"
+    },
+    {
+      "src": "app/data/procedures/procedures_db.json",
+      "dest": "app/data/procedures/procedures_db.json"
+    },
+    {
+      "src": "app/knowledge/construction_kb.json",
+      "dest": "app/knowledge/construction_kb.json"
+    },
+    {
+      "src": "cli/config.toml.example",
+      "dest": "cli/config.toml.example"
+    },
+    {
+      "src": "cli/pyproject.toml",
+      "dest": "cli/pyproject.toml"
+    },
+    {
+      "src": "cli/README.md",
+      "dest": "cli/README.md"
+    },
+    {
+      "src": "cli/cerebrum_cli/__init__.py",
+      "dest": "cli/cerebrum_cli/__init__.py"
+    },
+    {
+      "src": "cli/cerebrum_cli/__main__.py",
+      "dest": "cli/cerebrum_cli/__main__.py"
+    },
+    {
+      "src": "cli/cerebrum_cli/auth.py",
+      "dest": "cli/cerebrum_cli/auth.py"
+    },
+    {
+      "src": "cli/cerebrum_cli/config.py",
+      "dest": "cli/cerebrum_cli/config.py"
+    },
+    {
+      "src": "cli/cerebrum_cli/main.py",
+      "dest": "cli/cerebrum_cli/main.py"
+    },
+    {
+      "src": "cli/cerebrum_cli/sse.py",
+      "dest": "cli/cerebrum_cli/sse.py"
+    }
+  ],
+  "cli": {
+    "command": "cerebrum",
+    "config_template": "cli/config.toml.example"
+  },
+  "price_cents": 0,
+  "install_requires": {
+    "min_platform_version": "2.0.0",
+    "python": ">=3.10"
+  },
+  "serves_verticals": [
+    "construction"
+  ],
+  "build_ready": true,
+  "status": "available"
+}

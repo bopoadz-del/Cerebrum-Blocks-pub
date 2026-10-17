@@ -1,0 +1,6 @@
+# The marker block reads the PDF text layer: pypdfium2, PyMuPDF fallback.
+# Neither depends on Pillow. marker-pdf (every release to 2.0.0) and its
+# surya-ocr pin pillow<11, so they are no longer a dependency. No OCR here.
+# Same pins as requirements.lock.
+pypdfium2==5.13.0
+pymupdf==1.28.0

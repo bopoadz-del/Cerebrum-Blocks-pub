@@ -1,0 +1,68 @@
+{
+  "acceptance": [
+    {
+      "check": "an empty payload is refused, not silently accepted",
+      "id": "empty_payload",
+      "status": "refused"
+    },
+    {
+      "check": "an unknown action is refused, not silently accepted",
+      "id": "unknown_action",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Supply chain domain analysis: deterministic document-type detection and entity extraction for the supply chain vertical.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "9b29f361fec5d0583904ca41660464b00354be97adca06020862228c1f0d2bf1",
+    "block.py": "9a39c6bcdc64de464f2de29b6cc3b125c4ab1c15bc5935736de74f69fb7c95c3"
+  },
+  "id": "supply_chain_v2",
+  "inputs": [
+    {
+      "description": "Document text to analyze",
+      "name": "text",
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 3,
+  "name": "supply_chain_v2",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Capability result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "+pqKgBB0oMUOK49w5ydiidIzNFHUvcJPEKl5vwUeN0ZHyhc2jEOJBqIEmBQBsogmW6DLftBh58Bazfht3nNTAg==",
+  "tags": [
+    "domain",
+    "vertical",
+    "supply_chain"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "acceptance": [
+    {
+      "check": "refuses or errors when a required input is absent",
+      "id": "missing_required_input",
+      "status": "refused"
+    },
+    {
+      "check": "errors on an unknown or missing action",
+      "id": "unknown_action",
+      "status": "failed"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Governed FinanceOps dimensions, fact types, normalization, and validation.",
+  "digests": {
+    "block.json": "3c9d660385fd9f536e395d22dc886921506497562a8a5596211ceef9aeeee1f1",
+    "block.py": "272679b8570f56d467b1cc27b440aa3b2c5c4e632400bc7be488737cc56ffd66"
+  },
+  "id": "finance_canonical_model",
+  "inputs": [
+    {
+      "description": "FinanceOps payload",
+      "name": "input",
+      "required": false,
+      "type": "json"
+    }
+  ],
+  "layer": 3,
+  "name": "Finance Canonical Model",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Deterministic FinanceOps result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [
+      "typing"
+    ],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    }
+  ],
+  "signature": "zKeXzydFbP9clWLqcx+hwV0m3Nf3m1PmmM4rMhlhsJxuxlCzudVworaQY/AYqgYQx489QXbhYjeOZAG2rSgRAQ==",
+  "tags": [
+    "domain",
+    "finance_ops",
+    "data_model",
+    "governance",
+    "deterministic"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

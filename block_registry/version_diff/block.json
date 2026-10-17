@@ -1,0 +1,80 @@
+{
+  "acceptance": [
+    {
+      "check": "an unknown action is refused, not silently accepted",
+      "id": "unknown_action",
+      "status": "refused"
+    },
+    {
+      "check": "an empty payload without required arguments is refused, not faked",
+      "id": "missing_arguments",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Diffs two finding sets (resolved / new / regressed / persisting) and scores proposals against the diff.",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "2ad6b6a33b6c956fb4aafc63e391c1bdef816b978fc8d8d2126c717b74b81bcc",
+    "block.py": "c2fec2c1c92161f1f14c21aab8201f0e33071f1b8e250546ea63f4180843af08"
+  },
+  "id": "version_diff",
+  "inputs": [
+    {
+      "description": "diff | score",
+      "name": "action",
+      "options": [
+        "diff",
+        "score"
+      ],
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 3,
+  "name": "Version Diff",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Capability result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "file",
+      "scope": "local.read"
+    }
+  ],
+  "requires": [],
+  "signature": "P30Gs2morxsFSRUUqAsnMgnpQfLa7rjT1hj4f1Q/HHJiSQX/Gnb4pd+SG+K7pTcTZAYU9Q0NlErhxgrCJXoIAg==",
+  "tags": [
+    "mep",
+    "construction",
+    "coordination"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    },
+    {
+      "kind": "file",
+      "scope": "local.write"
+    }
+  ]
+}

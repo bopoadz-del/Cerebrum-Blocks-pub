@@ -1,0 +1,64 @@
+kit: fitout
+version: 1
+serves_verticals: [fitout, fit_out, interior_design]
+hooks_used: [H0, H1, H2, H3]
+
+quantities:
+  dimension:          {units: [mm, m]}
+  floor_area:         {units: [m2],   aliases: [GIA, NIA, GEA, GFA]}
+  lead_time:          {units: [weeks, days]}
+  fire_rating:        {units: [min, hours]}
+  available_capacity: {units: [kW, A, m3h, Ls]}
+  rate:               {units: [currency_per_m2, currency_per_unit]}
+
+qualifier_fields:
+  surveyed_or_drawn:  {type: enum,   values: [surveyed, drawn]}
+  survey_date:        {type: date}
+  lead_time_basis:    {type: enum,   values: [from_order, from_approval, from_design_freeze]}
+  confirmed_or_indicative: {type: enum, values: [confirmed, indicative]}
+  tested_assembly:    {type: string}
+  area_basis:         {type: enum,   values: [GEA, GIA, NIA, IPMS1, IPMS2, IPMS3, local_GFA]}
+  market:             {type: string}
+  quality_band:       {type: enum,   values: [basic, standard, premium, super_prime]}
+
+source_classes:
+  building_code:      {rank: 1}
+  fire_authority:     {rank: 2}
+  head_lease:         {rank: 3, reject_as_proof: [verbal_landlord_approval]}
+  contract_spec:      {rank: 4}
+  approved_drawings:  {rank: 5, reject_as_proof: [for_information, superseded_revision]}
+  brand_standard:     {rank: 6}
+  client_instruction: {rank: 7}
+  site_instruction:   {rank: 8}
+  verbal_landlord_approval: {rank: 9}
+  for_information:    {rank: 9}
+  superseded_revision: {rank: 9}
+
+state_providers:
+  survey_date:        {kind: revision, max_age: event}     # any base-build works after
+  drawing_revision:   {kind: revision, max_age: next_issue}
+  approval_status:    {kind: status,   max_age: event}
+  capacity_spare:     {kind: status,   max_age: event}
+  # The rate trigger names market_movement and currency_movement. A provider
+  # is what tells us the movement happened; declared so the trigger can fire.
+  market_reference:   {kind: revision, max_age: event}
+
+staleness_triggers:
+  dimension:          [base_build_work_after_survey]
+  floor_area:         [any_revision]
+  lead_time:          [supplier_confirmation_lapsed]
+  fire_rating:        [any_design_change]
+  available_capacity: [another_tenant_takes_it]
+  rate:               [market_movement, currency_movement]
+
+scope_refusals:
+  - pattern: "will this pass fire inspection"
+    authority: "authority — pre-inspection advisable"
+  - pattern: "can we hang (this|that) from the slab"
+    authority: "structural engineer"
+  - pattern: "is there enough (power|cooling|drainage|water)"
+    authority: "verified measurement, not base-build design"
+  - pattern: "whose scope is this"
+    authority: "contract scope matrix"
+  - pattern: "can we open on time"
+    authority: "current approval and delivery status"

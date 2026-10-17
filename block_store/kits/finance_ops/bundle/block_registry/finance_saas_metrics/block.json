@@ -1,0 +1,74 @@
+{
+  "acceptance": [
+    {
+      "check": "refuses or errors when a required input is absent",
+      "id": "missing_required_input",
+      "status": "refused"
+    },
+    {
+      "check": "errors on an unknown or missing action",
+      "id": "unknown_action",
+      "status": "failed"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "MRR, ARR, ACV, TCV, NRR, GRR, renewals, and ARR bridges.",
+  "digests": {
+    "block.json": "ef110d1583409b0ea1fc86e3bd552a393a8a776ab9256630bae01e1fbe1c2788",
+    "block.py": "370e193d0540d1cbb76c40fde89301fe21b059f196f7fc8c3a96992c1846c1ae"
+  },
+  "id": "finance_saas_metrics",
+  "inputs": [
+    {
+      "description": "FinanceOps payload",
+      "name": "input",
+      "required": false,
+      "type": "json"
+    }
+  ],
+  "layer": 3,
+  "name": "Finance SaaS Metrics",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Deterministic FinanceOps result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [
+      "calendar",
+      "datetime",
+      "decimal",
+      "typing"
+    ],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "signature": "PYYFL7iKsN6xQmjWdGLyNWCW92SufuqPA6YLvwL3LdFUWhuNLAZoO8Hc9omh1Ue0YzummfYOcZTh5KYUVzsPDA==",
+  "tags": [
+    "domain",
+    "finance_ops",
+    "saas",
+    "arr",
+    "subscription",
+    "deterministic"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

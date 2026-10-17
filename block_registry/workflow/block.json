@@ -1,0 +1,168 @@
+{
+  "acceptance": [
+    {
+      "check": "errors on an unknown or missing action",
+      "id": "unknown_action",
+      "status": "failed"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "capability_class": "orchestration",
+  "description": "Chain blocks into pipelines with variable interpolation and scheduling",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "ef44ac53c983597b93169e86961289578c985b644be949907e77b14f7ab409a4",
+    "block.py": "e988d40c86822c769b033d8ed299e4fe63dfe278324169510dc36ad7f8cec26e"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/workflow:latest",
+    "type": "docker"
+  },
+  "id": "workflow",
+  "inputs": [
+    {
+      "description": "{\"pipeline_id\": \"daily-report\", \"steps\": [...]}",
+      "name": "input",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "default": "run",
+      "description": "Action",
+      "name": "action",
+      "options": [
+        "run",
+        "schedule",
+        "unschedule",
+        "list",
+        "get",
+        "history",
+        "status",
+        "health"
+      ],
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": 20,
+      "description": "Max Pipeline Steps",
+      "name": "max_pipeline_steps",
+      "required": false,
+      "type": "number"
+    },
+    {
+      "default": true,
+      "description": "Enable Scheduler",
+      "name": "enable_scheduler",
+      "required": false,
+      "type": "boolean"
+    },
+    {
+      "default": 60,
+      "description": "Default Timeout",
+      "name": "default_timeout",
+      "required": false,
+      "type": "number"
+    }
+  ],
+  "layer": 2,
+  "name": "Workflow",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Pipeline ID",
+      "name": "pipeline_id",
+      "type": "text"
+    },
+    {
+      "description": "Status",
+      "name": "status",
+      "type": "text"
+    },
+    {
+      "description": "Step Results",
+      "name": "results",
+      "type": "json"
+    },
+    {
+      "description": "Time (ms)",
+      "name": "execution_time_ms",
+      "type": "number"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "env",
+      "scope": "process"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    }
+  ],
+  "requires": [],
+  "signature": "rqFQrb4Lpqs35n1fVtHJbvpN3uzgbgdmjfNwuq/sjjc6j06pJLq9oGe4+pfqw4MWlUYvK0iH0Iiznex926RDDw==",
+  "tags": [
+    "workflow",
+    "pipeline",
+    "orchestration",
+    "automation",
+    "core"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "{\"pipeline_id\": \"daily-report\", \"steps\": [...]}",
+      "name": "input",
+      "widget": "json"
+    },
+    {
+      "label": "Action",
+      "name": "action",
+      "options": [
+        "run",
+        "schedule",
+        "unschedule",
+        "list",
+        "get",
+        "history",
+        "status",
+        "health"
+      ],
+      "widget": "select"
+    },
+    {
+      "label": "Max Pipeline Steps",
+      "name": "max_pipeline_steps",
+      "widget": "number"
+    },
+    {
+      "label": "Enable Scheduler",
+      "name": "enable_scheduler",
+      "widget": "toggle"
+    },
+    {
+      "label": "Default Timeout",
+      "name": "default_timeout",
+      "widget": "number"
+    }
+  ],
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

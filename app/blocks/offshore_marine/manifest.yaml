@@ -1,0 +1,91 @@
+kit: offshore_marine
+version: 1
+serves_verticals: [offshore_marine, offshore]
+hooks_used: [H0, H1, H2, H3, H4]
+
+quantities:
+  lay_tension:            {units: [t, kN],     aliases: [tension, top_tension, residual_tension]}
+  strain:                 {units: [pct],       aliases: [overbend_strain, sagbend_strain]}
+  stress:                 {units: [MPa],       aliases: [allowable_stress, touchdown_stress]}
+  departure_angle:        {units: [deg]}
+  stinger_radius:         {units: [m]}
+  pipe_ovality:           {units: [pct]}
+  buckle_arrestor_spacing: {units: [m]}
+  dp_capability:          {units: [kt]}
+  crane_swl:              {units: [t]}
+  mbr:                    {units: [m]}
+  forecast_hs:            {units: [m]}
+  forecast_tp:            {units: [s]}
+  forecast_dir:           {units: [deg]}
+  water_depth:            {units: [m]}
+
+  # Spec §1: a staleness trigger is keyed on a QUANTITY. These are the
+  # artifacts the sheet's triggers name — records the domain talks about,
+  # unitless, so the trigger has something to be keyed on.
+  stinger_setting:       {units: [—]}
+
+qualifier_fields:
+  spread_type:            {type: enum,   values: [s_lay, j_lay, reel_lay, heavy_lift]}
+  water_depth_band:       {type: enum,   values: [shallow, deep, ultradeep]}
+  static_or_dynamic:      {type: enum,   values: [static, dynamic]}
+  region:                 {type: enum,   values: [overbend, sagbend, touchdown, none]}
+  pipe_or_cable_spec:     {type: string}
+  failure_case:           {type: string}
+  forecast_horizon_h:     {type: number}
+  contingency_h:          {type: number}
+  operation_duration_h:   {type: number}
+  configuration:          {type: string}
+  radius:                 {type: number}
+  daf_applied:            {type: bool}
+
+source_classes:
+  class_rules:                     {rank: 1}
+  flag_statutory:                  {rank: 2}
+  certified_installation_analysis: {rank: 3, reject_as_proof: [draft_analysis, sister_project_analysis, nominal_analysis]}
+  approved_procedure:              {rank: 4, reject_as_proof: [draft_procedure, superseded_revision]}
+  mws_approval:                    {rank: 5, reject_as_proof: [verbal_approval]}
+  vessel_manual:                   {rank: 6}
+  site_instruction:                {rank: 7}
+  # The classes named in reject_as_proof above must themselves be declared, or
+  # the rule could never fire. Ranked below every governing class.
+  draft_analysis:                  {rank: 8}
+  sister_project_analysis:         {rank: 8}
+  nominal_analysis:                {rank: 8}
+  draft_procedure:                 {rank: 8}
+  superseded_revision:             {rank: 8}
+  verbal_approval:                 {rank: 9}
+
+state_providers:
+  vessel_monitoring:   {kind: status,   max_age: realtime}
+  manual_log:          {kind: status,   max_age: shift}
+  as_set_stinger:      {kind: status,   max_age: event}
+  forecast:            {kind: cycle,    max_age: next_issue}
+  # Referenced by INV-OM-CURRENCY-ANALYSIS. Spec 1: window.provider names a
+  # state_providers entry, so the analysis revision is declared as one.
+  certified_installation_analysis_state: {kind: revision, max_age: event}
+
+staleness_triggers:
+  lay_tension:         [stinger_change, tensioner_change, pipe_spec_change, route_change, water_depth_band_change]
+  strain:              [stinger_change, roller_adjustment, pipe_spec_change]
+  stress:              [stinger_change, roller_adjustment, pipe_spec_change]
+  dp_capability:       [thruster_failure, generator_failure, reference_failure]
+  crane_swl:           [configuration_change, boom_change, radius_change]
+  stinger_setting:     [any_roller_adjustment]
+  mbr:                 [pipe_spec_change, straightener_setting_change]
+  forecast_hs:         [next_issue]
+  forecast_tp:         [next_issue]
+  forecast_dir:        [next_issue]
+
+scope_refusals:
+  - pattern: "can we (start|begin|commence) (the )?(lift|pull.?in|lay|tie.?in)"
+    authority: "master / OIM / construction manager"
+  - pattern: "is (the )?weather (ok|good|fine|acceptable|suitable)"
+    authority: "master, against an issued forecast"
+  - pattern: "can we run on (one|two|three) thrusters?"
+    authority: "master, against the post-failure capability plot"
+  - pattern: "is it safe to (dive|put a diver)"
+    authority: "diving supervisor"
+  - pattern: "can we get (closer|nearer)"
+    authority: "asset operator + marine superintendent"
+  - pattern: "should we (proceed|continue|push on)"
+    authority: "master / OIM / construction manager"

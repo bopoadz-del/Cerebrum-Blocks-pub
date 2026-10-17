@@ -1,0 +1,80 @@
+{
+  "learning_engine_enabled": false,
+  "name": "universal_kernel",
+  "version": "0.1.0",
+  "waves": {
+    "wave1": [
+      "identity",
+      "authorization_policy",
+      "scope_guard",
+      "rate_limit_guard",
+      "audit_evidence",
+      "provenance_verification"
+    ],
+    "wave2": [
+      "secure_ingestion",
+      "document_parsing",
+      "durable_jobs",
+      "embedding_provider",
+      "vector_store",
+      "hybrid_retrieval",
+      "llm_provider",
+      "grounded_answer"
+    ],
+    "wave3": [
+      "xlsx_export",
+      "pdf_export",
+      "json_audit_export",
+      "health",
+      "monitoring",
+      "structured_outcomes",
+      "billing_entitlement",
+      "notification_mailer"
+    ],
+    "wave4": [
+      "approval_action",
+      "block_runner"
+    ]
+  },
+  "id": "universal_kernel",
+  "description": "Product-neutral universal kernel: trust, intelligence, operations, and frontier capabilities. Premium-only.",
+  "author": "bopoadz-del",
+  "tags": [
+    "kernel",
+    "universal",
+    "premium",
+    "trust",
+    "intelligence",
+    "operations"
+  ],
+  "price_cents": -1,
+  "status": "available",
+  "tier": "premium",
+  "note": "Premium-only; not available in the freemium tier.",
+  "blocks": [
+    "identity",
+    "authorization_policy",
+    "scope_guard",
+    "rate_limit_guard",
+    "audit_evidence",
+    "provenance_verification",
+    "secure_ingestion",
+    "document_parsing",
+    "durable_jobs",
+    "embedding_provider",
+    "vector_store",
+    "hybrid_retrieval",
+    "llm_provider",
+    "grounded_answer",
+    "xlsx_export",
+    "pdf_export",
+    "json_audit_export",
+    "health",
+    "monitoring",
+    "structured_outcomes",
+    "billing_entitlement",
+    "notification_mailer",
+    "approval_action",
+    "block_runner"
+  ]
+}

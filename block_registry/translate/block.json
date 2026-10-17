@@ -1,0 +1,84 @@
+{
+  "acceptance": [
+    {
+      "check": "refuses or errors when a required input is absent",
+      "id": "missing_required_input",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Translate text between 20+ languages \u2014 no API key needed",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "4bf9e5a2c7f3458508b70f23f14959f84e5fdc0c3ace65675d90dfb9b47bd538",
+    "block.py": "444b2cf0909a6d334092036987e9a81b16f3853a7583fa14f96447a21e54a657"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/translate:latest",
+    "type": "docker"
+  },
+  "id": "translate",
+  "inputs": [
+    {
+      "description": "Enter text to translate...",
+      "name": "input",
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 3,
+  "name": "Translate",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Translation",
+      "name": "translated",
+      "type": "text"
+    },
+    {
+      "description": "From",
+      "name": "source_language",
+      "type": "text"
+    },
+    {
+      "description": "To",
+      "name": "target_language",
+      "type": "text"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "dx/c6NAezxx1ccMFwpZaE2NifQtoiSooEas/IrOyIzZSSxViBGUQTmWczPIT8H8GhJCG2ljdUssNjSiHty3MCw==",
+  "tags": [
+    "domain",
+    "nlp",
+    "translation"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "Enter text to translate...",
+      "name": "input",
+      "widget": "text"
+    }
+  ],
+  "version": "2.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "acceptance": [],
+  "description": "Fail-closed multi-tenant RBAC (<private-repo> port): permission checks with tenant and project visibility. No DB \u2014 in-process role store.",
+  "digests": {
+    "block.json": "b8059bdaabe2ea65c22fb3357868df4730f606eca0083e3e648a24b11e178869",
+    "block.py": "9ff7dfeb0c6738073531507bf904ec2cb5456c075cd7aa1fd203e9a75aa18d3d"
+  },
+  "id": "multi_tenant_rbac",
+  "name": "Multi-Tenant RBAC",
+  "never": [],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [],
+  "signature": "KOQ5GYcejptuosBO3Y45qCrscpJYzcKOvGRGeBHV1xLMh6T2x6wcipCWdyH/yAA1DBQXk0Q0sp00on0GGJqIAg==",
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": []
+}

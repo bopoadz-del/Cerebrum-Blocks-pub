@@ -1,0 +1,178 @@
+{
+  "schema_version": "1.0.0",
+  "shelf_id": "virgin_domains",
+  "name": "Domain Virgin Edition Shelf",
+  "description": "Minimal clean domain editions. Each edition ships a DomainContainer plus the four base interface/parser blocks and one domain v2 block. No extended platform blocks, no construction leakage.",
+  "editions": [
+    {
+      "id": "agriculture",
+      "name": "Agriculture Virgin Edition",
+      "domain": "agriculture",
+      "version": "1.0.0",
+      "container_class": "app.containers.agriculture.AgricultureContainer",
+      "blocks": ["pdf", "ocr", "chat", "image", "agriculture_v2"],
+      "source_kit": "block_store/kits/agriculture/manifest.json",
+      "description": "Field reports, crop risk, and compliance analysis."
+    },
+    {
+      "id": "automotive",
+      "name": "Automotive Virgin Edition",
+      "domain": "automotive",
+      "version": "1.0.0",
+      "container_class": "app.containers.automotive.AutomotiveContainer",
+      "blocks": ["pdf", "ocr", "chat", "image", "automotive_v2"],
+      "source_kit": "block_store/kits/automotive/manifest.json",
+      "description": "Vehicle documentation, recall, and supply chain analysis."
+    },
+    {
+      "id": "aviation",
+      "name": "Aviation Virgin Edition",
+      "domain": "aviation",
+      "version": "1.0.0",
+      "container_class": "app.containers.aviation.AviationContainer",
+      "blocks": ["pdf", "ocr", "chat", "image", "aviation_v2"],
+      "source_kit": "block_store/kits/aviation/manifest.json",
+      "description": "Flight logs, maintenance records, and safety analysis."
+    },
+    {
+      "id": "construction",
+      "name": "Construction Virgin Edition",
+      "domain": "construction",
+      "version": "3.1",
+      "container_class": "app.containers.construction.ConstructionContainer",
+      "blocks": ["pdf", "ocr", "chat", "image", "construction_v2"],
+      "source_kit": "block_store/kits/construction/manifest.json",
+      "description": "Contracts, specs, and baseline project document analysis."
+    },
+    {
+      "id": "education",
+      "name": "Education Virgin Edition",
+      "domain": "education",
+      "version": "1.0.0",
+      "container_class": "app.containers.education.EducationContainer",
+      "blocks": ["pdf", "ocr", "chat", "image", "education_v2"],
+      "source_kit": "block_store/kits/education/manifest.json",
+      "description": "Syllabus, accreditation, and learning material analysis."
+    },
+    {
+      "id": "finance",
+      "name": "Finance Virgin Edition",
+      "domain": "finance",
+      "version": "1.0.0",
+      "container_class": "app.containers.finance.FinanceContainer",
+      "blocks": ["pdf", "ocr", "chat", "image", "finance_v2"],
+      "source_kit": "block_store/kits/finance/manifest.json",
+      "description": "Financial document analysis and risk flagging."
+    },
+    {
+      "id": "hotel_management",
+      "name": "Hotel Management Virgin Edition",
+      "domain": "hotel_management",
+      "version": "1.0.0",
+      "container_class": "app.containers.hotel_management.HotelManagementContainer",
+      "blocks": ["pdf", "ocr", "chat", "image", "hotel_management_v2"],
+      "source_kit": "block_store/kits/hotel_management/manifest.json",
+      "description": "Guest services, operations, and hospitality document analysis."
+    },
+    {
+      "id": "hr",
+      "name": "HR Virgin Edition",
+      "domain": "hr",
+      "version": "1.0.0",
+      "container_class": "app.containers.hr.HRContainer",
+      "blocks": ["pdf", "ocr", "chat", "image", "hr_v2"],
+      "source_kit": "block_store/kits/hr/manifest.json",
+      "description": "Resumes, policies, and workforce document analysis."
+    },
+    {
+      "id": "insurance",
+      "name": "Insurance Virgin Edition",
+      "domain": "insurance",
+      "version": "1.0.0",
+      "container_class": "app.containers.insurance.InsuranceContainer",
+      "blocks": ["pdf", "ocr", "chat", "image", "insurance_v2"],
+      "source_kit": "block_store/kits/insurance/manifest.json",
+      "description": "Policies, claims, and underwriting document analysis."
+    },
+    {
+      "id": "legal",
+      "name": "Legal Virgin Edition",
+      "domain": "legal",
+      "version": "2.0.0",
+      "container_class": "app.containers.legal.LegalContainer",
+      "blocks": ["pdf", "ocr", "chat", "image", "legal_v2"],
+      "source_kit": "block_store/kits/legal/manifest.json",
+      "description": "Contract review, clauses, and legal risk analysis."
+    },
+    {
+      "id": "manufacturing",
+      "name": "Manufacturing Virgin Edition",
+      "domain": "manufacturing",
+      "version": "1.0.0",
+      "container_class": "app.containers.manufacturing.ManufacturingContainer",
+      "blocks": ["pdf", "ocr", "chat", "image", "manufacturing_v2"],
+      "source_kit": "block_store/kits/manufacturing/manifest.json",
+      "description": "Quality, BOM, and operations document analysis."
+    },
+    {
+      "id": "medical",
+      "name": "Medical Virgin Edition",
+      "domain": "medical",
+      "version": "1.0.0",
+      "container_class": "app.containers.medical.MedicalContainer",
+      "blocks": ["pdf", "ocr", "chat", "image", "medical_v2"],
+      "source_kit": "block_store/kits/medical/manifest.json",
+      "description": "Clinical notes, entity extraction, and compliance checks."
+    },
+    {
+      "id": "oil_gas",
+      "name": "Oil & Gas Virgin Edition",
+      "domain": "oil_gas",
+      "version": "1.0.0",
+      "container_class": "app.containers.oil_gas.OilGasContainer",
+      "blocks": ["pdf", "ocr", "chat", "image", "oil_gas_v2"],
+      "source_kit": "block_store/kits/oil_gas/manifest.json",
+      "description": "Well logs, permits, and energy operations analysis."
+    },
+    {
+      "id": "pharma",
+      "name": "Pharma Virgin Edition",
+      "domain": "pharma",
+      "version": "1.0.0",
+      "container_class": "app.containers.pharma.PharmaContainer",
+      "blocks": ["pdf", "ocr", "chat", "image", "pharma_v2"],
+      "source_kit": "block_store/kits/pharma/manifest.json",
+      "description": "Regulatory filings, trial docs, and pharmacovigilance analysis."
+    },
+    {
+      "id": "real_estate",
+      "name": "Real Estate Virgin Edition",
+      "domain": "real_estate",
+      "version": "1.0.0",
+      "container_class": "app.containers.real_estate.RealEstateContainer",
+      "blocks": ["pdf", "ocr", "chat", "image", "real_estate_v2"],
+      "source_kit": "block_store/kits/real_estate/manifest.json",
+      "description": "Leases, listings, and property document analysis."
+    },
+    {
+      "id": "retail",
+      "name": "Retail Virgin Edition",
+      "domain": "retail",
+      "version": "1.0.0",
+      "container_class": "app.containers.retail.RetailContainer",
+      "blocks": ["pdf", "ocr", "chat", "image", "retail_v2"],
+      "source_kit": "block_store/kits/retail/manifest.json",
+      "description": "Inventory, sales, and retail operations document analysis."
+    },
+    {
+      "id": "supply_chain",
+      "name": "Supply Chain Virgin Edition",
+      "domain": "supply_chain",
+      "version": "1.0.0",
+      "container_class": "app.containers.supply_chain.SupplyChainContainer",
+      "blocks": ["pdf", "ocr", "chat", "image", "supply_chain_v2"],
+      "source_kit": "block_store/kits/supply_chain/manifest.json",
+      "description": "POs, invoices, and logistics document analysis."
+    }
+  ]
+}

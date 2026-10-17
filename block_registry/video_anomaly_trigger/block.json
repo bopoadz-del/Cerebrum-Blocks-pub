@@ -1,0 +1,194 @@
+{
+  "acceptance": [],
+  "author": "Cerebrum Team",
+  "description": "Watch video metadata for anomalies and chain to notification or workflow triggers",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "30dc8dc1a07f1bc67aff3e75b9a58e662a0bf3f28cc4f689da3bf04d9a36f9d8",
+    "block.py": "1f1cfebdf24a5a0e9c61845323f37a3d147c33be81ec7a3e97912e03db78846d"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/video_anomaly_trigger:latest",
+    "type": "docker"
+  },
+  "id": "video_anomaly_trigger",
+  "inputs": [
+    {
+      "description": "{\"metadata\": {...}} or {\"event_id\": \"...\"}",
+      "name": "input",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "default": "evaluate",
+      "description": "Action",
+      "name": "action",
+      "options": [
+        "evaluate",
+        "scan_store",
+        "health"
+      ],
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": "webhook",
+      "description": "Notify Channel",
+      "name": "channel",
+      "options": [
+        "webhook",
+        "email",
+        "slack"
+      ],
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": "true",
+      "description": "Send Notification",
+      "name": "send_notification",
+      "options": [
+        "true",
+        "false"
+      ],
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": "webhook",
+      "description": "Configuration parameter: default_channel",
+      "name": "default_channel",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": "medium",
+      "description": "Configuration parameter: min_severity",
+      "name": "min_severity",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": [],
+      "description": "Configuration parameter: notify_on_types",
+      "name": "notify_on_types",
+      "required": false,
+      "type": "array"
+    }
+  ],
+  "layer": 2,
+  "name": "Video Anomaly Trigger",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Triggered",
+      "name": "triggered",
+      "type": "boolean"
+    },
+    {
+      "description": "Anomalies",
+      "name": "anomalies",
+      "type": "json"
+    },
+    {
+      "description": "Notification Result",
+      "name": "notification",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    },
+    {
+      "kind": "block",
+      "scope": "peer"
+    }
+  ],
+  "requires": [
+    "notification"
+  ],
+  "signature": "WdoG1GnAUBdBaitYJdf67WXu/mdLBotrr+08oRn5TgxFp49HtMYR/krHoFowhyRiW3l3cAXCS+okfv1gkeNcAQ==",
+  "tags": [
+    "connector",
+    "video",
+    "trigger",
+    "anomaly",
+    "reactive"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "{\"metadata\": {...}} or {\"event_id\": \"...\"}",
+      "name": "input",
+      "widget": "json"
+    },
+    {
+      "label": "Action",
+      "name": "action",
+      "options": [
+        "evaluate",
+        "scan_store",
+        "health"
+      ],
+      "widget": "select"
+    },
+    {
+      "label": "Notify Channel",
+      "name": "channel",
+      "options": [
+        "webhook",
+        "email",
+        "slack"
+      ],
+      "widget": "select"
+    },
+    {
+      "label": "Send Notification",
+      "name": "send_notification",
+      "options": [
+        "true",
+        "false"
+      ],
+      "widget": "select"
+    },
+    {
+      "label": "Default Channel",
+      "name": "default_channel",
+      "widget": "text"
+    },
+    {
+      "label": "Min Severity",
+      "name": "min_severity",
+      "widget": "text"
+    },
+    {
+      "label": "Notify On Types",
+      "name": "notify_on_types",
+      "widget": "json"
+    }
+  ],
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    },
+    {
+      "kind": "notification",
+      "scope": "outbound"
+    }
+  ]
+}

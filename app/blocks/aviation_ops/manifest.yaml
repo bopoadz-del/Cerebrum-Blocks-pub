@@ -1,0 +1,95 @@
+kit: aviation_ops
+version: 1
+serves_verticals: [aviation_ops, aviation_operations]
+hooks_used: [H0, H1, H2, H3]
+
+quantities:
+  mtow:                   {units: [kg],   aliases: [maximum_takeoff_weight]}
+  mzfw:                   {units: [kg]}
+  fuel_minimum:           {units: [kg]}
+  performance_distance:   {units: [m]}
+  fdp_limit:              {units: [h]}
+  rest_requirement:       {units: [h]}
+  delay_cost:             {units: [currency_per_min]}
+  handling_rate:          {units: [currency_per_turn]}
+
+  # Correction 6 (spec §1): a staleness_triggers KEY must be a declared
+  # quantity. These seven are artifacts the sheet's triggers name, not
+  # figures — declared unitless so the trigger has something to be keyed on.
+  weight_limits:          {units: [—]}
+  performance_data:       {units: [—]}
+  mel_interval:           {units: [—]}
+  duty_limits:            {units: [—]}
+  contract_rate:          {units: [—]}
+  fuel_price:             {units: [—]}
+  compensation:           {units: [—]}
+
+qualifier_fields:
+  aircraft_registration:  {type: string}
+  aircraft_type:          {type: string}
+  configuration:          {type: string}
+  runway:                 {type: string}
+  temperature_c:          {type: number}
+  qnh_hpa:                {type: number}
+  sector:                 {type: string}
+  alternate:              {type: string}
+  reserve_policy:         {type: string}
+  report_time:            {type: date}
+  sectors_flown:          {type: number}
+  acclimatisation_state:  {type: enum,   values: [acclimatised, not_acclimatised, unknown]}
+  augmentation:           {type: enum,   values: [none, augmented]}
+  station:                {type: string}
+  aircraft_category:      {type: enum,   values: [narrowbody, widebody, regional]}
+  shift:                  {type: enum,   values: [day, night, out_of_hours]}
+  contract_or_adhoc:      {type: enum,   values: [contract, ad_hoc]}
+  delay_phase:            {type: enum,   values: [gate_engines_off, gate_extended, taxi, airborne]}
+  ftl_authority:          {type: enum,   values: [GACA, EASA, FAA, other]}
+
+source_classes:
+  AFM:                    {rank: 1}
+  OM_A_OM_B:              {rank: 2, reject_as_proof: [superseded_revision]}
+  MEL_CDL:                {rank: 3}
+  OpSpecs:                {rank: 4}
+  CAA_directive:          {rank: 5}
+  IATA_AHM:               {rank: 6}
+  handling_contract:      {rank: 7, reject_as_proof: [verbal_agreement]}
+  station_procedure:      {rank: 8}
+  OCC_standing_instruction: {rank: 9}
+  # Correction 1: every class named in reject_as_proof or demote must itself
+  # be a declared source class, or the rule that names it can never fire and
+  # the loader refuses. Ranked below every governing class.
+  superseded_revision:    {rank: 10}
+  verbal_agreement:       {rank: 11}
+  planning_default:       {rank: 12}
+  previous_loadsheet:     {rank: 13}
+  crew_note:              {rank: 14}
+
+state_providers:
+  crew_roster:            {kind: status,   max_age: realtime}
+  manual_revision:        {kind: revision, max_age: next_issue}
+  contract_revision:      {kind: revision, max_age: next_issue}
+  notam_state:            {kind: cycle,    max_age: next_issue}
+
+staleness_triggers:
+  weight_limits:          [configuration_change, AFM_revision]
+  fuel_minimum:           [reserve_policy_change]
+  performance_data:       [AFM_revision, runway_change]
+  mel_interval:           [expiry]
+  duty_limits:            [ftl_authority_change, FTL_revision]
+  contract_rate:          [contract_renewal]
+  fuel_price:             [contract_or_index_movement]
+  compensation:           [regime_change]
+
+scope_refusals:
+  - pattern: "can we dispatch with this defect"
+    authority: "duty engineer + MEL"
+  - pattern: "is the crew legal for this"
+    authority: "crew control — live roster"
+  - pattern: "should we (cancel|swap|ferry|divert)"
+    authority: "OCC duty manager"
+  - pattern: "can we accept this (technical|defect)"
+    authority: "duty engineer"
+
+spec_extensions:
+  claim_class:            true
+  same_source:            true

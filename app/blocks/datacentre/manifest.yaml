@@ -1,0 +1,152 @@
+# Data centre — kit VOCABULARY for the shared reasoning-layer evaluator.
+#
+# This is the declarative half of the kit. The facility_01 design basis (real
+# values, from the completed domain encoding sheet) stays in design_basis.yaml,
+# which the hand-written gate in reasoning.py still reads; this file is what the
+# shared evaluator needs, and nothing in the evaluator knows what a chiller is.
+#
+# Why the datacentre kit was rewritten to this shape: the hand-written gate
+# enforced four invariants. Reading it against the portable spec, four of the
+# eight kinds were simply absent — `authority` (the tier trap and the whole
+# REJECT_AS_PROOF table were one bespoke loop), `band` (nothing stopped a PUE of
+# 0.4, which is thermodynamically impossible), `derivation` (nothing checked that
+# stated working matched a stated result), and `grounding` at the figure level.
+# They are declared here instead of written again.
+kit: datacentre
+version: 1
+serves_verticals: [datacentre, data_centre, data_center]
+interview_status: "run — facility_01 design basis complete (design_basis.yaml); gaps in KNOWN_GAPS.md"
+
+quantities:
+  tested_result:
+    aliases: [test result, IST result, commissioning result]
+    classes: [any_claim]
+  resilience_level:
+    aliases: [redundancy, N+1, resilience, fault tolerance, concurrent maintainability]
+    classes: [any_claim]
+  available_capacity:
+    units: [MW, kW, kVA]
+    aliases: [available capacity, remaining capacity, spare capacity]
+    classes: [any_claim, any_measured]
+  ride_through_minutes:
+    units: [minutes, min, s]
+    aliases: [thermal ride-through, ride through]
+    classes: [any_claim, any_measured]
+  ups_autonomy_minutes:
+    units: [minutes, min]
+    classes: [any_measured]
+  generator_autonomy_hours:
+    units: [hours, h]
+    classes: [any_measured]
+  pue:
+    aliases: [PUE, power usage effectiveness]
+    classes: [any_measured]
+  space_temperature_c:
+    units: [degC, C]
+    classes: [any_measured]
+  it_load_mw:
+    units: [MW, kW]
+    classes: [any_measured]
+
+qualifier_fields:
+  # INV-1: what makes a "tested" claim actionable.
+  commissioning_level:   {type: enum, values: [L1, L2, L3, L4, L5]}
+  load_pct:              {type: number}
+  failure_scenario:      {type: string}
+  # INV-2: the basis of a resilience claim. as_designed is not as_built, and
+  # neither is what the facility is doing right now.
+  basis:                 {type: enum, values: [as_designed, as_built, as_currently_operating]}
+  # INV-3: whether the capacity figure has redundancy reserved out of it.
+  redundancy_basis:      {type: enum, values: [design, installed, available_after_redundancy]}
+  facility:              {type: string}
+  system:                {type: string}
+
+source_classes:
+  # The authority ladder. rank 1 governs. `reject_as_proof` is what each class
+  # may NOT stand in for — the old kit's REJECT_AS_PROOF table and its "tier
+  # trap", expressed once as data.
+  integrated_systems_test:
+    rank: 1
+    name_patterns: ["\\bIST\\b", "integrated systems? test"]
+  witnessed_test:
+    rank: 1
+    name_patterns: ["witnessed test", "witness(ed)? (of )?test"]
+  live_measurement:
+    rank: 1
+    name_patterns: ["bms (log|reading)", "live (log|reading|measurement)", "trend data"]
+  tier_constructed_certificate:
+    rank: 2
+    name_patterns: ["tier constructed", "constructed facility certificat"]
+  l4_functional_test:
+    rank: 3
+    name_patterns: ["l4 functional test", "functional test"]
+    # A component passing its own functional test says nothing about the
+    # facility riding through a failure.
+    reject_as_proof: [integrated_systems_test, witnessed_test]
+  tier_design_certificate:
+    rank: 4
+    name_patterns: ["tier design certificat"]
+    # THE TIER TRAP: a design certification is not a constructed-facility one.
+    reject_as_proof: [tier_constructed_certificate, integrated_systems_test]
+  single_line_diagram:
+    rank: 5
+    name_patterns: ["single[- ]line diagram", "\\bSLD\\b"]
+    reject_as_proof: [integrated_systems_test, live_measurement, witnessed_test]
+  design_document:
+    rank: 5
+    name_patterns: ["design (basis|document|intent)", "basis of design"]
+    reject_as_proof: [live_measurement, integrated_systems_test]
+  manufacturer_specification:
+    rank: 6
+    name_patterns: ["manufacturer('s)? (spec|specification|data)"]
+    reject_as_proof: [witnessed_test, integrated_systems_test]
+  installation_certificate:
+    rank: 6
+    name_patterns: ["installation certificat"]
+    reject_as_proof: [witnessed_test, integrated_systems_test]
+  desktop_review:
+    rank: 7
+    name_patterns: ["desktop review", "paper (review|study)"]
+    reject_as_proof: [witnessed_test, integrated_systems_test, live_measurement]
+
+state_providers:
+  # BOTH are required for a live claim. The BMS control panel is itself a single
+  # point of failure, and the manual log carries what the BMS cannot see —
+  # manual isolations, racked-out breakers, components out.
+  bms:        {kind: status, max_age: 3600}
+  manual_log: {kind: status, max_age: 3600}
+  # An IST's validity is an EVENT, not a clock: it dies the moment the tested
+  # systems change, however recent the test was. The register is what says so.
+  ist_register: {kind: revision, max_age: tested_system_modified}
+
+staleness_triggers:
+  # EVENTS, not a clock. An IST result is stale the moment the tested systems
+  # change, however recent the test was — the live chiller incident.
+  tested_result:
+    - control_sequence_modified
+    - tested_system_modified
+    - ist_superseded
+  resilience_level:
+    - component_racked_out
+    - manual_bypass_applied
+    - shared_component_isolated
+  available_capacity:
+    - new_load_energised
+    - breaker_reconfigured
+  ride_through_minutes:
+    - control_sequence_modified
+    - chiller_replaced
+    - setpoint_changed
+
+scope_refusals:
+  # Refused BEFORE retrieval. No document makes these answerable, so retrieving
+  # produces citations that read as though they authorised the decision.
+  - label: readiness for IT load
+    pattern: "ready\\s+for\\s+(IT|live)\\s+load|accept\\s+IT\\s+load|clear\\s+for\\s+go[-\\s]?live|authoris[ez]e\\s+go[-\\s]?live"
+    authority: "the client's authorised person, on the commissioning authority's recommendation"
+  - label: energisation
+    pattern: "safe\\s+to\\s+energi[sz]e|can\\s+we\\s+energi[sz]e"
+    authority: "the authorised person for the electrical system"
+  - label: current resilience declaration
+    pattern: "are\\s+we\\s+(fully\\s+)?(redundant|resilient)\\s+(right\\s+now|today)|what\\s+is\\s+our\\s+current\\s+resilience"
+    authority: "the facility's duty engineer, from the live state — not from any document"

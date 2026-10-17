@@ -1,0 +1,115 @@
+{
+  "acceptance": [
+    {
+      "check": "errors on an unknown or missing action",
+      "id": "unknown_action",
+      "status": "failed"
+    },
+    {
+      "check": "refuses or errors when a required input is absent",
+      "id": "missing_required_input",
+      "status": "failed"
+    },
+    {
+      "check": "control-delete mutation turns the block's tests red",
+      "id": "control_delete",
+      "status": "failed"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Deterministic marketplace insurance gate: per-vertical required coverage lines, policy validity windows, explicit gap reporting, and incident intake with the coverage verdict attached.",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "9b0a5120c4c7deaad18004910afdf0374593b1f5c76269e6ec79a588171b3ea2",
+    "block.py": "c7b0522298c32976839aa293d33b9eee0fc085dcf18c6a692ca74f05741df1f4"
+  },
+  "execution": {
+    "entrypoint": "block.py",
+    "image": "ghcr.io/cerebrum-blocks/insurance_compliance:latest",
+    "type": "python"
+  },
+  "id": "insurance_compliance",
+  "inputs": [
+    {
+      "description": "JSON payload for the selected operation",
+      "name": "input",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "default": "verify_coverage",
+      "description": "Compliance operation",
+      "name": "operation",
+      "options": [
+        "register_policy",
+        "verify_coverage",
+        "required_coverage",
+        "incident_intake"
+      ],
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 3,
+  "name": "Insurance Compliance",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Compliance operation result (registered policy, coverage verdict with gaps, required lines, incident record)",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [
+      "datetime",
+      "typing"
+    ],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "tbSsXnw3CeBzj8H9kEp1oma1SITxY0Kelr35Yg5r7fmlzLaZyhxhPLEh5LV0TBBtmBikCR+TDw+6QDlhi/u3Bg==",
+  "tags": [
+    "domain",
+    "marketplace",
+    "insurance",
+    "compliance",
+    "trust",
+    "deterministic"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "JSON payload for the selected operation",
+      "name": "input",
+      "widget": "json"
+    },
+    {
+      "label": "Operation",
+      "name": "operation",
+      "options": [
+        "register_policy",
+        "verify_coverage",
+        "required_coverage",
+        "incident_intake"
+      ],
+      "widget": "select"
+    }
+  ],
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

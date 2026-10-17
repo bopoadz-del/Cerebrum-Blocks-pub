@@ -1,0 +1,81 @@
+{
+  "acceptance": [
+    {
+      "check": "an unknown action is refused, not silently accepted",
+      "id": "unknown_action",
+      "status": "refused"
+    },
+    {
+      "check": "an empty payload without required arguments is refused, not faked",
+      "id": "missing_arguments",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Exact clash and clearance measurement from one pass over IFC meshes: AABB pre-filter, then triangle-mesh judgement (CLASH vs CLEARANCE).",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "f65f4f942226dc350fabf344d9595d21d8f605712be4304456ab49046fe8c795",
+    "block.py": "f27033a17b8c4d4abc306ce39114b6ce82f08de4875c16a3533c444166d5e743"
+  },
+  "id": "geometry_engine",
+  "inputs": [
+    {
+      "description": "judge | aabb_overlaps | backend",
+      "name": "action",
+      "options": [
+        "judge",
+        "aabb_overlaps",
+        "backend"
+      ],
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 3,
+  "name": "Geometry Engine",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Capability result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": true,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "file",
+      "scope": "local.read"
+    }
+  ],
+  "requires": [],
+  "signature": "QHYWhe0sNqie/M88jb/pnx9as3c1HnWN2ouf2DUpjUJoj3JNDnwrs3Irhd+JtzCGRxXOPEph1zhWcZFoHPrwDg==",
+  "tags": [
+    "mep",
+    "construction",
+    "coordination"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    },
+    {
+      "kind": "file",
+      "scope": "local.write"
+    }
+  ]
+}

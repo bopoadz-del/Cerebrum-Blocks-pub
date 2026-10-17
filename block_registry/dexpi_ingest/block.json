@@ -1,0 +1,68 @@
+{
+  "acceptance": [
+    {
+      "check": "malformed XML is refused with the parse error, never half-parsed",
+      "id": "malformed_xml",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "DEXPI/Proteus XML parser ported from <private-repo> ingest_dexpi.py: namespace-tolerant extraction of Sheet/Drawing, Equipment, Nozzle, Pipeline (+Component children), Instrument, BatteryLimit, DesignVolume and System into a normalized entity list. WALLS carried: full DEXPI XSD certification, Proteus schema namespaces and vendor extensions are NOT implemented.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "42a5d93c4ebecdb66ed358735bf4f53e1f9c1e9272fbd3f53516030d48a4295d",
+    "block.py": "63d4b817d482b83d2354bdf0179fadd339b833c60755ade6017bc780f3672624"
+  },
+  "id": "dexpi_ingest",
+  "inputs": [
+    {
+      "description": "parse",
+      "name": "action",
+      "options": [
+        "parse"
+      ],
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 3,
+  "name": "dexpi_ingest",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Capability result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "ckO0bDlr9rY7/mzVIYm9VCdkgr0MBa7I2Sx4p8tyMq+pZdzLdecmv0Fn7OOduC+DENPS71EWoPG8sn+KXF6bDQ==",
+  "tags": [
+    "dexpi",
+    "xml",
+    "piping",
+    "<private-repo>",
+    "digital-thread"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

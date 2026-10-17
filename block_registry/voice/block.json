@@ -1,0 +1,88 @@
+{
+  "acceptance": [
+    {
+      "check": "refuses or errors when a required input is absent",
+      "id": "missing_required_input",
+      "status": "refused"
+    },
+    {
+      "check": "errors on an unknown or missing action",
+      "id": "unknown_action",
+      "status": "failed"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Text-to-speech (gTTS) and speech-to-text (Google STT) \u2014 no API key needed",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "b3b37e67fcfbdbce5e04905917b2e06491c7b074ef832166615435417f22285e",
+    "block.py": "9202b2fd1477f4c93dd777c0a0ad735ff09ad5dbc3cdc6487b10189519812532"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/voice:latest",
+    "type": "docker"
+  },
+  "id": "voice",
+  "inputs": [
+    {
+      "description": "Record or upload audio...",
+      "name": "input",
+      "required": false,
+      "type": "file"
+    }
+  ],
+  "layer": 3,
+  "name": "Voice",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Transcription",
+      "name": "text",
+      "type": "text"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "file",
+      "scope": "local.read"
+    }
+  ],
+  "requires": [],
+  "signature": "toi/PRqSrB8xBT3Y3uynzbeIBXOcnf8Y+82suHVj2yadQv4s5xRyk0o5o9dmmE+wKDDos9yNAthAuuVi3yGrDw==",
+  "tags": [
+    "domain",
+    "audio",
+    "tts",
+    "stt"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "Record or upload audio...",
+      "name": "input",
+      "widget": "file"
+    }
+  ],
+  "version": "2.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    },
+    {
+      "kind": "file",
+      "scope": "temp"
+    }
+  ]
+}

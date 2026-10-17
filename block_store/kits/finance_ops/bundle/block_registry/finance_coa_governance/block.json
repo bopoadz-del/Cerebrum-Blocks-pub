@@ -1,0 +1,72 @@
+{
+  "acceptance": [
+    {
+      "check": "refuses or errors when a required input is absent",
+      "id": "missing_required_input",
+      "status": "refused"
+    },
+    {
+      "check": "errors on an unknown or missing action",
+      "id": "unknown_action",
+      "status": "failed"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Chart of Accounts hierarchy, mapping, effective dating, and impact controls.",
+  "digests": {
+    "block.json": "ffc21759e1efc4ddb390b60900477f1f60f31e0356f5af768be68afe45a43f0d",
+    "block.py": "fb9bf803a81e1c10431082f41f8cf163624621d41da4d350d5ebce72bbbf0a83"
+  },
+  "id": "finance_coa_governance",
+  "inputs": [
+    {
+      "description": "FinanceOps payload",
+      "name": "input",
+      "required": false,
+      "type": "json"
+    }
+  ],
+  "layer": 3,
+  "name": "Finance CoA Governance",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Deterministic FinanceOps result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [
+      "collections",
+      "datetime",
+      "typing"
+    ],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "signature": "HFTyDchop7ZEPP9gsckafcwBnCcTMY7EQa8C9eQbS5u9lVT/aTFACyT6RRa72eTlYCqVzlIea7+BWYBrCWrBBA==",
+  "tags": [
+    "domain",
+    "finance_ops",
+    "chart_of_accounts",
+    "master_data",
+    "governance"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

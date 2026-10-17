@@ -1,0 +1,65 @@
+{
+  "acceptance": [
+    {
+      "check": "errors on an unknown or missing action",
+      "id": "unknown_action",
+      "status": "failed"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Normalize tabular ERP, CRM, HCM, budget, forecast, and project-cost rows.",
+  "digests": {
+    "block.json": "ab9c283763edcc7a1ff0b340ae49c4fc8d0cd7810389a1fea7d3a00e0bf1d1ff",
+    "block.py": "2772f9953c1cd27c815fd7ced9965caf54cba88e800d5526c1af0742bda053c4"
+  },
+  "id": "finance_import",
+  "inputs": [
+    {
+      "description": "FinanceOps payload",
+      "name": "input",
+      "required": false,
+      "type": "json"
+    }
+  ],
+  "layer": 3,
+  "name": "Finance Import Normalizer",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Deterministic FinanceOps result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [
+      "typing"
+    ],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "signature": "EJBYF50H0XmUFIK6V+g2no5Gb/2NQFs97maX/7sFoyAC/UrxqKbRkEQGhQA0YXE6mb1U0IIP+vd4TYxy+OltCQ==",
+  "tags": [
+    "domain",
+    "finance_ops",
+    "ingestion",
+    "normalization",
+    "deterministic"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

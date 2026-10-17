@@ -1,0 +1,63 @@
+kit: fm
+version: 1
+serves_verticals: [fm, facility_management]
+hooks_used: [H0, H1, H3]
+
+quantities:
+  asset_field:            {units: [—]}
+  compliance_status:      {units: [—]}
+  response_time:          {units: [hours, minutes]}
+  rectification_time:     {units: [hours, days]}
+  in_service_status:      {units: [—]}
+  reactive_to_planned_ratio: {units: [ratio]}
+
+  # Spec §1: a staleness trigger is keyed on a QUANTITY. These are the
+  # artifacts the sheet's triggers name — records the domain talks about,
+  # unitless, so the trigger has something to be keyed on.
+  asset_register_entry:  {units: [—]}
+  condition_survey:      {units: [—]}
+  warranty:              {units: [—]}
+
+qualifier_fields:
+  regime:                 {type: enum,   values: [statutory, contractual, manufacturer, insurer, discretionary]}
+  deferral_authority:     {type: string}
+  in_service_basis:       {type: enum,   values: [BMS_monitored, manual_log]}
+  sla_clock_start:        {type: enum,   values: [report, dispatch, arrival]}
+  sla_clock_stop:         {type: enum,   values: [temporary_make_safe, permanent_repair, resolution]}
+
+source_classes:
+  statutory_regulation:   {rank: 1}
+  authority_notice:       {rank: 2}
+  insurer_requirement:    {rank: 3}
+  manufacturer_requirement: {rank: 4}
+  head_lease:             {rank: 5}
+  client_policy:          {rank: 6}
+  site_procedure:         {rank: 7, reject_as_proof: [verbal_instruction]}
+  verbal_instruction:     {rank: 8}
+
+state_providers:
+  bms_status:             {kind: status,   max_age: realtime}
+  manual_log:             {kind: status,   max_age: shift}
+
+staleness_triggers:
+  in_service_status:      [any_isolation, any_override]
+  compliance_status:      [change_to_protected_system]
+  asset_register_entry:   [any_physical_change]
+  condition_survey:       [intervening_works]
+  warranty:               [non_approved_intervention]
+
+scope_refusals:
+  - pattern: "are we compliant"
+    authority: "named responsible person + regulator"
+  - pattern: "is it safe to work on this"
+    authority: "site safety authority"
+  - pattern: "can we defer this"
+    authority: "regime-appropriate authoriser"
+  - pattern: "is there asbestos here"
+    authority: "asbestos register + surveyor"
+  - pattern: "is this system in service"
+    authority: "live isolation register"
+
+spec_extensions:
+  claim_class:            true
+  same_source:            true

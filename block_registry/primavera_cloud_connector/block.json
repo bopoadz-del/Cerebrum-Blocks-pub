@@ -1,0 +1,93 @@
+{
+  "acceptance": [
+    {
+      "check": "oauth_token unconfigured returns status refused (no fabricated token)",
+      "id": "oauth_unconfigured_refused",
+      "status": "refused"
+    },
+    {
+      "check": "etl unconfigured returns status refused (no fabricated rows)",
+      "id": "etl_unconfigured_refused",
+      "status": "refused"
+    },
+    {
+      "check": "oauth_token with credentials still refused \u2014 no donor adapter exists",
+      "id": "oauth_configured_still_refused",
+      "status": "refused"
+    },
+    {
+      "check": "etl with credentials still refused \u2014 no donor adapter exists",
+      "id": "etl_configured_still_refused",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "honest-stub \u2014 Primavera Cloud OAuth2 ETL connector, no donor \u2014 honest stub. No donor adapter exists on disk: no OAuth2 token request and no ETL call is implemented; oauth_token and etl fail closed with a structured refusal (never a fabricated token, never fabricated project rows), whether or not credentials are configured.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "8b750f307d6f916e3dbbbaf4f0948933c698bc55b3ac259bd0c861fb5c22d751",
+    "block.py": "e0277da37d0ad54ae5686a67e926df65c274dbafe155fd976941a9dce2b72703"
+  },
+  "id": "primavera_cloud_connector",
+  "inputs": [
+    {
+      "description": "status | capabilities | oauth_token | etl",
+      "name": "action",
+      "options": [
+        "status",
+        "capabilities",
+        "oauth_token",
+        "etl"
+      ],
+      "required": false,
+      "type": "string"
+    },
+    {
+      "description": "ETL resource name (projects, activities, ...)",
+      "name": "resource",
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 2,
+  "name": "primavera_cloud_connector",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Capability result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "VT6NV1VIKUmkMiEbkup8L7XJKLx7xXiCvOB9u0CB9Z35HLSxwTwHxONj+pD0axP70yWPS+Bl5v/0vGLqcnOGCg==",
+  "tags": [
+    "connector",
+    "primavera",
+    "oauth2",
+    "etl",
+    "construction",
+    "honest-stub"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

@@ -1,0 +1,242 @@
+{
+  "acceptance": [
+    {
+      "check": "fails loud when a required credential or key is absent",
+      "id": "missing_credential",
+      "status": "failed"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Fetch FHIR Patient, Observation, and MedicationRequest resources from an EHR",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "3919b24c96aab9532537261d92097122df651a54c906c42e9b6b1d28846cc1cc",
+    "block.py": "438796091e07e5ac31ce45574167bb2b67614a15a46e84b0b0113e8106dfdc6a"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/medical_ehr_connector:latest",
+    "type": "docker"
+  },
+  "id": "medical_ehr_connector",
+  "inputs": [
+    {
+      "description": "{\"resource\": \"Patient\", \"patient_id\": \"123\"}",
+      "name": "input",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "default": "fetch",
+      "description": "Action",
+      "name": "action",
+      "options": [
+        "fetch",
+        "auth",
+        "health"
+      ],
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": "Patient",
+      "description": "FHIR Resource",
+      "name": "resource",
+      "options": [
+        "Patient",
+        "Observation",
+        "MedicationRequest"
+      ],
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": "Observation",
+      "description": "Resource type (alias)",
+      "name": "resource_type",
+      "options": [
+        "Patient",
+        "Observation",
+        "MedicationRequest"
+      ],
+      "required": false,
+      "type": "string"
+    },
+    {
+      "description": "Patient ID",
+      "name": "patient_id",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": 20,
+      "description": "Max results",
+      "name": "limit",
+      "required": false,
+      "type": "number"
+    },
+    {
+      "default": "",
+      "description": "Configuration parameter: fhir_base_url",
+      "name": "fhir_base_url",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": "",
+      "description": "Configuration parameter: fhir_access_token",
+      "name": "fhir_access_token",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": "",
+      "description": "Configuration parameter: fhir_client_id",
+      "name": "fhir_client_id",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": "",
+      "description": "Configuration parameter: fhir_client_secret",
+      "name": "fhir_client_secret",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": 30,
+      "description": "Configuration parameter: timeout_seconds",
+      "name": "timeout_seconds",
+      "required": false,
+      "type": "number"
+    }
+  ],
+  "layer": 2,
+  "name": "Medical Ehr Connector",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Connector Event",
+      "name": "event",
+      "type": "json"
+    },
+    {
+      "description": "FHIR Resources",
+      "name": "resources",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "env",
+      "scope": "process"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    },
+    {
+      "kind": "network",
+      "scope": "http.outbound"
+    }
+  ],
+  "requires": [],
+  "signature": "RyO+q/hfTYXNsVCcX+k1tDiXav1DE+Vd41oNVGQtvUhsP+lThG+I7V8E9HDm1fx93ELA016Gsyyxf6PGwEw3DQ==",
+  "tags": [
+    "connector",
+    "medical",
+    "fhir",
+    "ehr",
+    "healthcare"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "{\"resource\": \"Patient\", \"patient_id\": \"123\"}",
+      "name": "input",
+      "widget": "json"
+    },
+    {
+      "label": "Action",
+      "name": "action",
+      "options": [
+        "fetch",
+        "auth",
+        "health"
+      ],
+      "widget": "select"
+    },
+    {
+      "label": "FHIR Resource",
+      "name": "resource",
+      "options": [
+        "Patient",
+        "Observation",
+        "MedicationRequest"
+      ],
+      "widget": "select"
+    },
+    {
+      "label": "Resource type (alias)",
+      "name": "resource_type",
+      "options": [
+        "Patient",
+        "Observation",
+        "MedicationRequest"
+      ],
+      "widget": "select"
+    },
+    {
+      "label": "Patient ID",
+      "name": "patient_id",
+      "widget": "text"
+    },
+    {
+      "label": "Max results",
+      "name": "limit",
+      "widget": "number"
+    },
+    {
+      "label": "Fhir Base Url",
+      "name": "fhir_base_url",
+      "widget": "text"
+    },
+    {
+      "label": "Fhir Access Token",
+      "name": "fhir_access_token",
+      "widget": "text"
+    },
+    {
+      "label": "Fhir Client Id",
+      "name": "fhir_client_id",
+      "widget": "text"
+    },
+    {
+      "label": "Fhir Client Secret",
+      "name": "fhir_client_secret",
+      "widget": "text"
+    },
+    {
+      "label": "Timeout Seconds",
+      "name": "timeout_seconds",
+      "widget": "number"
+    }
+  ],
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

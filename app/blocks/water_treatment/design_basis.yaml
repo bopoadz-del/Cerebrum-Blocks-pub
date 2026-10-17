@@ -1,0 +1,174 @@
+# Water treatment plant operations reasoning layer — treatment basis.
+#
+# Source of truth: the domain encoding sheet for Water Treatment Plant
+# Operations. NO INTERVIEW HAS RUN. Every `value` below is null on purpose and
+# stays null until the interview fills it; see KNOWN_GAPS.md.
+#
+# A null value is legal. A MISSING QUALIFIER IS NOT: the loader refuses any
+# figure that does not carry every key in MANDATORY_QUALIFIERS, at load time,
+# naming the figure and the keys it lacks. A half-qualified figure is how a
+# CT value computed at the wrong temperature/pH row ends up answering a
+# different disinfection question.
+#
+# contact_time_basis is part of the identity of every contact-time figure,
+# not a label on it:
+#   theoretical   hydraulic design value only — never proof where T10 is required
+#   T10           10th-percentile detention from a tracer study, baffling factor applied
+#   tracer        the tracer study result itself
+# Nothing carries between them. See DERIVATION_GUARD in reasoning.py.
+#
+# dose_basis is likewise part of the identity of every dose figure:
+#   as_product    the commercial product as delivered (e.g. 12.5% trade NaOCl)
+#   as_active     the active ingredient (e.g. as Cl2, as Al2O3) — what the
+#                 process calculation actually needs
+# The nameplate/rated strength of a chemical is never a substitute for the
+# delivered, measured strength: see the "nameplate hypochlorite strength"
+# derivation guard entry.
+source: "domain encoding sheet, Water Treatment Plant Operations"
+scope: "plant- and train-specific — never carry to another plant or train"
+interview_status: "not run — every value is null (KNOWN_GAPS.md)"
+
+design_basis:
+  # ---- CT (disinfection credit): INV-1 needs temperature, pH, disinfectant,
+  # organism and log target — a CT value without all five cannot be checked
+  # against the correct row of the CT table.
+  ct_required_mg_min_per_l:
+    value: null
+    unit: "mg*min/L"
+    plant: null
+    train: null
+    parameter: "CT_required"
+    averaging_basis: null
+    regulation: null
+    contact_time_basis: null
+    CT_T_pH: null
+    dose_basis: null
+    source: null
+    revision: null
+    date: null
+  ct_achieved_mg_min_per_l:
+    value: null
+    unit: "mg*min/L"
+    plant: null
+    train: null
+    parameter: "CT_achieved"
+    averaging_basis: null
+    regulation: null
+    contact_time_basis: null
+    CT_T_pH: null
+    dose_basis: null
+    source: null
+    revision: null
+    date: null
+
+  # ---- contact time: INV-2 needs the basis (theoretical|T10|tracer), the
+  # flow it was established at, and the tank level assumed. The basis is
+  # structural identity for these two figures — the clearwell is a T10 figure
+  # by design (large enough that theoretical detention overstates it); the
+  # rapid-mix chamber is short enough that theoretical detention is the
+  # accepted basis. Neither substitutes for the other.
+  clearwell_contact_time_min:
+    value: null
+    unit: min
+    plant: null
+    train: null
+    parameter: "contact_time_clearwell"
+    averaging_basis: null
+    regulation: null
+    contact_time_basis: T10
+    CT_T_pH: null
+    dose_basis: null
+    source: null
+    revision: null
+    date: null
+  rapid_mix_contact_time_sec:
+    value: null
+    unit: sec
+    plant: null
+    train: null
+    parameter: "contact_time_rapid_mix"
+    averaging_basis: null
+    regulation: null
+    contact_time_basis: theoretical
+    CT_T_pH: null
+    dose_basis: null
+    source: null
+    revision: null
+    date: null
+
+  # ---- chemical dose: INV-3 needs the basis (as_product|as_active) and the
+  # delivered (measured) strength — nameplate strength is never proof.
+  hypochlorite_dose_mg_per_l:
+    value: null
+    unit: mg/L
+    plant: null
+    train: null
+    parameter: "chlorine_dose"
+    averaging_basis: null
+    regulation: null
+    contact_time_basis: null
+    CT_T_pH: null
+    dose_basis: as_active
+    source: null
+    revision: null
+    date: null
+  coagulant_dose_mg_per_l:
+    value: null
+    unit: mg/L
+    plant: null
+    train: null
+    parameter: "coagulant_dose"
+    averaging_basis: null
+    regulation: null
+    contact_time_basis: null
+    CT_T_pH: null
+    dose_basis: as_product
+    source: null
+    revision: null
+    date: null
+  fluoride_dose_mg_per_l:
+    value: null
+    unit: mg/L
+    plant: null
+    train: null
+    parameter: "fluoride_dose"
+    averaging_basis: null
+    regulation: null
+    contact_time_basis: null
+    CT_T_pH: null
+    dose_basis: as_product
+    source: null
+    revision: null
+    date: null
+
+  # ---- regulatory limits: INV-4 needs averaging basis, monitoring frequency
+  # and the named regulation. INV-5 governs what happens when two sources
+  # disagree on one of these — refuse and report both, never pick a winner.
+  filtered_water_turbidity_limit_ntu:
+    value: null
+    unit: NTU
+    plant: null
+    train: null
+    parameter: "filtered_water_turbidity_limit"
+    averaging_basis: null
+    regulation: null
+    contact_time_basis: null
+    CT_T_pH: null
+    dose_basis: null
+    source: null
+    revision: null
+    date: null
+  distribution_chlorine_residual_limit_mg_per_l:
+    value: null
+    unit: mg/L
+    plant: null
+    train: null
+    parameter: "distribution_chlorine_residual_limit"
+    averaging_basis: null
+    regulation: null
+    contact_time_basis: null
+    CT_T_pH: null
+    dose_basis: null
+    source: null
+    revision: null
+    date: null

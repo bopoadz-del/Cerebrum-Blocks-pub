@@ -1,0 +1,6 @@
+{
+  "checkpoint": "tinker://d33e27e4-5533-5af4-9039-c9bf8254d4b7:train:0/sampler_weights/posture-qwen3-8b-lora-r16-epoch2",
+  "source_path": "configs/serve/posture-epoch2.json",
+  "source_repo": "https://github.com/bopoadz-del/<private-repo>",
+  "source_sha": "4e167a7"
+}

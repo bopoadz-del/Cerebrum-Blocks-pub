@@ -1,0 +1,85 @@
+kit: aesthetic
+version: 1
+serves_verticals: [aesthetic, cosmetic]
+hooks_used: [H0, H1, H2, H3]
+
+quantities:
+  neuromodulator_dose:    {units: [units]}
+  filler_volume:          {units: [mL]}
+  hyaluronidase_dose:     {units: [IU]}
+  device_fluence:         {units: [J_cm2]}
+  device_pulse_duration:  {units: [ms]}
+  device_cooling_temp:    {units: [degC]}
+  peel_contact_time:      {units: [min]}
+  anaesthetic_max_dose:   {units: [mg]}
+
+  # Correction 5: staleness_triggers below keys contraindication_list. It is
+  # not a figure the model states a value for -- it is an artifact (a
+  # maintained list) that a staleness event invalidates. A staleness trigger
+  # keyed on something the manifest never declares as a quantity is a load
+  # failure, so it is declared here, unitless, purely so the trigger has
+  # something to be keyed on. (INV-AES-CURRENCY below applies to `any`
+  # quantity, so this is already governed once declared -- no new currency
+  # invariant needed.)
+  contraindication_list:  {units: [—]}
+
+qualifier_fields:
+  product_brand:          {type: string}
+  product_class:          {type: enum,   values: [HA, CaHA, PLLA, botulinum, other]}
+  reversible:             {type: bool}
+  reconstitution_used:    {type: string}
+  device:                 {type: string}
+  skin_type_fitzpatrick:  {type: enum,   values: [I, II, III, IV, V, VI]}
+  treatment_area:         {type: string}
+  pass_number:            {type: number}
+  indication:             {type: enum,   values: [elective, occlusion]}
+  protocol_version:       {type: string}
+  protocol_approved_date: {type: date}
+
+source_classes:
+  regulator:              {rank: 1}
+  SPC:                    {rank: 2, reject_as_proof: [other_brand_spc]}
+  manufacturer_ifu:       {rank: 3}
+  published_guideline:    {rank: 4}
+  professional_body:      {rank: 5}
+  clinic_protocol:        {rank: 6, reject_as_proof: [unversioned, no_approval_date]}
+  training_material:      {rank: 7}
+  practitioner_preference: {rank: 8}
+
+  # Correction 1: SPC rejects other_brand_spc; clinic_protocol rejects
+  # unversioned and no_approval_date. Each rejected class must itself be
+  # declared, or the rule could never fire. Ranked below every governing
+  # class above.
+  other_brand_spc:        {rank: 9}
+  unversioned:            {rank: 9}
+  no_approval_date:       {rank: 9}
+
+state_providers:
+  protocol_current:       {kind: revision, max_age: event}
+  device_serviced:        {kind: revision, max_age: event}
+  hyaluronidase_stock:    {kind: status,   max_age: shift}
+  hyaluronidase_temp:     {kind: status,   max_age: shift}
+
+staleness_triggers:
+  neuromodulator_dose:    [product_brand_change, reconstitution_change]
+  filler_volume:          [product_line_change]
+  device_fluence:         [servicing, software_update, lamp_change]
+  peel_contact_time:      [product_change, pH_change]
+  hyaluronidase_dose:     [protocol_revision, stock_change]
+  contraindication_list:  [guideline_update]
+
+scope_refusals:
+  - pattern: "how much should I inject"
+    authority: "treating practitioner — clinical decision"
+  - pattern: "is this patient suitable"
+    authority: "consultation and assessment"
+  - pattern: "is this (swelling|redness|bruising|nodule) normal"
+    authority: "clinical review — follow adverse event protocol"
+  - pattern: "can I treat despite this contraindication"
+    authority: "medical director"
+  - pattern: "what's causing this complication"
+    authority: "clinical assessment — adverse event protocol"
+
+spec_extensions:
+  claim_class:            true
+  same_source:            true

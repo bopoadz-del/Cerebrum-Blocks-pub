@@ -1,0 +1,194 @@
+# FastAPI & Server
+# These track requirements.lock. pydantic must stay >=2.12.0 (mcp 2.0.0
+# constrains it); 2.10.4 made the file unresolvable.
+fastapi==0.141.1
+uvicorn[standard]==0.34.0
+pydantic==2.13.4
+python-multipart==0.0.32
+aiofiles==25.1.0
+python-dotenv==1.2.2
+
+# Shared infrastructure — Redis clients for cache_manager and session/memory blocks
+redis==8.0.1
+
+# Marketplace security — publisher identity and Ed25519 block signing.
+# Must stay >=43,<51: mlflow 3.16.0 declares cryptography<51,>=43.0.0.
+# 50.0.1 is the Linux fix for PYSEC-2026-3552/3553/3554 (highest fix 50.0.0).
+cryptography==50.0.1
+
+# HTTP Client
+aiohttp==3.14.3
+httpx==0.28.1
+requests==2.33.1
+
+# Web Scraping
+beautifulsoup4==4.15.0
+ddgs==9.14.4
+
+# Image Processing
+pillow==12.3.0
+
+# Vector Search / RAG — local embedding model required for pgvector ingestion
+# and retrieval. sentence-transformers pulls torch; installs cleanly on Linux
+# and Windows with pip.
+# chromadb>=0.4.18
+sentence-transformers==5.6.1
+numpy==2.4.6
+
+# OCR
+# easyocr>=1.7.0
+pytesseract==0.3.13
+
+# PDF Processing
+pymupdf==1.28.0
+pdfplumber==0.11.10
+pypdf==6.19.0
+
+# Construction Intelligence Blocks (Week 1)
+sympy==1.14.0
+pandas==2.3.3
+openpyxl==3.1.5
+# Imported by app/blocks/document_engine/{main,mapper}.py and by
+# scripts/intake_kit.py, but never declared -- it has been arriving
+# transitively, which is luck rather than a dependency.
+PyYAML==6.0.3
+# Imported by block_store/kits/universal_kernel/wave1/identity/code.py
+# and never declared. Undetectable while CI ran a fifth of the suite:
+# the only test that reaches it, tests/universal_kernel/test_trust_chain.py,
+# was one of the 103 files never executed.
+bcrypt==4.2.1
+
+# Sandboxed code execution for formula_executor_v2 / reasoning engine
+RestrictedPython==8.4
+
+# Construction Domain Blocks (Week 2)
+ezdxf==1.4.4
+shapely==2.1.2
+
+# Intelligence Blocks (Week 3)
+pint==0.25.3
+ifcopenshell==0.8.5
+# Mesh geometry backend. Imported by app/blocks/ifc_loader.py
+# (trimesh.Trimesh) and app/blocks/geometry_engine.py
+# (trimesh.proximity.ProximityQuery), which clash_resolver calls to
+# re-check a proposed move against its neighbourhood. It was in no
+# requirements file, so tests/blocks/test_clash_resolver.py and
+# tests/blocks/test_geometry_engine.py -- both gated on
+# pytest.importorskip("trimesh") -- skipped on every machine and in CI,
+# and a file of nothing but skips exits 5.
+# Pinned to the last 4.x: the code uses the 3.x/4.x surface
+# (Trimesh(vertices=, faces=, process=), .bounds, .apply_translation,
+# proximity.ProximityQuery) and 5.x has not been run against it here.
+trimesh==4.12.2
+# trimesh's two OPTIONAL backends (its own `easy` extra names both). Bare
+# trimesh imports fine, so the pin above made the geometry tests RUN -- and
+# then judged interpenetrating solids "clear", which is the confident wrong
+# answer geometry_engine exists to prevent. manifold3d is already declared a
+# kit runtime dep by block_store/kits/mep_coordination/manifest.json -- the
+# Store's own pin file was the copy that lacked it. rtree is declared nowhere
+# and is added here on the evidence below.
+#
+#   manifold3d  -- exact_backend_available() imports it. Without it
+#     _mesh_pair_measure() never attempts the boolean path, so penetration
+#     volume is never measured. Two 1m cubes overlapping by 0.5m came back
+#     kind='clear', and clash_resolver then proposed moves straight into a
+#     wall (_would_create_new_clash returned None for every candidate, so
+#     nothing was rejected and nothing escalated).
+#   rtree       -- trimesh's pure-python ray engine builds its triangle
+#     spatial index through rtree, so mesh.contains() raises
+#     ModuleNotFoundError without it. geometry_engine._surfaces_intersect()
+#     is the documented fallback when the boolean backend is absent or
+#     raises, and that ImportError was being swallowed by the broad
+#     `except Exception` around it, silently degrading every judgement to a
+#     distance measurement.
+#
+# Pinned to what the harvested suites were actually run against (46/46 green,
+# tests/blocks/test_geometry_engine.py + test_clash_resolver.py).
+manifold3d==3.5.3
+rtree==1.4.1
+
+# Intelligence Blocks (Week 4)
+scikit-learn==1.9.0
+
+# Domain formula backends — Library Container (Layer 4)
+CoolProp==8.0.0  # thermodynamic / HVAC property lookups
+QuantLib==1.43  # quantitative finance — PyPI name is `QuantLib` (imports as `import QuantLib`)
+
+# ML experiment tracking — used by app/core/mlflow_tracker.py.
+# No-ops gracefully when MLFLOW_TRACKING_URI is unset.
+mlflow==3.16.0
+
+# PostgreSQL async driver — activates the Postgres backend for the
+# historical_benchmark block when DATABASE_URL is set; otherwise the block
+# falls back to its file-backed store.
+asyncpg==0.31.0
+
+# Document parsing — promoted from optional after real-world tests
+# showed DOCX uploads silently producing zero text and BOQ tables in
+# PDFs being missed without table-aware extraction.
+python-docx==1.2.0  # Word documents (.docx) — used by app/blocks/pdf.py
+pdfplumber==0.11.10  # PDF table-aware extraction — better at BOQ tables than text-only
+
+# Optional - domain libraries (install as needed)
+# spacy>=3.7.0           # NLP for spec_analyzer
+# reportlab>=4.1.0       # PDF generation
+# statsmodels>=0.14.0    # statistical modeling
+# xgboost>=2.0.0         # gradient boosting
+# polars>=0.20.0         # fast DataFrames
+
+# AI/ML APIs - Optional (uncomment if needed)
+# openai>=1.3.0
+anthropic==0.120.2
+# groq>=0.5.0
+
+# Translation - Optional (uncomment if needed)
+# googletrans>=4.0.0
+# deepl>=1.16.0
+
+# Voice
+SpeechRecognition==3.17.0
+gTTS==2.5.4
+
+# Translation
+deep-translator==1.11.4
+
+# Microsoft OneDrive - Optional (uncomment if needed)
+# msal>=1.25.0
+
+# Google Drive - Optional (uncomment if needed)
+# google-auth>=2.23.0
+# google-auth-oauthlib>=1.1.0
+# google-auth-httplib2>=0.2.0
+# google-api-python-client>=2.108.0
+
+# Testing
+pytest==9.1.1
+pytest-asyncio==1.4.0
+pytest-cov==7.1.0
+pytest-json-report==1.5.0
+respx==0.23.1
+python-magic==0.4.27
+# In-process Redis with real data-structure semantics. tests/blocks/test_queue.py
+# drives the queue block's Redis backend (LPOP/LPUSH ordering, ZSET
+# reservations, visibility-timeout re-delivery) against it, so the backend is
+# tested in CI without a Redis service. Pulls sortedcontainers.
+fakeredis==2.38.0
+
+# High-quality PDF -> Markdown extraction is optional and local-only.
+# See requirements-marker.txt. The platform base image does NOT install it
+# because it pulls torch, transformers, and ~1.35 GB of model weights.
+# If not installed, the `marker` block returns a helpful error and callers
+# can fall back to the generic `pdf` block.
+
+# Image processing (capture, OCR, image blocks)
+opencv-python-headless==5.0.0.93
+mcp==2.0.0
+
+# Error tracking — optional. Activated when SENTRY_DSN is set.
+sentry-sdk[fastapi]==2.66.1
+
+# Prometheus metrics exposition — used by app/routers/metrics.py to
+# expose /metrics in the Prometheus text format and to record per-request
+# counters/histograms via the metrics middleware.
+prometheus_client==0.26.0
+xlrd>=2.0.1  # legacy BIFF .xls BOQs (boq_processor engine by format)

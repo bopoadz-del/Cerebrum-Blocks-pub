@@ -1,0 +1,129 @@
+# Local MCP server config — contains API keys, never commit
+.mcp.json
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+# Python virtual envs (but NOT frontend/src/lib/)
+/lib/
+/lib64/
+!/frontend/src/lib/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+ENV/
+env/
+.venv/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Cryptographic secrets
+*.pem
+*.key
+
+# pytest
+.pytest_cache/
+.coverage
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+frontend/node_modules
+
+# Secrets vault (plaintext removed - see vault/secrets.tar.gz.gpg)
+.ssh/
+.render/
+
+vault/secrets.tar.gz
+claudebot/KEYS.md
+frontend/dist
+
+# Runtime data — uploads, captures, the SQLite db file. Generated at runtime.
+data/
+# ...except data a kit AUTHORS at its kit root (publish_kit resolves the kit
+# root first); that is source, not runtime output.
+!block_store/kits/*/app/data/
+# Automotive foundation pack build artifacts (harvests, embeddings, indexes)
+*.csv
+*.zip
+*.jsonl
+harvests/
+embeddings/
+indexes/
+# Published container kit bundles ship Fork artifacts (override data/ above)
+!block_store/kits/**/bundle/app/data/
+!block_store/kits/**/bundle/app/data/**
+# Platform publisher identity is required for block signature verification.
+!data/publishers.json
+!data/publishers/
+!data/publishers/*.pub
+# Never commit publisher private keys.
+data/publishers/*.key
+uploads/
+
+# Carry-Back runtime proposal packages (never commit local runs)
+.carry_back/
+
+# Audit / shell logs written by the shell_audit hook during dev.
+logs/
+
+# Local dev logs
+*.log
+backend.log
+mock_backend.log
+frontend_dev.log
+frontend_e2e.log
+
+# Portable local Postgres binaries (large, generated)
+.postgres/
+
+# Temporary diagnostic scripts
+diagnose_retrieval.py
+
+# Odd artifacts
+=1.6.0
+storage/
+
+# MEP kit fixture: 47MB public model, fetched by fixtures/fetch_fixtures.sh
+block_store/kits/mep_coordination/fixtures/*.ifc
+
+# MEP kit: acceptance run output (contains 47MB model clones)
+block_store/kits/mep_coordination/acceptance_out/
+
+# Owner-supplied client models — never committed
+block_store/kits/mep_coordination/fixtures/owner_models/
+
+# generated at run time (carry_back/seeds.py); never committed
+fixtures/carry_back/
+# fleet operations artifacts stay out of the repository
+FLEET_OPS/

@@ -1,0 +1,113 @@
+{
+  "acceptance": [],
+  "author": "Cerebrum Team",
+  "description": "Parse Excel/CSV Bills of Quantities into structured quantities and cost breakdown",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "6b0a47d6e272c4b3b6adee8da92a16154c62af5fa555e5635fc6e6c8ba838cfb",
+    "block.py": "df5a267a3aa44ff217ca1c9ffb0a3024383bf507f42316dd745f0fee9e366f7b"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/boq_processor:latest",
+    "type": "docker"
+  },
+  "id": "boq_processor",
+  "inputs": [
+    {
+      "description": "Upload BOQ spreadsheet (.xlsx or .csv)...",
+      "name": "input",
+      "required": false,
+      "type": "file"
+    },
+    {
+      "default": "USD",
+      "description": "Configuration parameter: currency",
+      "name": "currency",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": false,
+      "description": "Configuration parameter: include_zero_qty",
+      "name": "include_zero_qty",
+      "required": false,
+      "type": "boolean"
+    }
+  ],
+  "layer": 3,
+  "name": "Boq Processor",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Line Items",
+      "name": "item_count",
+      "type": "number"
+    },
+    {
+      "description": "Total Cost",
+      "name": "total_cost",
+      "type": "number"
+    },
+    {
+      "description": "Line Items",
+      "name": "line_items",
+      "type": "list"
+    },
+    {
+      "description": "Cost Breakdown",
+      "name": "cost_breakdown",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    }
+  ],
+  "requires": [],
+  "signature": "sr+ohAabdzLU/F5ZUNvWF/l8hiwqZmKXlGgnCA4CKSdFxWzGk6Sd0O9GtZQJxCn+oaBsx50DqohVW/Bjn9tmAA==",
+  "tags": [
+    "domain",
+    "construction",
+    "boq",
+    "quantities",
+    "excel"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "Upload BOQ spreadsheet (.xlsx or .csv)...",
+      "name": "input",
+      "widget": "file"
+    },
+    {
+      "label": "Currency",
+      "name": "currency",
+      "widget": "text"
+    },
+    {
+      "label": "Include Zero Qty",
+      "name": "include_zero_qty",
+      "widget": "toggle"
+    }
+  ],
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

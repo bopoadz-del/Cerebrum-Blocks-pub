@@ -1,0 +1,84 @@
+{
+  "acceptance": [
+    {
+      "check": "an unknown action is refused, not silently accepted",
+      "id": "unknown_action",
+      "status": "refused"
+    },
+    {
+      "check": "an empty payload without required arguments is refused, not faked",
+      "id": "missing_arguments",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Ranks clash findings into a build order: resolution rank, zone congestion, workflow-noise filtering, programme CSV loading.",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "73b9c5af58e7e65e7982df0d5aa340dafc67a0eeed11550a70333afa9cabd190",
+    "block.py": "d2365d4f34fd501a7abe5a7ecedc85879aae145b9ac42ef734ec6534ac8e0c1d"
+  },
+  "id": "clash_triage",
+  "inputs": [
+    {
+      "description": "triage | rank | congestion | order | programme | clash_id",
+      "name": "action",
+      "options": [
+        "triage",
+        "rank",
+        "congestion",
+        "order",
+        "programme",
+        "clash_id"
+      ],
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 3,
+  "name": "Clash Triage",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Capability result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": true,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "file",
+      "scope": "local.read"
+    }
+  ],
+  "requires": [],
+  "signature": "92lBQzB5CPyrmkvXwBeeZjKHeQ/JyVz4zkXTSq9FvkCfcQgxtfb6GdjkCr8IB0nM/jvpNHIh+9FAsDACzYZiAQ==",
+  "tags": [
+    "mep",
+    "construction",
+    "coordination"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    },
+    {
+      "kind": "file",
+      "scope": "local.write"
+    }
+  ]
+}

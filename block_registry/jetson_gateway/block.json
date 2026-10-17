@@ -1,0 +1,158 @@
+{
+  "acceptance": [],
+  "author": "Cerebrum Team",
+  "description": "Edge computing gateway: dispatch construction actions to NVIDIA Jetson fleet with OTA, health monitoring, parallel execution",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "c4d33db7187c19ff9069c48547ff60ac2ddcf26fe1ea90e9499f05ab00760c30",
+    "block.py": "a807dbcac46c5cf4c66347ed3dbbbca3a7bb80bd29f36d050b2d5f53dc3e1f1e"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/jetson_gateway:latest",
+    "type": "docker"
+  },
+  "id": "jetson_gateway",
+  "inputs": [
+    {
+      "description": "{\"action_name\": \"drawing_qto\", \"file_path\": \"/data/plan.dxf\", \"parameters\": {}}",
+      "name": "input",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "default": 30,
+      "description": "Configuration parameter: timeout_seconds",
+      "name": "timeout_seconds",
+      "required": false,
+      "type": "number"
+    },
+    {
+      "default": 4,
+      "description": "Configuration parameter: max_parallel",
+      "name": "max_parallel",
+      "required": false,
+      "type": "number"
+    },
+    {
+      "default": 2,
+      "description": "Configuration parameter: retry_count",
+      "name": "retry_count",
+      "required": false,
+      "type": "number"
+    },
+    {
+      "default": "JETSON_FLEET_REGISTRY",
+      "description": "Configuration parameter: fleet_registry_env",
+      "name": "fleet_registry_env",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": true,
+      "description": "Configuration parameter: fallback_local",
+      "name": "fallback_local",
+      "required": false,
+      "type": "boolean"
+    }
+  ],
+  "layer": 2,
+  "name": "Jetson Gateway",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Result",
+      "name": "structured_json",
+      "type": "json"
+    },
+    {
+      "description": "Exec Time (ms)",
+      "name": "execution_time_ms",
+      "type": "number"
+    },
+    {
+      "description": "Device",
+      "name": "device_id",
+      "type": "text"
+    },
+    {
+      "description": "Mode",
+      "name": "mode",
+      "type": "text"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "env",
+      "scope": "process"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    },
+    {
+      "kind": "network",
+      "scope": "http.outbound"
+    }
+  ],
+  "requires": [],
+  "signature": "wFydiUC75WHkdOwGNEfYQ2tlq8ZIkVwz9r0FUt/UZl9sarUvKwZU81Lz1G7G9Tg8IwdQ62+mhO//4LdEQctTDw==",
+  "tags": [
+    "infrastructure",
+    "edge",
+    "jetson",
+    "iot",
+    "gateway",
+    "construction"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "{\"action_name\": \"drawing_qto\", \"file_path\": \"/data/plan.dxf\", \"parameters\": {}}",
+      "name": "input",
+      "widget": "json"
+    },
+    {
+      "label": "Timeout Seconds",
+      "name": "timeout_seconds",
+      "widget": "number"
+    },
+    {
+      "label": "Max Parallel",
+      "name": "max_parallel",
+      "widget": "number"
+    },
+    {
+      "label": "Retry Count",
+      "name": "retry_count",
+      "widget": "number"
+    },
+    {
+      "label": "Fleet Registry Env",
+      "name": "fleet_registry_env",
+      "widget": "text"
+    },
+    {
+      "label": "Fallback Local",
+      "name": "fallback_local",
+      "widget": "toggle"
+    }
+  ],
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

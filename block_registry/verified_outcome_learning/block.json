@@ -1,0 +1,75 @@
+{
+  "acceptance": [
+    {
+      "check": "an unknown module is refused, never learned from",
+      "id": "unknown_module",
+      "status": "refused"
+    },
+    {
+      "check": "a payload missing required fields is refused, never recorded",
+      "id": "payload_invalid",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Verified outcome learning ported from <client> retailops/learning/engine.py: per-module payload validation, verified-only profile updates (unverified events are stored but never applied), deterministic deduplication keys, tenant scoping. Store is in-process.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "1231d8685bbe5d5c95481095189125d6fb0ef67f8b4f0ffa0ba1f0fb8fd9855a",
+    "block.py": "29f9f5c3f1f7d6be816fb82b7a85bdd6acdfe0cdfcdff7f60474079b8ed3828b"
+  },
+  "id": "verified_outcome_learning",
+  "inputs": [
+    {
+      "description": "validate | record | profile | modules",
+      "name": "action",
+      "options": [
+        "validate",
+        "record",
+        "profile",
+        "modules"
+      ],
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 3,
+  "name": "verified_outcome_learning",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Capability result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "61qjVbkv3UNXgu1du7NdN+gJJFbrnc9zNKAWT52pyax+qFGYq2x7WAbWBKPLA7aA+K4ameo4JY9gnZZr/eEYBQ==",
+  "tags": [
+    "learning",
+    "verified-outcome",
+    "retail",
+    "<client>"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

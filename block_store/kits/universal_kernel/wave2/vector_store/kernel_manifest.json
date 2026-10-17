@@ -1,0 +1,12 @@
+{
+  "name": "vector_store",
+  "version": "0.1.0",
+  "sha256": "8a7648feffead162c1349d535d92af1fb3b147f34916b1ddee0f8aaaa51285f9",
+  "dependencies": [
+    "numpy"
+  ],
+  "provenance": "fork+factory",
+  "acceptance_test": "tests/test_vector_store.py",
+  "tier": "premium",
+  "note": "Premium-only; not available in the freemium tier."
+}

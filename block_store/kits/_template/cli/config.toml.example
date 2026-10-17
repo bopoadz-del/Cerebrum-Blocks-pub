@@ -1,0 +1,20 @@
+# Example Cerebrum CLI configuration.
+# Copy this file to ~/.cerebrum/config.toml and fill in the values for your
+# deployed instance, or use `cerebrum init` to create one interactively.
+
+# Base URL of the Cerebrum instance this CLI talks to.
+base_url = "https://your-instance.onrender.com"
+
+# API key the CLI sends as a Bearer token. For deployed instances this is the
+# instance's CEREBRUM_MASTER_KEY / CEREBRUM_DEV_API_KEY.
+api_key = "cb_prod_..."
+
+# Domain kit installed on the instance (e.g. construction, medical, oil_gas).
+domain = "construction"
+
+# Human-readable name for this instance; used only for display.
+instance_name = "your-instance"
+
+# Optional default session ID. If empty, commands that need a session require
+# the --session flag.
+session_id = ""

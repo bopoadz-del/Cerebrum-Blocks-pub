@@ -1,0 +1,97 @@
+{
+  "manifest": {
+    "domain_id": "retail_ops",
+    "version": "0.1.0",
+    "name": "Retail Ops — candidate pack",
+    "description": "Candidate pack extracted from <private-product>: the deterministic reasoner (questions → RAG, commands → permitted actions only), allowed-action filtering, and refusal of actions outside the active discipline. CANDIDATE: requires domain-expert review before production authority.",
+    "certification": "candidate",
+    "donor_repo": "https://github.com/bopoadz-del/<private-product>",
+    "donor_commit": "49c9bf2"
+  },
+  "ontology": {
+    "terms": {
+      "replenishment": {"definition": "Restocking decision for a SKU/store pair", "aliases": ["restock", "replenish"]},
+      "markdown": {"definition": "Price reduction action", "aliases": ["discount", "promo"]},
+      "inventory_count": {"definition": "Physical stock count", "aliases": ["stock count", "cycle count"]}
+    }
+  },
+  "entities": {
+    "sku": {"fields": ["id", "store_id", "on_hand", "reorder_point"]}
+  },
+  "permissions": {
+    "role_permissions": {
+      "store_manager": ["*"],
+      "associate": ["ret.inventory_count"],
+      "viewer": []
+    },
+    "action_requirements": {
+      "ret.replenish": "ret.replenish",
+      "ret.markdown": "ret.markdown",
+      "ret.inventory_count": "ret.inventory_count"
+    }
+  },
+  "evidence_policy": {
+    "ret.replenish": ["sku_id", "store_id"],
+    "ret.markdown": ["sku_id", "reason"]
+  },
+  "authority_sources": {
+    "retail.reasoner": {"kind": "product_policy", "reference": "retailops/reasoning/reasoner.py", "tier": "controlled"}
+  },
+  "refusal_policy": {
+    "unsupported_command": "refuse_by_name",
+    "action_outside_discipline": "permission_denied",
+    "mixed_embedder_corpus": "refuse_by_name"
+  },
+  "formulas": [],
+  "rules": [
+    {
+      "rule_id": "ret.commands_route_to_actions_not_rag",
+      "version": "0.1.0",
+      "conditions": [{"field": "is_command", "op": "eq", "value": true}, {"field": "is_question", "op": "eq", "value": false}],
+      "decision": {"outcome": "route", "message": "Commands route to the action layer; questions route to retrieval."},
+      "severity": "major",
+      "precedence": 80,
+      "refusal_behavior": "warn",
+      "authority_source": "retail.reasoner",
+      "certification": "candidate",
+      "provenance": {"donor_repo": "https://github.com/bopoadz-del/<private-product>", "donor_commit": "49c9bf2", "donor_path": "backend/app/retailops/reasoning/reasoner.py", "donor_symbol": "_looks_like_command/_is_question"}
+    },
+    {
+      "rule_id": "ret.unpermitted_action_is_refused",
+      "version": "0.1.0",
+      "conditions": [{"field": "action_permitted", "op": "eq", "value": false}],
+      "decision": {"outcome": "refuse", "message": "Action is not permitted for the active discipline/role."},
+      "severity": "critical",
+      "precedence": 100,
+      "refusal_behavior": "refuse",
+      "authority_source": "retail.reasoner",
+      "certification": "candidate",
+      "provenance": {"donor_repo": "https://github.com/bopoadz-del/<private-product>", "donor_commit": "49c9bf2", "donor_path": "backend/app/retailops/reasoning/reasoner.py", "donor_symbol": "allowed_actions filtering"}
+    },
+    {
+      "rule_id": "ret.mixed_embedder_corpus_is_refused",
+      "version": "0.1.0",
+      "conditions": [{"field": "embedder_mismatch", "op": "eq", "value": true}],
+      "decision": {"outcome": "refuse", "message": "Corpus vectors come from a different embedder/model — retrieval refused."},
+      "severity": "critical",
+      "precedence": 100,
+      "refusal_behavior": "refuse",
+      "authority_source": "retail.reasoner",
+      "certification": "candidate",
+      "provenance": {"donor_repo": "https://github.com/bopoadz-del/<private-product>", "donor_commit": "49c9bf2", "donor_path": "backend/app/retailops/retrieval.py", "donor_symbol": "embedder-mismatch refusal"}
+    }
+  ],
+  "decision_tables": [],
+  "workflows": [],
+  "approvals": [],
+  "actions": {
+    "ret.replenish": {"risk": "low"},
+    "ret.markdown": {"risk": "medium"},
+    "ret.inventory_count": {"risk": "low"}
+  },
+  "verification_oracles": {},
+  "fixtures": {},
+  "tests": {
+    "kernel": "tests/core/test_reasoning_kernel_packs.py"
+  }
+}

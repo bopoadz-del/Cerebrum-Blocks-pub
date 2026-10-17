@@ -1,0 +1,561 @@
+# GENERATED from docs/kit_questions/heritage.md by scripts/import_kit_questions.py — do not hand-edit.
+# Edit the markdown sheet and re-run. The sheet is the record of what the domain
+# owner actually asked for; this file is only its machine-readable form.
+#
+# gate: true  -> [GATE]. The platform refuses anything needing it until answered.
+# gate: false -> [GAP].  Experience worth having; does not block.
+# gate: null  -> the sheet marked neither. Treated as GATING, because a question
+#                whose class cannot be read must block rather than pass.
+#
+# There is deliberately NO answer slot in this file. Answers are per-platform and
+# per-client; this kit is a signed Store block shared by every customer.
+kit: heritage
+source_document: docs/kit_questions/heritage.md
+title: 'Heritage Building Restoration — Questions I Cannot Answer'
+answer_format:
+  - 'value'
+  - 'unit'
+  - 'building / element'
+  - 'grade'
+  - 'source'
+  - 'date'
+sections:
+  '1':
+    title: 'Materials catalogue'
+  '2':
+    title: 'Rates and productivity'
+  '3':
+    title: 'Cost of getting it wrong'
+  '4':
+    title: 'Conservation principles as operating rules'
+  '5':
+    title: 'Consent and statutory scope'
+  '6':
+    title: 'Investigation and diagnosis'
+  '7':
+    title: 'The intervention decision'
+  '8':
+    title: 'Evidence standard'
+  '9':
+    title: 'Never-estimate'
+  '10':
+    title: 'May-estimate'
+  '11':
+    title: 'Refusals'
+  '12':
+    title: 'Source authority and precedence'
+  '13':
+    title: 'Unit-confusion history'
+  '14':
+    title: 'Incidents'
+  '15':
+    title: 'The five questions'
+questions:
+  - id: '1.1'
+    section: '1'
+    gate: true
+    covers: [compressive_strength, vapour_permeability]
+    text: >-
+      Your mortar catalogue as actually specified — binder type, class, mix ratio (volume
+      or weight, stated), compressive strength, vapour permeability, and the substrate each
+      must remain weaker than — with the source of each specification.
+  - id: '1.1.1'
+    section: '1'
+    gate: true
+    text: >-
+      Your rule for maximum permissible repair strength relative to substrate — ratio,
+      tested value, or judgement — and how it is applied.
+  - id: '1.1.2'
+    section: '1'
+    gate: true
+    text: >-
+      What determines lime selection on your projects — exposure, substrate, season,
+      availability — and where availability has forced a compromise, and who authorised it.
+  - id: '1.1.3'
+    section: '1'
+    gate: true
+    text: >-
+      When mortar analysis is mandatory on your projects before specification, and what it
+      tests for.
+  - id: '1.1.4'
+    section: '1'
+    gate: true
+    text: >-
+      Your organisation's position on cement on historic fabric — where permitted, under
+      whose authority, and where never.
+  - id: '1.2'
+    section: '1'
+    gate: true
+    text: >-
+      Your masonry / timber / fabric catalogue — sourcing, matching criteria, lead times,
+      costs, for stone (quarry and reclaimed), brick, terracotta, structural timber,
+      joinery timber, lath, glass, lead, slate, tile, ironwork, paint.
+  - id: '1.2.1'
+    section: '1'
+    gate: true
+    text: >-
+      For stone matching on your projects — which criteria are non-negotiable (geology,
+      bed, colour, texture, weathering, porosity).
+  - id: '1.2.2'
+    section: '1'
+    gate: true
+    text: >-
+      Which materials govern your programme rather than the works — your quarry reopening,
+      your handmade lead times.
+  - id: '1.2.3'
+    section: '1'
+    gate: false
+    text: >-
+      What you permit as reclaimed on your projects, what must be new, and where provenance
+      or ethics questions have arisen.
+  - id: '2.1'
+    section: '2'
+    gate: true
+    text: >-
+      Your rates per operation — raking out, repointing, indent, dutchman, stone
+      replacement (plain and carved), stitching, grout consolidation, lime plaster, lath,
+      limewash, timber splice, resin repair, joinery repair, leadwork, roof strip, paint
+      analysis/removal, cleaning (poultice/nebulous/laser), recording — with conditions
+      that change each.
+  - id: '2.2'
+    section: '2'
+    gate: true
+    text: >-
+      Your lime working limits as practised — minimum and maximum temperature, frost risk
+      period, protection and curing regime, duration.
+  - id: '2.3'
+    section: '2'
+    gate: true
+    text: >-
+      On your projects, what proportion of programme is investigation and recording vs
+      physical work — and how this is contracted.
+  - id: '2.4'
+    section: '2'
+    gate: true
+    text: >-
+      Your skilled labour availability picture — how far ahead conservation masons,
+      leadworkers, specialist joiners must be booked, per trade.
+  - id: '3.1'
+    section: '3'
+    gate: true
+    covers: [consent]
+    text: >-
+      Your consent timeline — application to determination — and what extends it on your
+      projects.
+  - id: '3.2'
+    section: '3'
+    gate: true
+    covers: [consent]
+    text: >-
+      Cost of scaffold standing while consent, approval or specialist is awaited — your
+      figure.
+  - id: '3.3'
+    section: '3'
+    gate: false
+    text: >-
+      Where removing a previous inappropriate repair cost more than the original work would
+      have — real example.
+  - id: '3.4'
+    section: '3'
+    gate: false
+    text: >-
+      How loss of original fabric is treated commercially on your projects — contractual
+      mechanism, or professional obligation only.
+  - id: '3.5'
+    section: '3'
+    gate: true
+    covers: [consent]
+    text: >-
+      Your cost set — unauthorised works (enforcement, prosecution, reinstatement), consent
+      refused after works started, cement pointing removal and redo, programme delay,
+      watching brief delay, specialist re-mobilisation, additional investigation, PI
+      impact.
+  - id: '4.1'
+    section: '4'
+    gate: true
+    text: >-
+      How you establish "necessary" before accepting removal of any original fabric — what
+      evidence required.
+  - id: '4.2'
+    section: '4'
+    gate: true
+    text: >-
+      Which of your standard techniques are genuinely reversible, and which are not — resin
+      repairs, stainless stitching, consolidants, grouts — and what authorises using the
+      irreversible ones anyway.
+  - id: '4.3'
+    section: '4'
+    gate: true
+    text: >-
+      What your compatibility assessment actually tests — strength, porosity, vapour,
+      thermal, salt, chemical.
+  - id: '4.4'
+    section: '4'
+    gate: true
+    text: >-
+      Your convention for distinguishability — tell-tale, date stamp, setback, record only.
+  - id: '4.5'
+    section: '4'
+    gate: true
+    text: >-
+      What you record before, during and after, and where the record goes so a conservator
+      in fifty years can find it.
+  - id: '4.6'
+    section: '4'
+    gate: true
+    text: >-
+      Where these principles conflict with each other on your projects — reversibility vs
+      structural adequacy, distinguishability vs harmony, minimum intervention vs client
+      use — and how you resolve, and by whom.
+  - id: '5.1'
+    section: '5'
+    gate: true
+    text: >-
+      Your jurisdiction's repair / alteration line — the specific boundary as it applies on
+      your projects, with the basis for each case: repointing matching vs different mortar,
+      stone replacement like-for-like vs different stone, removing later render, removing
+      lime plaster, window replacement identical vs different glazing, adding insulation,
+      coatings, chasing, DPC, cleaning, paint removal.
+  - id: '5.2'
+    section: '5'
+    gate: true
+    covers: [consent]
+    text: >-
+      Which consents your projects require and who determines each — listed building
+      consent, scheduled monument consent, planning, conservation area consent,
+      ecclesiastical exemption, building regs, archaeological condition, protected species
+      licence.
+  - id: '5.3'
+    section: '5'
+    gate: true
+    text: >-
+      Your jurisdiction's order of precedence — does heritage compliance sit before or
+      after building regulations? Confirm, because this changes every damp, insulation and
+      ventilation answer.
+  - id: '5.4'
+    section: '5'
+    gate: true
+    covers: [consent]
+    text: >-
+      Consent conditions typically attached on your projects, and which constrain
+      construction directly — method statements, sample panels, watching briefs, recording,
+      material approval.
+  - id: '5.5'
+    section: '5'
+    gate: true
+    text: >-
+      Your sample panel process — when required, who approves, lead time, can any work
+      proceed before approval.
+  - id: '5.6'
+    section: '5'
+    gate: true
+    covers: [consent]
+    text: >-
+      Your trigger for consent variation rather than site decision — discovery on opening
+      up as the common case.
+  - id: '5.7'
+    section: '5'
+    gate: true
+    covers: [consent]
+    text: >-
+      Your emergency works provision — what may be done without prior consent, and what
+      must follow.
+  - id: '6.1'
+    section: '6'
+    gate: true
+    text: >-
+      Which investigations you require complete before a specification can be written on
+      your projects, and which may run alongside.
+  - id: '6.2'
+    section: '6'
+    gate: true
+    text: >-
+      Your trigger for opening up, and the authority to do it.
+  - id: '6.3'
+    section: '6'
+    gate: true
+    text: >-
+      How you establish cause vs symptom — rising damp, condensation, penetrating damp,
+      salt efflorescence — your diagnostic method.
+  - id: '6.4'
+    section: '6'
+    gate: true
+    text: >-
+      Your archaeological watching brief trigger and what stops work when something is
+      found.
+  - id: '6.5'
+    section: '6'
+    gate: true
+    covers: [condition_survey, monitoring]
+    text: >-
+      Your investigation catalogue — when mandatory, what each establishes, lead time, who
+      performs — for measured survey, condition survey, mortar analysis, petrography, paint
+      stratigraphy, timber ID, dendro, moisture, salt, structural monitoring,
+      archaeological evaluation, archival research, NDT, species survey.
+  - id: '7.1'
+    section: '7'
+    gate: true
+    text: >-
+      Your order of options considered for a decayed element — monitor, maintain,
+      consolidate, repair in situ, piece in, partial replace, full replace like-for-like,
+      modern substitute, reconstruction.
+  - id: '7.2'
+    section: '7'
+    gate: true
+    text: >-
+      What makes each option impossible on your projects — hard blockers per option.
+  - id: '7.3'
+    section: '7'
+    gate: true
+    text: >-
+      Your absolute prohibitions — things never done to historic fabric on your projects,
+      whatever client pressure or budget.
+  - id: '7.4'
+    section: '7'
+    gate: true
+    covers: [consent, method_statement]
+    text: >-
+      Your authority matrix — remove original fabric, change specified material, depart
+      from method statement, accept substitute on lead time, approve sample panel, instruct
+      emergency works, vary consent, sign off completed work, stop work on find.
+  - id: '7.5'
+    section: '7'
+    gate: true
+    text: >-
+      Your resolution route when two experts disagree — conservation architect vs
+      structural engineer, conservation officer vs client.
+  - id: '8.1'
+    section: '8'
+    gate: true
+    covers: [consent, mortar_mix, substrate_strength]
+    text: >-
+      Per figure / decision class — mortar mix for this building, substrate strength, what
+      is original fabric, consent scope, structural adequacy, compatibility, historic
+      detail for reinstatement — what your organisation accepts as proof and what it
+      rejects even if it states the number.
+  - id: '8.2'
+    section: '8'
+    gate: true
+    covers: [condition_survey, consent, materials_analysis]
+    text: >-
+      Minimum acceptable citation per source type on your projects — legislation, national
+      heritage body guidance, standard (part and year), listed building consent, condition
+      survey, materials analysis, archival source, specification.
+  - id: '8.3'
+    section: '8'
+    gate: true
+    covers: [consent, mortar_mix]
+    text: >-
+      Mandatory qualifiers your organisation requires with each figure — mortar mix (with
+      substrate), "original fabric" (with evidence basis), lime type, consent position,
+      strength value, historic detail.
+  - id: '8.3.2'
+    section: '8'
+    gate: true
+    text: >-
+      Confirm your rule — must every claim about the building's history state whether it is
+      documented, inferred, or assumed?
+  - id: '8.4'
+    section: '8'
+    gate: true
+    text: >-
+      Your derivation rules — applying published mix to this building, inferring mortar
+      visually, carrying spec between elevations, between buildings, inferring lost detail
+      from fragments, from comparators, scaling historic drawings, interpolating strength
+      from material type, assuming phase from style, proposing material on performance
+      grounds — allowed or not on your projects.
+  - id: '8.4.2'
+    section: '8'
+    gate: true
+    text: >-
+      Confirm the inversion rule — never propose a material on performance grounds alone,
+      without compatibility assessment.
+  - id: '8.5'
+    section: '8'
+    gate: true
+    covers: [condition_survey, consent, materials_analysis, method_statement, monitoring]
+    text: >-
+      Your staleness rules per figure — consent, condition survey, materials analysis,
+      monitoring, method statement, species survey, archival research — valid for how long,
+      stale immediately on what.
+  - id: '8.5.2'
+    section: '8'
+    gate: true
+    text: >-
+      Confirm the discovery rule — no answer about a specification without knowing whether
+      anything has been discovered since it was written.
+  - id: '8.6'
+    section: '8'
+    gate: true
+    covers: [consent]
+    text: >-
+      Your conflict resolution on your projects — national guidance vs officer requirement,
+      consent conditions vs specification, archival record vs physical evidence,
+      conservation vs structural necessity.
+  - id: '8.7'
+    section: '8'
+    gate: false
+    text: >-
+      Partial-evidence disclosure wording, and which decisions must never be offered as
+      estimates — only cited exactly or refused.
+  - id: '9.1'
+    section: '9'
+    gate: true
+    covers: [consent, structural_capacity, vapour_permeability]
+    text: >-
+      Which figures / decisions your organisation treats as absolute — consent requirement
+      and scope, mortar type and mix per element, maximum permissible repair strength,
+      vapour permeability requirements, whether element is original/later/conjectural,
+      structural capacity of historic timber/iron/masonry, safe loading during temporary
+      works, fixings into historic fabric, cleaning method and parameters per stone,
+      consolidant selection, lime working temperature limits, species constraints,
+      archaeological trigger depths, fire strategy for historic interior.
+  - id: '9.2'
+    section: '9'
+    gate: false
+    text: >-
+      Which of the above have caught you out, and how.
+  - id: '10.1'
+    section: '10'
+    gate: false
+    text: >-
+      Figures you accept as estimates on your projects — programme duration, cost per m²
+      repointing, quantity of stone replacement — and the exact wording you want attached.
+  - id: '11.1'
+    section: '11'
+    gate: true
+    text: >-
+      Confirm the system never answers a question whose answer would authorise removal of
+      original fabric.
+  - id: '11.2'
+    section: '11'
+    gate: true
+    text: >-
+      Confirm the system never offers a historical narrative — dates, phases, attribution —
+      and only retrieves what a cited source states.
+  - id: '11.3'
+    section: '11'
+    gate: true
+    covers: [consent]
+    text: >-
+      Your list of questions that must be refused outright — consent requirement, mortar
+      choice, removal authorisation, original/later determination, beam adequacy, original
+      appearance — and what it should say instead.
+  - id: '12.1'
+    section: '12'
+    gate: true
+    covers: [consent, materials_analysis]
+    text: >-
+      Your ranking, highest first — legislation, consent and conditions, statutory heritage
+      body guidance, conservation officer's written requirement, standards, conservation
+      management plan, materials analysis, specification, professional body guidance,
+      manufacturer's data, contractor's proposal.
+  - id: '12.2'
+    section: '12'
+    gate: true
+    text: >-
+      Your jurisdiction's position — building regulation relative to heritage requirement,
+      before/after/balanced.
+  - id: '12.3'
+    section: '12'
+    gate: true
+    text: >-
+      On your projects, when archival record and physical fabric disagree, which governs.
+  - id: '12.4'
+    section: '12'
+    gate: true
+    covers: [consent]
+    text: >-
+      How your projects track which consent is operative and has not lapsed or been varied.
+  - id: '12.5'
+    section: '12'
+    gate: false
+    text: >-
+      Which figures are building-specific on your portfolio and never carried between
+      buildings.
+  - id: '12.6'
+    section: '12'
+    gate: false
+    text: >-
+      Which are elevation-, phase- or element-specific rather than building-standard.
+  - id: '13.1'
+    section: '13'
+    gate: false
+    text: >-
+      Where an NHL class has been specified too strong for the substrate on your projects.
+  - id: '13.2'
+    section: '13'
+    gate: false
+    text: >-
+      Where "restoration" vs "conservation" has been misunderstood between client, designer
+      and contractor on yours.
+  - id: '13.3'
+    section: '13'
+    gate: false
+    text: >-
+      Where a damp diagnosis has been wrong on yours, and what was installed as a result.
+  - id: '13.4'
+    section: '13'
+    gate: false
+    text: >-
+      Where a mix ratio by volume has been read as by weight, or vice versa, on yours.
+  - id: '14.1'
+    section: '14'
+    gate: false
+    text: >-
+      A specification carried from another building, elevation or phase where it did not
+      apply.
+  - id: '14.2'
+    section: '14'
+    gate: false
+    text: >-
+      A material specified because it performed better, that damaged the fabric.
+  - id: '14.3'
+    section: '14'
+    gate: false
+    text: >-
+      Original fabric removed that should have been retained — and how discovered.
+  - id: '14.4'
+    section: '14'
+    gate: false
+    covers: [consent]
+    text: >-
+      Work done that turned out to need consent.
+  - id: '14.5'
+    section: '14'
+    gate: false
+    text: >-
+      A detail reconstructed from a comparator that was wrong for this building.
+  - id: '14.6'
+    section: '14'
+    gate: false
+    text: >-
+      Something recorded as original that later proved to be a later intervention, or the
+      reverse.
+  - id: '14.7'
+    section: '14'
+    gate: false
+    text: >-
+      A discovery on opening up that invalidated an approved specification, and what
+      happened next.
+  - id: '14.8'
+    section: '14'
+    gate: false
+    text: >-
+      A previous "restoration" whose removal cost more than the original work.
+  - id: '14.9'
+    section: '14'
+    gate: false
+    text: >-
+      A damp or decay diagnosis that treated the symptom and not the cause.
+  - id: '14.10'
+    section: '14'
+    gate: false
+    text: >-
+      What an architect or contractor new to heritage work most commonly gets wrong in
+      their first year.
+  - id: '15.1'
+    section: '15'
+    gate: false
+    text: >-
+      Five things you'd ask a system daily and trust completely.

@@ -1,0 +1,112 @@
+{
+  "acceptance": [
+    {
+      "check": "verify without the source signature header is refused (fail closed)",
+      "id": "missing_header_refused",
+      "status": "refused"
+    },
+    {
+      "check": "verify with a wrong-secret or tampered signature is refused (constant-time compare)",
+      "id": "mismatch_refused",
+      "status": "refused"
+    },
+    {
+      "check": "verify with a timestamp outside the 5-minute window is refused (replay guard)",
+      "id": "stale_timestamp_refused",
+      "status": "refused"
+    },
+    {
+      "check": "verify without a secret is refused",
+      "id": "missing_secret_refused",
+      "status": "refused"
+    },
+    {
+      "check": "verify with a malformed signature header is refused",
+      "id": "malformed_header_refused",
+      "status": "refused"
+    },
+    {
+      "check": "verify with an unknown source is refused",
+      "id": "unknown_source_refused",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "real \u2014 per-source HMAC webhook receivers ported from C:\\Users\\<owner>\\Cerebrum\\backend\\app\\core\\security\\webhook_security.py (WebhookSignature sign/verify with 5-minute replay window and constant-time compare, WebhookManager.verify_incoming_webhook), plus the documented vendor header schemes for GitHub (X-Hub-Signature-256), Slack (X-Slack-Signature v0), Procore (X-Procore-Signature); Maximo uses the ported donor v1 scheme. Missing signature, missing secret, malformed header, stale timestamp, or mismatched signature is refused.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "fcf80ba2196063cb540328fa67a46e4e509286a8d9df574823dd39a1a63550f6",
+    "block.py": "c0154a4d67f4bd38c5342fa868ef75a5b82a05f9b39be1636c776e83c4daaa0c"
+  },
+  "id": "hmac_webhook_receiver",
+  "inputs": [
+    {
+      "description": "verify | sign | generate_secret | schemes",
+      "name": "action",
+      "options": [
+        "verify",
+        "sign",
+        "generate_secret",
+        "schemes"
+      ],
+      "required": false,
+      "type": "string"
+    },
+    {
+      "description": "github | slack | procore | maximo | cerebrum",
+      "name": "source",
+      "options": [
+        "github",
+        "slack",
+        "procore",
+        "maximo",
+        "cerebrum"
+      ],
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 2,
+  "name": "hmac_webhook_receiver",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Capability result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "J8Rru24oOL0bU7ZeszAIgu58WHFwBEcKLinIc2eVNBDF3kEA7PVsZlSpYKilan0KC5PU+sBW9kNMbwhZ2ySLBQ==",
+  "tags": [
+    "webhook",
+    "security",
+    "hmac",
+    "signature",
+    "procore",
+    "github",
+    "slack",
+    "maximo"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

@@ -1,0 +1,425 @@
+# GENERATED from docs/kit_questions/architecture.md by scripts/import_kit_questions.py — do not hand-edit.
+# Edit the markdown sheet and re-run. The sheet is the record of what the domain
+# owner actually asked for; this file is only its machine-readable form.
+#
+# gate: true  -> [GATE]. The platform refuses anything needing it until answered.
+# gate: false -> [GAP].  Experience worth having; does not block.
+# gate: null  -> the sheet marked neither. Treated as GATING, because a question
+#                whose class cannot be read must block rather than pass.
+#
+# There is deliberately NO answer slot in this file. Answers are per-platform and
+# per-client; this kit is a signed Store block shared by every customer.
+kit: architecture
+source_document: docs/kit_questions/architecture.md
+title: 'Architecture Design Office — Questions I Cannot Answer'
+answer_format:
+  - 'value'
+  - 'unit'
+  - 'project type / element'
+  - 'basis'
+  - 'source'
+  - 'date'
+sections:
+  '1':
+    title: 'Practice economics'
+  '2':
+    title: 'Production norms'
+  '3':
+    title: 'Design benchmarks'
+  '4':
+    title: 'Area and planning'
+  '5':
+    title: 'Compliance calculations'
+  '6':
+    title: 'Coordination and information'
+  '7':
+    title: 'Evidence standard'
+  '8':
+    title: 'Never-estimate'
+  '9':
+    title: 'May-estimate'
+  '10':
+    title: 'Refusals'
+  '11':
+    title: 'Precedence and boundaries'
+  '12':
+    title: 'Unit-confusion history'
+  '13':
+    title: 'Incidents'
+  '14':
+    title: 'The five questions'
+questions:
+  - id: '1.1'
+    section: '1'
+    gate: true
+    text: >-
+      Your charge-out rates, true staff cost rates, utilisation target, overhead recovery,
+      target profit margin — junior / mid / senior-director — with source.
+  - id: '1.2'
+    section: '1'
+    gate: true
+    text: >-
+      Your fee % range by project type — residential bespoke, residential volume,
+      commercial office, retail/F&B, hospitality, healthcare, education,
+      industrial/logistics, fit-out, masterplanning, refurbishment — and what moves it up
+      and down on your practice.
+  - id: '1.3'
+    section: '1'
+    gate: true
+    text: >-
+      Your fee distribution by stage — what proportion sits in each work stage, and which
+      stage you most often under-price.
+  - id: '1.4'
+    section: '1'
+    gate: true
+    text: >-
+      Your additional services list and rates — detailed joinery, interiors, landscape,
+      authority liaison, site supervision, as-builts — charged separately, at what
+      percentage or lump sum.
+  - id: '1.5'
+    section: '1'
+    gate: true
+    text: >-
+      Your variation threshold — when does a change become a variation rather than absorbed
+      effort on your practice? Threshold, percentage, revision count, or named trigger.
+  - id: '2.1'
+    section: '2'
+    gate: true
+    text: >-
+      Your hourly outputs per deliverable — concept design, schematic/developed,
+      technical/IFC, GA plan, section/elevation, detail, schedule, specification section,
+      BIM LOD 200→300, clash cycle, authority submission pack, tender query response, shop
+      drawing review, site inspection — hours per unit as your office actually produces
+      them, with what changes each.
+  - id: '2.2'
+    section: '2'
+    gate: true
+    text: >-
+      Your assumed revision cycles per drawing at each stage, and what an unplanned extra
+      cycle costs you.
+  - id: '2.3'
+    section: '2'
+    gate: true
+    text: >-
+      Your coordination-time proportion of technical-stage work — how much is consultant
+      coordination vs drawing — as you actually experience it.
+  - id: '2.4'
+    section: '2'
+    gate: true
+    text: >-
+      Which deliverables blow out most often on your projects, and why.
+  - id: '3.1'
+    section: '3'
+    gate: true
+    covers: [floor_area]
+    text: >-
+      Your office benchmarks — GIA as % of GEA, NIA as % of GIA, wall-to-floor ratio,
+      façade area per m² GIA, core area %, circulation %, plant area %, parking per
+      unit/100 m², cost per m² shell & core, cost per m² fit-out, sanitary provision, lift
+      provision — with what each varies by.
+  - id: '3.2'
+    section: '3'
+    gate: true
+    text: >-
+      Which benchmarks on your projects are client requirements vs code minimums — the
+      distinction that changes whether a shortfall is negotiation or refusal.
+  - id: '3.3'
+    section: '3'
+    gate: true
+    text: >-
+      Which vary by jurisdiction on your markets, and by how much.
+  - id: '4.1'
+    section: '4'
+    gate: true
+    covers: [floor_area, plot_ratio, site_coverage]
+    text: >-
+      Your area-basis definitions and their uses — GEA/IPMS 1, GIA/IPMS 2, NIA/IPMS 3,
+      local authority GFA, saleable/leasable, BUA, plot ratio/FAR, site coverage, setbacks,
+      height limit, balcony/terrace treatment, basement and parking exclusion — with the
+      standard or authority each follows.
+  - id: '4.2'
+    section: '4'
+    gate: true
+    text: >-
+      Which measurement standard governs on your projects — RICS, IPMS, local municipality
+      — and where they conflict, which wins for which purpose.
+  - id: '4.3'
+    section: '4'
+    gate: true
+    covers: [plot_ratio]
+    text: >-
+      The critical one — which areas count toward plot ratio in your jurisdictions, and
+      which are excluded (basements, parking, plant, balconies, terraces, service areas,
+      double-height voids). Your rules per market.
+  - id: '4.4'
+    section: '4'
+    gate: true
+    text: >-
+      Which area figure goes on planning submission, cost plan, lease, marketing on your
+      projects — and whether they are ever the same number in your practice.
+  - id: '4.5'
+    section: '4'
+    gate: false
+    text: >-
+      A case where an area figure was quoted without its basis and caused a problem.
+  - id: '5.1'
+    section: '5'
+    gate: true
+    covers: [travel_distance]
+    text: >-
+      Your inputs and method for each calculation — occupancy load, means of escape width,
+      travel distance, number of exits, refuge, compartment size limits, fire resistance by
+      element, smoke ventilation, accessible route gradient/width, accessible WC, lift
+      provision, sanitary provision, parking and accessible bays, daylight factor/autonomy,
+      natural ventilation area, U-values, acoustic separation, structural grid/span
+      coordination — with the standard or authority each follows.
+  - id: '5.2'
+    section: '5'
+    gate: true
+    text: >-
+      Which authority's code applies in each market you work in (SBC, DM/DCD, IBC, Approved
+      Documents, Estidama, other), and where two apply at once.
+  - id: '5.3'
+    section: '5'
+    gate: true
+    text: >-
+      Which of these your office calculates, and which a consultant owns — as a hard
+      boundary.
+  - id: '5.4'
+    section: '5'
+    gate: true
+    text: >-
+      For fire and life safety — at what point it stops being your designer's calculation
+      and becomes a fire engineer's determination on your projects.
+  - id: '6.1'
+    section: '6'
+    gate: true
+    covers: [level]
+    text: >-
+      Your BIM LOD expectations by stage — what each level actually means in your office.
+  - id: '6.2'
+    section: '6'
+    gate: true
+    text: >-
+      Your information exchange protocol — who issues what to whom, in what format, at what
+      stage — as practised.
+  - id: '6.3'
+    section: '6'
+    gate: true
+    text: >-
+      How clashes are classified and prioritised on your projects, and your tolerance.
+  - id: '6.4'
+    section: '6'
+    gate: true
+    text: >-
+      Your drawing register and revision protocol, and how site knows which revision is
+      current.
+  - id: '7.1'
+    section: '7'
+    gate: true
+    covers: [fire_rating, floor_area, level, plot_ratio]
+    text: >-
+      Per figure class — code requirement (fire/egress/accessibility), structural dimension
+      or opening, MEP capacity or clearance, floor area, plot ratio/planning constraint,
+      fire rating, product performance (U-value/acoustic), site level/survey data — what
+      your practice accepts as proof, and what it rejects even if it states the number.
+  - id: '7.2'
+    section: '7'
+    gate: true
+    text: >-
+      Minimum acceptable citation per source type — building code/regulation, planning
+      consent condition, fire strategy report, structural drawing, MEP drawing,
+      specification, manufacturer's data/test certificate, survey, client brief. State
+      whether "the building code" is acceptable, or if code + table + clause + edition is
+      required.
+  - id: '7.3'
+    section: '7'
+    gate: true
+    covers: [fire_rating, floor_area, level, travel_distance]
+    text: >-
+      Mandatory qualifiers your practice requires — floor area (basis, which floors,
+      inclusions/exclusions), travel distance (occupancy class, single/multiple direction,
+      sprinklered), fire rating (element, compartment line, code and edition), level (FFL
+      or SSL, datum, build-up allowance), U-value (element, tested or calculated,
+      standard).
+  - id: '7.4'
+    section: '7'
+    gate: true
+    covers: [floor_area]
+    text: >-
+      Your derivation rules — scaling off drawings, converting GEA↔GIA, interpolating code
+      tables, applying code formulas, summing areas, carrying figures from earlier stages
+      of the same project, carrying from similar previous projects, deriving levels from
+      sections — allowed or not on your projects.
+  - id: '7.4.1'
+    section: '7'
+    gate: true
+    text: >-
+      Confirm the never rules — scaling off drawings and carrying figures from previous
+      projects.
+  - id: '7.5'
+    section: '7'
+    gate: true
+    covers: [level]
+    text: >-
+      Your staleness rules per figure — drawing dimension, code requirement, planning
+      consent condition, fire strategy figure, survey/site level, product certificate, cost
+      benchmark — valid for how long, stale immediately on what.
+  - id: '7.5.1'
+    section: '7'
+    gate: true
+    text: >-
+      How your practice knows a drawing or report is the current revision — revision field,
+      issue register, CDE status — or whether it depends on a person knowing.
+  - id: '7.5.2'
+    section: '7'
+    gate: true
+    text: >-
+      Confirm the currency rule — refuse or warn when currency cannot be verified.
+  - id: '7.6'
+    section: '7'
+    gate: true
+    text: >-
+      Your conflict rule — when two acceptable sources disagree, does the system answer
+      with the higher-authority source, answer with both and flag, or refuse and report?
+      Does it change by figure class? Which classes must always refuse (drawing vs
+      specification, architectural vs structural are the common cases).
+  - id: '7.6.2'
+    section: '7'
+    gate: false
+    text: >-
+      A real conflict of this kind on your projects — the two sources, what happened.
+  - id: '7.7'
+    section: '7'
+    gate: false
+    text: >-
+      Partial-evidence disclosure wording, and which figures must never be offered as
+      estimates — confirmed against your Section 8 list.
+  - id: '8.1'
+    section: '8'
+    gate: true
+    covers: [plot_ratio]
+    text: >-
+      Which figures your practice treats as absolute — escape travel distances and widths,
+      exit numbers and refuge provision, compartmentation and fire ratings, smoke
+      ventilation, accessible gradients/widths/turning circles, ceiling heights and
+      habitable-room minimums, balustrade heights and gaps, structural
+      openings/spans/loads, MEP clearances and riser sizes, plot ratio/setbacks/height
+      limits, fire-rated glazing limits, sanitary and lift provision, U-values and thermal
+      bridging, acoustic separation.
+  - id: '8.2'
+    section: '8'
+    gate: false
+    text: >-
+      Which of these have caught you out, and how.
+  - id: '9.1'
+    section: '9'
+    gate: false
+    covers: [floor_area, stage_duration]
+    text: >-
+      Figures you accept as estimates — concept-stage GFA, cost per m², stage duration —
+      and the exact wording you want attached.
+  - id: '10.1'
+    section: '10'
+    gate: true
+    text: >-
+      Your list of questions the system must refuse outright — does this design comply, can
+      I remove this wall, is this fire strategy acceptable, will planning approve this —
+      and what the system should say instead.
+  - id: '11.1'
+    section: '11'
+    gate: true
+    text: >-
+      Your ranking, highest first — building code/regulation, planning consent conditions,
+      contract documents, specification, structural drawings, MEP drawings, architectural
+      drawings, consultant reports, contractor shop drawings, sketches/markups.
+  - id: '11.2'
+    section: '11'
+    gate: true
+    text: >-
+      Drawings vs specification on your projects — which governs, and whether the contract
+      form decides it.
+  - id: '11.3'
+    section: '11'
+    gate: true
+    text: >-
+      Discipline boundaries — which figures must never be taken from the architectural set
+      on your projects, even though they appear on it. Structural member sizes, riser and
+      plant space dimensions, site levels, and any others you name.
+  - id: '11.4'
+    section: '11'
+    gate: true
+    text: >-
+      How someone knows a drawing is the current revision on your practice, and what
+      happens when a superseded one is built to.
+  - id: '11.5'
+    section: '11'
+    gate: true
+    text: >-
+      Jurisdiction — which codes apply where you work, what changes between them, and where
+      a clause has been applied from the wrong code, occupancy class, or building-height
+      band.
+  - id: '11.6'
+    section: '11'
+    gate: false
+    text: >-
+      Which figures are project-specific on your practice and never carried to another
+      project (consent conditions, fire strategy assumptions, approved deviations,
+      client-specific standards).
+  - id: '12.1'
+    section: '12'
+    gate: false
+    text: >-
+      Where an area basis confusion has caused a real problem on your projects — a lease, a
+      submission, a cost plan.
+  - id: '12.2'
+    section: '12'
+    gate: false
+    text: >-
+      Where an FFL vs SSL error has caused one on yours.
+  - id: '13.1'
+    section: '13'
+    gate: false
+    covers: [level]
+    text: >-
+      A dimension or level taken from the wrong drawing set or a superseded revision.
+  - id: '13.2'
+    section: '13'
+    gate: false
+    text: >-
+      A code clause applied from the wrong jurisdiction, occupancy class, or height band.
+  - id: '13.3'
+    section: '13'
+    gate: false
+    text: >-
+      An area figure quoted without its basis, and what followed.
+  - id: '13.4'
+    section: '13'
+    gate: false
+    text: >-
+      A figure right at concept and wrong by the time it was built.
+  - id: '13.5'
+    section: '13'
+    gate: false
+    text: >-
+      A coordination clash that traced back to a number rather than geometry.
+  - id: '13.6'
+    section: '13'
+    gate: false
+    text: >-
+      Something taken from a previous project that did not apply to this one.
+  - id: '13.7'
+    section: '13'
+    gate: false
+    text: >-
+      A submission refused on a figure rather than on design.
+  - id: '13.8'
+    section: '13'
+    gate: false
+    text: >-
+      What a Part 1 or graduate architect most commonly gets wrong in their first year.
+  - id: '14.1'
+    section: '14'
+    gate: false
+    text: >-
+      Five things you'd ask a system per day and trust completely.

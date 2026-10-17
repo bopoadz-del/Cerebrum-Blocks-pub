@@ -1,0 +1,12 @@
+{
+  "name": "approval_action",
+  "version": "0.1.0",
+  "sha256": "9e37d82df2db62dc9a13f4d6803ed05798debbcdd5b06ad0b8b6a2f3de7dce5f",
+  "dependencies": [
+    "block_store.kits.universal_kernel.wave1.audit_evidence"
+  ],
+  "provenance": "new",
+  "acceptance_test": "tests/test_approval_action.py",
+  "tier": "premium",
+  "note": "Premium-only; not available in the freemium tier."
+}

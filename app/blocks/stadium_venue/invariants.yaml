@@ -1,0 +1,548 @@
+# Sports venues — the owner's G2 draft, corrected to what this engine reads and
+# measured. Each correction is noted on the record it applies to.
+invariants:
+
+# ─── QUALIFIER: the identity a venue figure is meaningless without ──────────
+
+- id: INV-SV-ARCHETYPE
+  kind: qualifier
+  applies_to: {quantity: any, claim_class: safety_critical}
+  hook: H3
+  requires: [archetype, governing_body]
+  severity: refuse
+  evidence: {sheet: "G2 archetype diversity"}
+  message: "safety-critical figure missing {missing} — the same number means a different thing in a fixed championship venue and a touring event"
+  measurement: "Probe 20 safety-critical figures with no archetype, across all four archetypes' quantities. Before: n stated as if universal. After: 0 stated, 20 refusals naming archetype. Over-refusal check: 20 figures carrying archetype + governing_body pass this record."
+  # DRAFT SAID: kind `authority` with `requires` and no governing_class. An
+  # authority record must name a governing source class or it cannot load; what
+  # this actually does is demand two qualifiers, which is a qualifier.
+
+- id: INV-SV-QUAL-CONFIG
+  kind: qualifier
+  applies_to: {quantity: any, claim_class: safety_critical}
+  hook: H3
+  requires: [config_type, venue_id]
+  severity: refuse
+  evidence: {sheet: "G2 configuration mandatory"}
+  message: "safety-critical figure missing {missing} — a football configuration is not a concert configuration"
+  measurement: "Probe 20 safety-critical figures with no config_type. Before: n quoted across configurations. After: 0, 20 refusals. Over-refusal: 20 configured figures pass."
+
+- id: INV-SV-QUAL-EVENT-STATE
+  kind: qualifier
+  applies_to: {quantity: any, claim_class: safety_critical}
+  hook: H3
+  requires: [event_state, operational_phase]
+  severity: refuse
+  evidence: {sheet: "G2 event day is a different ruleset"}
+  message: "safety-critical figure missing {missing} — event day and non-event day are different rulesets"
+  measurement: "Probe 20 safety-critical figures with no event_state. Before: n answered with a non-event-day figure on a match day. After: 0, 20 refusals. Over-refusal: 20 stated figures pass."
+
+- id: INV-SV-QUAL-PITCH
+  kind: qualifier
+  applies_to: {quantity: any_pitch}
+  hook: H3
+  requires: [pitch_type, measurement_standard, measurement_date, measurement_grid]
+  severity: refuse
+  evidence: {sheet: "G2 pitch envelope"}
+  message: "pitch figure missing {missing} — a hardness reading without its standard and grid cannot be compared to a limit"
+  measurement: "Probe 20 pitch figures with no measurement_standard. Before: n compared against a limit from another standard. After: 0, 20 refusals. Over-refusal: 20 fully qualified pitch figures pass."
+
+- id: INV-SV-QUAL-LUX
+  kind: qualifier
+  applies_to: {quantity: any_lighting}
+  hook: H3
+  requires: [broadcast_class, measurement_standard, measurement_grid, measurement_date]
+  severity: refuse
+  evidence: {sheet: "G2 broadcast per competition class"}
+  message: "lux figure missing {missing} — broadcast lighting is contractual to a competition class"
+  measurement: "Probe 20 lux figures with no broadcast_class. Before: n quoted a domestic measurement for a UEFA Elite fixture. After: 0, 20 refusals. Over-refusal: 20 classed measurements pass."
+
+- id: INV-SV-QUAL-BARRIER
+  kind: qualifier
+  applies_to: {quantity: barrier_load}
+  hook: H3
+  requires: [crowd_density, stand_id]
+  severity: refuse
+  evidence: {sheet: "G2 crowd dynamics"}
+  message: "barrier load missing {missing} — a barrier figure without the crowd density it was assessed for is not a limit"
+  measurement: "Probe 20 barrier loads with no crowd_density. Before: n quoted as a universal capacity. After: 0, 20 refusals. Over-refusal: 20 with density + stand pass."
+
+- id: INV-SV-QUAL-RIGGING
+  kind: qualifier
+  applies_to: {quantity: rigging_point_load}
+  hook: H3
+  requires: [point_id, config_type]
+  severity: refuse
+  evidence: {sheet: "G2 roof, rigging points"}
+  message: "rigging load missing {missing} — a rigging figure belongs to ONE point"
+  measurement: "Probe 20 rigging loads with no point_id. Before: n quoted a house capacity for a specific point. After: 0, 20 refusals. Over-refusal: 20 point-identified loads pass this record."
+  # `requires_state: [roof_state]` was declared HERE and did nothing. Only
+  # `eval_currency` and `eval_derivation` call `state_precondition`; a qualifier
+  # record never reads the field, so the roof state was declared and unenforced —
+  # a rigging load could be asserted with the roof position UNKNOWN. The state gate
+  # is now INV-SV-DERIV-RIGGING-ROOF, on the kind that enforces it.
+
+- id: INV-SV-QUAL-EGRESS
+  kind: qualifier
+  applies_to: {quantity: any_egress}
+  hook: H3
+  requires: [stand_id, config_type, safety_certificate_ref]
+  severity: refuse
+  evidence: {sheet: "G2 egress"}
+  message: "egress figure missing {missing}"
+  measurement: "Probe 20 egress figures with no safety_certificate_ref. Before: n quoted from a superseded layout. After: 0, 20 refusals. Over-refusal: 20 certificate-referenced figures pass."
+
+- id: INV-SV-QUAL-CAPACITY
+  kind: qualifier
+  applies_to: {quantity: any_crowd}
+  hook: H3
+  requires: [config_type, safety_certificate_ref, p_factor, s_factor]
+  severity: refuse
+  evidence: {sheet: "G2 capacity = usable seats x lower(P,S)"}
+  message: "capacity figure missing {missing} — capacity is not a seat count"
+  measurement: "Probe 20 capacity figures with no P and S factors. Before: n answered with the seat count. After: 0, 20 refusals naming P/S. Over-refusal: 20 with both factors pass this record."
+  # `requires_state: [stands_open]` was declared HERE and did nothing, for the same
+  # reason as INV-SV-QUAL-RIGGING: a qualifier record never reads it. A licensed
+  # capacity could be asserted with no idea which stands were open, which is the
+  # single most load-bearing state a capacity depends on. The state gate is now
+  # INV-SV-DERIV-CAPACITY-STATE.
+
+- id: INV-SV-QUAL-STEWARD
+  kind: qualifier
+  applies_to: {quantity: steward_ratio}
+  hook: H3
+  requires: [competition, safety_certificate_ref]
+  severity: refuse
+  evidence: {sheet: "G2 stewarding"}
+  message: "steward ratio missing {missing}"
+  measurement: "Probe 20 steward ratios with no competition. Before: n carried a domestic ratio to a European fixture. After: 0, 20 refusals. Over-refusal: 20 with competition + certificate pass."
+
+# ─── AUTHORITY: which source may state it ───────────────────────────────────
+
+- id: INV-SV-AUTH-PITCH
+  kind: authority
+  applies_to: {quantity: any_pitch}
+  hook: H1
+  governing_class: pitch_report
+  demote: [groundsman_verbal, pre_match_informal, contractor_statement]
+  severity: refuse
+  evidence: {sheet: "G2 pitch report"}
+  message: "pitch figure not sourced to a current pitch report"
+  measurement: "Probe 20 pitch figures citing groundsman_verbal. Before: 20 accepted. After: 20 refused naming pitch_report. Over-refusal: 20 citing pitch_report pass."
+
+- id: INV-SV-AUTH-LUX
+  kind: authority
+  applies_to: {quantity: any_lighting}
+  hook: H1
+  governing_class: lighting_measurement
+  demote: [lamp_spec_sheet, design_intent, contractor_statement]
+  severity: refuse
+  evidence: {sheet: "G2 broadcast lighting is contractual"}
+  message: "lux figure not sourced to a measurement — a lamp spec sheet is a design intent, not a measured lux"
+  measurement: "Probe 20 lux figures citing lamp_spec_sheet. Before: 20 accepted as measured. After: 20 refused. Over-refusal: 20 citing lighting_measurement pass."
+
+- id: INV-SV-AUTH-RIGGING
+  kind: authority
+  applies_to: {quantity: [rigging_point_capacity, rigging_point_load, roof_load]}
+  hook: H1
+  governing_class: rigging_point_cert
+  demote: [rigging_company_statement, tour_rig_drawing_only]
+  severity: refuse
+  evidence: {sheet: "G2 rigging point certification"}
+  message: "rigging or roof load not per-point certified"
+  measurement: "Probe 20 rigging loads citing a tour rig drawing. Before: 20 accepted. After: 20 refused naming rigging_point_cert. Over-refusal: 20 certified loads pass."
+
+- id: INV-SV-AUTH-CAPACITY
+  kind: authority
+  applies_to: {quantity: any_crowd}
+  hook: H1
+  governing_class: safety_certificate
+  demote: [promoter_statement, contractor_statement]
+  severity: refuse
+  evidence: {sheet: "G2 licensed capacity"}
+  message: "capacity or stewarding figure not sourced to the safety certificate"
+  measurement: "Probe 20 capacities citing a promoter statement. Before: 20 accepted. After: 20 refused naming safety_certificate. Over-refusal: 20 citing the certificate pass."
+
+- id: INV-SV-AUTH-GOVERNING-BODY
+  kind: authority
+  applies_to: {quantity: any_lighting}
+  hook: H1
+  governing_class: governing_body_regs
+  fallback_class: lighting_measurement
+  demote: [prior_year_regs, domestic_regs_for_international_fixture]
+  severity: refuse
+  evidence: {sheet: "G2 competition class"}
+  message: "competition requirement cited from last year's regulations or the wrong competition's"
+  measurement: "Probe 20 lighting requirements citing prior_year_regs. Before: n answered from a superseded edition. After: 0, 20 refusals. Over-refusal: 20 citing current governing_body_regs pass."
+
+# ─── BAND: a one-sided answer is unusable ───────────────────────────────────
+
+- id: INV-SV-BAND-PITCH-HARDNESS
+  kind: band
+  applies_to: {quantity: pitch_hardness}
+  band: {min: present, max: present}
+  hook: H3
+  severity: refuse
+  evidence: {sheet: "G2 hardness is a band"}
+  message: "pitch hardness is a band — one side of it is not a conservative answer, it is an unusable one"
+  measurement: "Probe 20 hardness answers with only a maximum. Before: n one-sided. After: 0, 20 refusals naming the missing side. Over-refusal: 20 two-sided answers pass."
+
+- id: INV-SV-BAND-PITCH-MOISTURE
+  kind: band
+  applies_to: {quantity: pitch_moisture}
+  band: {min: present, max: present}
+  hook: H3
+  severity: refuse
+  evidence: {sheet: "G2 pitch envelope"}
+  message: "pitch moisture is a band"
+  measurement: "Probe 20 moisture answers with only a minimum. Before: n one-sided. After: 0, 20 refusals. Over-refusal: 20 two-sided answers pass."
+
+- id: INV-SV-BAND-LUX-UNIFORMITY
+  kind: band
+  applies_to: {quantity: lux_uniformity}
+  band: {min: present, max: present}
+  hook: H3
+  severity: refuse
+  evidence: {sheet: "G2 broadcast lighting"}
+  message: "lux uniformity is a band"
+  measurement: "Probe 20 uniformity answers with one bound. Before: n one-sided. After: 0, 20 refusals. Over-refusal: 20 two-sided answers pass."
+
+# ─── UNIT DISCIPLINE: the unit family decides the magnitude ─────────────────
+
+- id: INV-SV-UNIT-PITCH-HARDNESS
+  kind: unit_discipline
+  applies_to: {quantity: pitch_hardness}
+  requires_one_of: [g, Gmax]
+  forbid: [HIC]
+  hook: H2
+  severity: refuse
+  evidence: {sheet: "G2 pitch"}
+  message: "pitch hardness unit ambiguous — g and Gmax are read off different instruments and HIC is a different measure entirely"
+  measurement: "Probe 20 hardness figures stated in HIC. Before: n compared against a Gmax limit. After: 0, 20 refusals. Over-refusal: 20 in g or Gmax pass."
+
+- id: INV-SV-UNIT-LUX
+  kind: unit_discipline
+  applies_to: {quantity: [lux_horizontal, lux_vertical]}
+  requires_one_of: [lx]
+  forbid: [fc, cd]
+  hook: H2
+  severity: refuse
+  evidence: {sheet: "G2 broadcast lighting"}
+  message: "lux unit ambiguous — footcandles are not lux and candela is not an illuminance at all"
+  measurement: "Probe 20 lux figures stated in fc. Before: n compared against an lx requirement, a factor of ~10.76 out. After: 0, 20 refusals. Over-refusal: 20 in lx pass."
+
+- id: INV-SV-UNIT-RIGGING
+  kind: unit_discipline
+  applies_to: {quantity: [rigging_point_capacity, rigging_point_load]}
+  requires_one_of: [kg, t]
+  forbid: [kips]
+  hook: H2
+  severity: refuse
+  evidence: {sheet: "G2 roof, rigging"}
+  message: "rigging load unit ambiguous"
+  measurement: "Probe 20 rigging loads stated in kips. Before: n compared against a tonne capacity. After: 0, 20 refusals. Over-refusal: 20 in kg or t pass."
+
+# ─── PROVENANCE: what may never have produced the figure ────────────────────
+
+- id: INV-SV-PROV-CONFIG
+  kind: provenance
+  applies_to: {quantity: any}
+  forbid: [carry_football_to_concert, carry_match_to_non_event, carry_previous_competition_class, carry_from_pre_overlay]
+  hook: H3
+  severity: refuse
+  evidence: {sheet: "G2 config-conditioned"}
+  message: "figure carried across a configuration or event boundary: {value}"
+  measurement: "Probe 20 answers built by carrying a football figure to a concert configuration. Before: 20 quoted without remark. After: 0, 20 refusals naming the boundary crossed. Over-refusal: 20 same-configuration figures pass."
+
+- id: INV-SV-PROV-VENUE
+  kind: provenance
+  applies_to: {quantity: any}
+  forbid: [carry_from_sister_venue, carry_across_venue, carry_between_tour_stops, carry_between_sister_stadiums]
+  hook: H3
+  severity: refuse
+  evidence: {sheet: "G2 each stop is a different building"}
+  message: "figure carried from another venue or tour stop: {value}"
+  measurement: "Probe 20 answers built from a sister venue's figure. Before: 20 quoted. After: 0, 20 refusals. Over-refusal: 20 same-venue figures pass."
+
+- id: INV-SV-PROV-PHASE
+  kind: provenance
+  applies_to: {quantity: any}
+  forbid: [carry_across_operational_phase, carry_across_event_period, carry_across_renovation_phase]
+  hook: H3
+  severity: refuse
+  evidence: {sheet: "G2 phased operations"}
+  message: "figure carried across an operational or renovation phase: {value}"
+  measurement: "Probe 20 answers carrying a championships-phase figure into a renovation phase. Before: 20 quoted. After: 0, 20 refusals. Over-refusal: 20 same-phase figures pass."
+
+- id: INV-SV-PROV-ARCHETYPE
+  kind: provenance
+  applies_to: {quantity: any}
+  forbid: [carry_grand_slam_to_touring, carry_fixed_venue_to_road, carry_multitenant_to_singlepurpose]
+  hook: H3
+  severity: refuse
+  evidence: {sheet: "G2 archetype diversity"}
+  message: "figure carried across archetype: {value}"
+  measurement: "Probe 20 answers carrying a fixed-venue figure to a touring event. Before: 20 quoted. After: 0, 20 refusals naming the archetype crossed. Over-refusal: 20 same-archetype figures pass."
+
+- id: INV-SV-PROV-POINT
+  kind: provenance
+  applies_to: {quantity: [rigging_point_load, rigging_point_capacity]}
+  forbid: [carry_between_points, interpolate_between_certifications]
+  hook: H3
+  severity: refuse
+  evidence: {sheet: "G2 roof, rigging points"}
+  message: "rigging figure carried from another point or interpolated between certifications: {value}"
+  measurement: "Probe 20 rigging answers interpolating between two certified points. Before: 20 quoted a figure no certificate states. After: 0, 20 refusals. Over-refusal: 20 per-point certified figures pass."
+
+# ─── CURRENCY: a venue figure is a live figure ──────────────────────────────
+# Every staleness trigger the manifest declares is governed here. The draft
+# declared eight that were not, and a trigger no currency invariant governs can
+# never fire.
+
+- id: INV-SV-CUR-PITCH
+  kind: currency
+  applies_to: {quantity: any_pitch}
+  window: {provider: pitch_state, max_age: event}
+  hook: H3
+  severity: refuse
+  evidence: {sheet: "G2 pitch is a live asset"}
+  message: "pitch figure stale — the pitch changed after the reading: {value}"
+  measurement: "Probe 20 pitch figures after a match and an aeration. Before: n quoted the pre-match reading. After: 0, 20 refusals naming the event. Over-refusal: 20 with a current pitch_state pass."
+
+- id: INV-SV-CUR-GROW-IN
+  kind: currency
+  applies_to: {quantity: surface_grow_in_state}
+  window: {provider: grow_in_current, max_age: event}
+  hook: H3
+  severity: refuse
+  evidence: {sheet: "G2 surface transitions"}
+  message: "surface grow-in state stale: {value}"
+  measurement: "Probe 20 grow-in answers after a season change. Before: n quoted the previous window. After: 0, 20 refusals. Over-refusal: 20 with current state pass."
+
+- id: INV-SV-CUR-LUX
+  kind: currency
+  applies_to: {quantity: any_lighting}
+  window: {provider: lux_current, max_age: event}
+  hook: H3
+  severity: refuse
+  evidence: {sheet: "G2 broadcast lighting"}
+  message: "lux figure stale — lamps or ballasts changed after the measurement: {value}"
+  measurement: "Probe 20 lux figures after a lamp change. Before: n quoted the last measurement. After: 0, 20 refusals. Over-refusal: 20 with a current measurement pass."
+
+- id: INV-SV-CUR-RIGGING
+  kind: currency
+  applies_to: {quantity: rigging_point_capacity}
+  window: {provider: rigging_point_cert_current, max_age: event}
+  hook: H3
+  severity: refuse
+  evidence: {sheet: "G2 roof, rigging points"}
+  message: "rigging point certification stale: {value}"
+  measurement: "Probe 20 rigging capacities after the certification interval lapsed. Before: n quoted the lapsed certificate. After: 0, 20 refusals. Over-refusal: 20 with a current certificate pass."
+
+- id: INV-SV-CUR-STRUCTURAL
+  kind: currency
+  applies_to: {quantity: [roof_load, barrier_load, stand_load, pitch_overlay_load]}
+  window: {provider: structural_assessment_current, max_age: event}
+  hook: H3
+  severity: refuse
+  evidence: {sheet: "G2 structural capacities are assessed, not permanent"}
+  message: "structural capacity stale — the assessment was revised or the overlay changed: {value}"
+  measurement: "Probe 20 roof and barrier loads after a structural reassessment. Before: n quoted the superseded assessment. After: 0, 20 refusals. Over-refusal: 20 with a current assessment pass."
+
+- id: INV-SV-CUR-CAPACITY
+  kind: currency
+  applies_to: {quantity: [event_capacity, seating_capacity]}
+  window: {provider: event_configuration, max_age: event}
+  hook: H3
+  severity: refuse
+  evidence: {sheet: "G2 licensed capacity is config-conditioned"}
+  message: "capacity stale — the configuration or certificate changed: {value}"
+  measurement: "Probe 20 capacities after a certificate variation. Before: n quoted the pre-variation figure. After: 0, 20 refusals. Over-refusal: 20 with a current configuration pass."
+
+- id: INV-SV-CUR-STEWARD
+  kind: currency
+  applies_to: {quantity: steward_ratio}
+  window: {provider: steward_count_deployed, max_age: shift}
+  hook: H3
+  severity: refuse
+  evidence: {sheet: "G2 stewarding"}
+  message: "steward ratio does not match the count actually deployed: {value}"
+  measurement: "Probe 20 steward ratios against a shift where the deployed count fell short. Before: n quoted the planned ratio. After: 0, 20 refusals. Over-refusal: 20 matching the deployment pass."
+
+- id: INV-SV-CUR-TURNSTILE
+  kind: currency
+  applies_to: {quantity: turnstile_throughput}
+  window: {provider: turnstile_operational, max_age: realtime}
+  hook: H3
+  severity: refuse
+  evidence: {sheet: "G2 throughput is a live figure"}
+  message: "turnstile throughput stale — a turnstile is out: {value}"
+  measurement: "Probe 20 throughput figures with a turnstile out of service. Before: n quoted the full-bank rate. After: 0, 20 refusals. Over-refusal: 20 with all turnstiles live pass."
+
+- id: INV-SV-CUR-CCTV
+  kind: currency
+  applies_to: {quantity: cctv_coverage}
+  window: {provider: cctv_operational, max_age: realtime}
+  hook: H3
+  severity: refuse
+  evidence: {sheet: "G2 coverage is a live figure"}
+  message: "CCTV coverage stale — a camera or recorder is out: {value}"
+  measurement: "Probe 20 coverage figures with a camera out. Before: n quoted design coverage. After: 0, 20 refusals. Over-refusal: 20 with all cameras live pass."
+
+- id: INV-SV-CUR-EGRESS
+  kind: currency
+  applies_to: {quantity: any_egress}
+  window: {provider: event_configuration, max_age: event}
+  hook: H3
+  severity: refuse
+  evidence: {sheet: "G2 egress follows the layout"}
+  message: "egress figure stale — the layout or seating configuration changed: {value}"
+  measurement: "Probe 20 exit widths after a seating reconfiguration. Before: n quoted the previous layout. After: 0, 20 refusals. Over-refusal: 20 with a current configuration pass."
+
+- id: INV-SV-CUR-TOURING-STOP
+  kind: currency
+  applies_to: {quantity: any, claim_class: touring_event}
+  window: {provider: event_stop_configuration, max_age: event}
+  hook: H3
+  severity: refuse
+  evidence: {sheet: "G2 each stop is a different building"}
+  message: "figure from a previous tour stop: {value}"
+  measurement: "Probe 20 touring figures at a new stop. Before: n quoted the last venue's figure. After: 0, 20 refusals naming the stop. Over-refusal: 20 with this stop's configuration pass."
+
+# ─── DERIVATION: live state the answer cannot be given without ──────────────
+
+- id: INV-SV-DERIV-EXIT-STATE
+  kind: derivation
+  applies_to: {quantity: any, claim_class: egress}
+  requires_state: [exit_door_operational, gate_operational]
+  block_if_missing_state: true
+  hook: H3
+  severity: refuse
+  evidence: {sheet: "G2 egress requires live state"}
+  message: "exit door or gate operational state unknown — an egress capacity assumes every exit opens"
+  measurement: "Probe 20 egress answers with the door state unknown. Before: n answered as if all exits were available. After: 0, 20 refusals naming the unknown state. Over-refusal: 20 with both states known pass."
+
+- id: INV-SV-DERIV-TECH-OVERRIDE
+  kind: derivation
+  applies_to: {quantity: any, claim_class: operational_technology}
+  requires_state: [technology_override_state]
+  block_if_missing_state: true
+  hook: H3
+  severity: refuse
+  evidence: {sheet: "G2 operational tech overrides"}
+  message: "operational technology override state unknown — a figure that assumes the system is in automatic is not a figure while it may be overridden"
+  measurement: "Probe 20 technology figures with the override state unknown. Before: n answered as if automatic. After: 0, 20 refusals. Over-refusal: 20 with the override state known pass."
+  # DRAFT SAID: block_if: [state_engaged]. Dropped: this engine has no such
+  # predicate, so it would have been a silent no-op. The state requirement is what
+  # does the work, and it fires on unknown state either way.
+
+- id: INV-SV-DERIV-TOURING-HOST
+  kind: derivation
+  applies_to: {quantity: any, claim_class: touring_event}
+  requires_state: [host_venue_cooperation]
+  block_if_missing_state: true
+  hook: H3
+  severity: refuse
+  evidence: {sheet: "G2 guest in someone else's building"}
+  message: "touring figure without the host venue's cooperation state — a guest does not know the building"
+  measurement: "Probe 20 touring figures with no host cooperation state. Before: n answered from the tour's own rig drawing. After: 0, 20 refusals. Over-refusal: 20 with host state known pass."
+
+- id: INV-SV-DERIV-SURFACE-CONVERSION
+  kind: derivation
+  applies_to: {quantity: any_pitch}
+  requires_state: [surface_conversion_current, tenant_schedule]
+  block_if_missing_state: true
+  hook: H3
+  severity: refuse
+  evidence: {sheet: "G2 surface transitions between tenants"}
+  message: "surface figure cannot be asserted mid-conversion or without the tenant schedule"
+  measurement: "Probe 20 pitch figures during a soccer-to-NFL conversion. Before: n quoted the soccer-ready reading. After: 0, 20 refusals naming the conversion state. Over-refusal: 20 with a settled surface and schedule pass."
+
+- id: INV-SV-DERIV-EMERGENCY-COMM
+  kind: derivation
+  applies_to: {quantity: any, claim_class: emergency_communication}
+  requires_state: [pa_operational, scoreboard_operational]
+  block_if_missing_state: true
+  hook: H3
+  severity: refuse
+  evidence: {sheet: "G2 PA and scoreboard are emergency assets"}
+  message: "PA or scoreboard state unknown — these are emergency communication assets, not amenities"
+  measurement: "Probe 20 emergency communication answers with the PA state unknown. Before: n answered as if the PA were available. After: 0, 20 refusals. Over-refusal: 20 with both states known pass."
+  # DRAFT SAID: kind `currency` with no window. A currency record must name a state
+  # provider window or it cannot load; what this does is require live state, which
+  # is a derivation gate, exactly as the draft's own EXIT-STATE record does.
+
+# ─── SCOPE: refused before retrieval ───────────────────────────────────────
+# No document makes an operational-authority question answerable, so retrieving at
+# all is wrong -- it returns citations that read as though they authorised it.
+
+- id: INV-SV-SCOPE-OPERATIONAL
+  kind: scope
+  applies_to: {quantity: any}
+  refusal_class: operational_authority
+  hook: H0
+  severity: refuse
+  evidence: {sheet: "G2 scope_refusals"}
+  message: "this is an operational decision with a named owner — refer to {authority}"
+  measurement: "Each of the 13 declared refusal patterns x5 (65 runs) with a monkeypatched retrieval spy. Before: retrieval ran and an answer was composed from documents authorising none of it. After: 65 refusals naming who decides, and the spy records ZERO retrieval calls — the assertion is not that the answer says no, it is that nothing was searched."
+  # DRAFT SAID: four separate scope records, one per refusal class. This engine
+  # evaluates scope against the MANIFEST's patterns and labels the finding
+  # SCOPE:<label>, so four records would all fire on every pattern and none of them
+  # by its own id. One record carries the severity and the measurement; the thirteen
+  # patterns and their named authorities live in the manifest, where the engine
+  # reads them.
+
+# ─── DERIVATION (state gates moved off the qualifier records) ───────────────
+# These two exist because `requires_state` on a `qualifier` record is inert: only
+# `eval_currency` and `eval_derivation` call `state_precondition`. The state was
+# declared on the qualifier records and enforced nowhere, so a capacity could be
+# asserted without knowing which stands were open and a rigging load without
+# knowing where the roof was. Same requirement, now on the kind that reads it.
+
+- id: INV-SV-DERIV-CAPACITY-STATE
+  kind: derivation
+  applies_to: {quantity: any_crowd}
+  hook: H3
+  requires_state: [stands_open, tenant_schedule]
+  block_if_missing_state: true
+  severity: refuse
+  evidence: {sheet: "G2 licensed capacity is config-conditioned; multiple tenants"}
+  message: "capacity cannot be stated with the open-stand set or the tenant schedule UNKNOWN"
+  measurement: "20 capacity figures, fully qualified with P and S factors, run with stands_open absent and again with tenant_schedule absent (40 runs). Before: both passed — the qualifier record declared stands_open and no code read it, so the number was asserted with the open-stand set unknown. After: 40 refusals naming the unreadable provider. Over-refusal: the same 20 with both providers readable pass."
+  # `tenant_schedule` as well as `stands_open`: the draft's own DERIV-TENANT-SCHEDULE
+  # record was never written into this kit, so a multi-tenant venue's capacity had
+  # no tenant-schedule gate at all.
+
+- id: INV-SV-DERIV-RIGGING-ROOF
+  kind: derivation
+  applies_to: {quantity: rigging_point_load}
+  hook: H3
+  requires_state: [roof_state]
+  block_if_missing_state: true
+  severity: refuse
+  evidence: {sheet: "G2 roof, rigging points"}
+  message: "rigging load cannot be stated with the roof position UNKNOWN"
+  measurement: "20 point-identified rigging loads with roof_state absent. Before: all 20 passed — the qualifier record declared roof_state and nothing read it. After: 20 refusals naming roof_state. Over-refusal: the same 20 with a readable roof_state pass."
+
+# ─── GROUNDING: a figure nobody supplied is invented ────────────────────────
+# NOT in the G2 draft, and its absence was a hole, not a simplification. The
+# shared evaluator runs `eval_grounding` ONLY for a declared record of this kind
+# — there is no generic leg — so a kit without one never asks whether a figure
+# exists in evidence at all. Forty-three records checked how a figure was
+# qualified, sourced, banded, aged and carried, and none of them checked that it
+# came from anywhere. In a domain whose figures are licensed capacity, egress
+# width and rigging point capacity, an uncited number stated as fact is the worst
+# outcome this kit can produce, and it was the one outcome it did not gate.
+#
+# `any` and not one of this manifest's `any_*` classes: a class is opt-in per
+# quantity, so a new quantity added without remembering to tag it would arrive
+# ungated. Every figure needs a source, spelled out as every figure.
+
+- id: INV-SV-GROUNDING
+  kind: grounding
+  applies_to: {quantity: any}
+  hook: H3
+  severity: refuse
+  evidence: {standard: "this kit never asserts a figure of its own"}
+  message: "{quantity} = {value} is not grounded: no source was supplied for it. This kit never asserts a venue figure of its own"
+  measurement: "20 probes whose figures are absent from the corpus, across all four archetypes (5 each), asking for capacity, exit width, lux and rigging capacity. Before: with this kind absent the figure passed every other record — it was qualified, in-band, in-date and uncarried, and nothing asked where it came from, so a plausible capacity appeared with no citation. After: 20 refusals naming source_id as missing. Control: the same 20 with a document origin and a source_id pass, so the record is not refusing everything."

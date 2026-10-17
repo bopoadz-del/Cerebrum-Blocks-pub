@@ -1,0 +1,76 @@
+{
+  "acceptance": [
+    {
+      "check": "a 5,900 delta_degC temperature value fails the pipeline with overall fail and first_failure empirical (the donor regression)",
+      "id": "temp_delta_fails",
+      "status": "failed"
+    },
+    {
+      "check": "an unrecognised unit string fails the dimensional stage and the overall verdict",
+      "id": "unrecognised_unit_fails",
+      "status": "failed"
+    },
+    {
+      "check": "a concrete rate far above the file-backed USD band fails the empirical stage",
+      "id": "out_of_band_fails",
+      "status": "failed"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "real: 5-stage validation pipeline (syntactic/dimensional/physical/empirical/operational) ported from The_Fork app/blocks/validation_pipeline.py with its companion config/empirical_ranges.json. Pint dimensional analysis, file-backed per-material/per-currency empirical bands with slack and strict modes, and fail-loud overall verdicts. Class renamed (PintValidationBlock) because the Store defs already alias validation_pipeline to app.blocks.validation.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "53fec9c2140c530b489f536afd86af138e1694d0c01c768837521b0f0ba50cab",
+    "block.py": "a666b790945fea7018e01f1bfbce0dfbc9bff393cf7eee6fcea6e5ce0c9853a1"
+  },
+  "id": "pint_validation",
+  "inputs": [
+    {
+      "description": "{value, unit?, context?, claim?}",
+      "name": "input",
+      "type": "json"
+    }
+  ],
+  "layer": 3,
+  "name": "pint_validation",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Capability result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "DPuUxvaHMKXNhG0w42zgG1wSJKJ2Wf1zt9YUuJsscynrZlubrZYzJOetbJkgJ//9YI7TZx8+l7Z+M1f+scOaCg==",
+  "tags": [
+    "validation",
+    "pint",
+    "units",
+    "empirical",
+    "reasoning",
+    "construction",
+    "the-fork"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

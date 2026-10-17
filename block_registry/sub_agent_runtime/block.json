@@ -1,0 +1,75 @@
+{
+  "acceptance": [
+    {
+      "check": "a spawn past the process cap is refused, not admitted",
+      "id": "cap_refused",
+      "status": "refused"
+    },
+    {
+      "check": "a payload without task is refused before any spawn is admitted",
+      "id": "invalid_payload",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Sub-agent spawn contract ported from <private-repo> agent/swarm/spawner.py: the child inherits only the scrub allowlist (PATH/PYTHONPATH/AIRGAP/TEST_MODE/DATA_DIR/OLLAMA_*), the process cap is enforced, and the payload validates before any spawn is admitted. In-process bookkeeping.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "3bb032cf0f055a40552696898c1acaaf5e82cf61aee1d97a04c9e8aba6a7ed8e",
+    "block.py": "9690bdeb594a64353de960164fe7efd14eeed01f4887106500893e4af42625d7"
+  },
+  "id": "sub_agent_runtime",
+  "inputs": [
+    {
+      "description": "scrub | spawn | reap | running",
+      "name": "action",
+      "options": [
+        "scrub",
+        "spawn",
+        "reap",
+        "running"
+      ],
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 3,
+  "name": "sub_agent_runtime",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Capability result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "DCpOZhtW5ikWmq6/J3+fETF8p1bt/2o45wC7jTZVvk2yXsyZl0CDcJi6UD9KN73FMHOHZyZyHhOPuFWuyhkNAA==",
+  "tags": [
+    "agent",
+    "spawn",
+    "isolation",
+    "<private-repo>"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

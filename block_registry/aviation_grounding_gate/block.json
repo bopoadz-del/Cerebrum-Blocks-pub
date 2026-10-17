@@ -1,0 +1,23 @@
+{
+  "acceptance": [],
+  "description": "Safety-critical grounding gate: every figure must trace to a retrieved chunk with matching unit/currency semantics.",
+  "digests": {
+    "block.json": "aadc89a468df9df028cb12304814d491312e6c8a93d6f36b4f0a94557936b31a",
+    "block.py": "c94fe089313cb0c9426102238dbf1493a084e4299a23feda4f18018655d82d8b"
+  },
+  "id": "aviation_grounding_gate",
+  "name": "Aviation Grounding Gate",
+  "never": [],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [],
+  "signature": "NYur3Y5+mNsdUR4zE6+WpSpCPzLIg5w+6vptBjHnIYhKkpsoqOffK31R7DhYjky5fqEwFBbdJQo5dHoQkT/dDw==",
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": []
+}

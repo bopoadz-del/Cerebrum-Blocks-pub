@@ -1,0 +1,12 @@
+{
+  "name": "embedding_provider",
+  "version": "0.1.0",
+  "sha256": "4e76d61f1d2527030dc0b92ae351622f9330415a9280f9eff580500fce3a9437",
+  "dependencies": [
+    "numpy"
+  ],
+  "provenance": "factory",
+  "acceptance_test": "tests/test_embedding_provider.py",
+  "tier": "premium",
+  "note": "Premium-only; not available in the freemium tier."
+}

@@ -1,0 +1,141 @@
+{
+  "acceptance": [
+    {
+      "check": "errors on an unknown or missing action",
+      "id": "unknown_action",
+      "status": "failed"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "LLM-augmented enhancement of construction quantities/risks/RFIs",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "a03440e740c5dbb53b10099af79126f18dcb1f014a5b895f8fab3c70fb8e0880",
+    "block.py": "a29a78456245f9a49a92dd90525555df9e906404f2826fdb9e53d7eebc221f49"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/llm_enhancer:latest",
+    "type": "docker"
+  },
+  "id": "llm_enhancer",
+  "inputs": [
+    {
+      "description": "{\"action\": \"status\"}  \u2014 or {\"action\": \"enhance_quantities\", \"text\": \"...\", \"baseline\": {...}}",
+      "name": "input",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "default": "claude-sonnet-4-6",
+      "description": "Configuration parameter: model",
+      "name": "model",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": 4000,
+      "description": "Configuration parameter: max_output_tokens",
+      "name": "max_output_tokens",
+      "required": false,
+      "type": "number"
+    },
+    {
+      "default": 30.0,
+      "description": "Configuration parameter: timeout_seconds",
+      "name": "timeout_seconds",
+      "required": false,
+      "type": "number"
+    }
+  ],
+  "layer": 3,
+  "name": "Llm Enhancer",
+  "never": [],
+  "outputs": [
+    {
+      "description": "LLM additions",
+      "name": "additions",
+      "type": "array"
+    },
+    {
+      "description": "Skipped",
+      "name": "skipped",
+      "type": "boolean"
+    },
+    {
+      "description": "Reason",
+      "name": "reason",
+      "type": "string"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "env",
+      "scope": "process"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    },
+    {
+      "kind": "network",
+      "scope": "http.outbound"
+    },
+    {
+      "kind": "llm",
+      "scope": "provider"
+    },
+    {
+      "kind": "credential",
+      "scope": "env"
+    }
+  ],
+  "requires": [],
+  "signature": "1Y7pX9kSyspL4+KTWNaMjOHmfivfV+UozGz2oEOWe6CrIUp9NBz1vDe4t+0umsTxAc15CVP2ueT6Llik0yG/CA==",
+  "tags": [
+    "domain",
+    "construction",
+    "llm",
+    "enhancement"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "{\"action\": \"status\"}  \u2014 or {\"action\": \"enhance_quantities\", \"text\": \"...\", \"baseline\": {...}}",
+      "name": "input",
+      "widget": "json"
+    },
+    {
+      "label": "Model",
+      "name": "model",
+      "widget": "text"
+    },
+    {
+      "label": "Max Output Tokens",
+      "name": "max_output_tokens",
+      "widget": "number"
+    },
+    {
+      "label": "Timeout Seconds",
+      "name": "timeout_seconds",
+      "widget": "number"
+    }
+  ],
+  "version": "1.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

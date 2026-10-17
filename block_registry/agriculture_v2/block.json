@@ -1,0 +1,68 @@
+{
+  "acceptance": [
+    {
+      "check": "an empty payload is refused, not silently accepted",
+      "id": "empty_payload",
+      "status": "refused"
+    },
+    {
+      "check": "an unknown action is refused, not silently accepted",
+      "id": "unknown_action",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Agriculture domain analysis: deterministic document-type detection and entity extraction for the agriculture vertical.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "76b7257bd4e6250bf72c59334e83d2df5504f84fcde9f1e4573d3ea7e36547b4",
+    "block.py": "c0ee3052a5e680690087a646cdaa8581b45959cfdd8c000b6b07aa824798010c"
+  },
+  "id": "agriculture_v2",
+  "inputs": [
+    {
+      "description": "Document text to analyze",
+      "name": "text",
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 3,
+  "name": "agriculture_v2",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Capability result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "PD9hV3tU+nnx9IuBUKWSdzfZ4wSZLu0kQWJSTRNfQBwN6MudyonzglG6aU+fWBpruWKhTqTIYhvjFRSAG3b+BQ==",
+  "tags": [
+    "domain",
+    "vertical",
+    "agriculture"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

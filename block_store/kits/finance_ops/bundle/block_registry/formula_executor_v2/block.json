@@ -1,0 +1,38 @@
+{
+  "acceptance": [],
+  "capability_class": "shared_reasoning",
+  "description": "LLM-assisted formula drafting with a deterministic validation gate and RestrictedPython sandbox execution; never authorizes on its own.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "0d6e6610e4de0a0968271e204e99b2b91bea11a2081ec74ee80fe39dd2bc1b75",
+    "block.py": "de39dbf2a9bed10512e460e3bc729a487f787bd04cd286d825310d41e4d2f25e"
+  },
+  "factory_attach": {
+    "cleared": false,
+    "reason": "a Store runtime alias shared by the domain kits, not a part the Factory attaches to a product"
+  },
+  "id": "formula_executor_v2",
+  "name": "Formula Executor V2",
+  "never": [],
+  "permissions": {
+    "blocks": [],
+    "filesystem": true,
+    "imports": [
+      "os"
+    ],
+    "network": true
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [],
+  "signature": "kCveWJJmOKPAP6gsHHk9NLs4atq5FwILZzbI+WUYmWJd8yS9rAEkOlRnVvAJbTYl+uSHHP+5KpMqc8XDCAezCA==",
+  "trust_tier": "platform",
+  "version": "2.0.0",
+  "verticals": [
+    "construction",
+    "interior_design",
+    "architecture",
+    "facility_management",
+    "facilities_management"
+  ],
+  "writes": []
+}

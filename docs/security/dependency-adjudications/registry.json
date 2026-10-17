@@ -1,0 +1,40 @@
+{
+  "schema": "store.dep_adjudication.v1",
+  "rules": [
+    "Every remaining advisory needs a dated note and a test twin.",
+    "Adjudicate against the package's declared Requires-Dist, not a scanner summary.",
+    "A fix_versions list that the installed pin does not satisfy is a stale note — upgrade or rewrite.",
+    "Never a bare pip-audit --ignore-vuln or npm audit --ignore."
+  ],
+  "adjudications": [
+    {
+      "id": "PYSEC-2026-2132",
+      "aliases": ["CVE-2026-7246", "GHSA-47fr-3ffg-hgmw"],
+      "package": "click",
+      "date": "2026-09-11",
+      "note": "docs/security/dependency-adjudications/2026-09-11-click.md",
+      "decision": "accept_constrained",
+      "evidence": {
+        "kind": "declared_requires_dist",
+        "installed_pin": "8.1.8",
+        "published_fix": "8.3.3",
+        "constraining_package": "gTTS",
+        "constraining_pin": "2.5.4",
+        "constraint": "click<8.2,>=7.1"
+      }
+    },
+    {
+      "id": "PYSEC-2022-252",
+      "aliases": [],
+      "package": "deep-translator",
+      "date": "2026-09-11",
+      "note": "docs/security/dependency-adjudications/2026-09-11-deep-translator.md",
+      "decision": "accept_until_fix",
+      "evidence": {
+        "kind": "no_fixed_version",
+        "installed_pin": "1.11.4",
+        "latest_published": "1.11.4"
+      }
+    }
+  ]
+}

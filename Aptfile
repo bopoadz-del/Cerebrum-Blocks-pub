@@ -1,0 +1,7 @@
+# Kept in parity with Dockerfile and render-build.sh — see
+# tests/core/test_deploy_parity.py. Render uses render-build.sh, not this file.
+tesseract-ocr
+tesseract-ocr-ara
+poppler-utils
+libgl1
+libglib2.0-0

@@ -1,0 +1,95 @@
+kit: airport_construction
+version: 1
+serves_verticals: [airport_construction, airport]
+hooks_used: [H0, H1, H2, H3, H4]
+
+quantities:
+  ols_penetration_height: {units: [m]}
+  ils_critical_area:      {units: [m]}
+  rsa_limit:              {units: [m]}
+  rofa_limit:             {units: [m]}
+  tsa_limit:              {units: [m]}
+  tofa_limit:             {units: [m]}
+  declared_distance:      {units: [m]}
+  pcn:                    {units: [—]}
+  acr:                    {units: [—]}
+  crane_radius:           {units: [m]}
+  agl_unserviceable:      {units: [count]}
+  jet_blast_distance:     {units: [m]}
+
+  # Correction 6 (spec §1): a staleness_triggers KEY must be a declared
+  # quantity. ols_geometry and phasing_plan are artifacts the sheet's
+  # triggers name, not figures — declared unitless so the trigger has
+  # something to be keyed on.
+  ols_geometry:           {units: [—]}
+  phasing_plan:           {units: [—]}
+
+qualifier_fields:
+  runway_designator:      {type: string}
+  direction:              {type: enum,   values: [primary, secondary]}
+  aerodrome_reference_code: {type: string}
+  surface_name:           {type: enum,   values: [approach, transitional, inner_horizontal, conical, takeoff_climb, OFZ]}
+  reference_point:        {type: string}
+  datum_m_or_ft:          {type: enum,   values: [m, ft]}
+  amsl_basis:              {type: enum,   values: [AMSL, local]}
+  effective_date:         {type: date}
+  temporary:              {type: bool}
+  pavement_type:          {type: enum,   values: [rigid, flexible]}
+  subgrade_category:      {type: string}
+  tyre_pressure_category: {type: string}
+  evaluation_method:      {type: enum,   values: [ACN_PCN, ACR_PCR]}
+  runway_category:        {type: enum,   values: [non_instrument, non_precision, CAT_I, CAT_II, CAT_III]}
+  wgs84_confirmed:        {type: bool}
+  # Correction 7: an enum value that parses as a boolean must be quoted, or
+  # `true` becomes the Python boolean True and never matches the string
+  # "true" a host or a figure sends — true north would fail this check while
+  # the boolean sailed through it.
+  magnetic_or_true:       {type: enum,   values: [magnetic, "true"]}
+
+source_classes:
+  icao_annex_14:          {rank: 1}
+  national_aviation_reg:  {rank: 2}
+  aerodrome_manual:       {rank: 3}
+  safeguarding_assessment: {rank: 4, reject_as_proof: [undated, pre_works]}
+  approved_phasing_plan:  {rank: 5, reject_as_proof: [draft, superseded_revision]}
+  NAVAID_siting_drawings: {rank: 6}
+  design_drawings:        {rank: 7}
+  method_statement:       {rank: 8}
+  site_instruction:       {rank: 9}
+  # Correction 1: every class named in reject_as_proof or demote must itself
+  # be a declared source class, or the rule that names it can never fire and
+  # the loader refuses. Ranked below every governing class.
+  undated:                {rank: 10}
+  pre_works:              {rank: 11}
+  draft:                  {rank: 12}
+  superseded_revision:    {rank: 13}
+
+state_providers:
+  notam_state:            {kind: cycle,    max_age: next_issue}
+  airac_cycle:            {kind: cycle,    max_age: next_cycle}
+  phasing_plan_current:   {kind: revision, max_age: event}
+  NAVAID_status:          {kind: status,   max_age: realtime}
+  agl_status:             {kind: status,   max_age: shift}
+
+staleness_triggers:
+  declared_distance:      [airac_cycle_change, threshold_change]
+  ols_geometry:           [obstacle_change, safeguarding_revision]
+  ils_critical_area:      [NAVAID_change, siting_revision]
+  rsa_limit:              [runway_category_change]
+  pcn:                    [pavement_evaluation_interval]
+  agl_unserviceable:      [light_change, service_interval]
+  phasing_plan:           [revision]
+
+scope_refusals:
+  - pattern: "can we put the crane here"
+    authority: "safeguarding — obstacle notification required"
+  - pattern: "is it safe to work with the runway open"
+    authority: "approved CSPP / method of working plan"
+  - pattern: "can we hand this back tonight"
+    authority: "duty airfield officer"
+  - pattern: "will this affect the ILS"
+    authority: "ANSP / CNS engineering"
+
+spec_extensions:
+  claim_class:            true
+  same_source:            true

@@ -1,0 +1,23 @@
+{
+  "acceptance": [],
+  "description": "Estate-scoped bearer auth (<private-repo> port): HMAC-SHA256 pepper-hashed tokens with an estate scope check. In-process token store; no DB, no demo bypass.",
+  "digests": {
+    "block.json": "ce918d4055f66f8c6cfd3eb48468a7ed7696ead8b427398f4b41354dec48dd1e",
+    "block.py": "e377838a1035934977285e1360ae8f054a525df52d81ab0b08fd020f2c9f11eb"
+  },
+  "id": "estate_bearer_auth",
+  "name": "Estate Bearer Auth",
+  "never": [],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [],
+  "signature": "2UKwAx82Jf8GewpHAnpe/y3U6qKJUngP4r07bPfGMuk55D4/74Y6eCIjk/2h+vEGNha2XoxblI99XH/BI013CA==",
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": []
+}

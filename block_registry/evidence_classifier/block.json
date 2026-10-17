@@ -1,0 +1,72 @@
+{
+  "acceptance": [
+    {
+      "check": "a test-line-to-tank fire-pump certificate is failed, never passed",
+      "id": "test_to_tank",
+      "status": "refused"
+    },
+    {
+      "check": "an unknown asset type is UNPROVABLE, never fabricated",
+      "id": "unknown_asset",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Commissioning evidence classifier ported from <private-repo> reasoning/evidence.py: A/B/C/D/Unprovable classes with PASS/FAIL/UNPROVABLE verdicts for fire-pump and fire-life-safety packets (test-line-to-tank, covers/clips obscuring the nameplate, serial mismatch, stale unwitnessed factory test, integrated C&E chain).",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "80a9ba3e51ca1cc0d3fe5125f6777f649f3d68b65944f3f31b0121230b2d435b",
+    "block.py": "89f4fc619ec7da31e58da5e363c1c0ff09499780ff9fe5c5a3ba0ec5ee28fb7c"
+  },
+  "id": "evidence_classifier",
+  "inputs": [
+    {
+      "description": "classify",
+      "name": "action",
+      "options": [
+        "classify"
+      ],
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 3,
+  "name": "evidence_classifier",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Capability result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "P7qgZa8De501ZaA4lSpAXtADn/yHqvwjxXzEL+3SWE7NlVhKf+MQGbC4aKpARurApVUuXl9mEpgwXg/QIuU8BQ==",
+  "tags": [
+    "evidence",
+    "commissioning",
+    "fraud-aware",
+    "hotelops"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

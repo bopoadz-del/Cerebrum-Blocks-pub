@@ -1,0 +1,87 @@
+{
+  "acceptance": [
+    {
+      "check": "an approval that does not name the person making it is refused, and nothing is applied",
+      "id": "anonymous_approval",
+      "status": "refused"
+    },
+    {
+      "check": "deciding a rule_id that is not among the candidates is refused (decisions are by id, one at a time)",
+      "id": "unknown_rule",
+      "status": "refused"
+    },
+    {
+      "check": "deciding before any candidate set was ingested for the project/doc is refused",
+      "id": "no_set",
+      "status": "refused"
+    },
+    {
+      "check": "ingesting candidates without a source document is refused - there is no text to approve against",
+      "id": "no_source_doc",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "real (clone of <private-repo> app/rules/approval.py): extracted clearance-rule candidates are inert until a NAMED reviewer approves them one at a time by id - no approve_all, no approval by count; an anonymous approval is refused and every decision is a ledger row (who, when, against what text). approved_rules() only returns what a person individually approved, in the kit loader's shape. Ledger kept in-process; the donor's SQLAlchemy session is not ported.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "28778f4427f1359aebdb8701a925ecd992b15e9bf27f5aba187538066383cba1",
+    "block.py": "1f4ba64749933b1e0abaf19d1325f68e26d4c6fbfd3e97d3619ff256aab26492"
+  },
+  "id": "approval_rules",
+  "inputs": [
+    {
+      "description": "ingest | decide | approved | list | ledger",
+      "name": "action",
+      "options": [
+        "ingest",
+        "decide",
+        "approved",
+        "list",
+        "ledger"
+      ],
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 3,
+  "name": "approval_rules",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Capability result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "JO+v9BKql6n1KPZRRWJQpEEYVxIPnrkzqsbqGyFmgd4M8e5KoGaNTMoVfID+poh3nQLWS2bf3fFTfuSYlnfLAg==",
+  "tags": [
+    "bim",
+    "approval",
+    "rules",
+    "governance",
+    "bim-manager"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

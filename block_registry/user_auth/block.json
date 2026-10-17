@@ -1,0 +1,23 @@
+{
+  "acceptance": [],
+  "description": "User authentication (<private-repo> port): bcrypt hashes, access token, refresh rotation (single-use), TOTP (RFC 6238). No backtest, no email.",
+  "digests": {
+    "block.json": "48f738d85017648af14f71bfc5a16cbf7c6802c7573a4f9bb6bebfd04938afd9",
+    "block.py": "94152c6eb28a803f1210044ef8779825e1c96d54ecba2394de92e7b9b3ac85ce"
+  },
+  "id": "user_auth",
+  "name": "User Auth",
+  "never": [],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [],
+  "signature": "I1N71LUmxz5mCB9rDAmnVjrYS5CAPRBJC7KMGu21F/9KQVMNl9WMOOBffnoc3x5ZLVRo97FoXV+LhLAjfPyKBQ==",
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": []
+}

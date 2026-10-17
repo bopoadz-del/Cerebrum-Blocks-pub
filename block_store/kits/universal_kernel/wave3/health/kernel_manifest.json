@@ -1,0 +1,10 @@
+{
+  "name": "health",
+  "version": "0.1.0",
+  "sha256": "9e4b9af36206b3ef01da1408e468d7e1cb8c927d349dea0cde8752357fb83cd9",
+  "dependencies": [],
+  "provenance": "factory",
+  "acceptance_test": "tests/test_health.py",
+  "tier": "premium",
+  "note": "Premium-only; not available in the freemium tier."
+}

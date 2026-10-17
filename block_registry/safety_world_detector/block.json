@@ -1,0 +1,69 @@
+{
+  "acceptance": [],
+  "author": "Cerebrum Team",
+  "description": "YOLO-Worldv2 detector surfacing what the model sees (vest, hat, person, crack...) \u2014 class, confidence, box. Deliberately judgment-free: no violation/non-compliance vocabulary; application-layer judgments stay with the operator in the loop. Refuses honestly when SAFETY_WORLD_WEIGHTS is unset.",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "ebfea2d9091a355b45b7f6555861d83dce2c18b802796ee12322241ff70d32d9",
+    "block.py": "aaf0eab62dcde9cd83925542f87801bf17c48fe394656f5c2cf8c4733dce484c"
+  },
+  "id": "safety_world_detector",
+  "inputs": [
+    {
+      "description": "Path to the image file to run detection on",
+      "name": "file_path",
+      "required": true,
+      "type": "string"
+    },
+    {
+      "default": 0.25,
+      "description": "Confidence threshold (0.0-1.0)",
+      "name": "confidence",
+      "required": false,
+      "type": "number"
+    },
+    {
+      "default": "detect",
+      "description": "Action",
+      "name": "action",
+      "options": [
+        "detect"
+      ],
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 2,
+  "name": "Safety World Detector",
+  "never": [],
+  "outputs": {
+    "result": {
+      "description": "detections: [{class, confidence, bbox}], count, class_names",
+      "type": "json"
+    }
+  },
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "file",
+      "scope": "input_image"
+    }
+  ],
+  "requires": [],
+  "signature": "E8DYMXoWhcHJxwUO52/9L2VBKggerd6hXn8ilurYglQeOleNZeFhytikezz8m4vIts3W/ojCEzhJBexDttPADw==",
+  "tags": [
+    "vision",
+    "safety",
+    "detection",
+    "yolo"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": []
+}

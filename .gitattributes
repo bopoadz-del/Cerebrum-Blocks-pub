@@ -1,0 +1,15 @@
+# Line endings: every text file is stored with LF on every platform; git's own
+# detection decides text vs binary per file.
+* text=auto eol=lf
+
+# Binary types present in this tree: stored and checked out byte for byte.
+*.png binary
+*.pdf binary
+
+# Block registry source files are part of the signed digest payload.
+# Force LF line endings so signatures produced on Windows still verify on
+# Linux CI checkouts and vice versa.
+block_registry/**/block.py text eol=lf
+block_registry/**/Dockerfile text eol=lf
+block_registry/**/requirements.txt text eol=lf
+block_registry/**/block.json text eol=lf

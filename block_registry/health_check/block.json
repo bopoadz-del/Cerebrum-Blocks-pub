@@ -1,0 +1,179 @@
+{
+  "acceptance": [
+    {
+      "check": "errors on an unknown or missing action",
+      "id": "unknown_action",
+      "status": "failed"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "1e227ca74a418c0d6ce4bef591e72aeb8dacc9649b0cc08a9185687564f97383",
+    "block.py": "bbdd3e3219b82b451e591ec9123615a11f42d259d7f91932e4548bd8993dca01"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/health_check:latest",
+    "type": "docker"
+  },
+  "id": "health_check",
+  "inputs": [
+    {
+      "description": "JSON payload for the selected action",
+      "name": "input",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "default": "ping",
+      "description": "Action",
+      "name": "action",
+      "options": [
+        "ping",
+        "deep_check",
+        "check_dependency",
+        "register_probe",
+        "unregister_probe",
+        "get_status",
+        "get_history",
+        "simulate_failure"
+      ],
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": 30,
+      "description": "Configuration parameter: check_interval",
+      "name": "check_interval",
+      "required": false,
+      "type": "number"
+    },
+    {
+      "default": 300,
+      "description": "Configuration parameter: deep_check_interval",
+      "name": "deep_check_interval",
+      "required": false,
+      "type": "number"
+    },
+    {
+      "default": 5,
+      "description": "Configuration parameter: timeout_per_check",
+      "name": "timeout_per_check",
+      "required": false,
+      "type": "number"
+    },
+    {
+      "default": true,
+      "description": "Configuration parameter: alert_on_failure",
+      "name": "alert_on_failure",
+      "required": false,
+      "type": "boolean"
+    },
+    {
+      "default": 100,
+      "description": "Configuration parameter: max_probe_history",
+      "name": "max_probe_history",
+      "required": false,
+      "type": "number"
+    }
+  ],
+  "layer": 1,
+  "name": "Health Check",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Health status",
+      "name": "status",
+      "type": "text"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    },
+    {
+      "kind": "llm",
+      "scope": "provider"
+    }
+  ],
+  "requires": [
+    "database",
+    "memory",
+    "config"
+  ],
+  "signature": "hUCVgq/GRrE8STXeIcEHiUpnj1wiCnkXiG0jUZ2MiJJPT2ne1/QJVT/1mre2n3jRVizWWNrgBv+2JQHc+hC+BA==",
+  "tags": [
+    "observability",
+    "infra",
+    "reliability",
+    "health"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "JSON payload for the selected action",
+      "name": "input",
+      "widget": "json"
+    },
+    {
+      "label": "Action",
+      "name": "action",
+      "options": [
+        "ping",
+        "deep_check",
+        "check_dependency",
+        "register_probe",
+        "unregister_probe",
+        "get_status",
+        "get_history",
+        "simulate_failure"
+      ],
+      "widget": "select"
+    },
+    {
+      "label": "Check Interval",
+      "name": "check_interval",
+      "widget": "number"
+    },
+    {
+      "label": "Deep Check Interval",
+      "name": "deep_check_interval",
+      "widget": "number"
+    },
+    {
+      "label": "Timeout Per Check",
+      "name": "timeout_per_check",
+      "widget": "number"
+    },
+    {
+      "label": "Alert On Failure",
+      "name": "alert_on_failure",
+      "widget": "toggle"
+    },
+    {
+      "label": "Max Probe History",
+      "name": "max_probe_history",
+      "widget": "number"
+    }
+  ],
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

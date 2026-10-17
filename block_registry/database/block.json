@@ -1,0 +1,145 @@
+{
+  "acceptance": [
+    {
+      "check": "errors on an unknown or missing action",
+      "id": "unknown_action",
+      "status": "failed"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "capability_class": "records",
+  "description": "",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "5025bc6b4f0687db4d3219826e5fa1b6ea5801e1c0aa9f9fa39582abc5d19f49",
+    "block.py": "d16a3e3f63e46aa761577d96b9cc23bf7485a3c951d16a796f16881119dc66d6"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/database:latest",
+    "type": "docker"
+  },
+  "id": "database",
+  "inputs": [
+    {
+      "description": "JSON payload for the selected action",
+      "name": "input",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "default": "query",
+      "description": "Action",
+      "name": "action",
+      "options": [
+        "query",
+        "insert",
+        "update",
+        "delete",
+        "create_table",
+        "list_tables"
+      ],
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": "sqlite",
+      "description": "Configuration parameter: backend",
+      "name": "backend",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": null,
+      "description": "Configuration parameter: connection_string",
+      "name": "connection_string",
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 0,
+  "name": "Database",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Rows",
+      "name": "rows",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "env",
+      "scope": "process"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    },
+    {
+      "kind": "database",
+      "scope": "sql"
+    }
+  ],
+  "requires": [
+    "config"
+  ],
+  "signature": "RuD8zcSwu3zX4nARjSAicK5zdKlsgVgJBjRt/BtQHbe0hjIEJs2844Eeagz98nC6z5/5GD0Iu1nXHy/evJCSDA==",
+  "tags": [
+    "infrastructure",
+    "database",
+    "storage"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "JSON payload for the selected action",
+      "name": "input",
+      "widget": "json"
+    },
+    {
+      "label": "Action",
+      "name": "action",
+      "options": [
+        "query",
+        "insert",
+        "update",
+        "delete",
+        "create_table",
+        "list_tables"
+      ],
+      "widget": "select"
+    },
+    {
+      "label": "Backend",
+      "name": "backend",
+      "widget": "text"
+    },
+    {
+      "label": "Connection String",
+      "name": "connection_string",
+      "widget": "text"
+    }
+  ],
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    },
+    {
+      "kind": "database",
+      "scope": "sql"
+    }
+  ]
+}

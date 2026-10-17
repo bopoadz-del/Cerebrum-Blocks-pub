@@ -1,0 +1,87 @@
+{
+  "acceptance": [
+    {
+      "check": "list_gl_accounts unconfigured returns status refused (no fabricated GL rows)",
+      "id": "gl_unconfigured_refused",
+      "status": "refused"
+    },
+    {
+      "check": "list_po_headers unconfigured returns status refused (no fabricated PO rows)",
+      "id": "po_unconfigured_refused",
+      "status": "refused"
+    },
+    {
+      "check": "list_gl_accounts with credentials still refused \u2014 no donor adapter exists",
+      "id": "gl_configured_still_refused",
+      "status": "refused"
+    },
+    {
+      "check": "list_po_headers with credentials still refused \u2014 no donor adapter exists",
+      "id": "po_configured_still_refused",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "honest-stub \u2014 SAP OData connector (read-only GL accounts + PO headers), no donor \u2014 honest stub. No donor adapter exists on disk: no OData call is implemented; list_gl_accounts and list_po_headers fail closed with a structured refusal (never fabricated rows, never a mock SAP), whether or not credentials are configured.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "8fcaf6c2566892ccc155fdf29341bf70c9d7f04ce235a8d95aec4598511c342d",
+    "block.py": "acad4ca71f7453339e0afbabf4eadaaa86c3843f3519bd490ad3887f79e132c1"
+  },
+  "id": "sap_odata_connector",
+  "inputs": [
+    {
+      "description": "status | capabilities | list_gl_accounts | list_po_headers",
+      "name": "action",
+      "options": [
+        "status",
+        "capabilities",
+        "list_gl_accounts",
+        "list_po_headers"
+      ],
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 2,
+  "name": "sap_odata_connector",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Capability result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "iRxNkORvtfdxtHG8akYro+mbZjU6WMw8F2C2GPnJzAc65t2t54uIGD4ePUKAHAEqkOSrCrchA8ZrpLo6xp5FDg==",
+  "tags": [
+    "connector",
+    "sap",
+    "odata",
+    "erp",
+    "finance",
+    "honest-stub"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

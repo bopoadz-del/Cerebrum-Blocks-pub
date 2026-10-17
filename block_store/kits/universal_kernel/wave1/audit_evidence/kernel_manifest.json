@@ -1,0 +1,10 @@
+{
+  "name": "audit_evidence",
+  "version": "0.1.0",
+  "sha256": "1a5e7fcfc4df6558291939d49f4b5d60e2291cee3f7b44661fc6fe45fe835bbf",
+  "dependencies": [],
+  "provenance": "factory",
+  "acceptance_test": "tests/test_audit_evidence.py",
+  "tier": "premium",
+  "note": "Premium-only; not available in the freemium tier."
+}

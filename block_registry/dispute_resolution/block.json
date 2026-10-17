@@ -1,0 +1,121 @@
+{
+  "acceptance": [
+    {
+      "check": "errors on an unknown or missing action",
+      "id": "unknown_action",
+      "status": "failed"
+    },
+    {
+      "check": "refuses or errors when a required input is absent",
+      "id": "missing_required_input",
+      "status": "failed"
+    },
+    {
+      "check": "control-delete mutation turns the block's tests red",
+      "id": "control_delete",
+      "status": "failed"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Deterministic marketplace dispute lifecycle: party-gated opening and evidence submission by digest, platform-only resolution with recorded reasoning, sequence-based auto-escalation deadlines, and an auditable history.",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "01735937c7bd796d4844e970e19c04461196a1f7804fe53e6375ffcd03b9b00a",
+    "block.py": "a53328a1044d70eca1476cd5bd4e8ff2cccc847c69036189b7ba9910cea278b2"
+  },
+  "execution": {
+    "entrypoint": "block.py",
+    "image": "ghcr.io/cerebrum-blocks/dispute_resolution:latest",
+    "type": "python"
+  },
+  "id": "dispute_resolution",
+  "inputs": [
+    {
+      "description": "JSON payload for the selected operation",
+      "name": "input",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "default": "open",
+      "description": "Dispute operation",
+      "name": "operation",
+      "options": [
+        "open",
+        "add_evidence",
+        "escalate",
+        "resolve",
+        "status"
+      ],
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 3,
+  "name": "Dispute Resolution",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Dispute operation result (opened dispute, evidence count, escalation, resolution, status with history)",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [
+      "typing"
+    ],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    }
+  ],
+  "requires": [
+    "evidence_or_refuse"
+  ],
+  "signature": "z1VWt3myUkkPAkJZ+GI1/5FVc6wbiyDkI6N+09FGoLd1QTHKsk7vmWNbqYgj/ORZbZvHqic4xYVZ/lIyBhhnAw==",
+  "tags": [
+    "domain",
+    "marketplace",
+    "dispute",
+    "trust",
+    "deterministic"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "JSON payload for the selected operation",
+      "name": "input",
+      "widget": "json"
+    },
+    {
+      "label": "Operation",
+      "name": "operation",
+      "options": [
+        "open",
+        "add_evidence",
+        "escalate",
+        "resolve",
+        "status"
+      ],
+      "widget": "select"
+    }
+  ],
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

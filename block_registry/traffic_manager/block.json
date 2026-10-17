@@ -1,0 +1,178 @@
+{
+  "acceptance": [
+    {
+      "check": "errors on an unknown or missing action",
+      "id": "unknown_action",
+      "status": "failed"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Governance layer between block-to-block calls",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "a8ac6153d38388e2d1b43ef426536abdbc820d89b5cc896fe187e6214f3f29ad",
+    "block.py": "7077019e0de8bb5692d4f7663bde75843f74df95347af284ae024e607af61c62"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/traffic_manager:latest",
+    "type": "docker"
+  },
+  "id": "traffic_manager",
+  "inputs": [
+    {
+      "description": "{\"source\": \"chat\", \"target\": \"pdf\", \"payload\": {}}",
+      "name": "input",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "default": [
+        "zvec",
+        "pdf",
+        "construction"
+      ],
+      "description": "Configuration parameter: heavy_blocks",
+      "name": "heavy_blocks",
+      "required": false,
+      "type": "array"
+    },
+    {
+      "default": true,
+      "description": "Configuration parameter: rate_limit_enabled",
+      "name": "rate_limit_enabled",
+      "required": false,
+      "type": "boolean"
+    },
+    {
+      "default": true,
+      "description": "Configuration parameter: circuit_breaker_enabled",
+      "name": "circuit_breaker_enabled",
+      "required": false,
+      "type": "boolean"
+    },
+    {
+      "default": true,
+      "description": "Configuration parameter: queue_enabled",
+      "name": "queue_enabled",
+      "required": false,
+      "type": "boolean"
+    },
+    {
+      "default": 1000,
+      "description": "Configuration parameter: default_quota",
+      "name": "default_quota",
+      "required": false,
+      "type": "number"
+    },
+    {
+      "default": 5,
+      "description": "Configuration parameter: circuit_threshold",
+      "name": "circuit_threshold",
+      "required": false,
+      "type": "number"
+    },
+    {
+      "default": 60,
+      "description": "Configuration parameter: circuit_timeout",
+      "name": "circuit_timeout",
+      "required": false,
+      "type": "number"
+    }
+  ],
+  "layer": 1,
+  "name": "Traffic Manager",
+  "never": [],
+  "outputs": [
+    {
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    },
+    {
+      "kind": "queue",
+      "scope": "jobs"
+    }
+  ],
+  "requires": [
+    "rate_limiter",
+    "failover",
+    "queue"
+  ],
+  "signature": "2XgoaDMZVL4FNIGcHZ5p5q/rbObt4EGpyBaxw/3icTgg9Bi3NnZsxKRhx0fI2qIYORg3JjCvZGimK9c6ZrHsDQ==",
+  "tags": [
+    "security",
+    "governance",
+    "traffic",
+    "core"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "{\"source\": \"chat\", \"target\": \"pdf\", \"payload\": {}}",
+      "name": "input",
+      "widget": "json"
+    },
+    {
+      "label": "Heavy Blocks",
+      "name": "heavy_blocks",
+      "widget": "json"
+    },
+    {
+      "label": "Rate Limit Enabled",
+      "name": "rate_limit_enabled",
+      "widget": "toggle"
+    },
+    {
+      "label": "Circuit Breaker Enabled",
+      "name": "circuit_breaker_enabled",
+      "widget": "toggle"
+    },
+    {
+      "label": "Queue Enabled",
+      "name": "queue_enabled",
+      "widget": "toggle"
+    },
+    {
+      "label": "Default Quota",
+      "name": "default_quota",
+      "widget": "number"
+    },
+    {
+      "label": "Circuit Threshold",
+      "name": "circuit_threshold",
+      "widget": "number"
+    },
+    {
+      "label": "Circuit Timeout",
+      "name": "circuit_timeout",
+      "widget": "number"
+    }
+  ],
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    },
+    {
+      "kind": "memory",
+      "scope": "cache"
+    }
+  ]
+}

@@ -1,0 +1,106 @@
+{
+  "acceptance": [
+    {
+      "check": "refuses or errors when a required input is absent",
+      "id": "missing_required_input",
+      "status": "refused"
+    },
+    {
+      "check": "errors on an unknown or missing action",
+      "id": "unknown_action",
+      "status": "failed"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Deterministic insurance distribution analytics for GWP, commission, productivity, and retention proxy metrics.",
+  "digests": {
+    "block.json": "cf9ad08ef31a59c1081fbd822de71a50519c084ef2d78686a052494cd6331140",
+    "block.py": "2b2fa0a5aae6488107c26ef010ff0827f4a6f8cff5b8859b78cf8134e191f6b8"
+  },
+  "id": "distribution_analytics",
+  "inputs": [
+    {
+      "description": "Normalized bordereaux records or raw CSV/JSON dataset",
+      "name": "input",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "default": "summary",
+      "description": "Operation to run",
+      "name": "action",
+      "options": [
+        "summary",
+        "benchmark",
+        "trend"
+      ],
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 3,
+  "name": "Distribution Analytics",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Distribution metrics",
+      "name": "metrics",
+      "type": "json"
+    },
+    {
+      "description": "Rows skipped during normalization",
+      "name": "validation_errors",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    }
+  ],
+  "requires": [],
+  "signature": "NmfIqJsPfIMywHuqGS1Ym0GLEav1fOdKED5xMopGIQIWDC3L5xxo0Zg5cQ5Tmoh0B9G9bJXoSFGOxsY/i7HcDw==",
+  "tags": [
+    "insurance",
+    "distribution",
+    "analytics",
+    "bordereaux"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "Distribution dataset",
+      "name": "input",
+      "widget": "json"
+    },
+    {
+      "label": "Action",
+      "name": "action",
+      "options": [
+        "summary",
+        "benchmark",
+        "trend"
+      ],
+      "widget": "select"
+    }
+  ],
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

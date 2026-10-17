@@ -1,0 +1,19 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AutomotiveSafetyRating",
+  "type": "object",
+  "required": ["record_type", "vehicle_id", "make", "model", "source_url"],
+  "properties": {
+    "record_type": { "const": "safety_rating" },
+    "vehicle_id": { "type": "string" },
+    "make": { "type": "string" },
+    "model": { "type": "string" },
+    "model_year": { "type": ["integer", "null"] },
+    "overall_rating": { "type": ["string", "null"] },
+    "frontal_crash_rating": { "type": ["string", "null"] },
+    "side_crash_rating": { "type": ["string", "null"] },
+    "rollover_rating": { "type": ["string", "null"] },
+    "source_url": { "type": "string", "format": "uri" },
+    "source_family": { "const": "safety_rating" }
+  }
+}

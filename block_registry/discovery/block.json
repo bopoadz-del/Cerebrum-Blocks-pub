@@ -1,0 +1,186 @@
+{
+  "acceptance": [
+    {
+      "check": "errors on an unknown or missing action",
+      "id": "unknown_action",
+      "status": "failed"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "7539422f8ecb43a0add27e93e5784bf5a01c268f69d461d8e55bcd0ec3f1ae49",
+    "block.py": "3b24555f515848fa7ab1a27162de719e3be35153be5f3aefb92bdbd151c2e965"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/discovery:latest",
+    "type": "docker"
+  },
+  "id": "discovery",
+  "inputs": [
+    {
+      "description": "Project goal, block query, or indexing payload",
+      "name": "input",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "default": "recommend_for_project",
+      "description": "Action",
+      "name": "action",
+      "options": [
+        "recommend_for_project",
+        "find_alternative",
+        "search_blocks",
+        "trending",
+        "get_compatible",
+        "index_block",
+        "get_categories",
+        "smart_stack"
+      ],
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": "embedding_similarity",
+      "description": "Configuration parameter: recommendation_model",
+      "name": "recommendation_model",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": 5,
+      "description": "Configuration parameter: max_suggestions",
+      "name": "max_suggestions",
+      "required": false,
+      "type": "number"
+    },
+    {
+      "default": 0.6,
+      "description": "Configuration parameter: min_similarity_score",
+      "name": "min_similarity_score",
+      "required": false,
+      "type": "number"
+    },
+    {
+      "default": true,
+      "description": "Configuration parameter: boost_popular",
+      "name": "boost_popular",
+      "required": false,
+      "type": "boolean"
+    },
+    {
+      "default": true,
+      "description": "Configuration parameter: boost_rated",
+      "name": "boost_rated",
+      "required": false,
+      "type": "boolean"
+    },
+    {
+      "default": false,
+      "description": "Configuration parameter: include_installed",
+      "name": "include_installed",
+      "required": false,
+      "type": "boolean"
+    }
+  ],
+  "layer": 4,
+  "name": "Discovery",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    }
+  ],
+  "requires": [
+    "vector",
+    "analytics"
+  ],
+  "signature": "NXkDpIyLLAuadHn03uJqPVAd8lewVh02ZmcwVVNOtQ/B6jjlH22O11XZvV21gaM61kX+JvHrRFuitbQfJsrOBQ==",
+  "tags": [
+    "store",
+    "ai",
+    "recommendation",
+    "discovery"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "Project goal, block query, or indexing payload",
+      "name": "input",
+      "widget": "json"
+    },
+    {
+      "label": "Action",
+      "name": "action",
+      "options": [
+        "recommend_for_project",
+        "find_alternative",
+        "search_blocks",
+        "trending",
+        "get_compatible",
+        "index_block",
+        "get_categories",
+        "smart_stack"
+      ],
+      "widget": "select"
+    },
+    {
+      "label": "Recommendation Model",
+      "name": "recommendation_model",
+      "widget": "text"
+    },
+    {
+      "label": "Max Suggestions",
+      "name": "max_suggestions",
+      "widget": "number"
+    },
+    {
+      "label": "Min Similarity Score",
+      "name": "min_similarity_score",
+      "widget": "number"
+    },
+    {
+      "label": "Boost Popular",
+      "name": "boost_popular",
+      "widget": "toggle"
+    },
+    {
+      "label": "Boost Rated",
+      "name": "boost_rated",
+      "widget": "toggle"
+    },
+    {
+      "label": "Include Installed",
+      "name": "include_installed",
+      "widget": "toggle"
+    }
+  ],
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

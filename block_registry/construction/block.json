@@ -1,0 +1,76 @@
+{
+  "acceptance": [
+    {
+      "check": "refuses or errors when a required input is absent",
+      "id": "missing_required_input",
+      "status": "refused"
+    },
+    {
+      "check": "errors on an unknown or missing action",
+      "id": "unknown_action",
+      "status": "failed"
+    },
+    {
+      "check": "fails loud when a required credential or key is absent",
+      "id": "missing_credential",
+      "status": "failed"
+    }
+  ],
+  "description": "Construction domain container adapter.",
+  "digests": {
+    "block.json": "ba77eb21fcbd99733435f012b07aeed786b278ea1390d5ad14970bcfcbfb6c8e"
+  },
+  "id": "construction",
+  "name": "Construction Container",
+  "never": [],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "file",
+      "scope": "local.read"
+    },
+    {
+      "kind": "file",
+      "scope": "input_document"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    },
+    {
+      "kind": "network",
+      "scope": "http.outbound"
+    },
+    {
+      "kind": "memory",
+      "scope": "cache"
+    },
+    {
+      "kind": "block",
+      "scope": "peer"
+    }
+  ],
+  "signature": "Er5DPNplZvx8yKAe82Ahu1Pz91PxJxlwfNgyu8YONALPyalGEdID3gD9fjUPJZ7uOZIdzKE/fOXYODtzBoj9CA==",
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    },
+    {
+      "kind": "file",
+      "scope": "local.write"
+    }
+  ]
+}

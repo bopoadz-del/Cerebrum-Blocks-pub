@@ -1,0 +1,78 @@
+{
+  "acceptance": [
+    {
+      "check": "unmatched intent without a web-search backend is refused with the correction UI, never a fabricated answer",
+      "id": "fallback_refused",
+      "status": "refused"
+    },
+    {
+      "check": "routing an empty message is refused",
+      "id": "empty_text",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Rule-based intent router ported from <private-repo> src/commands/chat.ts + learning.ts + db.ts nl_logs (real): deterministic $TICKER / uppercase-word extraction, ticker-only detection, the ordered regex intent ladder (help, portfolio, watchlist, simulate, metrics, mimic, alert, watchlist add/remove, news, score, search, default score), pending-flow / expired mimic checks, and the fallback path (web search first, then log + correction keyboard with the donor correct_intent callback data). Command handlers are not executed - route() returns the donor command strings. Company search and DuckDuckGo fallback are injected (wire search/web_search); unwired, the router logs the fallback and refuses to invent an answer. Intent log is in-process. NEVER the backtest.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "593e246b559d990d81026d8368a6b90e6d079c384862b41fa919bfd544ce0ed1",
+    "block.py": "245066871e98062cbcd13812c2394eec6b85ee9e746c0edf95e9076dbeb246f6"
+  },
+  "id": "rule_intent_router",
+  "inputs": [
+    {
+      "description": "route | correct | stats | missed | report | log",
+      "name": "action",
+      "options": [
+        "route",
+        "correct",
+        "stats",
+        "missed",
+        "report",
+        "log"
+      ],
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 4,
+  "name": "rule_intent_router",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Capability result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "UWu6ZdWhOCHWa5s8WUlpO0P1qwBr6e6l9+C/KNnrLv0Ldpv168/MYVTZ5Fj5Atb+cQZ4EcZdxirtEdsRHVKyBA==",
+  "tags": [
+    "nlp",
+    "intent",
+    "router",
+    "learning",
+    "<private-repo>"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

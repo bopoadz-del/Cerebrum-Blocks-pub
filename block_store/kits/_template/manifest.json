@@ -1,0 +1,59 @@
+{
+  "id": "{{domain}}",
+  "name": "{{name}}",
+  "version": "0.0.0-skeleton",
+  "description": "{{description}}",
+  "status": "{{status}}",
+  "author": "bopoadz-del",
+  "tags": {{tags_json}},
+  "source": {
+    "repo": "https://github.com/bopoadz-del/The_Fork",
+    "ref": "main",
+    "publish_script": null
+  },
+  "container": {
+    "class": "app.containers.{{domain}}.{{Domain}}Container",
+    "default_chat_prompt": "{{domain}}_expert.txt"
+  },
+  "blocks": [],
+  "learning_engine_enabled": false,
+  "_flow_note": "The generated container resolves a single <domain>_v2 block, so a generated kit ships a bundle rather than a pipeline. A kit whose blocks DO compose replaces this with a flow: [[stage], [stage]] covering every block.",
+  "flow": "independent",
+  "prompts": [
+    "prompts/{{domain}}_expert.txt",
+    "prompts/{{domain}}_workflow.md"
+  ],
+  "data": [],
+  "core_modules": [
+    "knowledge.py",
+    "types.py"
+  ],
+  "artifacts": [],
+  "cli": {
+    "command": "cerebrum",
+    "config_template": "cli/config.toml.example"
+  },
+  "skeleton_artifacts": [
+    {"src": "container.py", "dest": "app/containers/{{domain}}.py"},
+    {"src": "knowledge.py", "dest": "app/core/{{domain}}_knowledge.py"},
+    {"src": "types.py", "dest": "app/core/{{domain}}_types.py"},
+    {"src": "blocks/{{domain}}_block.py", "dest": "app/blocks/{{domain}}_block.py"},
+    {"src": "tests/test_{{domain}}_block.py", "dest": "tests/test_{{domain}}_block.py"},
+    {"src": "prompts/{{domain}}_expert.txt", "dest": "app/prompts/{{domain}}_expert.txt"},
+    {"src": "prompts/{{domain}}_workflow.md", "dest": "app/prompts/{{domain}}_workflow.md"},
+    {"src": "cli/config.toml.example", "dest": "cli/config.toml.example"},
+    {"src": "cli/pyproject.toml", "dest": "cli/pyproject.toml"},
+    {"src": "cli/README.md", "dest": "cli/README.md"},
+    {"src": "cli/cerebrum_cli/__init__.py", "dest": "cli/cerebrum_cli/__init__.py"},
+    {"src": "cli/cerebrum_cli/__main__.py", "dest": "cli/cerebrum_cli/__main__.py"},
+    {"src": "cli/cerebrum_cli/auth.py", "dest": "cli/cerebrum_cli/auth.py"},
+    {"src": "cli/cerebrum_cli/config.py", "dest": "cli/cerebrum_cli/config.py"},
+    {"src": "cli/cerebrum_cli/main.py", "dest": "cli/cerebrum_cli/main.py"},
+    {"src": "cli/cerebrum_cli/sse.py", "dest": "cli/cerebrum_cli/sse.py"}
+  ],
+  "price_cents": 0,
+  "install_requires": {
+    "min_platform_version": "2.0.0",
+    "python": ">=3.10"
+  }
+}

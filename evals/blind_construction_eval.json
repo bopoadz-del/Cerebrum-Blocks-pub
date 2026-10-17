@@ -1,0 +1,106 @@
+{
+ "schema_version": "blind_eval.v1",
+ "name": "blind_construction_eval",
+ "authored": "2026-07-29",
+ "method": "Questions written WITHOUT sight of the construction KB entries. The author knew only the domain distribution (roads, buildings, procurement, concrete) and the three procurement workflow ids surfaced by earlier tests; no question targets those workflows. Scoring: a question is a hit when a single entry among the top-k contains every expected keyword in its title+statement (strict AND).",
+ "k": 5,
+ "questions": [
+  {
+   "id": "b01",
+   "question": "What is the minimum concrete cover to reinforcement for foundations cast against the ground?",
+   "expected_keywords": [
+    "cover",
+    "reinforcement"
+   ]
+  },
+  {
+   "id": "b02",
+   "question": "What is the maximum water-cement ratio for durable structural concrete?",
+   "expected_keywords": [
+    "water",
+    "cement",
+    "ratio"
+   ]
+  },
+  {
+   "id": "b03",
+   "question": "What is the maximum longitudinal gradient allowed for a main road?",
+   "expected_keywords": [
+    "gradient",
+    "road"
+   ]
+  },
+  {
+   "id": "b04",
+   "question": "What compaction percentage is required for road subbase layers?",
+   "expected_keywords": [
+    "compaction",
+    "subbase"
+   ]
+  },
+  {
+   "id": "b05",
+   "question": "How long must structural concrete be cured before loading?",
+   "expected_keywords": [
+    "curing",
+    "concrete"
+   ]
+  },
+  {
+   "id": "b06",
+   "question": "What is the minimum laying temperature for asphalt paving?",
+   "expected_keywords": [
+    "asphalt",
+    "temperature"
+   ]
+  },
+  {
+   "id": "b07",
+   "question": "What is the maximum spacing of control joints in concrete slabs?",
+   "expected_keywords": [
+    "joint",
+    "slab"
+   ]
+  },
+  {
+   "id": "b08",
+   "question": "What lap length is required for reinforcement bar splices?",
+   "expected_keywords": [
+    "lap",
+    "reinforcement"
+   ]
+  },
+  {
+   "id": "b09",
+   "question": "At what excavation depth is shoring or a retaining structure required?",
+   "expected_keywords": [
+    "excavation",
+    "shoring"
+   ]
+  },
+  {
+   "id": "b10",
+   "question": "What minimum cover depth is required for drainage pipes under roads?",
+   "expected_keywords": [
+    "pipe",
+    "cover"
+   ]
+  },
+  {
+   "id": "b11",
+   "question": "What slump range is acceptable for pumped concrete?",
+   "expected_keywords": [
+    "slump",
+    "concrete"
+   ]
+  },
+  {
+   "id": "b12",
+   "question": "What pavement layer thickness is required for heavy traffic roads?",
+   "expected_keywords": [
+    "pavement",
+    "thickness"
+   ]
+  }
+ ]
+}

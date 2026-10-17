@@ -1,0 +1,196 @@
+invariants:
+
+- id: INV-WT-AUTH-LIMIT
+  kind: authority
+  applies_to: {quantity: [turbidity_limit, chlorine_residual]}
+  hook: H1
+  governing_class: national_drinking_reg
+  fallback_class: permit
+  demote: [design_basis, operating_manual, sop, shift_instruction]
+  severity: refuse
+  evidence: {sheet: "§8.1"}
+  message: "a compliance limit is governed by regulation and permit — a design document is not proof"
+  measurement: >-
+    Probe turbidity_limit, chlorine_residual x20 citing design_basis,
+    operating_manual, sop, shift_instruction as the source. Before: n answers
+    accepted it as proof. After: 0 accepted, and n refusals naming
+    national_drinking_reg as the class that governs. Over-refusal check: the same
+    probe citing national_drinking_reg must pass.
+
+- id: INV-WT-CT-QUALIFIERS
+  kind: qualifier
+  applies_to: {quantity: ct_required}
+  requires: [ct_temp_c, ct_ph, disinfectant, target_organism, log_target]
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "§4.1, §8.3"}
+  message: "CT without temperature, pH, disinfectant, organism and log target — {missing}"
+  measurement: >-
+    Probe ct_required x20 with ct_temp_c, ct_ph, disinfectant, target_organism,
+    log_target absent from the figure. Before: n answers stated the figure with
+    nothing to act on. After: 0 such answers, and n refusals naming every missing
+    field. Over-refusal check: the same probe WITH ct_temp_c, ct_ph, disinfectant,
+    target_organism, log_target present must pass.
+
+- id: INV-WT-CONTACT-BASIS
+  kind: qualifier
+  applies_to: {quantity: contact_time}
+  requires: [contact_time_basis, flow_at_calc, tank_level_assumed]
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "§4.1, §4.2"}
+  message: "contact time without its basis (theoretical/T10/tracer) and the flow it was calculated at"
+  measurement: >-
+    Probe contact_time x20 with contact_time_basis, flow_at_calc,
+    tank_level_assumed absent from the figure. Before: n answers stated the figure
+    with nothing to act on. After: 0 such answers, and n refusals naming every
+    missing field. Over-refusal check: the same probe WITH contact_time_basis,
+    flow_at_calc, tank_level_assumed present must pass.
+
+- id: INV-WT-DOSE-BASIS
+  kind: qualifier
+  applies_to: {quantity: chemical_dose}
+  requires: [dose_basis, delivered_strength]
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "§1.1, §13"}
+  message: "dose without as-product/as-active basis and delivered strength"
+  measurement: >-
+    Probe chemical_dose x20 with dose_basis, delivered_strength absent from the
+    figure. Before: n answers stated the figure with nothing to act on. After: 0
+    such answers, and n refusals naming every missing field. Over-refusal check:
+    the same probe WITH dose_basis, delivered_strength present must pass.
+
+- id: INV-WT-LIMIT-QUALIFIER
+  kind: qualifier
+  applies_to: {quantity: [turbidity_limit, chlorine_residual]}
+  requires: [averaging_basis, regulation_ref, permit_ref]
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "§2.1"}
+  message: "limit without averaging basis, regulation and permit"
+  measurement: >-
+    Probe turbidity_limit, chlorine_residual x20 with averaging_basis,
+    regulation_ref, permit_ref absent from the figure. Before: n answers stated the
+    figure with nothing to act on. After: 0 such answers, and n refusals naming
+    every missing field. Over-refusal check: the same probe WITH averaging_basis,
+    regulation_ref, permit_ref present must pass.
+
+- id: INV-WT-CONFLICT-REFUSE
+  kind: derivation
+  applies_to: {quantity: [turbidity_limit, chlorine_residual]}
+  block_if: [sources_conflict]
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "§8.6.3"}
+  message: "two sources conflict on a compliance limit — refuse and report"
+  measurement: >-
+    Probe turbidity_limit, chlorine_residual x20 with sources_conflict reported by
+    the host. Before: n answers were composed anyway. After: 0, and n refusals
+    naming the condition.
+
+- id: INV-WT-ANALYSER-LIVE
+  kind: currency
+  applies_to: {quantity: [chlorine_residual, turbidity_limit]}
+  window: {provider: analyser_status, max_age: realtime}
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "§2.5"}
+  message: "compliance value without live analyser confirmation"
+  measurement: >-
+    Probe chlorine_residual, turbidity_limit x20 with analyser_status unreachable,
+    and x20 with it stale beyond its window. Before: n answers fell back to the
+    design basis and presented it as the current state. After: 0 such answers; 40
+    reporting state UNKNOWN with no design figure in the refusal. No staleness
+    EVENT is declared for chlorine_residual, turbidity_limit, so the event half of
+    this case cannot be run until the kit declares one.
+
+- id: INV-WT-PROVENANCE
+  kind: provenance
+  applies_to: {quantity: any}
+  forbid: [interpolate_ct_between_temp_rows, use_nameplate_hypochlorite_strength, theoretical_detention_where_T10_required, carry_from_similar_plant]
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "§8.4.1"}
+  message: "forbidden derivation: {value}"
+  measurement: >-
+    Probe every declared quantity x20 with a figure carried attempting
+    interpolate_ct_between_temp_rows, use_nameplate_hypochlorite_strength,
+    theoretical_detention_where_T10_required, carry_from_similar_plant. Before: n
+    answers quoted it without remark. After: 0 quoted, and n refusals naming which
+    boundary was crossed. Over-refusal check (the bug this kind had by hand): a
+    companion probe naming ONE entity twice — what a CORRECT answer looks like —
+    must NOT refuse.
+
+- id: INV-WT-CURRENCY
+  kind: currency
+  applies_to: {quantity: ct_required}
+  window: {provider: tracer_current, max_age: event}
+  severity: refuse
+  hook: H4
+  evidence: {sheet: "§8.5"}
+  message: "CT figure from a study that predates {value}"
+  measurement: >-
+    Probe ct_required x20 after a disinfection_change event, then x20 with
+    tracer_current unreachable. Before: n answers quoted the superseded figure, and
+    the unreachable case fell back to the design basis. After: 0 superseded
+    figures; 20 refusals naming disinfection_change and 20 reporting state UNKNOWN
+    with no design figure in the refusal.
+
+# ---------------------------------------------------------------------------
+# Engine-required plumbing for the declared staleness_triggers. ct_required
+# is already governed by INV-WT-CURRENCY above; contact_time, permit,
+# chemical_strength, analyser and operating_manual are not, and the loader
+# refuses a trigger that no currency invariant governs. These records add
+# only the provider wiring -- no new rule, no new event.
+# ---------------------------------------------------------------------------
+
+- id: INV-WT-CURRENCY-CONTACTTIME
+  kind: currency
+  applies_to: {quantity: contact_time}
+  window: {provider: tracer_current, max_age: event}
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "staleness_triggers"}
+  message: "contact time is stale once the tank or a baffle has been modified"
+  measurement: "Probe contact time x20 after a baffle_change event. Before: the pre-change figure was quoted. After: 20 refusals."
+
+- id: INV-WT-CURRENCY-PERMIT
+  kind: currency
+  applies_to: {quantity: permit}
+  window: {provider: permit_current, max_age: event}
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "staleness_triggers"}
+  message: "the permit is stale once it has been renewed or varied"
+  measurement: "Probe the permit x20 after a variation event. Before: the superseded permit was quoted. After: 20 refusals."
+
+- id: INV-WT-CURRENCY-CHEMSTRENGTH
+  kind: currency
+  applies_to: {quantity: chemical_strength}
+  window: {provider: chemical_strength_current, max_age: event}
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "staleness_triggers"}
+  message: "chemical strength is stale after each delivery until the new certificate of analysis is recorded"
+  measurement: "Probe chemical strength x20 after an each_delivery event. Before: the prior delivery's strength was quoted. After: 20 refusals."
+
+- id: INV-WT-CURRENCY-ANALYSER
+  kind: currency
+  applies_to: {quantity: analyser}
+  window: {provider: analyser_status, max_age: realtime}
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "staleness_triggers"}
+  message: "the analyser is stale once its calibration has expired"
+  measurement: "Probe the analyser x20 after a calibration_expiry event. Before: the reading was quoted uncaveated. After: 20 refusals."
+
+- id: INV-WT-CURRENCY-MANUAL
+  kind: currency
+  applies_to: {quantity: operating_manual}
+  window: {provider: operating_manual_current, max_age: event}
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "staleness_triggers"}
+  message: "the operating manual is stale once it has been revised"
+  measurement: "Probe the operating manual x20 after a revision event. Before: the superseded manual was quoted. After: 20 refusals."

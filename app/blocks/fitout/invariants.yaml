@@ -1,0 +1,151 @@
+invariants:
+
+- id: INV-FO-SURVEYED
+  kind: qualifier
+  applies_to: {quantity: [dimension, available_capacity]}
+  requires: [surveyed_or_drawn, survey_date]
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "Three rules carried through"}
+  message: "dimension or capacity without surveyed/drawn basis — a value off a drawing is not the same number"
+  measurement: >-
+    Probe dimension, available_capacity x20 with surveyed_or_drawn, survey_date
+    absent from the figure. Before: n answers stated the figure with nothing to act
+    on. After: 0 such answers, and n refusals naming every missing field.
+    Over-refusal check: the same probe WITH surveyed_or_drawn, survey_date present
+    must pass.
+
+- id: INV-FO-LEADTIME
+  kind: qualifier
+  applies_to: {quantity: lead_time}
+  requires: [lead_time_basis, confirmed_or_indicative]
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "Three rules carried through"}
+  message: "lead time without from-order/from-approval basis, or without confirmed/indicative flag"
+  measurement: >-
+    Probe lead_time x20 with lead_time_basis, confirmed_or_indicative absent from
+    the figure. Before: n answers stated the figure with nothing to act on. After:
+    0 such answers, and n refusals naming every missing field. Over-refusal check:
+    the same probe WITH lead_time_basis, confirmed_or_indicative present must pass.
+
+- id: INV-FO-FIRE-ASSEMBLY
+  kind: qualifier
+  applies_to: {quantity: fire_rating}
+  requires: [tested_assembly]
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "Three rules carried through"}
+  message: "fire rating without its tested assembly — a product sheet is not an assembly test"
+  measurement: >-
+    Probe fire_rating x20 with tested_assembly absent from the figure. Before: n
+    answers stated the figure with nothing to act on. After: 0 such answers, and n
+    refusals naming every missing field. Over-refusal check: the same probe WITH
+    tested_assembly present must pass.
+
+- id: INV-FO-AREA-BASIS
+  kind: qualifier
+  applies_to: {quantity: floor_area}
+  requires: [area_basis]
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "§13"}
+  message: "floor area without basis (GEA/GIA/NIA/IPMS/local GFA) — same building, several correct answers"
+  measurement: >-
+    Probe floor_area x20 with area_basis absent from the figure. Before: n answers
+    stated the figure with nothing to act on. After: 0 such answers, and n refusals
+    naming every missing field. Over-refusal check: the same probe WITH area_basis
+    present must pass.
+
+- id: INV-FO-REVISION
+  kind: currency
+  applies_to: {quantity: [dimension, floor_area]}
+  window: {provider: drawing_revision, max_age: event}
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "§9.5"}
+  message: "figure from a superseded drawing revision"
+  measurement: >-
+    Probe dimension, floor_area x20 after a any_revision event, then x20 with
+    drawing_revision unreachable. Before: n answers quoted the superseded figure,
+    and the unreachable case fell back to the design basis. After: 0 superseded
+    figures; 20 refusals naming any_revision and 20 reporting state UNKNOWN with no
+    design figure in the refusal.
+
+- id: INV-FO-PROVENANCE
+  kind: provenance
+  applies_to: {quantity: [rate, lead_time]}
+  forbid: [previous_project_carry, previous_order_carry]
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "§9.4"}
+  message: "rate or lead time carried from a previous project or order"
+  measurement: >-
+    Probe rate, lead_time x20 with a figure carried attempting
+    previous_project_carry, previous_order_carry. Before: n answers quoted it
+    without remark. After: 0 quoted, and n refusals naming which boundary was
+    crossed. Over-refusal check (the bug this kind had by hand): a companion probe
+    naming ONE entity twice — what a CORRECT answer looks like — must NOT refuse.
+
+- id: INV-FO-SCOPE
+  kind: scope
+  applies_to: {quantity: any}
+  refusal_class: authority_determination
+  severity: refuse
+  hook: H0
+  evidence: {sheet: "§12"}
+  message: "requires a named authority — refer to {authority}"
+  measurement: >-
+    Each of the 5 declared refusal patterns x5 (25 runs) with a monkeypatched
+    retrieval spy. Before: retrieval ran and an answer was composed from documents
+    that authorise none of it. After: 25 refusals naming who decides, and the spy
+    records ZERO retrieval calls — the assertion is not that the answer says no, it
+    is that retrieval never happened.
+
+# ---------------------------------------------------------------------------
+# Engine-required completions of the DECLARED staleness triggers.
+# The sheet names the events that invalidate each figure; the loader refuses a
+# trigger that no currency invariant can fire, because a declared trigger
+# nothing checks is a rule that reports green while gating nothing. These
+# records add only the provider wiring -- no new rule, no new event.
+# ---------------------------------------------------------------------------
+
+- id: INV-FO-CAPACITY-CURRENCY
+  kind: currency
+  applies_to: {quantity: available_capacity}
+  window: {provider: capacity_spare, max_age: event}
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "staleness_triggers"}
+  message: "spare capacity is stale the moment another tenant takes it"
+  measurement: "Probe available capacity x20 after an another_tenant_takes_it event. Before: the old spare was quoted. After: 20 refusals."
+
+- id: INV-FO-LEADTIME-CURRENCY
+  kind: currency
+  applies_to: {quantity: lead_time}
+  window: {provider: approval_status, max_age: event}
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "staleness_triggers"}
+  message: "a confirmed lead time lapses; a lapsed confirmation is an indicative quote"
+  measurement: "Probe lead time x20 after a supplier_confirmation_lapsed event. Before: confirmed was still claimed. After: 20 refusals."
+
+- id: INV-FO-RATING-CURRENCY
+  kind: currency
+  applies_to: {quantity: fire_rating}
+  window: {provider: drawing_revision, max_age: event}
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "staleness_triggers"}
+  message: "a fire rating is stale after any design change to the assembly"
+  measurement: "Probe fire rating x20 after an any_design_change event. Before: the old rating stood. After: 20 refusals."
+
+- id: INV-FO-RATE-CURRENCY
+  kind: currency
+  applies_to: {quantity: rate}
+  window: {provider: market_reference, max_age: event}
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "staleness_triggers"}
+  message: "a rate is stale on market or currency movement"
+  measurement: "Probe rates x20 after a market_movement event. Before: the stale rate was quoted. After: 20 flags or refusals."

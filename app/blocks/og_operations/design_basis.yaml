@@ -1,0 +1,211 @@
+# Oil & gas operations reasoning layer — operating basis.
+#
+# Source of truth: the domain encoding sheet for Oil & Gas Operations. NO
+# INTERVIEW HAS RUN. Every `value` below is null on purpose and stays null
+# until the interview fills it; see KNOWN_GAPS.md.
+#
+# A null value is legal. A MISSING QUALIFIER IS NOT: the loader refuses any
+# figure that does not carry every key in MANDATORY_QUALIFIERS, at load time,
+# naming the figure and the keys it lacks. A half-qualified figure is how a
+# trip setpoint ends up answering a design-pressure question, or an alarm
+# figure ends up quoted as if it were the trip.
+#
+# envelope_tier is part of the identity of every pressure figure, not a label
+# on it:
+#   normal   steady operating condition
+#   alarm    operator-actionable warning, before a trip
+#   trip     automatic protective action fires
+#   SOL      safe operating limit — the ceiling the trip protects
+#   design   the vessel/line design basis (MAWP, design pressure)
+# Nothing carries between them, and nothing carries between pressure_kind
+# (design | mawp | operating) and envelope_tier — they are two different axes
+# of the same figure. See reasoning.py.
+source: "domain encoding sheet, Oil & Gas Operations"
+scope: "asset- and tag-specific — never carry a figure to another facility, unit or sister asset"
+interview_status: "not run — every value is null (KNOWN_GAPS.md)"
+
+operating_basis:
+  # ---- design basis (INV-1: which pressure, gauge|absolute, location) -----
+  mawp_psig:
+    value: null
+    unit: psig
+    asset: "V-101"
+    tag: "PV-101"
+    pressure_kind: mawp
+    gauge_or_absolute: gauge
+    envelope_tier: design
+    override_register_ref: null
+    isolation_register_ref: null
+    "P&ID_rev": null
+    MOC_ref: null
+    source: null
+    date: null
+
+  design_pressure_psig:
+    value: null
+    unit: psig
+    asset: "V-101"
+    tag: "PV-101"
+    pressure_kind: design
+    gauge_or_absolute: gauge
+    envelope_tier: design
+    override_register_ref: null
+    isolation_register_ref: null
+    "P&ID_rev": null
+    MOC_ref: null
+    source: null
+    date: null
+
+  operating_pressure_psig:
+    value: null
+    unit: psig
+    asset: "V-101"
+    tag: "PT-101"
+    pressure_kind: operating
+    gauge_or_absolute: gauge
+    envelope_tier: normal
+    override_register_ref: null
+    isolation_register_ref: null
+    "P&ID_rev": null
+    MOC_ref: null
+    source: null
+    date: null
+
+  # ---- envelope tiers (INV-2: normal|alarm|trip|SOL|design named) ---------
+  high_alarm_pressure_psig:
+    value: null
+    unit: psig
+    asset: "V-101"
+    tag: "PAH-101"
+    pressure_kind: null
+    gauge_or_absolute: gauge
+    envelope_tier: alarm
+    override_register_ref: null
+    isolation_register_ref: null
+    "P&ID_rev": null
+    MOC_ref: null
+    source: null
+    date: null
+
+  high_high_trip_pressure_psig:
+    value: null
+    unit: psig
+    asset: "V-101"
+    tag: "PSH-101"
+    pressure_kind: null
+    gauge_or_absolute: gauge
+    envelope_tier: trip
+    override_register_ref: null
+    isolation_register_ref: null
+    "P&ID_rev": null
+    MOC_ref: null
+    source: null
+    date: null
+
+  sol_pressure_psig:
+    value: null
+    unit: psig
+    asset: "V-101"
+    tag: "PV-101"
+    pressure_kind: null
+    gauge_or_absolute: gauge
+    envelope_tier: SOL
+    override_register_ref: null
+    isolation_register_ref: null
+    "P&ID_rev": null
+    MOC_ref: null
+    source: null
+    date: null
+
+  # ---- protective functions (INV-3: SCE live — override AND isolation) ---
+  psv_set_pressure_psig:
+    value: null
+    unit: psig
+    asset: "V-101"
+    tag: "PSV-205"
+    pressure_kind: null
+    gauge_or_absolute: gauge
+    envelope_tier: trip
+    override_register_ref: null
+    isolation_register_ref: null
+    "P&ID_rev": null
+    MOC_ref: null
+    source: null
+    date: null
+
+  sif_setpoint_psig:
+    value: null
+    unit: psig
+    asset: "Separator-2"
+    tag: "SIF-1"
+    pressure_kind: null
+    gauge_or_absolute: gauge
+    envelope_tier: trip
+    override_register_ref: null
+    isolation_register_ref: null
+    "P&ID_rev": null
+    MOC_ref: null
+    source: null
+    date: null
+
+  # ---- units by claim class (INV-4: flow std/normal/actual; concentration
+  # %LEL/%vol/ppm; exposure TWA/STEL/ceiling) ------------------------------
+  corrosion_rate_mmpy:
+    value: null
+    unit: "mm/y"
+    asset: "Pipeline-12"
+    tag: "CML-12A"
+    pressure_kind: null
+    gauge_or_absolute: null
+    envelope_tier: null
+    override_register_ref: null
+    isolation_register_ref: null
+    "P&ID_rev": null
+    MOC_ref: null
+    source: null
+    date: null
+
+  flow_rate_mmscfd:
+    value: null
+    unit: MMscfd
+    asset: "Export-Line"
+    tag: "FT-301"
+    pressure_kind: null
+    gauge_or_absolute: null
+    envelope_tier: null
+    override_register_ref: null
+    isolation_register_ref: null
+    "P&ID_rev": null
+    MOC_ref: null
+    source: null
+    date: null
+
+  h2s_concentration_ppm:
+    value: null
+    unit: ppm
+    asset: "Wellhead-7"
+    tag: "GD-701"
+    pressure_kind: null
+    gauge_or_absolute: null
+    envelope_tier: null
+    override_register_ref: null
+    isolation_register_ref: null
+    "P&ID_rev": null
+    MOC_ref: null
+    source: null
+    date: null
+
+  worker_exposure_limit_ppm:
+    value: null
+    unit: ppm
+    asset: "Process-Area-3"
+    tag: null
+    pressure_kind: null
+    gauge_or_absolute: null
+    envelope_tier: null
+    override_register_ref: null
+    isolation_register_ref: null
+    "P&ID_rev": null
+    MOC_ref: null
+    source: null
+    date: null

@@ -1,0 +1,610 @@
+# GENERATED from docs/kit_questions/rail.md by scripts/import_kit_questions.py — do not hand-edit.
+# Edit the markdown sheet and re-run. The sheet is the record of what the domain
+# owner actually asked for; this file is only its machine-readable form.
+#
+# gate: true  -> [GATE]. The platform refuses anything needing it until answered.
+# gate: false -> [GAP].  Experience worth having; does not block.
+# gate: null  -> the sheet marked neither. Treated as GATING, because a question
+#                whose class cannot be read must block rather than pass.
+#
+# There is deliberately NO answer slot in this file. Answers are per-platform and
+# per-client; this kit is a signed Store block shared by every customer.
+kit: rail
+source_document: docs/kit_questions/rail.md
+title: 'Railway & Metro Construction — Questions I Cannot Answer'
+answer_format:
+  - 'value'
+  - 'unit'
+  - 'route / line'
+  - 'category'
+  - 'source'
+  - 'date'
+sections:
+  '1':
+    title: 'Access economics'
+  '2':
+    title: 'Railway-specific rates'
+  '3':
+    title: 'Third-party and disruption cost'
+  '4':
+    title: 'Track geometry and rail stress'
+  '5':
+    title: 'Clearances and gauging'
+  '6':
+    title: 'Electrification, signalling and systems interface'
+  '7':
+    title: 'Tunnelling and ground movement'
+  '8':
+    title: 'Possession planning and handback'
+  '9':
+    title: 'Evidence standard'
+  '10':
+    title: 'Never-estimate'
+  '11':
+    title: 'May-estimate'
+  '12':
+    title: 'Refusals'
+  '13':
+    title: 'Live state'
+  '14':
+    title: 'Precedence'
+  '15':
+    title: 'Unit-confusion history'
+  '16':
+    title: 'Incidents'
+  '17':
+    title: 'The five questions'
+questions:
+  - id: '1.1'
+    section: '1'
+    gate: true
+    covers: [live_state_answer]
+    text: >-
+      Your ratio of effective work to possession length — nominal possession, effective
+      working time, and what consumes the rest — on your routes.
+  - id: '1.2'
+    section: '1'
+    gate: true
+    covers: [live_state_answer]
+    text: >-
+      What triggers aborted or curtailed possessions on your projects — late handover,
+      weather, isolation failure, protection failure, train running late — and what each
+      costs you.
+  - id: '1.3'
+    section: '1'
+    gate: true
+    covers: [live_state_answer]
+    text: >-
+      Your possession overrun penalty and the point at which an overrun becomes a
+      reportable event on your network.
+  - id: '1.4'
+    section: '1'
+    gate: true
+    covers: [tsr_speed]
+    text: >-
+      What a line closure or temporary speed restriction costs your operator — or the
+      operator's stated figure — per hour or per day.
+  - id: '1.5'
+    section: '1'
+    gate: true
+    covers: [live_state_answer]
+    text: >-
+      Your access cost set — site access/walk-in and setup, protection setup (lookouts /
+      COSS / TOWS), isolation setup and confirmation, clear-site and handback, track access
+      charge per possession, rail labour premium over civils, night shift premium, standby
+      plant charged but not worked, on-track machine per shift, RRV access point setup,
+      aborted possession per event.
+  - id: '2.1'
+    section: '2'
+    gate: true
+    covers: [ballast_depth, face_pressure]
+    text: >-
+      Your rates per item — plain line renewal (ballasted), slab track, S&C unit, rail
+      supply and lay, flash-butt weld, thermit weld, rail stressing, sleeper replacement,
+      ballast supply and place, tamping, ballast cleaning/undercutting, formation
+      treatment, track drainage, OLE mast and foundation, contact and catenary wire, third
+      rail conductor, signalling per signal / per point end, cable route and troughing,
+      level crossing works, platform construction/extension, tunnel lining segments, TBM
+      drive.
+  - id: '2.2'
+    section: '2'
+    gate: true
+    covers: [live_state_answer]
+    text: >-
+      Which items are possession-constrained rather than resource-constrained on your work
+      — where more crew does not go faster.
+  - id: '2.3'
+    section: '2'
+    gate: true
+    text: >-
+      Which items have long lead times that govern your programme — your S&C units, OLE
+      steelwork, signalling equipment, segments.
+  - id: '3.1'
+    section: '3'
+    gate: true
+    text: >-
+      Your cost set — building condition survey per property, protective works, utility
+      diversion per service, instrumentation and monitoring per point per month,
+      noise/vibration mitigation, settlement damage claim per property, compensation for
+      access or disturbance, environmental breach penalty.
+  - id: '3.2'
+    section: '3'
+    gate: true
+    text: >-
+      For tunnelling or deep excavation on your projects — how many properties are inside
+      the influence zone and the monitoring regime cost per month.
+  - id: '3.3'
+    section: '3'
+    gate: true
+    covers: [trigger_level]
+    text: >-
+      What a single amber or red trigger exceedance costs you in stoppage, investigation
+      and remediation.
+  - id: '4.1'
+    section: '4'
+    gate: true
+    covers: [geometry_limit]
+    text: >-
+      Your three-tier geometry limits — design tolerance, maintenance limit,
+      safety/immediate action limit — for gauge, cross level/cant, cant deficiency, cant
+      excess, twist, top (short/long wavelength), alignment, rate of change of cant and
+      cant deficiency, minimum curve radius, maximum gradient, rail wear/profile limits,
+      rail joint gap — with the standard each comes from.
+  - id: '4.2'
+    section: '4'
+    gate: true
+    text: >-
+      What your three tiers are actually called on your network, and what each triggers —
+      record, plan work, or restrict traffic immediately.
+  - id: '4.3'
+    section: '4'
+    gate: true
+    covers: [sft]
+    text: >-
+      Your route's stress-free temperature and where it is recorded.
+  - id: '4.4'
+    section: '4'
+    gate: true
+    covers: [sft]
+    text: >-
+      How SFT is re-verified on your network — VERSE, rail cutting, inference — and how
+      anyone would know the recorded SFT no longer matches actual.
+  - id: '4.5'
+    section: '4'
+    gate: true
+    text: >-
+      Your rail temperature working limits — at what temperature may you not stress, weld,
+      tamp, or disturb track — and the limits for working at all.
+  - id: '4.6'
+    section: '4'
+    gate: true
+    covers: [ballast_depth]
+    text: >-
+      Your ballast disturbance rule — after tamping, sleeper renewal, or undercutting, what
+      speed restriction applies, and what removes it (tonnage passed, mechanical
+      consolidation, elapsed time) as practised on your network.
+  - id: '4.7'
+    section: '4'
+    gate: true
+    covers: [buckling_answer, trigger_level]
+    text: >-
+      Your buckling precaution trigger combination — rail temperature, recent disturbance,
+      alignment defect, drainage, curve radius — as your standards set it.
+  - id: '4.8'
+    section: '4'
+    gate: true
+    text: >-
+      How rail expansion is accounted for at fixed points on your routes — bridges, S&C,
+      level crossings, structures — as your design states.
+  - id: '5.1'
+    section: '5'
+    gate: true
+    covers: [clearance_envelope]
+    text: >-
+      Your envelope definitions — structure gauge, kinematic envelope, vehicle gauge,
+      loading gauge, pantograph envelope, platform gauge — as your standards define them,
+      and where each applies on your routes.
+  - id: '5.2'
+    section: '5'
+    gate: true
+    covers: [live_state_answer]
+    text: >-
+      Your minimum clearances and consequence of infringement — structure to kinematic,
+      platform edge to vehicle, platform height, walkway/cess width, position of safety,
+      six-foot/four-foot, OLE live to earth, OLE live to person/plant, third rail to
+      person/plant, contact wire height min/max, contact wire stagger.
+  - id: '5.3'
+    section: '5'
+    gate: true
+    text: >-
+      Which clearances change with line speed, cant, or curve radius on your network, and
+      by how much.
+  - id: '5.4'
+    section: '5'
+    gate: true
+    covers: [clearance_envelope]
+    text: >-
+      Your gauging assessment process — who performs it, lead time, and whether temporary
+      structures or plant may be positioned without one.
+  - id: '6.1'
+    section: '6'
+    gate: true
+    covers: [live_state_answer]
+    text: >-
+      Your isolation process — who authorises, how proved dead, earthing and bonding
+      requirement, minimum approach distance before confirmed isolation.
+  - id: '6.2'
+    section: '6'
+    gate: true
+    text: >-
+      Your traction return and bonding rules — what must never be cut, disconnected or
+      removed without assessment.
+  - id: '6.3'
+    section: '6'
+    gate: true
+    text: >-
+      Your signal sighting distances and what a temporary obstruction can do to them — who
+      assesses a change on your network.
+  - id: '6.4'
+    section: '6'
+    gate: true
+    text: >-
+      Your immunisation and EMC limits on stray current, induced voltage, metallic objects
+      near track circuits or axle counters.
+  - id: '6.5'
+    section: '6'
+    gate: true
+    text: >-
+      Your braking and overlap distances as they constrain construction layout — platform
+      position, signal position, gradient.
+  - id: '6.6'
+    section: '6'
+    gate: true
+    text: >-
+      Your systems testing required before handback, and who certifies.
+  - id: '7.1'
+    section: '7'
+    gate: true
+    covers: [face_pressure]
+    text: >-
+      Your TBM face pressure band per chainage zone — minimum, maximum, basis
+      (ground/groundwater), sensitive asset above.
+  - id: '7.2'
+    section: '7'
+    gate: true
+    text: >-
+      How actual pressures are logged and verified against target on your drives before
+      mining reaches a sensitive area.
+  - id: '7.3'
+    section: '7'
+    gate: true
+    text: >-
+      Your design volume loss and trough width factor, and how face/shield/tail losses are
+      separated on your projects.
+  - id: '7.4'
+    section: '7'
+    gate: true
+    covers: [trigger_level]
+    text: >-
+      Your trigger levels — green/amber/red/stop-work — with value, required response, and
+      who is notified.
+  - id: '7.5'
+    section: '7'
+    gate: true
+    text: >-
+      Your allowable deformation limits per asset — building category, structural
+      condition, utility material, operator's own limit for its track or tunnel.
+  - id: '7.6'
+    section: '7'
+    gate: true
+    text: >-
+      Your over-excavation detection — muck volume and weight vs theoretical, and the
+      discrepancy that triggers a stop.
+  - id: '7.7'
+    section: '7'
+    gate: true
+    text: >-
+      Your grouting parameters — target volumes and pressures for annulus and compensation
+      grouting, and the pressure never to be exceeded.
+  - id: '7.8'
+    section: '7'
+    gate: true
+    text: >-
+      Your monitoring frequency and what happens when a reading is missed or an instrument
+      fails.
+  - id: '8.1'
+    section: '8'
+    gate: true
+    text: >-
+      Your priority order when planning access.
+  - id: '8.2'
+    section: '8'
+    gate: true
+    covers: [live_state_answer]
+    text: >-
+      What makes each option impossible on your network — full line closure, single line
+      working, adjacent line open, lookout-only protection, extending possession, handback
+      under speed restriction, handback incomplete, bringing plant on/off during traffic.
+  - id: '8.3'
+    section: '8'
+    gate: true
+    text: >-
+      Your handback criteria — what must be true, who inspects, who certifies, what defects
+      prevent handback outright vs permit handback under restriction.
+  - id: '8.4'
+    section: '8'
+    gate: true
+    covers: [ballast_depth, handback_speed]
+    text: >-
+      Your handback speed determination — geometry, ballast consolidation, stressing state,
+      signalling test status, incomplete works.
+  - id: '8.5'
+    section: '8'
+    gate: true
+    covers: [clearance_envelope, live_state_answer, tsr_speed]
+    text: >-
+      Your notification lead times — possession booking, isolation request, temporary speed
+      restriction, line speed change, gauging/obstruction notification, signalling
+      alteration, timetable impact.
+  - id: '8.6'
+    section: '8'
+    gate: true
+    covers: [live_state_answer]
+    text: >-
+      Your authority matrix — take possession, authorise isolation, work with adjacent line
+      open, enter four-foot, alter track geometry, stress or de-stress rail, impose or lift
+      speed restriction, hand line back, continue past possession end, deviate from
+      approved method of working.
+  - id: '9.1'
+    section: '9'
+    gate: true
+    covers: [clearance_envelope, face_pressure, geometry_limit, sft, trigger_level]
+    text: >-
+      Per figure class — geometry limit, SFT, structure clearance, OLE clearance, TBM face
+      pressure, settlement trigger, line speed, signalling parameter — what your
+      organisation accepts as proof, and what it rejects even if it states the number.
+  - id: '9.2'
+    section: '9'
+    gate: true
+    covers: [clearance_envelope, face_pressure]
+    text: >-
+      Minimum acceptable citation per source type — national/IM standard, route sectional
+      appendix, gauging assessment, design drawing, stressing record, surge/settlement
+      study, TBM operating schedule, method of working/SSOW, building risk assessment.
+  - id: '9.3'
+    section: '9'
+    gate: true
+    covers: [clearance_envelope, face_pressure, sft, trigger_level]
+    text: >-
+      Mandatory qualifiers your organisation requires — geometry tolerance, SFT, clearance,
+      OLE clearance, face pressure, settlement trigger, line speed.
+  - id: '9.4'
+    section: '9'
+    gate: true
+    covers: [face_pressure, sft]
+    text: >-
+      Your derivation rules — interpolating geometry limits between speeds, calculating
+      cant deficiency, scaling clearances, converting envelopes, inferring SFT,
+      interpolating face pressure, carrying limits between categories, carrying triggers
+      between assets, carrying pressure from a similar drive — allowed or not on your
+      projects.
+  - id: '9.5'
+    section: '9'
+    gate: true
+    covers: [ballast_depth, clearance_envelope, face_pressure, geometry_recording, sft, trigger_level]
+    text: >-
+      Your staleness rules per figure — SFT record, ballast condition, geometry recording,
+      gauging assessment, face pressure schedule, settlement trigger, method of working,
+      sectional appendix data — valid for how long, stale immediately on what.
+  - id: '9.5.2'
+    section: '9'
+    gate: true
+    covers: [buckling_answer, handback_speed]
+    text: >-
+      Confirm the physical-state rule — no answer about buckling risk, stressing or
+      handback speed without knowing whether the track has been disturbed since the last
+      record.
+  - id: '9.6'
+    section: '9'
+    gate: true
+    covers: [clearance_envelope]
+    text: >-
+      Your conflict resolution — IM standard vs project specification, design vs
+      as-built/gauging, sectional appendix vs temporary notice.
+  - id: '9.7'
+    section: '9'
+    gate: false
+    text: >-
+      Partial-evidence disclosure wording per situation, and which figures must never be
+      offered as estimates — confirmed explicitly against your Section 10 list.
+  - id: '10.1'
+    section: '10'
+    gate: true
+    covers: [ballast_depth, face_pressure, handback_speed, live_state_answer, sft, trigger_level]
+    text: >-
+      Which figures your organisation treats as absolute — geometry tolerances at all three
+      tiers, cant/cant deficiency/rate of change, twist and alignment, SFT and rail
+      temperature working limits, ballast consolidation requirement and speed restriction,
+      structure/kinematic/platform clearances, position of safety distances, OLE and
+      third-rail clearances, minimum approach distance before proved isolation, signal
+      sighting distances, TBM face pressure bands and grout pressures, settlement trigger
+      levels per asset, allowable deformation limits, handback speed and inspection
+      criteria, lifting radii adjacent to the operational railway.
+  - id: '10.2'
+    section: '10'
+    gate: false
+    text: >-
+      Which of the above have caught you out, and how.
+  - id: '11.1'
+    section: '11'
+    gate: false
+    covers: [live_state_answer]
+    text: >-
+      Figures you accept as estimates — expected possession productivity, indicative
+      renewal rate, predicted settlement — and the exact wording you want attached.
+  - id: '12.1'
+    section: '12'
+    gate: true
+    covers: [live_state_answer]
+    text: >-
+      Your list of questions that must be refused outright — handback tonight, adjacent
+      line open, crane position, stress rail today, building at risk, enter four-foot — and
+      what the system should say instead.
+  - id: '13.1'
+    section: '13'
+    gate: true
+    covers: [live_state_answer]
+    text: >-
+      What is currently in possession on your routes, how recorded, how communicated.
+  - id: '13.2'
+    section: '13'
+    gate: true
+    text: >-
+      What is currently isolated, how a person on site is certain, and what proves dead.
+  - id: '13.3'
+    section: '13'
+    gate: true
+    text: >-
+      Your temporary speed restrictions currently in force, where recorded, and how long
+      they persist after the works.
+  - id: '13.4'
+    section: '13'
+    gate: true
+    text: >-
+      Your protection arrangements per work site and who holds them.
+  - id: '13.5'
+    section: '13'
+    gate: true
+    covers: [live_state_answer, tsr_speed]
+    text: >-
+      Where live state lives — track disturbance, TSR in force, isolation removed — and
+      whether it is linked to anything a system could read.
+  - id: '13.6'
+    section: '13'
+    gate: false
+    covers: [live_state_answer]
+    text: >-
+      Your shift handover record across a possession boundary, and what must never be lost
+      across it.
+  - id: '14.1'
+    section: '14'
+    gate: true
+    covers: [clearance_envelope]
+    text: >-
+      Your ranking, highest first — national safety regulation, IM standards, route
+      sectional appendix and temporary notices, project specification, approved design
+      (as-built status), gauging assessment, approved method of working/SSOW, engineering
+      instruction, site instruction.
+  - id: '14.2'
+    section: '14'
+    gate: true
+    text: >-
+      When IM standard and project specification conflict on your projects — which governs,
+      who resolves.
+  - id: '14.3'
+    section: '14'
+    gate: true
+    text: >-
+      When design and as-built disagree on your projects — which governs, and how as-built
+      is maintained during a live renewal.
+  - id: '14.4'
+    section: '14'
+    gate: true
+    text: >-
+      How someone on site knows the method of working is the approved current version on
+      your network.
+  - id: '14.5'
+    section: '14'
+    gate: false
+    text: >-
+      Which figures are route- or line-specific on your portfolio and never carried between
+      routes.
+  - id: '14.6'
+    section: '14'
+    gate: false
+    text: >-
+      Which figures change with line category or speed band on your network.
+  - id: '15.1'
+    section: '15'
+    gate: false
+    text: >-
+      Where a cant vs cant deficiency confusion has occurred on your projects.
+  - id: '15.2'
+    section: '15'
+    gate: false
+    text: >-
+      Where twist without its base length has caused a problem on yours.
+  - id: '15.3'
+    section: '15'
+    gate: false
+    text: >-
+      Where rail temperature vs air temperature has been confused on yours.
+  - id: '15.4'
+    section: '15'
+    gate: false
+    covers: [clearance_envelope]
+    text: >-
+      Where a clearance has been quoted against the wrong envelope on yours.
+  - id: '16.1'
+    section: '16'
+    gate: false
+    text: >-
+      A figure taken from the wrong standard, line category, or a superseded revision.
+  - id: '16.2'
+    section: '16'
+    gate: false
+    covers: [sft]
+    text: >-
+      An SFT or stressing record that no longer reflected actual track state.
+  - id: '16.3'
+    section: '16'
+    gate: false
+    text: >-
+      Track handed back that should not have been, or at the wrong speed.
+  - id: '16.4'
+    section: '16'
+    gate: false
+    covers: [ballast_depth]
+    text: >-
+      Ballast disturbed and a restriction lifted too early.
+  - id: '16.5'
+    section: '16'
+    gate: false
+    covers: [clearance_envelope, live_state_answer]
+    text: >-
+      An obstruction, plant or material left inside a clearance or the four-foot.
+  - id: '16.6'
+    section: '16'
+    gate: false
+    covers: [live_state_answer]
+    text: >-
+      An isolation believed in place that was not, or removed early.
+  - id: '16.7'
+    section: '16'
+    gate: false
+    covers: [face_pressure]
+    text: >-
+      A TBM face pressure or grout pressure outside band, and what moved above.
+  - id: '16.8'
+    section: '16'
+    gate: false
+    covers: [trigger_level]
+    text: >-
+      A settlement trigger exceeded and the response that followed — or didn't.
+  - id: '16.9'
+    section: '16'
+    gate: false
+    covers: [clearance_envelope]
+    text: >-
+      A gauging or clearance infringement discovered after installation.
+  - id: '16.10'
+    section: '16'
+    gate: false
+    text: >-
+      What an engineer new to railway works most commonly gets wrong in their first six
+      months.
+  - id: '17.1'
+    section: '17'
+    gate: false
+    text: >-
+      Five things you'd ask a system per shift and trust completely.

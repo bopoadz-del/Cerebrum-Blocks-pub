@@ -1,0 +1,131 @@
+{
+  "version": 1,
+  "currency": "USD",
+  "schedules": {
+    "life_fyc": {
+      "description": "Life first-year commission on annualized premium.",
+      "line_of_business": "life",
+      "transaction_type": "new_business",
+      "basis": "annualized_premium",
+      "effective_periods": [
+        {
+          "effective_from": "2025-01-01",
+          "effective_to": null,
+          "default_level": "standard",
+          "min_rate": 0.5,
+          "max_rate": 1.2,
+          "rates": {
+            "trainee": 0.5,
+            "standard": 0.75,
+            "senior": 0.9,
+            "elite": 1.2
+          }
+        }
+      ]
+    },
+    "pc_new": {
+      "description": "Property and casualty new business commission on written premium.",
+      "line_of_business": "pc",
+      "transaction_type": "new_business",
+      "basis": "written_premium",
+      "effective_periods": [
+        {
+          "effective_from": "2025-01-01",
+          "effective_to": null,
+          "default_level": "producer",
+          "min_rate": 0.08,
+          "max_rate": 0.2,
+          "rates": {
+            "csr": 0.08,
+            "producer": 0.12,
+            "senior_producer": 0.15,
+            "partner": 0.2
+          }
+        }
+      ]
+    },
+    "renewals": {
+      "description": "Renewal commission schedules by line and policy year.",
+      "basis": "renewal_premium",
+      "effective_periods": [
+        {
+          "effective_from": "2025-01-01",
+          "effective_to": null,
+          "life": {
+            "default_rate": 0.05,
+            "min_rate": 0.03,
+            "max_rate": 0.1,
+            "year_rates": {
+              "2": 0.1,
+              "3": 0.075,
+              "4+": 0.05
+            }
+          },
+          "pc": {
+            "default_rate": 0.1,
+            "min_rate": 0.08,
+            "max_rate": 0.12,
+            "year_rates": {
+              "2+": 0.1
+            }
+          }
+        }
+      ]
+    }
+  },
+  "overrides": {
+    "description": "Upline override rates paid on the same premium basis as the sale.",
+    "basis": "premium",
+    "max_levels": 5,
+    "hierarchy_levels": {
+      "agency_manager": {
+        "life_fyc": 0.05,
+        "pc_new": 0.02,
+        "renewals": 0.015
+      },
+      "regional_director": {
+        "life_fyc": 0.025,
+        "pc_new": 0.01,
+        "renewals": 0.005
+      },
+      "broker_dealer": {
+        "life_fyc": 0.01,
+        "pc_new": 0.005,
+        "renewals": 0.0025
+      }
+    }
+  },
+  "chargebacks": {
+    "life_fyc": {
+      "method": "free_look_full_then_pro_rata",
+      "free_look_days": 30,
+      "window_days": 365,
+      "description": "Full chargeback in free-look period, then first-year pro rata."
+    },
+    "pc_new": {
+      "method": "pro_rata_term",
+      "term_days": 365,
+      "description": "Pro rata chargeback over the policy term."
+    },
+    "renewals": {
+      "method": "pro_rata_term",
+      "term_days": 365,
+      "description": "Pro rata chargeback over the renewal term."
+    }
+  },
+  "effective_dating": {
+    "boundary": "inclusive",
+    "date_field_precedence": [
+      "transaction_date",
+      "issue_date",
+      "effective_date"
+    ],
+    "default_date": "today"
+  },
+  "provenance": {
+    "kind": "contributor_unverified",
+    "recorded_on": "2026-08-29",
+    "reference": "The_Fork-published bundle orphan; no checkable source recovered",
+    "parked": true
+  }
+}

@@ -1,0 +1,130 @@
+{
+  "acceptance": [
+    {
+      "check": "refuses or errors when a required input is absent",
+      "id": "missing_required_input",
+      "status": "refused"
+    },
+    {
+      "check": "errors on an unknown or missing action",
+      "id": "unknown_action",
+      "status": "failed"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Deterministic HKIA GN16/GL16 Layer-1 compliance rule checks for insurance evidence packages. Rule checks only; no live HKIA filing submission.",
+  "digests": {
+    "block.json": "543f5225884471930e552a70dc32f7e8dfc52681a3b2971986760ba37e1b926e",
+    "block.py": "e19aec9481fcd100c985f1cde4bd0ed9c89e64bf9d097e13dddfb08d37cbf957"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/hkia_gn16_rules:latest",
+    "type": "docker"
+  },
+  "id": "hkia_gn16_rules",
+  "inputs": [
+    {
+      "description": "{\"text\": \"policy or control evidence\", \"customer_age\": 68}",
+      "name": "input",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "default": "evaluate",
+      "description": "Operation",
+      "name": "operation",
+      "options": [
+        "evaluate",
+        "list_rules",
+        "explain_finding",
+        "build_audit_package"
+      ],
+      "required": false,
+      "type": "string"
+    },
+    {
+      "description": "Rule ID for explain_finding",
+      "name": "rule_id",
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 1,
+  "name": "HKIA GN16 Rules",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Compliance findings with severity, rule_id, citation, and remediation",
+      "name": "findings",
+      "type": "json"
+    },
+    {
+      "description": "Internal audit package for rule evaluation evidence",
+      "name": "audit_package",
+      "type": "json"
+    },
+    {
+      "description": "Machine-readable GN16/GL16 pilot rule list",
+      "name": "rules",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    }
+  ],
+  "requires": [],
+  "signature": "o5V7whdj27HcIDdTe3w3/iLNCBOEFBeYcx8RDNg73prk2kDJ9fIwDJzhW30rIEb2CzYFOJuZqGCVL3JyOgR4Bw==",
+  "tags": [
+    "insurance",
+    "compliance",
+    "hkia",
+    "gn16",
+    "gl16",
+    "rules"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "{\"text\": \"Paste policy or control evidence...\"}",
+      "name": "input",
+      "widget": "json"
+    },
+    {
+      "label": "Operation",
+      "name": "operation",
+      "options": [
+        "evaluate",
+        "list_rules",
+        "explain_finding",
+        "build_audit_package"
+      ],
+      "widget": "select"
+    },
+    {
+      "label": "Rule ID",
+      "name": "rule_id",
+      "widget": "text"
+    }
+  ],
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

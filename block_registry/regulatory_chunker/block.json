@@ -1,0 +1,70 @@
+{
+  "acceptance": [
+    {
+      "check": "an unknown action is refused, not silently accepted",
+      "id": "unknown_action",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Dual-RAG chunking ported from <private-repo> rag/chunking.py: regulatory sections never split mid-section (TOC stubs skipped, appendix labels tracked), free-text 800-token windows with 15% overlap, atomic QA pairs.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "7449af2eac9782a39fa5a22af32dd58a028503952002ccba5d3a8999b67042e3",
+    "block.py": "813e74b92e4e77dc0d1e14bbbf9c180c937b38b735a730f9dac188e0c3f4e7ba"
+  },
+  "id": "regulatory_chunker",
+  "inputs": [
+    {
+      "description": "chunk_regulatory | chunk_free_text | chunk_qa",
+      "name": "action",
+      "options": [
+        "chunk_regulatory",
+        "chunk_free_text",
+        "chunk_qa"
+      ],
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 3,
+  "name": "regulatory_chunker",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Capability result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "AonWX6gtYxuk4iDTm19BWn52ECg+vzrET7Xc8oQmokQ3c19JgNRNPrfB2gWUL5wHJ0DLLaVoMSGYDbMYHsdaAw==",
+  "tags": [
+    "rag",
+    "chunking",
+    "insurance",
+    "regulatory",
+    "<private-repo>"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

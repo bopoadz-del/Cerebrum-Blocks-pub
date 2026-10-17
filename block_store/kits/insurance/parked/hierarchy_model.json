@@ -1,0 +1,105 @@
+{
+  "id": "insurance_distribution_hierarchy",
+  "version": "1.0.0",
+  "domain": "insurance",
+  "description": "F1 insurance distribution hierarchy model for agency and producer channels.",
+  "roles": [
+    {
+      "id": "agent",
+      "rank": 0,
+      "description": "Individual producer or writing agent."
+    },
+    {
+      "id": "agency",
+      "rank": 1,
+      "description": "Retail agency, downline agency, or producer group."
+    },
+    {
+      "id": "mga_fmo",
+      "rank": 2,
+      "description": "Managing general agency, field marketing organization, or intermediary."
+    },
+    {
+      "id": "carrier",
+      "rank": 3,
+      "description": "Insurance carrier or product manufacturer."
+    }
+  ],
+  "node_schema": {
+    "id": "string",
+    "role": "agent|agency|mga_fmo|carrier",
+    "parent_id": "string|null",
+    "name": "string",
+    "effective_from": "ISO-8601 date|null",
+    "effective_to": "ISO-8601 date|null",
+    "metadata": "object"
+  },
+  "relationship_constraints": {
+    "direction": "child_to_parent",
+    "canonical_path": [
+      "agent",
+      "agency",
+      "mga_fmo",
+      "carrier"
+    ],
+    "unlimited_depth": true,
+    "same_role_parenting": "allowed",
+    "parent_rank_rule": "parent rank must be greater than or equal to child rank",
+    "cycle_policy": "cycles are invalid",
+    "date_policy": "effective_to must not precede effective_from"
+  },
+  "operations": [
+    "upsert_node",
+    "get_subtree",
+    "path_to_root",
+    "validate_hierarchy"
+  ],
+  "examples": [
+    {
+      "id": "agent-1",
+      "role": "agent",
+      "parent_id": "agency-1",
+      "name": "Jane Producer",
+      "effective_from": "2024-03-01",
+      "effective_to": null,
+      "metadata": {
+        "npn": "123456"
+      }
+    },
+    {
+      "id": "agency-1",
+      "role": "agency",
+      "parent_id": "mga-1",
+      "name": "Pine Agency",
+      "effective_from": "2024-02-01",
+      "effective_to": null,
+      "metadata": {}
+    },
+    {
+      "id": "mga-1",
+      "role": "mga_fmo",
+      "parent_id": "carrier-1",
+      "name": "Summit FMO",
+      "effective_from": "2024-01-01",
+      "effective_to": null,
+      "metadata": {}
+    },
+    {
+      "id": "carrier-1",
+      "role": "carrier",
+      "parent_id": null,
+      "name": "Northstar Life",
+      "effective_from": "2024-01-01",
+      "effective_to": null,
+      "metadata": {
+        "naic": "10001"
+      }
+    }
+  ],
+  "provenance": {
+    "kind": "contributor_unverified",
+    "recorded_on": "2026-08-29",
+    "reference": "The_Fork-published bundle orphan; no checkable source recovered",
+    "parked": true
+  }
+}

@@ -1,0 +1,112 @@
+{
+  "acceptance": [
+    {
+      "check": "refuses or errors when a required input is absent",
+      "id": "missing_required_input",
+      "status": "refused"
+    },
+    {
+      "check": "errors on an unknown or missing action",
+      "id": "unknown_action",
+      "status": "failed"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Insurance producer record Store block for licenses, agency assignment, status, and carrier appointments",
+  "digests": {
+    "block.json": "e10fca2d456eabf5de4278ca801ae8d3e124dd54e93b7d3c2ce1b343559ecf10",
+    "block.py": "20ec5a7e3f431c30a43d92ccbe2b26235bd0046a3bae014121f1d280aba8c0c0"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/producer_record:latest",
+    "type": "docker"
+  },
+  "id": "producer_record",
+  "inputs": [
+    {
+      "description": "JSON payload for the selected operation",
+      "name": "input",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "default": "get",
+      "description": "Operation",
+      "name": "operation",
+      "options": [
+        "upsert",
+        "get",
+        "list_by_agency",
+        "license_status"
+      ],
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 3,
+  "name": "Producer Record",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Producer record operation result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    }
+  ],
+  "requires": [],
+  "signature": "6r+SBtUROpmVkH9oJ+xP0V+pz6k/BlCqlZztVoJgVka/CyZ1yTgvfsbk6qnOYtCLfe9ZLGr+eFQQpwTxtfGNDA==",
+  "tags": [
+    "domain",
+    "insurance",
+    "producer",
+    "licensing",
+    "store"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "JSON payload for the selected operation",
+      "name": "input",
+      "widget": "json"
+    },
+    {
+      "label": "Operation",
+      "name": "operation",
+      "options": [
+        "upsert",
+        "get",
+        "list_by_agency",
+        "license_status"
+      ],
+      "widget": "select"
+    }
+  ],
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    },
+    {
+      "kind": "database",
+      "scope": "vector"
+    }
+  ]
+}

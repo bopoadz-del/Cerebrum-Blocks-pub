@@ -1,0 +1,399 @@
+# GENERATED from docs/kit_questions/aviation_ops.md by scripts/import_kit_questions.py — do not hand-edit.
+# Edit the markdown sheet and re-run. The sheet is the record of what the domain
+# owner actually asked for; this file is only its machine-readable form.
+#
+# gate: true  -> [GATE]. The platform refuses anything needing it until answered.
+# gate: false -> [GAP].  Experience worth having; does not block.
+# gate: null  -> the sheet marked neither. Treated as GATING, because a question
+#                whose class cannot be read must block rather than pass.
+#
+# There is deliberately NO answer slot in this file. Answers are per-platform and
+# per-client; this kit is a signed Store block shared by every customer.
+kit: aviation_ops
+source_document: docs/kit_questions/aviation_ops.md
+title: 'Aviation Operations — Questions I Cannot Answer'
+answer_format:
+  - 'value'
+  - 'unit'
+  - 'aircraft / station'
+  - 'basis'
+  - 'contract or manual reference'
+  - 'date'
+sections:
+  '1':
+    title: 'Ground handling and turnaround rates'
+  '2':
+    title: 'Airport, navigation and fuel'
+  '3':
+    title: 'The cost of a delay minute'
+  '4':
+    title: 'Named calculations'
+  '5':
+    title: 'The recovery decision'
+  '6':
+    title: 'Delay coding'
+  '7':
+    title: 'Evidence standard'
+  '8':
+    title: 'Never-estimate'
+  '9':
+    title: 'May-estimate'
+  '10':
+    title: 'Refusals'
+  '11':
+    title: 'Precedence'
+  '12':
+    title: 'Unit-confusion history'
+  '13':
+    title: 'Incidents'
+  '14':
+    title: 'The five questions'
+questions:
+  - id: '1.1'
+    section: '1'
+    gate: true
+    covers: [handling_rate]
+    text: >-
+      Your handling rate catalogue — full handling per turn, ramp only, pushback/towing,
+      GPU per hour, air start, potable water, lavatory service, de-icing Type I and Type
+      IV, cabin cleaning transit and deep, wheelchair/PRM per pax, extra staff out-of-scope
+      — narrowbody, widebody, regional — with contract or ad-hoc source for each.
+  - id: '1.2'
+    section: '1'
+    gate: true
+    text: >-
+      Which of these are in your handling contract and which are billed ad hoc — per
+      station.
+  - id: '1.3'
+    section: '1'
+    gate: true
+    text: >-
+      Your rate change by station type (hub / focus city / outstation / remote / seasonal)
+      — the multipliers as you apply them.
+  - id: '1.4'
+    section: '1'
+    gate: true
+    text: >-
+      Your rate uplift outside published hours, on public holidays, overnight — the
+      specific multipliers.
+  - id: '1.5'
+    section: '1'
+    gate: true
+    text: >-
+      Which services carry an SLA with penalty or bonus, and what triggers each on your
+      contracts.
+  - id: '2.1'
+    section: '2'
+    gate: true
+    covers: [fuel_price, mtow]
+    text: >-
+      Your airport charge set per station — landing charge per tonne MTOW, parking per
+      hour/tonne, passenger charge per departing pax, security charge, airbridge, remote
+      stand + bussing, route navigation charge, terminal navigation, into-plane fee, fuel
+      price, slot/ATFM penalty — with the source for each.
+  - id: '2.2'
+    section: '2'
+    gate: true
+    text: >-
+      Which of your stations are materially more expensive than your network average, and
+      by how much.
+  - id: '2.3'
+    section: '2'
+    gate: true
+    covers: [fuel_price]
+    text: >-
+      Your authoritative fuel price source per station — contract, index, or invoice — and
+      how often each moves.
+  - id: '2.4'
+    section: '2'
+    gate: true
+    text: >-
+      Where tankering is used on your network, and what governs the decision.
+  - id: '3.1'
+    section: '3'
+    gate: true
+    text: >-
+      Your agreed cost-per-minute figures — at gate engines off, at gate extended (>60
+      min), taxi/ground engines running, airborne/holding, cancellation per flight —
+      narrowbody, widebody, regional. If you do not hold agreed figures, say so; it becomes
+      a KNOWN_GAP and the OCC decision rule has to be encoded as judgement-based.
+  - id: '3.2'
+    section: '3'
+    gate: true
+    covers: [compensation]
+    text: >-
+      How the cost changes as delay lengthens — the step points where compensation becomes
+      payable, where a crew goes out of hours, where a network effect starts.
+  - id: '3.3'
+    section: '3'
+    gate: true
+    covers: [compensation]
+    text: >-
+      The passenger compensation regime that applies to you — which one, and the
+      extraordinary-circumstances exclusions you actually rely on.
+  - id: '3.4'
+    section: '3'
+    gate: true
+    text: >-
+      Your misconnect cost — rebooking, hotel, meals, duty of care — long-haul vs
+      short-haul as you experience it.
+  - id: '3.5'
+    section: '3'
+    gate: true
+    text: >-
+      Your network-effect rule — how you account for a delay propagating down an aircraft's
+      day. Multiplier, rule of thumb, or judgement — say which.
+  - id: '4.1'
+    section: '4'
+    gate: true
+    covers: [delay_cost, rest_requirement]
+    text: >-
+      For each calculation — minimum turnaround, declared minimum ground time, fuel plan
+      (trip/contingency/alternate/final reserve/taxi), extra fuel / tankering breakeven,
+      payload–range trade, flight duty period limit, rest requirement, max sectors per
+      duty, crew standby callout time, delay cost of an option, swap vs delay vs cancel
+      cost, D0/D15/A15, completion factor, aircraft utilisation — your inputs, the
+      rule/standard each follows, and who owns it.
+  - id: '4.2'
+    section: '4'
+    gate: true
+    text: >-
+      For minimum turnaround — what actually drives it on your network (longest task,
+      contract, aircraft type) and where it differs by station.
+  - id: '4.3'
+    section: '4'
+    gate: true
+    text: >-
+      For fuel — which elements are regulatory minimums and which are
+      captain's/dispatcher's discretion on your airline, and where that discretion is
+      recorded.
+  - id: '4.4'
+    section: '4'
+    gate: true
+    covers: [duty_limits]
+    text: >-
+      For duty limits — which authority applies on your AOC, where commander's discretion
+      can extend, and what must be recorded.
+  - id: '5.1'
+    section: '5'
+    gate: true
+    text: >-
+      Your recovery option order as the OCC actually considers it — delay, aircraft swap,
+      crew swap, sub-charter, cancel, combine, reroute, divert, ferry, other.
+  - id: '5.2'
+    section: '5'
+    gate: true
+    text: >-
+      What makes each option impossible on your airline — hard blockers, not cost.
+  - id: '5.3'
+    section: '5'
+    gate: true
+    text: >-
+      Your hard limits that can never be traded, whatever the commercial cost.
+  - id: '5.4'
+    section: '5'
+    gate: true
+    text: >-
+      Your authority matrix — cancel, MEL/CDL dispatch, commander's discretion extension,
+      accept defect for onward flight, ferry, divert, off-schedule fuel uplift.
+  - id: '6.1'
+    section: '6'
+    gate: true
+    text: >-
+      Your coding scheme — IATA AHM 730, AHM 731 sub-codes, your own, or AHM 732.
+  - id: '6.2'
+    section: '6'
+    gate: true
+    text: >-
+      Which codes are most often applied wrongly in your operation, and what the correct
+      codes are.
+  - id: '6.3'
+    section: '6'
+    gate: true
+    text: >-
+      Which codes carry a contractual or financial consequence on your network — handler
+      bonus/malus, ATFM attribution, insurance.
+  - id: '6.4'
+    section: '6'
+    gate: true
+    text: >-
+      Who assigns the code, and who can change it after the fact.
+  - id: '7.1'
+    section: '7'
+    gate: true
+    covers: [compensation, delay_cost, handling_rate]
+    text: >-
+      Per figure class — weights and balance limits, fuel minimums, performance/runway
+      data, MEL dispatch conditions, duty and rest limits, handling rate/contract charge,
+      airport charge, delay cost figure, compensation entitlement — what your operation
+      accepts as proof and what it rejects even if it states the number.
+  - id: '7.2'
+    section: '7'
+    gate: true
+    text: >-
+      Minimum acceptable citation per source type — ICAO Annex, national regulation,
+      OpSpecs/AOC conditions, AFM/performance manual, OM-A/OM-B, MEL/CDL, IATA AHM,
+      handling contract, airport tariff, OCC standing instruction. State whether "OM-A" is
+      acceptable or if revision + paragraph + effective date is required.
+  - id: '7.3'
+    section: '7'
+    gate: true
+    covers: [delay_cost, fuel_minimum, handling_rate, mtow]
+    text: >-
+      Mandatory qualifiers your operation requires — MTOW (registration, configuration,
+      runway, temperature, QNH), fuel minimum (sector, alternate, reserve policy applied),
+      FDP (report time, sectors, acclimatisation, augmentation), handling rate (station,
+      aircraft category, shift, contract vs ad hoc), delay cost (aircraft type, phase,
+      delay band).
+  - id: '7.4'
+    section: '7'
+    gate: true
+    text: >-
+      Your derivation rules — interpolating performance tables, unit conversions (kg/lb,
+      litres/USG), reading off performance charts, applying stated formulas, summing fuel
+      components, carrying figures from a sister aircraft of the same type, carrying rates
+      from a similar station — allowed or not on your airline.
+  - id: '7.4.1'
+    section: '7'
+    gate: true
+    text: >-
+      Confirm the never rules — type-to-registration carry-over and station-to-station rate
+      carry-over as your operation draws them.
+  - id: '7.5'
+    section: '7'
+    gate: true
+    covers: [contract_rate, fuel_price, performance_data]
+    text: >-
+      Your staleness rules per figure — OM/manual, MEL rectification interval, performance
+      data, handling contract rate, airport tariff, fuel price, NOTAM-affected figures —
+      valid for how long, stale immediately on what.
+  - id: '7.5.1'
+    section: '7'
+    gate: true
+    text: >-
+      How the system knows a manual or contract is current on your operation — revision
+      field, effective date, register — or whether it depends on a person knowing.
+  - id: '7.5.2'
+    section: '7'
+    gate: true
+    text: >-
+      Confirm the currency rule — refuse or warn when currency cannot be verified.
+  - id: '7.6'
+    section: '7'
+    gate: true
+    text: >-
+      Your conflict rule — when two acceptable sources disagree, does the system answer
+      with the higher-authority source, answer with both and flag, or refuse and report?
+      Does it change by figure class? Which classes must always refuse — AFM vs OM-B in
+      particular.
+  - id: '7.6.2'
+    section: '7'
+    gate: false
+    text: >-
+      A real conflict of this kind on your operation — the two sources, and what happened.
+  - id: '7.7'
+    section: '7'
+    gate: false
+    text: >-
+      Partial-evidence disclosure wording per situation, and which figures must never be
+      offered as estimates — confirmed against your Section 8 list.
+  - id: '8.1'
+    section: '8'
+    gate: true
+    text: >-
+      Which figures your operation treats as absolute — maximum zero fuel weight, maximum
+      takeoff/landing weight, fuel minimums, runway performance and takeoff data, MEL/CDL
+      dispatch conditions and rectification intervals, duty and rest limits, required
+      equipment quantities, curfew times, slot times, minimum crew complement, ETOPS
+      constraints, dangerous goods limits — with the authoritative source for each.
+  - id: '8.2'
+    section: '8'
+    gate: false
+    text: >-
+      Which of the above have caught you out, and how.
+  - id: '9.1'
+    section: '9'
+    gate: false
+    text: >-
+      Figures you accept as estimates — expected taxi time, planning durations — and the
+      exact wording you want attached.
+  - id: '10.1'
+    section: '10'
+    gate: true
+    text: >-
+      Your list of questions the system must refuse outright — dispatch with this defect,
+      is the crew legal, and any others — with what it should say instead.
+  - id: '11.1'
+    section: '11'
+    gate: true
+    text: >-
+      Your ranking, highest first — AFM, OM-A/OM-B, MEL/CDL, OpSpecs, CAA directive, IATA
+      AHM, handling contract, station procedure, OCC standing instruction.
+  - id: '11.2'
+    section: '11'
+    gate: true
+    text: >-
+      When handling contract and station procedure disagree on your network — which
+      governs.
+  - id: '11.3'
+    section: '11'
+    gate: true
+    text: >-
+      How someone knows a document is the current revision on your operation, and what
+      happens when a superseded one is used.
+  - id: '11.4'
+    section: '11'
+    gate: true
+    text: >-
+      Which figures are station-specific on your network and never applied network-wide.
+  - id: '11.5'
+    section: '11'
+    gate: true
+    text: >-
+      Which figures are registration-specific, not just type-specific — weight variants,
+      MEL configuration, cabin config.
+  - id: '12.1'
+    section: '12'
+    gate: false
+    text: >-
+      Where a UTC/local confusion has caused an operational problem on your network.
+  - id: '12.2'
+    section: '12'
+    gate: false
+    text: >-
+      Where a unit conversion has caused one.
+  - id: '13.1'
+    section: '13'
+    gate: false
+    text: >-
+      A figure taken from the wrong source or a superseded revision.
+  - id: '13.2'
+    section: '13'
+    gate: false
+    text: >-
+      A number right for one aircraft, station or configuration and wrong for another.
+  - id: '13.3'
+    section: '13'
+    gate: false
+    text: >-
+      A time someone assumed a figure because it "looked normal".
+  - id: '13.4'
+    section: '13'
+    gate: false
+    text: >-
+      A recovery decision correct on cost and wrong on something else.
+  - id: '13.5'
+    section: '13'
+    gate: false
+    text: >-
+      A delay coded wrongly, and what it cost.
+  - id: '13.6'
+    section: '13'
+    gate: false
+    text: >-
+      What a new OCC controller most commonly gets wrong in their first six months.
+  - id: '14.1'
+    section: '14'
+    gate: false
+    text: >-
+      Five things you'd ask a system per shift and trust completely.

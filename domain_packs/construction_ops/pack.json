@@ -1,0 +1,225 @@
+{
+  "manifest": {
+    "domain_id": "construction_ops",
+    "version": "0.1.0",
+    "name": "Construction Ops — candidate pack",
+    "description": "First candidate Domain Pack extracted from The_Fork's verified construction intelligence (formulas 150/150 tested, PRC rule table, NCR workflow, approval vocabulary). CANDIDATE: not yet domain-approved — requires domain expert review before production authority.",
+    "certification": "candidate",
+    "donor_repo": "https://github.com/bopoadz-del/The_Fork",
+    "donor_commit": "8535199"
+  },
+  "ontology": {
+    "terms": {
+      "ncr": {"definition": "Non-conformance record", "aliases": ["nonconformance", "non-conformance"]},
+      "rfm": {"definition": "Request for Modification — an instruction, never a contract change", "aliases": ["modification request"]},
+      "vo": {"definition": "Variation Order — the only instrument that changes the contract", "aliases": ["variation order", "change order"]},
+      "dd": {"definition": "Design Directive", "aliases": ["design directive"]},
+      "retention": {"definition": "Percentage of certified amount withheld", "aliases": ["retention money"]},
+      "certified_amount": {"definition": "Amount certified for payment", "aliases": ["certified value"]},
+      "claimed_amount": {"definition": "Amount claimed by the contractor", "aliases": ["claimed value"]}
+    }
+  },
+  "entities": {
+    "work_order": {"fields": ["id", "title", "due", "status"]},
+    "ncr_record": {"fields": ["id", "status", "disposition"]},
+    "payment_certificate": {"fields": ["claimed_amount", "certified_amount", "retention_rate"]}
+  },
+  "permissions": {
+    "role_permissions": {
+      "project_manager": ["*"],
+      "controls_engineer": ["con.update_schedule", "con.raise_ncr"],
+      "qa_engineer": ["con.raise_ncr", "con.review_ncr"],
+      "viewer": []
+    },
+    "action_requirements": {
+      "con.update_schedule": "con.update_schedule",
+      "con.raise_ncr": "con.raise_ncr",
+      "con.review_ncr": "con.review_ncr",
+      "con.certify_payment": "con.certify_payment"
+    }
+  },
+  "evidence_policy": {
+    "con.review_ncr": ["photo", "disposition_note"],
+    "con.certify_payment": ["payment_certificate"]
+  },
+  "authority_sources": {
+    "PRC-302": {"kind": "procedure", "reference": "Risk Management procedure", "tier": "controlled"},
+    "PRC-402": {"kind": "procedure", "reference": "Non-Conformance Reporting", "tier": "controlled"},
+    "PRC-405": {"kind": "procedure", "reference": "Construction Inspection", "tier": "controlled"},
+    "PRC-406": {"kind": "procedure", "reference": "HSE Audit and Inspection", "tier": "controlled"},
+    "PRC-501": {"kind": "procedure", "reference": "Design Reviews & Acceptance", "tier": "controlled"},
+    "PRC-502": {"kind": "procedure", "reference": "Design Directives", "tier": "controlled"},
+    "PRC-603": {"kind": "procedure", "reference": "Tender Analysis and Recommendation", "tier": "controlled"},
+    "PRC-605": {"kind": "procedure", "reference": "Interim Payments", "tier": "controlled"},
+    "PRC-606": {"kind": "procedure", "reference": "Change Management", "tier": "controlled"}
+  },
+  "refusal_policy": {
+    "unsupported_operations": "refuse_by_name",
+    "out_of_envelope": "refuse_not_extrapolate",
+    "missing_authority": "dependency_required"
+  },
+  "formulas": [
+    {
+      "formula_id": "con.retention",
+      "name": "Retention held",
+      "domain": "construction_ops",
+      "version": "0.1.0",
+      "description": "retention = certified_amount * retention_rate (PRC-605). Decimal implementation; the donor used float arithmetic.",
+      "expression": "certified * rate",
+      "inputs": [{"name": "certified", "type": "decimal"}, {"name": "rate", "type": "decimal"}],
+      "output": {"name": "retention", "type": "decimal"},
+      "units": {"output": "currency"},
+      "currency": "SAR",
+      "precision": 2,
+      "rounding": "half_even",
+      "preconditions": ["rate ge 0", "rate le 1"],
+      "authority_source": "PRC-605",
+      "implementation": "tests.core.test_reasoning_kernel_pack._retention_impl",
+      "verification_oracle": "tests.core.test_reasoning_kernel_pack._retention_oracle",
+      "certification": "candidate",
+      "provenance": {
+        "donor_repo": "https://github.com/bopoadz-del/The_Fork",
+        "donor_commit": "8535199",
+        "donor_path": "app/core/construction_knowledge.py",
+        "donor_symbol": "calculate_payment",
+        "donor_tests": "tests/test_construction_formulas.py (150/150)"
+      }
+    },
+    {
+      "formula_id": "con.risk_score",
+      "name": "Risk score",
+      "domain": "construction_ops",
+      "version": "0.1.0",
+      "description": "score = probability * impact (PRC-302, 1-5 grid).",
+      "expression": "probability * impact",
+      "inputs": [{"name": "probability", "type": "integer"}, {"name": "impact", "type": "integer"}],
+      "output": {"name": "score", "type": "integer"},
+      "preconditions": ["probability ge 1", "probability le 5", "impact ge 1", "impact le 5"],
+      "authority_source": "PRC-302",
+      "implementation": "tests.core.test_reasoning_kernel_pack._risk_impl",
+      "verification_oracle": "tests.core.test_reasoning_kernel_pack._risk_oracle",
+      "certification": "candidate",
+      "provenance": {
+        "donor_repo": "https://github.com/bopoadz-del/The_Fork",
+        "donor_commit": "8535199",
+        "donor_path": "app/core/construction_knowledge.py",
+        "donor_symbol": "score_risk"
+      }
+    }
+  ],
+  "rules": [
+    {
+      "rule_id": "con.no_work_before_dd",
+      "version": "0.1.0",
+      "conditions": [{"field": "work_instruction", "op": "eq", "value": true}, {"field": "dd_approved", "op": "eq", "value": false}],
+      "decision": {"outcome": "refuse", "message": "Work cannot proceed: the Design Directive must have Employer approval first (PRC-502)."},
+      "severity": "critical",
+      "precedence": 100,
+      "refusal_behavior": "refuse",
+      "authority_source": "PRC-502",
+      "evidence_requirements": ["dd_approval"],
+      "certification": "candidate",
+      "provenance": {"donor_repo": "https://github.com/bopoadz-del/The_Fork", "donor_commit": "8535199", "donor_path": "app/core/construction_knowledge.py", "donor_symbol": "CRITICAL_RULES['no_work_before_dd_approval']"}
+    },
+    {
+      "rule_id": "con.stop_work_resumption",
+      "version": "0.1.0",
+      "conditions": [{"field": "stop_work_active", "op": "eq", "value": true}, {"field": "pd_written_signoff", "op": "eq", "value": false}],
+      "decision": {"outcome": "refuse", "message": "Work cannot resume after STOP WORK without PMC Project Director written sign-off (PRC-406)."},
+      "severity": "critical",
+      "precedence": 100,
+      "refusal_behavior": "refuse",
+      "authority_source": "PRC-406",
+      "certification": "candidate",
+      "provenance": {"donor_repo": "https://github.com/bopoadz-del/The_Fork", "donor_commit": "8535199", "donor_path": "app/core/construction_knowledge.py", "donor_symbol": "CRITICAL_RULES['stop_work_resumption']"}
+    },
+    {
+      "rule_id": "con.design_review_min_distribution",
+      "version": "0.1.0",
+      "conditions": [{"field": "days_before_workshop", "op": "lt", "value": 7}],
+      "decision": {"outcome": "refuse", "message": "Design review package must be distributed at least 7 calendar days before the workshop (PRC-501)."},
+      "severity": "major",
+      "precedence": 50,
+      "refusal_behavior": "refuse",
+      "authority_source": "PRC-501",
+      "certification": "candidate",
+      "provenance": {"donor_repo": "https://github.com/bopoadz-del/The_Fork", "donor_commit": "8535199", "donor_path": "app/core/construction_knowledge.py", "donor_symbol": "CRITICAL_RULES['design_review_min_distribution']"}
+    },
+    {
+      "rule_id": "con.rfm_not_vo",
+      "version": "0.1.0",
+      "conditions": [{"field": "contract_change_via_rfm", "op": "eq", "value": true}],
+      "decision": {"outcome": "refuse", "message": "An RFM is an instruction, not a contract amendment — a signed VO is required (PRC-606)."},
+      "severity": "critical",
+      "precedence": 100,
+      "refusal_behavior": "refuse",
+      "authority_source": "PRC-606",
+      "certification": "candidate",
+      "provenance": {"donor_repo": "https://github.com/bopoadz-del/The_Fork", "donor_commit": "8535199", "donor_path": "app/core/construction_knowledge.py", "donor_symbol": "CRITICAL_RULES['rfm_not_vo']"}
+    }
+  ],
+  "decision_tables": [
+    {
+      "table_id": "con.risk_band",
+      "version": "0.1.0",
+      "inputs": ["score"],
+      "rows": [
+        {"when": {"score": {"op": "ge", "value": 16}}, "then": {"band": "RED", "requires_action": true}},
+        {"when": {"score": {"op": "ge", "value": 9}}, "then": {"band": "AMBER", "requires_action": true}},
+        {"when": {"score": {"op": "ge", "value": 0}}, "then": {"band": "GREEN", "requires_action": false}}
+      ],
+      "default_outcome": {"band": "UNSCORED", "requires_action": false},
+      "authority_source": "PRC-302",
+      "certification": "candidate",
+      "provenance": {"donor_repo": "https://github.com/bopoadz-del/The_Fork", "donor_commit": "8535199", "donor_path": "app/core/construction_knowledge.py", "donor_symbol": "score_risk"}
+    }
+  ],
+  "workflows": [
+    {
+      "workflow_id": "con.ncr",
+      "version": "0.1.0",
+      "states": ["raised", "under_review", "closed"],
+      "initial_state": "raised",
+      "terminal_states": ["closed"],
+      "transitions": [
+        {"from": "raised", "to": "under_review", "permitted_actors": ["qa_engineer"], "evidence_required": ["photo"]},
+        {"from": "under_review", "to": "closed", "permitted_actors": ["project_manager"], "evidence_required": ["disposition_note"]}
+      ],
+      "immutable_states": ["closed"],
+      "certification": "candidate",
+      "provenance": {"donor_repo": "https://github.com/bopoadz-del/The_Fork", "donor_commit": "8535199", "donor_path": "app/core/construction_knowledge.py", "donor_symbol": "next_ncr_status"}
+    }
+  ],
+  "approvals": [
+    {
+      "action": "con.certify_payment",
+      "version": "0.1.0",
+      "risk_tier": "high",
+      "requester_roles": ["controls_engineer"],
+      "approver_roles": ["project_manager"],
+      "minimum_approvals": 1,
+      "self_approval": "prohibited",
+      "payload_binding": "required",
+      "expiry_seconds": 3600,
+      "replay_prevention": "required",
+      "certification": "candidate",
+      "provenance": {"donor_repo": "https://github.com/bopoadz-del/The_Fork", "donor_commit": "8535199", "donor_path": "app/core/construction_knowledge.py", "donor_symbol": "CRITICAL_RULES['payment_form_controlled']"}
+    }
+  ],
+  "actions": {
+    "con.raise_ncr": {"risk": "low"},
+    "con.review_ncr": {"risk": "low"},
+    "con.certify_payment": {"risk": "high"},
+    "con.update_schedule": {"risk": "low"}
+  },
+  "verification_oracles": {
+    "con.retention": {"cases": [{"inputs": {"certified": "1000.00", "rate": "0.05"}, "expected": "50.00"}]},
+    "con.risk_score": {"cases": [{"inputs": {"probability": "4", "impact": "4"}, "expected": "16"}]}
+  },
+  "fixtures": {
+    "ncr_photo": {"kind": "placeholder", "note": "neutral synthetic fixture only — no donor data"}
+  },
+  "tests": {
+    "kernel": "tests/core/test_reasoning_kernel_pack.py"
+  }
+}

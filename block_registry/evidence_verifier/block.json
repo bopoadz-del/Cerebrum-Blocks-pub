@@ -1,0 +1,125 @@
+{
+  "acceptance": [
+    {
+      "check": "refuses or errors when content is absent on store/verify",
+      "id": "missing_content",
+      "status": "refused"
+    },
+    {
+      "check": "fails verification when stored or provided content was tampered",
+      "id": "tampered_content",
+      "status": "failed"
+    },
+    {
+      "check": "errors on an unknown integrity record id",
+      "id": "unknown_record",
+      "status": "failed"
+    },
+    {
+      "check": "errors on an unknown or missing action",
+      "id": "unknown_action",
+      "status": "failed"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "SHA-256 tamper evidence: hashes content into chained integrity records (store) and verifies them, failing on tampered content (verify).",
+  "digests": {
+    "block.json": "0d13691c29ec2aa9bfc78a7fd8a68c27b323610b3dbf7e74272b10fa39aa85a7",
+    "block.py": "7ea96ebe5a7edeb37f31e8f9304b857356505d6e68c831a4a59f65bfb971293e"
+  },
+  "execution": {
+    "entrypoint": "block.py",
+    "type": "python"
+  },
+  "id": "evidence_verifier",
+  "inputs": [
+    {
+      "default": "store",
+      "description": "store | verify | list",
+      "name": "action",
+      "options": [
+        "store",
+        "verify",
+        "list"
+      ],
+      "required": false,
+      "type": "string"
+    },
+    {
+      "description": "Content to hash (store) or verify",
+      "name": "content",
+      "required": true,
+      "type": "json"
+    },
+    {
+      "description": "Integrity record id for verify",
+      "name": "record_id",
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 3,
+  "name": "Evidence Verifier",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Capability result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    }
+  ],
+  "requires": [],
+  "signature": "RCXIKdwcLCId3da2hcXebKYsxpmQ+DNrTsRTOYvxU6NWE3RKNThLx0ljaUBizIR3EKO7rQ+mNuxKwHcR4KTYAg==",
+  "tags": [
+    "estate",
+    "private_estate_operations",
+    "steward"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "Action",
+      "name": "action",
+      "options": [
+        "store",
+        "verify",
+        "list"
+      ],
+      "widget": "select"
+    },
+    {
+      "label": "Content",
+      "name": "content",
+      "widget": "json"
+    },
+    {
+      "label": "Record Id",
+      "name": "record_id",
+      "widget": "text"
+    }
+  ],
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

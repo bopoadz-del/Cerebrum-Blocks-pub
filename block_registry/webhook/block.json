@@ -1,0 +1,125 @@
+{
+  "acceptance": [
+    {
+      "check": "errors on an unknown or missing action",
+      "id": "unknown_action",
+      "status": "failed"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "c792f2f340c9ee52f048b1983e5bc4274d9d1c0b1d5f0c86c8e324b9cf8c23ab",
+    "block.py": "d44e65ff847d77df69a80979fa9ee4beef3640fcf24628a893f12b9325e24b25"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/webhook:latest",
+    "type": "docker"
+  },
+  "id": "webhook",
+  "inputs": [
+    {
+      "description": "Enter your request...",
+      "name": "input",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": 30,
+      "description": "Configuration parameter: timeout",
+      "name": "timeout",
+      "required": false,
+      "type": "number"
+    },
+    {
+      "default": 3,
+      "description": "Configuration parameter: retries",
+      "name": "retries",
+      "required": false,
+      "type": "number"
+    },
+    {
+      "default": true,
+      "description": "Configuration parameter: verify_ssl",
+      "name": "verify_ssl",
+      "required": false,
+      "type": "boolean"
+    }
+  ],
+  "layer": 5,
+  "name": "Webhook",
+  "never": [],
+  "outputs": [
+    {
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    },
+    {
+      "kind": "network",
+      "scope": "http.outbound"
+    },
+    {
+      "kind": "queue",
+      "scope": "jobs"
+    }
+  ],
+  "requires": [],
+  "signature": "iBf2OXA2nh8EMa4jZ0P+pu87FuivwcuLiOwqZIiMOkO4MMSWv0r/0k/KpGoZAjZ8dAJkeQyyzNaypoZrrJMMAQ==",
+  "tags": [
+    "webhook",
+    "http",
+    "integration"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "Enter your request...",
+      "name": "input",
+      "widget": "text"
+    },
+    {
+      "label": "Timeout",
+      "name": "timeout",
+      "widget": "number"
+    },
+    {
+      "label": "Retries",
+      "name": "retries",
+      "widget": "number"
+    },
+    {
+      "label": "Verify Ssl",
+      "name": "verify_ssl",
+      "widget": "toggle"
+    }
+  ],
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    },
+    {
+      "kind": "network",
+      "scope": "http.outbound"
+    }
+  ]
+}

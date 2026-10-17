@@ -1,0 +1,71 @@
+{
+  "acceptance": [],
+  "description": "LLM agent for project planning and reasoning. The LLM drafts plans and answers; deterministic gates stay in the caller. Missing provider credentials raise by name (tests/blocks/test_project_reasoner_fail_loud.py).",
+  "digests": {
+    "block.json": "d42c47661b245a12d83a3e9eb22bdf19eb7649fac149b8c04b6655042035d032",
+    "block.py": "b2685028a2fcefadc85fa8f47a812ce3f8d7f0399f9c85a9a1bfb64e8c073212"
+  },
+  "id": "project_reasoner",
+  "inputs": [
+    {
+      "description": "Project reasoning request payload (question or plan request)",
+      "name": "input",
+      "required": true,
+      "type": "json"
+    }
+  ],
+  "layer": 3,
+  "name": "Project Reasoner",
+  "never": [],
+  "permissions": {
+    "blocks": [],
+    "filesystem": true,
+    "imports": [
+      "httpx",
+      "json",
+      "logging",
+      "os"
+    ],
+    "network": true
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "env",
+      "scope": "process"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    },
+    {
+      "kind": "network",
+      "scope": "http.outbound"
+    },
+    {
+      "kind": "llm",
+      "scope": "provider"
+    }
+  ],
+  "requires": [],
+  "signature": "fXRmdP+yQu1Z1mFzuvgTvWtp3zWZFsAaSrkPksr11wfJZOo7TELK72VZvKX+Y8kcAD9EAWXhKJEoSZ2to+zkAQ==",
+  "tags": [
+    "domain",
+    "construction",
+    "reasoning",
+    "agent",
+    "llm"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

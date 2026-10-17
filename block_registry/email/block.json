@@ -1,0 +1,167 @@
+{
+  "acceptance": [
+    {
+      "check": "errors on an unknown or missing action",
+      "id": "unknown_action",
+      "status": "failed"
+    },
+    {
+      "check": "fails loud when a required credential or key is absent",
+      "id": "missing_credential",
+      "status": "failed"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "7e27e680293a9426797627b238d83a4d4efe3fcc8bedf4349d5cc7e84be459df",
+    "block.py": "aa761b7316fbe5a5f96db989ed800460bd412965a5aef689861767c4589e4227"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/email:latest",
+    "type": "docker"
+  },
+  "id": "email",
+  "inputs": [
+    {
+      "description": "Recipient, subject, body, template data",
+      "name": "input",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "default": "send",
+      "description": "Action",
+      "name": "action",
+      "options": [
+        "send",
+        "send_template",
+        "validate_address"
+      ],
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": "smtp",
+      "description": "Configuration parameter: provider",
+      "name": "provider",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": "localhost",
+      "description": "Configuration parameter: smtp_host",
+      "name": "smtp_host",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": 587,
+      "description": "Configuration parameter: smtp_port",
+      "name": "smtp_port",
+      "required": false,
+      "type": "number"
+    }
+  ],
+  "layer": 5,
+  "name": "Email",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    },
+    {
+      "kind": "network",
+      "scope": "http.outbound"
+    },
+    {
+      "kind": "network",
+      "scope": "smtp.outbound"
+    },
+    {
+      "kind": "credential",
+      "scope": "env"
+    }
+  ],
+  "requires": [
+    "config"
+  ],
+  "signature": "vLnBdJr5jRTbPROvgbfLe0SZfnnp7UZz+NHLu10nZUZQPSDDHQyazz+IOt9BXKv93DgyV0xfHd8kQjOv0zm1CQ==",
+  "tags": [
+    "email",
+    "notification",
+    "integration"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "Recipient, subject, body, template data",
+      "name": "input",
+      "widget": "json"
+    },
+    {
+      "label": "Action",
+      "name": "action",
+      "options": [
+        "send",
+        "send_template",
+        "validate_address"
+      ],
+      "widget": "select"
+    },
+    {
+      "label": "Provider",
+      "name": "provider",
+      "widget": "text"
+    },
+    {
+      "label": "Smtp Host",
+      "name": "smtp_host",
+      "widget": "text"
+    },
+    {
+      "label": "Smtp Port",
+      "name": "smtp_port",
+      "widget": "number"
+    }
+  ],
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    },
+    {
+      "kind": "network",
+      "scope": "http.outbound"
+    },
+    {
+      "kind": "network",
+      "scope": "smtp.outbound"
+    },
+    {
+      "kind": "email",
+      "scope": "outbound"
+    }
+  ]
+}

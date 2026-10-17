@@ -1,0 +1,82 @@
+{
+  "acceptance": [
+    {
+      "check": "KSA market is refused by the inbound guard",
+      "id": "ksa_refused",
+      "status": "refused"
+    },
+    {
+      "check": "unnamed operator SOP is refused; frequencies are never estimated",
+      "id": "sop_missing",
+      "status": "refused"
+    },
+    {
+      "check": "a generic frequency table claiming authority is refused",
+      "id": "generic_frequency_refused",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "PPM + licensing compliance resolver ported from <private-repo> reasoning/ppm_resolver.py + licensing.py + market_router.py + guard.py (real): UAE + generic only (KSA refused), Aconex/Procore/BIM sources refused, authoritative generic frequency tables refused, unnamed operator SOP refused (frequencies are never estimated from the sheet), three-valued FAIL > UNPROVABLE > PASS fold over the prerequisite graph with a computed master pacer. Domain data vendored from donor domain_kit licensing/ppm JSON with Class B evidence metadata.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "5678ebfedc34a47521bb71beb15e5f455f193080e7baca48b6e76113968dc399",
+    "block.py": "48b41df5cbe4c39d0c14130cd98faead83687438b3e92e6d7c6ba4e5df651b58"
+  },
+  "id": "ppm_licensing_resolver",
+  "inputs": [
+    {
+      "description": "resolve_ppm | evaluate_licensing | guard | normalize_market",
+      "name": "action",
+      "options": [
+        "resolve_ppm",
+        "evaluate_licensing",
+        "guard",
+        "normalize_market"
+      ],
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 3,
+  "name": "ppm_licensing_resolver",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Capability result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "3hStKl8t0VJRnH6cUVWpEqGt+oUs45Y2nP+61WCGWCHs3e4jqC6ionXYMQeamO6U4BEYi+TXgPIC5vt9xRHLCg==",
+  "tags": [
+    "hotel",
+    "compliance",
+    "ppm",
+    "licensing",
+    "refuse-by-design",
+    "hotelops"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

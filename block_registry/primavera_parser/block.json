@@ -1,0 +1,126 @@
+{
+  "acceptance": [],
+  "author": "Cerebrum Team",
+  "description": "Parse Primavera P6 .xer schedule files: critical path, milestones, resource loading",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "e486854d621da74e760792b36c3ac9aecddf888bc95e4ba8c0b2f1fabab53c48",
+    "block.py": "09ed3a010ebb6440de36d85e53f78c0b7a91bcf829be98b0ed0c6c17a645df32"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/primavera_parser:latest",
+    "type": "docker"
+  },
+  "id": "primavera_parser",
+  "inputs": [
+    {
+      "description": "Upload Primavera P6 .xer schedule file...",
+      "name": "input",
+      "required": false,
+      "type": "file"
+    },
+    {
+      "default": true,
+      "description": "Configuration parameter: include_resources",
+      "name": "include_resources",
+      "required": false,
+      "type": "boolean"
+    },
+    {
+      "default": 0,
+      "description": "Configuration parameter: critical_float_days",
+      "name": "critical_float_days",
+      "required": false,
+      "type": "number"
+    }
+  ],
+  "layer": 3,
+  "name": "Primavera Parser",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Activities",
+      "name": "activity_count",
+      "type": "number"
+    },
+    {
+      "description": "Critical Path",
+      "name": "critical_path",
+      "type": "list"
+    },
+    {
+      "description": "Milestones",
+      "name": "milestones",
+      "type": "list"
+    },
+    {
+      "description": "Schedule Summary",
+      "name": "schedule_data",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "file",
+      "scope": "local.read"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    }
+  ],
+  "requires": [],
+  "signature": "p/4HFifI7W1VAJRbb3iVd/KeS2xzdJNNCo4M6WnozK0D4xvEVrKQaYu0zUkpoqaMsIK2YkohnLgGeLoQimL3Bg==",
+  "tags": [
+    "domain",
+    "construction",
+    "schedule",
+    "primavera",
+    "xer",
+    "cpm"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "Upload Primavera P6 .xer schedule file...",
+      "name": "input",
+      "widget": "file"
+    },
+    {
+      "label": "Include Resources",
+      "name": "include_resources",
+      "widget": "toggle"
+    },
+    {
+      "label": "Critical Float Days",
+      "name": "critical_float_days",
+      "widget": "number"
+    }
+  ],
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    },
+    {
+      "kind": "file",
+      "scope": "local.write"
+    },
+    {
+      "kind": "file",
+      "scope": "temp"
+    }
+  ]
+}

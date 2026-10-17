@@ -1,0 +1,108 @@
+{
+  "acceptance": [
+    {
+      "check": "refuses or errors when a required input is absent",
+      "id": "missing_required_input",
+      "status": "refused"
+    },
+    {
+      "check": "errors on an unknown or missing action",
+      "id": "unknown_action",
+      "status": "failed"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Parse, validate, and normalize simulated insurance bordereaux CSV/JSON rows.",
+  "digests": {
+    "block.json": "2c6eaf9411fc9ba0766889c67f22e9ba2ce85b90bb592cf795b461886548a238",
+    "block.py": "aa78a7be9aad887fec07d7653a23babf418596e2581df123e90be01532d58107"
+  },
+  "id": "bordereaux_ingest",
+  "inputs": [
+    {
+      "description": "CSV text, JSON rows, or {'rows': [...]} bordereaux payload",
+      "name": "input",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "default": "normalize",
+      "description": "Operation to run",
+      "name": "action",
+      "options": [
+        "parse",
+        "validate",
+        "normalize",
+        "simulate_webhook"
+      ],
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 3,
+  "name": "Bordereaux Ingest",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Normalized bordereaux records",
+      "name": "normalized_records",
+      "type": "json"
+    },
+    {
+      "description": "Row-level validation errors",
+      "name": "validation_errors",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    }
+  ],
+  "requires": [],
+  "signature": "8aJTfx56GScp1BVipWo+0f+YctNGiGy1FBtqCt3tjjdbnRAsm3sTEFgOHv1Jg2zBwRMG9M3tVd4csH05qWKNDA==",
+  "tags": [
+    "insurance",
+    "bordereaux",
+    "ingest",
+    "simulated-feed"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "Bordereaux payload",
+      "name": "input",
+      "widget": "json"
+    },
+    {
+      "label": "Action",
+      "name": "action",
+      "options": [
+        "parse",
+        "validate",
+        "normalize",
+        "simulate_webhook"
+      ],
+      "widget": "select"
+    }
+  ],
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

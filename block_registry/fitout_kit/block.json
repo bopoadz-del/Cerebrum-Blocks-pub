@@ -1,0 +1,142 @@
+{
+  "acceptance": [
+    {
+      "check": "INV-FO-SURVEYED (qualifier at H3, severity refuse): dimension or capacity without surveyed/drawn basis \u2014 a value off a drawing is not the same number",
+      "id": "inv_fo_surveyed",
+      "status": "refused"
+    },
+    {
+      "check": "INV-FO-LEADTIME (qualifier at H3, severity refuse): lead time without from-order/from-approval basis, or without confirmed/indicative flag",
+      "id": "inv_fo_leadtime",
+      "status": "refused"
+    },
+    {
+      "check": "INV-FO-FIRE-ASSEMBLY (qualifier at H3, severity refuse): fire rating without its tested assembly \u2014 a product sheet is not an assembly test",
+      "id": "inv_fo_fire_assembly",
+      "status": "refused"
+    },
+    {
+      "check": "INV-FO-AREA-BASIS (qualifier at H3, severity refuse): floor area without basis (GEA/GIA/NIA/IPMS/local GFA) \u2014 same building, several correct answers",
+      "id": "inv_fo_area_basis",
+      "status": "refused"
+    },
+    {
+      "check": "INV-FO-REVISION (currency at H3, severity refuse): figure from a superseded drawing revision",
+      "id": "inv_fo_revision",
+      "status": "refused"
+    },
+    {
+      "check": "INV-FO-PROVENANCE (provenance at H3, severity refuse): rate or lead time carried from a previous project or order",
+      "id": "inv_fo_provenance",
+      "status": "refused"
+    },
+    {
+      "check": "INV-FO-SCOPE (scope at H0, severity refuse): requires a named authority \u2014 refer to {authority}",
+      "id": "inv_fo_scope",
+      "status": "refused"
+    },
+    {
+      "check": "INV-FO-CAPACITY-CURRENCY (currency at H3, severity refuse): spare capacity is stale the moment another tenant takes it",
+      "id": "inv_fo_capacity_currency",
+      "status": "refused"
+    },
+    {
+      "check": "INV-FO-LEADTIME-CURRENCY (currency at H3, severity refuse): a confirmed lead time lapses; a lapsed confirmation is an indicative quote",
+      "id": "inv_fo_leadtime_currency",
+      "status": "refused"
+    },
+    {
+      "check": "INV-FO-RATING-CURRENCY (currency at H3, severity refuse): a fire rating is stale after any design change to the assembly",
+      "id": "inv_fo_rating_currency",
+      "status": "refused"
+    },
+    {
+      "check": "INV-FO-RATE-CURRENCY (currency at H3, severity refuse): a rate is stale on market or currency movement",
+      "id": "inv_fo_rate_currency",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Declarative fitout reasoning kit on the shared reasoning layer. 11 invariants declared in app/blocks/fitout/invariants.yaml across the kinds the portable spec defines (grounding, qualifier, unit_discipline, authority, provenance, currency, scope, derivation, band) and the five hooks (H0 pre-retrieval, H1 ranking, H2 tool-time, H3 answer-time, H4 export-time). Vocabulary in app/blocks/fitout/manifest.yaml. Scope refusals classify BEFORE retrieval. Fail closed: a kit that does not parse is DISABLED and refuses every statement rather than passing them through with no invariants. NO INTERVIEW HAS RUN, so every declared figure value is null and the block refuses rather than inventing one (app/blocks/fitout/KNOWN_GAPS.md). Measured by tests/blocks/test_reasoning_kits.py.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "7aa64bdb7be17dabaee3361b73f7025c0c69d54c308f9567873775c5ed96bb67",
+    "block.py": "0d6b438ed086e3c3a024453613881c46dc1325f1b4387c0d36aa369c7c8d6e31"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/fitout_kit:latest",
+    "type": "docker"
+  },
+  "id": "fitout_kit",
+  "inputs": [
+    {
+      "description": "the operator question, classified at H0 BEFORE any retrieval",
+      "name": "question",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "description": "figures to gate: quantity, value, unit, origin, source_id, source_class, revision, qualifiers, claim_class, derivations, conditions, steps, bounds, asked_about, span, text",
+      "name": "figures",
+      "required": false,
+      "type": "array"
+    },
+    {
+      "description": "state records by provider name, each {as_of: <epoch>}; an absent provider yields UNKNOWN, never a design-basis fallback",
+      "name": "state",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "description": "events that have happened, matched against the kit's staleness_triggers",
+      "name": "events",
+      "required": false,
+      "type": "array"
+    },
+    {
+      "description": "subset of H0..H4 to run; all five by default, because a partial sweep is a silent coverage gap",
+      "name": "hooks",
+      "required": false,
+      "type": "array"
+    }
+  ],
+  "layer": 3,
+  "name": "fitout_kit",
+  "never": [],
+  "outputs": [
+    {
+      "description": "pass | annotated | flagged | refused, with findings, blocked_reason, hooks_run, retrieval_permitted, interview_status, unfilled_figures, unmeasured_invariants, ships and kit_disabled",
+      "name": "verdict",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "gXxNVpV1cRru6KL1LJQyFfCHPvsZyQrUYXq6RTaCOapX6SJv/Zwk7vcobKKrqCcE210rxG2fJ8aAOY/DiyoQCA==",
+  "tags": [
+    "fitout",
+    "gate",
+    "kit",
+    "reasoning"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

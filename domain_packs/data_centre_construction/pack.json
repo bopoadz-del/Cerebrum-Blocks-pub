@@ -1,0 +1,506 @@
+{
+  "manifest": {
+    "domain_id": "data_centre_construction",
+    "version": "0.1.0",
+    "name": "Data Centre Construction — Governance Reasoning Layer",
+    "description": "The governance spine of data-centre delivery, encoded from the owner's lessons sheet: refusal rules (what the platform must NOT answer from design), the four absolute rules, mandatory qualifiers per term, evidence sufficiency, staleness triggers, derivation limits, authority precedence, and term traps. LAYER 1 generalizes to any data centre. LAYER 2 (one facility's numbers) is included only as a labeled worked example — 0.4 MW, 2N, 45-min UPS — NOT a universal kit. The sheet's blank tables (lead times, costs, per-level proves/does-not-prove, IST scenarios, live works, blockers, failure shapes) are deliberately absent rather than fabricated.",
+    "certification": "candidate",
+    "donor_repo": "owner data-centre lessons sheet (single facility)",
+    "donor_commit": "n/a — owner-directed transcription"
+  },
+  "ontology": {
+    "terms": {
+      "tested": "a claim that something was tested; never emit without level (L1-L5) and load %",
+      "resilience": "a claim about survivability; always as-designed / as-built / as-currently-operating",
+      "capacity": "design | installed | available | available_after_redundancy",
+      "PUE": "design | guaranteed | measured | annualised",
+      "N_plus_1": "a resilience claim, not a component to count",
+      "Tier": "design certification level, not an operating guarantee",
+      "IST": "integrated systems test; a functional test, not a resilience proof",
+      "L1_L5": "testing levels; L5 requires client acceptance",
+      "SLD": "single line diagram; the as-built record of the power system",
+      "MOP": "method of procedure; the controlled-change document"
+    },
+    "mandatory_qualifiers": {
+      "tested": ["level", "load_percentage", "failure_scenario"],
+      "resilience": ["design_or_built_or_current_operating"],
+      "capacity": ["design_or_installed_or_available_or_available_after_redundancy"],
+      "PUE": ["design_or_guaranteed_or_measured_or_annualised", "load", "ambient"]
+    },
+    "authority_precedence": [
+      "statutory_safety",
+      "authority_approval",
+      "client_standard",
+      "certification",
+      "design_basis",
+      "as_built_sld",
+      "commissioning_script",
+      "manufacturer",
+      "mop",
+      "site_instruction"
+    ],
+    "test_levels": ["L1", "L2", "L3", "L4", "L5"]
+  },
+  "entities": {
+    "claim": {"fields": ["term", "qualifiers", "source", "asserted_at"]},
+    "test_result": {"fields": ["level", "load_percentage", "failure_scenario", "ist_result"]},
+    "facility_profile": {
+      "note": "WORKED EXAMPLE ONLY — one facility from the sheet, not a general kit.",
+      "design_power_kw": 400,
+      "redundancy": "2N",
+      "ups_autonomy_minutes": 45
+    }
+  },
+  "permissions": {
+    "assert_tested": ["commissioning_authority", "authority_approval"],
+    "declare_resilience": ["authority_approval"],
+    "declare_readiness": [],
+    "approve_mop": ["critical_environment_manager", "authority_approval"],
+    "skip_test": []
+  },
+  "evidence_policy": {
+    "figure_classes": {
+      "current_resilience_state": {"acceptable": ["live state record post-change"], "unacceptable": ["design basis statement"]},
+      "ist_result": {"acceptable": ["ist report at stated load with failure scenarios"], "unacceptable": ["component test result", "partial-load extrapolation"]},
+      "sld_currency": {"acceptable": ["as-built SLD reflecting latest change"], "unacceptable": ["design SLD"]},
+      "capacity_available": {"acceptable": ["measured capacity with redundancy reservation stated"], "unacceptable": ["design capacity stated as available"]},
+      "pue": {"acceptable": ["measured or annualised figure with load and ambient"], "unacceptable": ["design PUE stated as measured"]},
+      "tested_claim": {"acceptable": ["level + load % + failure scenario"], "unacceptable": ["bare 'tested'"]},
+      "readiness_declaration": {"acceptable": ["none — never emitted"], "unacceptable": ["any"]}
+    }
+  },
+  "authority_sources": {
+    "statutory_safety": "statutory and safety requirements — outranks everything",
+    "authority_approval": "approving authority sign-off",
+    "client_standard": "the client's own standard",
+    "certification": "Tier or equivalent certification",
+    "design_basis": "what was designed",
+    "as_built_sld": "what was actually built",
+    "commissioning_script": "the agreed test scripts",
+    "manufacturer": "vendor documentation",
+    "mop": "method of procedure",
+    "site_instruction": "site-level instruction — lowest"
+  },
+  "refusal_policy": {
+    "named_reasons": {
+      "requires_live_resilience_state": "not answerable from design; needs the live resilience state",
+      "requires_approved_mop_and_authority": "needs an approved MOP and authority; refer to the critical environment manager",
+      "requires_ist_at_load": "a functional test does not prove ride-through; needs IST at load",
+      "requires_l5_and_client_acceptance": "multi-party decision; needs L5 and client acceptance",
+      "requires_commissioning_authority": "needs the commissioning authority and the client standard",
+      "requires_measured_capacity": "design capacity is not available capacity"
+    },
+    "absolute_rules": [
+      "never emit tested without level and load percentage",
+      "never state resilience without as-designed / as-built / as-currently-operating",
+      "never quote capacity without stating whether redundancy is reserved",
+      "never declare ready for IT load"
+    ],
+    "derivation_limits": [
+      "never infer facility performance from individual system tests",
+      "never extrapolate partial-load IST to full load",
+      "never infer current resilience from the design basis"
+    ]
+  },
+  "formulas": [
+    {
+      "formula_id": "data_centre_construction.pue",
+      "name": "pue",
+      "domain": "data_centre_construction",
+      "version": "0.1.0",
+      "description": "Power usage effectiveness = total facility power / IT load. The RESULT is only a number: the qualifier (design/guaranteed/measured/annualised), load and ambient must accompany it or the claim is refused by R-DC-QUALIFIER-PUE.",
+      "expression": "total_facility_power / it_load",
+      "inputs": [
+        {"name": "total_facility_power", "type": "number", "min": 0},
+        {"name": "it_load", "type": "number", "min": 0}
+      ],
+      "output": {"type": "number", "units": "ratio"},
+      "units": {"total_facility_power": "kW", "it_load": "kW", "output": "ratio"},
+      "currency": null,
+      "precision": 3,
+      "rounding": "half_even",
+      "preconditions": ["it_load gt 0", "total_facility_power ge 0"],
+      "edge_cases": ["600 kW / 400 kW = 1.5", "it_load 0 refused (division by zero)"],
+      "unsupported_conditions": ["non-numeric input", "zero or negative IT load"],
+      "authority_source": "owner lessons sheet — PUE definition (generalizes to any DC)",
+      "implementation": "data_centre_construction.pue",
+      "verification_oracle": "tests/core/test_domain_pack_data_centre.py — 600/400 = 1.5; 0 load refused",
+      "certification": "candidate",
+      "provenance": {"donor_repo": "owner data-centre lessons sheet", "donor_commit": "n/a", "donor_path": "domain_packs/data_centre_construction/pack.json", "donor_symbol": "pue"}
+    },
+    {
+      "formula_id": "data_centre_construction.test_load_percentage",
+      "name": "test_load_percentage",
+      "domain": "data_centre_construction",
+      "version": "0.1.0",
+      "description": "The load a test achieved as a percentage of design load — the number that must accompany every 'tested' claim.",
+      "expression": "(achieved_load / design_load) * 100",
+      "inputs": [
+        {"name": "achieved_load", "type": "number", "min": 0},
+        {"name": "design_load", "type": "number", "min": 0}
+      ],
+      "output": {"type": "number", "units": "percent"},
+      "units": {"achieved_load": "kW", "design_load": "kW", "output": "percent"},
+      "precision": 1,
+      "rounding": "half_even",
+      "preconditions": ["design_load gt 0", "achieved_load ge 0"],
+      "edge_cases": ["300 / 400 = 75.0%"],
+      "unsupported_conditions": ["zero design load"],
+      "authority_source": "owner lessons sheet — test load percentage",
+      "implementation": "data_centre_construction.test_load_percentage",
+      "verification_oracle": "tests/core/test_domain_pack_data_centre.py — 300/400 = 75.0",
+      "certification": "candidate",
+      "provenance": {"donor_repo": "owner data-centre lessons sheet", "donor_commit": "n/a", "donor_path": "domain_packs/data_centre_construction/pack.json", "donor_symbol": "test_load_percentage"}
+    }
+  ],
+  "rules": [
+    {
+      "rule_id": "R-DC-ABSOLUTE-TESTED",
+      "version": "0.1.0",
+      "conditions": [{"field": "assertion_kind", "op": "eq", "value": "tested_claim"}],
+      "decision": {"action": "refuse", "reason": "requires_test_qualifiers", "message": "never emit 'tested' without level (L1-L5) and load percentage"},
+      "severity": "critical",
+      "precedence": 100,
+      "authority_source": "owner lessons sheet — Section 15 absolute rules",
+      "evidence_requirements": ["level", "load_percentage", "failure_scenario"],
+      "refusal_behavior": "refuse",
+      "certification": "candidate",
+      "provenance": {"donor_repo": "owner data-centre lessons sheet", "donor_path": "domain_packs/data_centre_construction/pack.json", "donor_symbol": "R-DC-ABSOLUTE-TESTED"}
+    },
+    {
+      "rule_id": "R-DC-ABSOLUTE-RESILIENCE",
+      "version": "0.1.0",
+      "conditions": [{"field": "assertion_kind", "op": "eq", "value": "resilience_claim"}],
+      "decision": {"action": "refuse", "reason": "requires_resilience_basis", "message": "never state resilience without as-designed / as-built / as-currently-operating"},
+      "severity": "critical",
+      "precedence": 100,
+      "authority_source": "owner lessons sheet — Section 15 absolute rules",
+      "refusal_behavior": "refuse",
+      "certification": "candidate",
+      "provenance": {"donor_repo": "owner data-centre lessons sheet", "donor_path": "domain_packs/data_centre_construction/pack.json", "donor_symbol": "R-DC-ABSOLUTE-RESILIENCE"}
+    },
+    {
+      "rule_id": "R-DC-ABSOLUTE-CAPACITY",
+      "version": "0.1.0",
+      "conditions": [{"field": "assertion_kind", "op": "eq", "value": "capacity_claim"}],
+      "decision": {"action": "refuse", "reason": "requires_redundancy_reservation", "message": "never quote capacity without stating whether redundancy is reserved"},
+      "severity": "critical",
+      "precedence": 100,
+      "authority_source": "owner lessons sheet — Section 15 absolute rules",
+      "refusal_behavior": "refuse",
+      "certification": "candidate",
+      "provenance": {"donor_repo": "owner data-centre lessons sheet", "donor_path": "domain_packs/data_centre_construction/pack.json", "donor_symbol": "R-DC-ABSOLUTE-CAPACITY"}
+    },
+    {
+      "rule_id": "R-DC-ABSOLUTE-READY",
+      "version": "0.1.0",
+      "conditions": [{"field": "assertion_kind", "op": "eq", "value": "readiness_declaration"}],
+      "decision": {"action": "refuse", "reason": "readiness_never_declared", "message": "never declare ready for IT load — the platform must never emit this"},
+      "severity": "critical",
+      "precedence": 100,
+      "authority_source": "owner lessons sheet — Section 15 absolute rules",
+      "refusal_behavior": "refuse",
+      "certification": "candidate",
+      "provenance": {"donor_repo": "owner data-centre lessons sheet", "donor_path": "domain_packs/data_centre_construction/pack.json", "donor_symbol": "R-DC-ABSOLUTE-READY"}
+    },
+    {
+      "rule_id": "R-DC-REFUSE-NPLUS1",
+      "version": "0.1.0",
+      "conditions": [{"field": "question_class", "op": "eq", "value": "are_we_n_plus_1"}],
+      "decision": {"action": "refuse", "reason": "requires_live_resilience_state", "message": "not answerable from design — needs the live resilience state"},
+      "severity": "high",
+      "precedence": 50,
+      "authority_source": "owner lessons sheet — Sections 9-12 refusals",
+      "refusal_behavior": "refuse",
+      "certification": "candidate",
+      "provenance": {"donor_repo": "owner data-centre lessons sheet", "donor_path": "domain_packs/data_centre_construction/pack.json", "donor_symbol": "R-DC-REFUSE-NPLUS1"}
+    },
+    {
+      "rule_id": "R-DC-REFUSE-STRING-DOWN",
+      "version": "0.1.0",
+      "conditions": [{"field": "question_class", "op": "eq", "value": "take_string_down"}],
+      "decision": {"action": "refuse", "reason": "requires_approved_mop_and_authority", "message": "needs an approved MOP and authority — refer to the critical environment manager"},
+      "severity": "critical",
+      "precedence": 50,
+      "authority_source": "owner lessons sheet — Sections 9-12 refusals",
+      "refusal_behavior": "refuse",
+      "certification": "candidate",
+      "provenance": {"donor_repo": "owner data-centre lessons sheet", "donor_path": "domain_packs/data_centre_construction/pack.json", "donor_symbol": "R-DC-REFUSE-STRING-DOWN"}
+    },
+    {
+      "rule_id": "R-DC-REFUSE-RIDE-THROUGH",
+      "version": "0.1.0",
+      "conditions": [{"field": "question_class", "op": "eq", "value": "will_it_ride_through"}],
+      "decision": {"action": "refuse", "reason": "requires_ist_at_load", "message": "a functional test does not prove ride-through — needs IST at load"},
+      "severity": "high",
+      "precedence": 50,
+      "authority_source": "owner lessons sheet — Sections 9-12 refusals",
+      "refusal_behavior": "refuse",
+      "certification": "candidate",
+      "provenance": {"donor_repo": "owner data-centre lessons sheet", "donor_path": "domain_packs/data_centre_construction/pack.json", "donor_symbol": "R-DC-REFUSE-RIDE-THROUGH"}
+    },
+    {
+      "rule_id": "R-DC-REFUSE-FACILITY-READY",
+      "version": "0.1.0",
+      "conditions": [{"field": "question_class", "op": "eq", "value": "facility_ready_for_it_load"}],
+      "decision": {"action": "refuse", "reason": "requires_l5_and_client_acceptance", "message": "multi-party decision — needs L5 and client acceptance"},
+      "severity": "high",
+      "precedence": 50,
+      "authority_source": "owner lessons sheet — Sections 9-12 refusals",
+      "refusal_behavior": "refuse",
+      "certification": "candidate",
+      "provenance": {"donor_repo": "owner data-centre lessons sheet", "donor_path": "domain_packs/data_centre_construction/pack.json", "donor_symbol": "R-DC-REFUSE-FACILITY-READY"}
+    },
+    {
+      "rule_id": "R-DC-REFUSE-SKIP-TEST",
+      "version": "0.1.0",
+      "conditions": [{"field": "question_class", "op": "eq", "value": "skip_test"}],
+      "decision": {"action": "refuse", "reason": "requires_commissioning_authority", "message": "needs the commissioning authority and the client standard"},
+      "severity": "high",
+      "precedence": 50,
+      "authority_source": "owner lessons sheet — Sections 9-12 refusals",
+      "refusal_behavior": "refuse",
+      "certification": "candidate",
+      "provenance": {"donor_repo": "owner data-centre lessons sheet", "donor_path": "domain_packs/data_centre_construction/pack.json", "donor_symbol": "R-DC-REFUSE-SKIP-TEST"}
+    },
+    {
+      "rule_id": "R-DC-REFUSE-CAPACITY",
+      "version": "0.1.0",
+      "conditions": [{"field": "question_class", "op": "eq", "value": "capacity_for_racks"}],
+      "decision": {"action": "refuse", "reason": "requires_measured_capacity", "message": "design capacity is not available capacity"},
+      "severity": "high",
+      "precedence": 50,
+      "authority_source": "owner lessons sheet — Sections 9-12 refusals",
+      "refusal_behavior": "refuse",
+      "certification": "candidate",
+      "provenance": {"donor_repo": "owner data-centre lessons sheet", "donor_path": "domain_packs/data_centre_construction/pack.json", "donor_symbol": "R-DC-REFUSE-CAPACITY"}
+    },
+    {
+      "rule_id": "R-DC-DERIVE-SYSTEM-TO-FACILITY",
+      "version": "0.1.0",
+      "conditions": [{"field": "inference_kind", "op": "eq", "value": "system_test_to_facility_performance"}],
+      "decision": {"action": "refuse", "reason": "derivation_limit", "message": "never infer facility performance from individual system tests"},
+      "severity": "critical",
+      "precedence": 80,
+      "authority_source": "owner lessons sheet — Section 9.4 derivation limits",
+      "refusal_behavior": "refuse",
+      "certification": "candidate",
+      "provenance": {"donor_repo": "owner data-centre lessons sheet", "donor_path": "domain_packs/data_centre_construction/pack.json", "donor_symbol": "R-DC-DERIVE-SYSTEM-TO-FACILITY"}
+    },
+    {
+      "rule_id": "R-DC-DERIVE-PARTIAL-TO-FULL",
+      "version": "0.1.0",
+      "conditions": [{"field": "inference_kind", "op": "eq", "value": "partial_load_to_full_load"}],
+      "decision": {"action": "refuse", "reason": "derivation_limit", "message": "never extrapolate partial-load IST to full load"},
+      "severity": "critical",
+      "precedence": 80,
+      "authority_source": "owner lessons sheet — Section 9.4 derivation limits",
+      "refusal_behavior": "refuse",
+      "certification": "candidate",
+      "provenance": {"donor_repo": "owner data-centre lessons sheet", "donor_path": "domain_packs/data_centre_construction/pack.json", "donor_symbol": "R-DC-DERIVE-PARTIAL-TO-FULL"}
+    },
+    {
+      "rule_id": "R-DC-DERIVE-DESIGN-TO-CURRENT",
+      "version": "0.1.0",
+      "conditions": [{"field": "inference_kind", "op": "eq", "value": "design_basis_to_current_resilience"}],
+      "decision": {"action": "refuse", "reason": "derivation_limit", "message": "never infer current resilience from the design basis"},
+      "severity": "critical",
+      "precedence": 80,
+      "authority_source": "owner lessons sheet — Section 9.4 derivation limits",
+      "refusal_behavior": "refuse",
+      "certification": "candidate",
+      "provenance": {"donor_repo": "owner data-centre lessons sheet", "donor_path": "domain_packs/data_centre_construction/pack.json", "donor_symbol": "R-DC-DERIVE-DESIGN-TO-CURRENT"}
+    },
+    {
+      "rule_id": "R-DC-STALE-CURRENT-STATE",
+      "version": "0.1.0",
+      "conditions": [{"field": "event", "op": "in", "value": ["bypass", "isolation", "component_out"]}],
+      "decision": {"action": "invalidate", "fact": "current_resilience_state", "message": "any bypass, isolation, or component out invalidates the live resilience state"},
+      "severity": "high",
+      "precedence": 40,
+      "authority_source": "owner lessons sheet — Section 9.5 staleness",
+      "refusal_behavior": "warn",
+      "certification": "candidate",
+      "provenance": {"donor_repo": "owner data-centre lessons sheet", "donor_path": "domain_packs/data_centre_construction/pack.json", "donor_symbol": "R-DC-STALE-CURRENT-STATE"}
+    },
+    {
+      "rule_id": "R-DC-STALE-IST",
+      "version": "0.1.0",
+      "conditions": [{"field": "event", "op": "eq", "value": "system_modified_after_ist"}],
+      "decision": {"action": "invalidate", "fact": "ist_result", "message": "any modification to tested systems invalidates the IST result"},
+      "severity": "high",
+      "precedence": 40,
+      "authority_source": "owner lessons sheet — Section 9.5 staleness",
+      "refusal_behavior": "warn",
+      "certification": "candidate",
+      "provenance": {"donor_repo": "owner data-centre lessons sheet", "donor_path": "domain_packs/data_centre_construction/pack.json", "donor_symbol": "R-DC-STALE-IST"}
+    },
+    {
+      "rule_id": "R-DC-STALE-SLD",
+      "version": "0.1.0",
+      "conditions": [{"field": "event", "op": "eq", "value": "change_not_reflected_as_built"}],
+      "decision": {"action": "invalidate", "fact": "sld", "message": "any change not reflected as-built invalidates the SLD"},
+      "severity": "high",
+      "precedence": 40,
+      "authority_source": "owner lessons sheet — Section 9.5 staleness",
+      "refusal_behavior": "warn",
+      "certification": "candidate",
+      "provenance": {"donor_repo": "owner data-centre lessons sheet", "donor_path": "domain_packs/data_centre_construction/pack.json", "donor_symbol": "R-DC-STALE-SLD"}
+    },
+    {
+      "rule_id": "R-DC-QUALIFIER-TESTED",
+      "version": "0.1.0",
+      "conditions": [
+        {"field": "term", "op": "eq", "value": "tested"},
+        {"field": "level", "op": "eq", "value": null}
+      ],
+      "decision": {"action": "refuse", "reason": "requires_test_qualifiers", "message": "a 'tested' claim must carry level (L1-L5), load percentage, and failure scenario"},
+      "severity": "critical",
+      "precedence": 90,
+      "authority_source": "owner lessons sheet — Section 9.3 mandatory qualifiers",
+      "refusal_behavior": "refuse",
+      "certification": "candidate",
+      "provenance": {"donor_repo": "owner data-centre lessons sheet", "donor_path": "domain_packs/data_centre_construction/pack.json", "donor_symbol": "R-DC-QUALIFIER-TESTED"}
+    }
+  ],
+  "decision_tables": [
+    {
+      "table_id": "data_centre_construction.mandatory_qualifiers",
+      "version": "0.1.0",
+      "inputs": ["term"],
+      "rows": [
+        {"when": {"term": "tested"}, "then": {"required_qualifiers": ["level", "load_percentage", "failure_scenario"]}},
+        {"when": {"term": "resilience"}, "then": {"required_qualifiers": ["design_or_built_or_current_operating"]}},
+        {"when": {"term": "capacity"}, "then": {"required_qualifiers": ["design_or_installed_or_available_or_available_after_redundancy"]}},
+        {"when": {"term": "PUE"}, "then": {"required_qualifiers": ["design_or_guaranteed_or_measured_or_annualised", "load", "ambient"]}}
+      ],
+      "default_outcome": {"required_qualifiers": [], "note": "no qualifier contract for this term"},
+      "authority_source": "owner lessons sheet — Section 9.3",
+      "certification": "candidate",
+      "provenance": {"donor_repo": "owner data-centre lessons sheet", "donor_path": "domain_packs/data_centre_construction/pack.json", "donor_symbol": "mandatory_qualifiers"}
+    },
+    {
+      "table_id": "data_centre_construction.evidence_sufficiency",
+      "version": "0.1.0",
+      "inputs": ["figure_class"],
+      "rows": [
+        {"when": {"figure_class": "current_resilience_state"}, "then": {"acceptable": "live state record post-change", "unacceptable": "design basis statement"}},
+        {"when": {"figure_class": "ist_result"}, "then": {"acceptable": "IST report at stated load with failure scenarios", "unacceptable": "component test or partial-load extrapolation"}},
+        {"when": {"figure_class": "sld_currency"}, "then": {"acceptable": "as-built SLD reflecting latest change", "unacceptable": "design SLD"}},
+        {"when": {"figure_class": "capacity_available"}, "then": {"acceptable": "measured capacity with redundancy reservation stated", "unacceptable": "design capacity stated as available"}},
+        {"when": {"figure_class": "pue"}, "then": {"acceptable": "measured or annualised figure with load and ambient", "unacceptable": "design PUE stated as measured"}}
+      ],
+      "default_outcome": {"acceptable": "domain review required", "unacceptable": "not defined"},
+      "authority_source": "owner lessons sheet — Section 9.1",
+      "certification": "candidate",
+      "provenance": {"donor_repo": "owner data-centre lessons sheet", "donor_path": "domain_packs/data_centre_construction/pack.json", "donor_symbol": "evidence_sufficiency"}
+    },
+    {
+      "table_id": "data_centre_construction.term_traps",
+      "version": "0.1.0",
+      "inputs": ["term"],
+      "rows": [
+        {"when": {"term": "load"}, "then": {"variants": ["design", "installed", "available", "measured"], "confusion_risk": "design load quoted as what is available now"}},
+        {"when": {"term": "capacity"}, "then": {"variants": ["design", "installed", "available", "available_after_redundancy"], "confusion_risk": "redundancy reservation not stated"}},
+        {"when": {"term": "redundancy"}, "then": {"variants": ["N", "N+1", "2N", "2(N+1)"], "confusion_risk": "N+1 counted as a component instead of a claim"}},
+        {"when": {"term": "Tier"}, "then": {"variants": ["design certification"], "confusion_risk": "Tier quoted as an operating guarantee"}},
+        {"when": {"term": "tested"}, "then": {"variants": ["L1-L5 at load %"], "confusion_risk": "bare 'tested' with no level or load"}},
+        {"when": {"term": "PUE"}, "then": {"variants": ["design", "guaranteed", "measured", "annualised"], "confusion_risk": "design PUE stated as measured"}},
+        {"when": {"term": "power"}, "then": {"variants": ["nameplate", "actual draw"], "confusion_risk": "nameplate used as actual"}},
+        {"when": {"term": "autonomy"}, "then": {"variants": ["nameplate minutes at full load", "actual minutes at real load"], "confusion_risk": "nameplate minutes quoted for real load"}}
+      ],
+      "default_outcome": {"variants": [], "confusion_risk": "not defined"},
+      "authority_source": "owner lessons sheet — Section 13.4",
+      "certification": "candidate",
+      "provenance": {"donor_repo": "owner data-centre lessons sheet", "donor_path": "domain_packs/data_centre_construction/pack.json", "donor_symbol": "term_traps"}
+    },
+    {
+      "table_id": "data_centre_construction.authority_precedence",
+      "version": "0.1.0",
+      "inputs": ["rank"],
+      "rows": [
+        {"when": {"rank": 1}, "then": {"source": "statutory_safety"}},
+        {"when": {"rank": 2}, "then": {"source": "authority_approval"}},
+        {"when": {"rank": 3}, "then": {"source": "client_standard"}},
+        {"when": {"rank": 4}, "then": {"source": "certification"}},
+        {"when": {"rank": 5}, "then": {"source": "design_basis"}},
+        {"when": {"rank": 6}, "then": {"source": "as_built_sld"}},
+        {"when": {"rank": 7}, "then": {"source": "commissioning_script"}},
+        {"when": {"rank": 8}, "then": {"source": "manufacturer"}},
+        {"when": {"rank": 9}, "then": {"source": "mop"}},
+        {"when": {"rank": 10}, "then": {"source": "site_instruction"}}
+      ],
+      "default_outcome": {"source": "unknown", "note": "a source outside the ladder cannot outrank any listed source"},
+      "authority_source": "owner lessons sheet — Section 13.1",
+      "certification": "candidate",
+      "provenance": {"donor_repo": "owner data-centre lessons sheet", "donor_path": "domain_packs/data_centre_construction/pack.json", "donor_symbol": "authority_precedence"}
+    }
+  ],
+  "workflows": [],
+  "approvals": [
+    {
+      "action": "skip_test",
+      "version": "0.1.0",
+      "risk_tier": "high",
+      "requester_roles": ["project_team"],
+      "approver_roles": ["commissioning_authority"],
+      "minimum_approvals": 1,
+      "thresholds": {},
+      "self_approval": "prohibited",
+      "segregation_of_duties": [],
+      "payload_binding": "required",
+      "expiry_seconds": 86400,
+      "replay_prevention": "required",
+      "emergency_override": {},
+      "evidence": ["client_standard_reference"],
+      "audit_required": true,
+      "certification": "candidate",
+      "provenance": {"donor_repo": "owner data-centre lessons sheet", "donor_path": "domain_packs/data_centre_construction/pack.json", "donor_symbol": "skip_test"}
+    },
+    {
+      "action": "take_string_down",
+      "version": "0.1.0",
+      "risk_tier": "high",
+      "requester_roles": ["project_team"],
+      "approver_roles": ["critical_environment_manager", "authority_approval"],
+      "minimum_approvals": 2,
+      "thresholds": {},
+      "self_approval": "prohibited",
+      "segregation_of_duties": [["critical_environment_manager", "project_team"]],
+      "payload_binding": "required",
+      "expiry_seconds": 86400,
+      "replay_prevention": "required",
+      "emergency_override": {},
+      "evidence": ["approved_mop"],
+      "audit_required": true,
+      "certification": "candidate",
+      "provenance": {"donor_repo": "owner data-centre lessons sheet", "donor_path": "domain_packs/data_centre_construction/pack.json", "donor_symbol": "take_string_down"}
+    }
+  ],
+  "actions": {},
+  "verification_oracles": {
+    "pue": {
+      "cases": [
+        {"inputs": {"total_facility_power": 600, "it_load": 400}, "expected": "1.5"},
+        {"inputs": {"total_facility_power": 400, "it_load": 400}, "expected": "1.0"}
+      ]
+    },
+    "test_load_percentage": {
+      "cases": [
+        {"inputs": {"achieved_load": 300, "design_load": 400}, "expected": "75.0"}
+      ]
+    }
+  },
+  "fixtures": {
+    "facility_worked_example": {
+      "design_power_kw": 400,
+      "redundancy": "2N",
+      "ups_autonomy_minutes": 45,
+      "note": "one facility from the sheet — a worked example, not a universal kit"
+    }
+  },
+  "tests": {
+    "store": ["tests/core/test_domain_pack_data_centre.py"],
+    "blank_tables_not_fabricated": ["lead_times", "costs_per_package", "proves_does_not_prove_per_level", "ist_scenarios", "live_works", "hard_blockers", "failure_shapes"]
+  }
+}

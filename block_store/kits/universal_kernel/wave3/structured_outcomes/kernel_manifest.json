@@ -1,0 +1,10 @@
+{
+  "name": "structured_outcomes",
+  "version": "0.1.0",
+  "sha256": "1083ec4f29c4929d73d9317f67eca5f56b6d4050e607688c5a34dcdf69d9f685",
+  "dependencies": [],
+  "provenance": "new",
+  "acceptance_test": "tests/test_structured_outcomes.py",
+  "tier": "premium",
+  "note": "Premium-only; not available in the freemium tier."
+}

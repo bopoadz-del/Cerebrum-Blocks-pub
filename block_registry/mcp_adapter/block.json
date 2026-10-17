@@ -1,0 +1,74 @@
+{
+  "acceptance": [],
+  "author": "Cerebrum Team",
+  "description": "Exposes every registered Cerebrum block as MCP-style tool descriptions to MCP-aware agents. Read-only catalog: list_tools and describe only \u2014 it never executes a block on behalf of a client.",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "130882c0c6382faacfabf3fdcc808485befea97aeae0905de223ec8f2c69a7cb",
+    "block.py": "1a6501d2c3c56bfe2cc1fa48fc0ad3ca212c27f87ffc276a9a001ab6273184e3"
+  },
+  "id": "mcp_adapter",
+  "inputs": [
+    {
+      "description": "Request payload (action: list_tools | describe)",
+      "name": "input",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "default": "list_tools",
+      "description": "Action",
+      "name": "action",
+      "options": [
+        "list_tools",
+        "describe"
+      ],
+      "required": false,
+      "type": "string"
+    },
+    {
+      "description": "Tool name for describe",
+      "name": "tool",
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 0,
+  "name": "MCP Adapter",
+  "never": [
+    {
+      "kind": "block",
+      "scope": "tool_invocation"
+    }
+  ],
+  "outputs": {
+    "result": {
+      "description": "tools (catalog) or tool (description) \u2014 read-only metadata",
+      "type": "json"
+    }
+  },
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "block",
+      "scope": "block_catalog"
+    }
+  ],
+  "requires": [],
+  "signature": "xhsin62I5yAnHf79kk/w+z3w+EM2Ji1E8N+FD93Hb6Da3lsWhon40F+OnG7aAK2Ok6Yp21x5bypCeN41SIHLBQ==",
+  "tags": [
+    "mcp",
+    "agents",
+    "infrastructure",
+    "interop"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": []
+}

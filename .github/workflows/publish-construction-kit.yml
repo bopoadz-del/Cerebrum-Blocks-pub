@@ -1,0 +1,80 @@
+name: Publish Construction Kit
+
+on:
+  workflow_dispatch:
+    inputs:
+      fork_ref:
+        description: The_Fork git ref (branch or tag)
+        required: false
+        default: main
+      fork_path:
+        description: >-
+          Optional absolute path to an existing Fork clone on the runner
+          (leave empty to clone bopoadz-del/The_Fork into the workspace)
+        required: false
+        default: ""
+  push:
+    branches: [main]
+    paths:
+      - block_store/kits/construction/manifest.json
+      - .github/workflows/publish-construction-kit.yml
+
+concurrency:
+  group: publish-construction-kit-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    name: Publish construction kit bundle
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout Cerebrum-Blocks
+        uses: actions/checkout@v7
+
+      # bopoadz-del/The_Fork is public (verified 2026-09-03 via git ls-remote
+      # over HTTPS with no token). The default GITHUB_TOKEN can clone a
+      # public repo. If this step fails with "repository not found", the
+      # repo was made private: do NOT add a secret in this workflow.
+      # Re-open the repo, or have the owner add a read token (owner-gated).
+      - name: Clone The Fork
+        if: inputs.fork_path == ''
+        id: clone-fork
+        continue-on-error: true
+        uses: actions/checkout@v7
+        with:
+          repository: bopoadz-del/The_Fork
+          ref: ${{ inputs.fork_ref || 'main' }}
+          path: The_Fork
+          persist-credentials: false
+
+      - name: Fail if The Fork is not accessible
+        if: inputs.fork_path == '' && steps.clone-fork.outcome == 'failure'
+        env:
+          FORK_REPO: bopoadz-del/The_Fork
+          FORK_REF: ${{ inputs.fork_ref || 'main' }}
+        run: |
+          echo "::error::Cannot clone ${FORK_REPO} at ref '${FORK_REF}'. The repository must be public for the default GITHUB_TOKEN to check it out. If The_Fork was made private, a read token is owner-gated — do not invent a secret here."
+          exit 1
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+
+      - name: Publish construction kit from Fork
+        run: |
+          if [ -n "${{ inputs.fork_path }}" ]; then
+            FORK_ROOT="${{ inputs.fork_path }}"
+          else
+            FORK_ROOT="${{ github.workspace }}/The_Fork"
+          fi
+          echo "Using Fork root: $FORK_ROOT"
+          python scripts/publish_construction_kit.py --fork-root "$FORK_ROOT" --refresh
+
+      - name: Upload bundle artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: construction-kit-bundle-${{ github.sha }}
+          path: block_store/kits/construction/bundle/
+          if-no-files-found: error
+          retention-days: 30

@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AutomotiveComplaint",
+  "type": "object",
+  "required": ["record_type", "odi_number", "failure_description", "source_url"],
+  "properties": {
+    "record_type": { "const": "complaint" },
+    "odi_number": { "type": "string" },
+    "make": { "type": ["string", "null"] },
+    "model": { "type": ["string", "null"] },
+    "model_year": { "type": ["integer", "string", "null"] },
+    "component": { "type": ["string", "null"] },
+    "incident_date": { "type": ["string", "null"] },
+    "failure_description": { "type": "string" },
+    "crash_indicator": { "type": ["boolean", "null"] },
+    "fire_indicator": { "type": ["boolean", "null"] },
+    "injury_count": { "type": ["integer", "null"] },
+    "death_count": { "type": ["integer", "null"] },
+    "source_url": { "type": "string", "format": "uri" },
+    "source_family": { "const": "complaint" }
+  }
+}

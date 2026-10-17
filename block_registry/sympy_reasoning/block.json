@@ -1,0 +1,108 @@
+{
+  "acceptance": [],
+  "author": "Cerebrum Team",
+  "description": "Heavy reasoning engine: symbolic variance analysis + data-driven construction recommendations",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "6c540a055a78eb2a6580c278e08954a56d5a92d84581e46ec4ac2b0d4b32946d",
+    "block.py": "d8a1d9aa5c1642b896a2ab98a09af4bae88bfe721c5e5bd5acc3220c4282ab54"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/sympy_reasoning:latest",
+    "type": "docker"
+  },
+  "id": "sympy_reasoning",
+  "inputs": [
+    {
+      "description": "{\"boq_data\": [...], \"drawing_data\": {}, \"spec_data\": {}, \"historical_benchmarks\": {}}",
+      "name": "input",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "default": 10.0,
+      "description": "Configuration parameter: variance_threshold_pct",
+      "name": "variance_threshold_pct",
+      "required": false,
+      "type": "number"
+    },
+    {
+      "default": 0.7,
+      "description": "Configuration parameter: confidence_floor",
+      "name": "confidence_floor",
+      "required": false,
+      "type": "number"
+    }
+  ],
+  "layer": 3,
+  "name": "Sympy Reasoning",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Recommendations",
+      "name": "recommendations",
+      "type": "list"
+    },
+    {
+      "description": "Variances",
+      "name": "variances",
+      "type": "list"
+    },
+    {
+      "description": "Cost Impacts",
+      "name": "cost_impacts",
+      "type": "list"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    }
+  ],
+  "requires": [],
+  "signature": "iNAgzpxNH+9gUiUheixPNVWCeefk8+dm/75ziEjV4nCS1dytCV7GfrQdDvx4t+l7C2oV3Oc8DhorVb8mcReICw==",
+  "tags": [
+    "domain",
+    "construction",
+    "reasoning",
+    "math",
+    "ai"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "{\"boq_data\": [...], \"drawing_data\": {}, \"spec_data\": {}, \"historical_benchmarks\": {}}",
+      "name": "input",
+      "widget": "json"
+    },
+    {
+      "label": "Variance Threshold Pct",
+      "name": "variance_threshold_pct",
+      "widget": "number"
+    },
+    {
+      "label": "Confidence Floor",
+      "name": "confidence_floor",
+      "widget": "number"
+    }
+  ],
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

@@ -1,0 +1,132 @@
+{
+  "manifest": {
+    "domain_id": "insurance_ops",
+    "version": "0.1.0",
+    "name": "Insurance Ops — candidate pack",
+    "description": "Candidate pack extracted from <private-repo>: Decimal-safe money, effective-dated commission schedules with tiered rates and min/max bounds, and the cross-check tolerance policy. CANDIDATE: requires domain-expert review before production authority.",
+    "certification": "candidate",
+    "donor_repo": "https://github.com/bopoadz-del/<private-repo>",
+    "donor_commit": "6c27cba"
+  },
+  "ontology": {
+    "terms": {
+      "fyc": {"definition": "First-year commission", "aliases": ["first year commission"]},
+      "annualized_premium": {"definition": "Premium annualized for commission basis", "aliases": ["APE", "annualized premium"]},
+      "commission_schedule": {"definition": "Effective-dated rate schedule per line of business and transaction type", "aliases": ["rate card"]},
+      "crosscheck": {"definition": "Independent recomputation of a commission line", "aliases": ["cross-check", "double check"]}
+    }
+  },
+  "entities": {
+    "commission_line": {"fields": ["id", "amount", "policy_id", "schedule", "level"]}
+  },
+  "permissions": {
+    "role_permissions": {
+      "commission_analyst": ["ins.compute_commission", "ins.crosscheck_commission"],
+      "viewer": []
+    },
+    "action_requirements": {
+      "ins.compute_commission": "ins.compute_commission",
+      "ins.crosscheck_commission": "ins.crosscheck_commission"
+    }
+  },
+  "evidence_policy": {
+    "ins.compute_commission": ["policy_premium", "schedule_id", "level"]
+  },
+  "authority_sources": {
+    "insops.schedule": {"kind": "product_policy", "reference": "kit commission_formulas.json (versioned schedules)", "tier": "controlled"},
+    "insops.money": {"kind": "product_policy", "reference": "backend/app/<private-repo>/money.py Decimal helpers", "tier": "controlled"},
+    "insops.crosscheck": {"kind": "product_policy", "reference": "config commission_crosscheck_tolerance 0.01", "tier": "controlled"}
+  },
+  "refusal_policy": {
+    "unsupported_schedule": "refuse_by_name",
+    "out_of_effective_period": "refuse_not_extrapolate",
+    "bool_money_input": "validation_error"
+  },
+  "formulas": [
+    {
+      "formula_id": "ins.commission_amount",
+      "name": "Commission amount",
+      "domain": "insurance_ops",
+      "version": "0.1.0",
+      "description": "commission = premium * rate, rate resolved from the effective-dated schedule by level, bounded by the schedule's min/max. Decimal money (0.0001 quant), HKD.",
+      "expression": "premium * rate",
+      "inputs": [{"name": "premium", "type": "decimal"}, {"name": "rate", "type": "decimal"}],
+      "output": {"name": "commission", "type": "decimal"},
+      "currency": "HKD",
+      "precision": 4,
+      "rounding": "half_up",
+      "preconditions": ["premium ge 0", "rate ge 0"],
+      "authority_source": "insops.schedule",
+      "implementation": "tests.core.test_reasoning_kernel_packs._commission_impl",
+      "verification_oracle": "tests.core.test_reasoning_kernel_packs._commission_oracle",
+      "certification": "candidate",
+      "provenance": {
+        "donor_repo": "https://github.com/bopoadz-del/<private-repo>",
+        "donor_commit": "6c27cba",
+        "donor_path": "kit/bundle/app/data/commission_formulas.json",
+        "donor_symbol": "schedules.life_fyc.rates",
+        "note": "donor rates are floats in JSON; the pack treats them as decimal strings at load"
+      }
+    }
+  ],
+  "rules": [
+    {
+      "rule_id": "ins.rate_outside_bounds_is_refused",
+      "version": "0.1.0",
+      "conditions": [{"field": "rate_in_bounds", "op": "eq", "value": false}],
+      "decision": {"outcome": "refuse", "message": "Commission rate is outside the schedule's min/max bounds."},
+      "severity": "critical",
+      "precedence": 100,
+      "refusal_behavior": "refuse",
+      "authority_source": "insops.schedule",
+      "certification": "candidate",
+      "provenance": {"donor_repo": "https://github.com/bopoadz-del/<private-repo>", "donor_commit": "6c27cba", "donor_path": "kit/bundle/app/data/commission_formulas.json", "donor_symbol": "schedules.*.effective_periods[].min_rate/max_rate"}
+    },
+    {
+      "rule_id": "ins.boolean_is_not_money",
+      "version": "0.1.0",
+      "conditions": [{"field": "bool_money_input", "op": "eq", "value": true}],
+      "decision": {"outcome": "refuse", "message": "boolean is not a money value"},
+      "severity": "critical",
+      "precedence": 100,
+      "refusal_behavior": "refuse",
+      "authority_source": "insops.money",
+      "certification": "candidate",
+      "provenance": {"donor_repo": "https://github.com/bopoadz-del/<private-repo>", "donor_commit": "6c27cba", "donor_path": "backend/app/<private-repo>/money.py", "donor_symbol": "to_decimal"}
+    }
+  ],
+  "decision_tables": [
+    {
+      "table_id": "ins.life_fyc_rate",
+      "version": "0.1.0",
+      "inputs": ["level"],
+      "rows": [
+        {"when": {"level": "trainee"}, "then": {"rate": "0.5"}},
+        {"when": {"level": "standard"}, "then": {"rate": "0.75"}},
+        {"when": {"level": "senior"}, "then": {"rate": "0.9"}},
+        {"when": {"level": "elite"}, "then": {"rate": "1.2"}}
+      ],
+      "default_outcome": {"rate": null, "refuse": "unknown_level"},
+      "authority_source": "insops.schedule",
+      "certification": "candidate",
+      "provenance": {"donor_repo": "https://github.com/bopoadz-del/<private-repo>", "donor_commit": "6c27cba", "donor_path": "kit/bundle/app/data/commission_formulas.json", "donor_symbol": "schedules.life_fyc.rates"}
+    }
+  ],
+  "workflows": [],
+  "approvals": [],
+  "actions": {
+    "ins.compute_commission": {"risk": "low"},
+    "ins.crosscheck_commission": {"risk": "low"}
+  },
+  "verification_oracles": {
+    "ins.commission_amount": {
+      "cases": [
+        {"inputs": {"premium": "10000", "rate": "0.75"}, "expected": "7500.0000"}
+      ]
+    }
+  },
+  "fixtures": {},
+  "tests": {
+    "kernel": "tests/core/test_reasoning_kernel_packs.py"
+  }
+}

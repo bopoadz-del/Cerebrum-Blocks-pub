@@ -1,0 +1,96 @@
+{
+  "acceptance": [
+    {
+      "check": "rejects paths that escape the configured root",
+      "id": "path_escape_rejected",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Sandboxed local filesystem access: list, read, write files",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "15e91e8fcde14cf46bc1316873718f9285869162703494bd622df9c86876b3e5",
+    "block.py": "b7afc7394fe677973b4db66e138afa049b6214a65e0b77916500a864f43c423a"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/local_drive:latest",
+    "type": "docker"
+  },
+  "id": "local_drive",
+  "inputs": [
+    {
+      "description": "Browse local files...",
+      "name": "input",
+      "required": false,
+      "type": "file"
+    }
+  ],
+  "layer": 4,
+  "name": "Local Drive",
+  "never": [
+    {
+      "kind": "file",
+      "scope": "escape_root"
+    }
+  ],
+  "outputs": [
+    {
+      "description": "Files",
+      "name": "files",
+      "type": "array"
+    },
+    {
+      "description": "Path",
+      "name": "path",
+      "type": "text"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "file",
+      "scope": "local.read"
+    },
+    {
+      "kind": "env",
+      "scope": "process"
+    }
+  ],
+  "requires": [],
+  "signature": "N2FIRKIYs019ISQMJeLIYnKQqpvNx4FR5Qmdp2GbThLqvVNpEWjQGF3jART3lZac8AAR6+ztm33ildqUyeGjCA==",
+  "tags": [
+    "integration",
+    "storage",
+    "local"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "Browse local files...",
+      "name": "input",
+      "widget": "file"
+    }
+  ],
+  "version": "1.1",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    },
+    {
+      "kind": "file",
+      "scope": "local.write"
+    }
+  ]
+}

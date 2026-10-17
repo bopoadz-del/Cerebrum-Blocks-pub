@@ -1,0 +1,139 @@
+{
+  "acceptance": [],
+  "author": "Cerebrum Team",
+  "description": "Chain execution engine with type validation",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "713fa42c9c57952eeca781c39bcb2a97dbff7abb827d8b74e66c39c55fb1146d",
+    "block.py": "59ecdf5f90eb9f025fde0b88788492d19929734e6308050c60af3e3c1d0e9d30"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/orchestrator:latest",
+    "type": "docker"
+  },
+  "id": "orchestrator",
+  "inputs": [
+    {
+      "description": "{\"steps\": [{\"block\": \"chat\", \"params\": {}}]}",
+      "name": "input",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "default": 50,
+      "description": "Configuration parameter: max_steps",
+      "name": "max_steps",
+      "required": false,
+      "type": "number"
+    },
+    {
+      "default": true,
+      "description": "Configuration parameter: persist_steps",
+      "name": "persist_steps",
+      "required": false,
+      "type": "boolean"
+    },
+    {
+      "default": true,
+      "description": "Configuration parameter: fail_fast",
+      "name": "fail_fast",
+      "required": false,
+      "type": "boolean"
+    },
+    {
+      "default": true,
+      "description": "Configuration parameter: auto_convert",
+      "name": "auto_convert",
+      "required": false,
+      "type": "boolean"
+    }
+  ],
+  "layer": 2,
+  "name": "Orchestrator",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Steps",
+      "name": "steps_executed",
+      "type": "number"
+    },
+    {
+      "description": "Output",
+      "name": "final_output",
+      "type": "json"
+    },
+    {
+      "description": "Conversions",
+      "name": "type_conversions",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    }
+  ],
+  "requires": [
+    "memory",
+    "traffic_manager"
+  ],
+  "signature": "sBLdfEYXijPkE2MmLU3XonsuZEcMB+hxHK7UdAJwRCiS8e1JmC31eu3u4XQ/4q9rjhHwgXCAND7D644sAwtkBA==",
+  "tags": [
+    "ai",
+    "core",
+    "orchestrator",
+    "chain",
+    "typed"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "{\"steps\": [{\"block\": \"chat\", \"params\": {}}]}",
+      "name": "input",
+      "widget": "json"
+    },
+    {
+      "label": "Max Steps",
+      "name": "max_steps",
+      "widget": "number"
+    },
+    {
+      "label": "Persist Steps",
+      "name": "persist_steps",
+      "widget": "toggle"
+    },
+    {
+      "label": "Fail Fast",
+      "name": "fail_fast",
+      "widget": "toggle"
+    },
+    {
+      "label": "Auto Convert",
+      "name": "auto_convert",
+      "widget": "toggle"
+    }
+  ],
+  "version": "2.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    },
+    {
+      "kind": "memory",
+      "scope": "cache"
+    }
+  ]
+}

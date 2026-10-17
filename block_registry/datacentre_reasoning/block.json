@@ -1,0 +1,144 @@
+{
+  "acceptance": [
+    {
+      "check": "AC1: 'tested' output without commissioning_level/load_pct/failure_scenario is refused, naming INV-1",
+      "id": "tested_without_qualifiers",
+      "status": "refused"
+    },
+    {
+      "check": "AC2: resilience claim without basis is refused, naming INV-2",
+      "id": "resilience_without_basis",
+      "status": "refused"
+    },
+    {
+      "check": "AC4: capacity figure without redundancy basis is refused, naming INV-3",
+      "id": "capacity_without_redundancy_basis",
+      "status": "refused"
+    },
+    {
+      "check": "AC5: readiness declaration is refused BEFORE retrieval, naming INV-4",
+      "id": "ready_for_it_load",
+      "status": "refused"
+    },
+    {
+      "check": "AC6: ride-through claim citing only a passed L4 functional test is refused as evidence substitution",
+      "id": "ride_through_from_l4",
+      "status": "refused"
+    },
+    {
+      "check": "AC7: design-load performance derived from a day-one (25%) measurement is refused as partial-to-full extrapolation",
+      "id": "partial_to_full_extrapolation",
+      "status": "refused"
+    },
+    {
+      "check": "AC8: with BMS unreachable the system states facility state unknown, never a design-basis figure",
+      "id": "bms_unreachable",
+      "status": "refused"
+    },
+    {
+      "check": "AC9: stale or missing live-state source is refused, naming the BMS + manual log both-required rule",
+      "id": "stale_manual_log",
+      "status": "refused"
+    },
+    {
+      "check": "AC10: a Tier design certificate cited for a constructed-facility claim is refused (tier trap)",
+      "id": "tier_design_certificate",
+      "status": "refused"
+    },
+    {
+      "check": "chiller incident regression: a pre-modification IST result is refused as stale once the control sequence changed",
+      "id": "ist_stale_after_modification",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Deterministic data centre reasoning gate seeded with the facility_01 design basis (real \u2014 domain encoding sheet, facility_01; reference pattern app/blocks/aviation_grounding_gate.py). INV-1..4 enforced, never-allowed derivation guard, BMS + manual-log two-source live-state gate, REJECT_AS_PROOF and tier trap. Blocked/refused statements fail loud; nothing is invented; all refusals are measured by tests/blocks/test_datacentre_reasoning.py.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "d7428e7f28607ef8290aa3d08bbd075f368aa12fd70a0cec0ed688b5ea76870c",
+    "block.py": "935d76cb2442764d3278365596b54e6b30a98a993e41c9c1119665ad366d2dbd"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/datacentre_reasoning:latest",
+    "type": "docker"
+  },
+  "id": "datacentre_reasoning",
+  "inputs": [
+    {
+      "description": "operator question",
+      "name": "query",
+      "required": true,
+      "type": "string"
+    },
+    {
+      "description": "candidate answer to gate",
+      "name": "answer",
+      "required": true,
+      "type": "string"
+    },
+    {
+      "description": "resilience basis: as_designed | as_built | as_currently_operating",
+      "name": "basis",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "description": "citations offered as evidence",
+      "name": "evidence",
+      "required": false,
+      "type": "array"
+    },
+    {
+      "description": "BMS + manual log two-source live state ({bms, manual_log, fetched_at})",
+      "name": "live_state",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "description": "tested systems were modified since the IST",
+      "name": "test_modified_since_ist",
+      "required": false,
+      "type": "boolean"
+    }
+  ],
+  "layer": 3,
+  "name": "datacentre_reasoning",
+  "never": [],
+  "outputs": [
+    {
+      "description": "verdict: pass | block | refused, with blocked_reason and optional corrected state",
+      "name": "verdict",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "Jx1iqcblZpjafd20H/y1JCIl1m/HCq0ehz+7IApLpfPAgLi7SXRhYvLjwq8x6hiDjc1m2o5343JeHWbLlFJCCQ==",
+  "tags": [
+    "datacentre",
+    "resilience",
+    "grounding",
+    "gate",
+    "facility"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

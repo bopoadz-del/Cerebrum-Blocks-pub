@@ -1,0 +1,78 @@
+{
+  "acceptance": [
+    {
+      "check": "audit persist failure surfaces a failed envelope, never a silent success",
+      "id": "persist_failure",
+      "status": "failed"
+    },
+    {
+      "check": "unconfigured auth tokens refuse authentication",
+      "id": "tokens_unconfigured",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Fail-closed ASGI audit middleware + principal auth ported from <private-repo> api/audit_middleware.py + api/auth.py (real): actor attribution only from a verified bearer token (hmac.compare_digest), never from client x-actor/x-role headers; authenticated mutating responses are held until the audit row persists and a persist failure surfaces 503 instead of a silent 2xx. Audit ledger is in-process (the donor sqlite sessionmaker is not ported); unconfigured tokens refuse authentication.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "2cac73b7cbd25f7db8776b7b2b45871def883c7272543df3baf2f7e0a6e82bd7",
+    "block.py": "713698d7188d375c5c13d7fbd6e1af8b38845e7934b05a11318709a640c53c0b"
+  },
+  "id": "audit_fail_closed",
+  "inputs": [
+    {
+      "description": "principal | require_principal | require_operator | record | ledger",
+      "name": "action",
+      "options": [
+        "principal",
+        "require_principal",
+        "require_operator",
+        "record",
+        "ledger"
+      ],
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 1,
+  "name": "audit_fail_closed",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Capability result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "JVXGJ10O/axfrDZixnTbkYXM1yW9UfU+7OAzpw6e05rpzcH3T1j+X3DndldIK2UPZsO5et2RB+Agyt0XjDsZCQ==",
+  "tags": [
+    "security",
+    "audit",
+    "asgi",
+    "middleware",
+    "fail-closed",
+    "hotelops"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

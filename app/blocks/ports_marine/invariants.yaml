@@ -1,0 +1,164 @@
+invariants:
+
+- id: INV-PM-AUTH-CAPACITY
+  kind: authority
+  applies_to: {quantity: [quay_wall_load, crane_rail_load, bollard_swl, fender_reaction]}
+  hook: H1
+  governing_class: design_dossier
+  fallback_class: as_built_drawings
+  demote: [operating_manual, berth_procedure, shift_instruction]
+  severity: refuse
+  evidence: {sheet: "§A, §D"}
+  message: "asset capacity governed by design dossier — {value} from a lesser class is not acceptable proof"
+  measurement: >-
+    Probe quay_wall_load, crane_rail_load, bollard_swl, fender_reaction x20 citing
+    operating_manual, berth_procedure, shift_instruction as the source. Before: n
+    answers accepted it as proof. After: 0 accepted, and n refusals naming
+    design_dossier as the class that governs. Over-refusal check: the same probe
+    citing design_dossier must pass.
+
+- id: INV-PM-DEPTH-BASIS
+  kind: qualifier
+  applies_to: {quantity: declared_depth}
+  requires: [depth_datum, survey_date, tide_state_assumed]
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "§A.2"}
+  message: "depth missing {missing} — datum, survey date and tide state are required"
+  measurement: >-
+    Probe declared_depth x20 with depth_datum, survey_date, tide_state_assumed
+    absent from the figure. Before: n answers stated the figure with nothing to act
+    on. After: 0 such answers, and n refusals naming every missing field.
+    Over-refusal check: the same probe WITH depth_datum, survey_date,
+    tide_state_assumed present must pass.
+
+- id: INV-PM-ASSET-CAPACITY
+  kind: qualifier
+  applies_to: {quantity: [bollard_swl, fender_reaction, fender_energy, crane_rail_load]}
+  requires: [asset_id, certification_ref]
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "§A.4"}
+  message: "asset capacity without asset ID and cert ref — {missing}"
+  measurement: >-
+    Probe bollard_swl, fender_reaction, fender_energy, crane_rail_load x20 with
+    asset_id, certification_ref absent from the figure. Before: n answers stated
+    the figure with nothing to act on. After: 0 such answers, and n refusals naming
+    every missing field. Over-refusal check: the same probe WITH asset_id,
+    certification_ref present must pass.
+
+- id: INV-PM-STACK-QUALIFIER
+  kind: qualifier
+  applies_to: {quantity: [stack_height, wind_limit]}
+  requires: [stack_area, wind_state]
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "§A.5"}
+  message: "stack height without {missing}"
+  measurement: >-
+    Probe stack_height, wind_limit x20 with stack_area, wind_state absent from the
+    figure. Before: n answers stated the figure with nothing to act on. After: 0
+    such answers, and n refusals naming every missing field. Over-refusal check:
+    the same probe WITH stack_area, wind_state present must pass.
+
+- id: INV-PM-CERT-CURRENCY
+  kind: currency
+  applies_to: {quantity: [bollard_swl, fender_reaction, crane_rail_load]}
+  window: {provider: survey_current, max_age: event}
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "§D.2, §E"}
+  message: "certification stale on {value}"
+  measurement: >-
+    Probe bollard_swl, fender_reaction, crane_rail_load x20 after a
+    certification_interval event, then x20 with survey_current unreachable. Before:
+    n answers quoted the superseded figure, and the unreachable case fell back to
+    the design basis. After: 0 superseded figures; 20 refusals naming
+    certification_interval and 20 reporting state UNKNOWN with no design figure in
+    the refusal.
+
+- id: INV-PM-PROVENANCE
+  kind: provenance
+  applies_to: {quantity: any}
+  forbid: [carry_from_similar_berth, use_old_survey_without_date, interpolate_depth_between_soundings, assume_chart_datum_equals_berth_datum]
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "§D.4"}
+  message: "forbidden derivation: {value}"
+  measurement: >-
+    Probe every declared quantity x20 with a figure carried attempting
+    carry_from_similar_berth, use_old_survey_without_date,
+    interpolate_depth_between_soundings, assume_chart_datum_equals_berth_datum.
+    Before: n answers quoted it without remark. After: 0 quoted, and n refusals
+    naming which boundary was crossed. Over-refusal check (the bug this kind had by
+    hand): a companion probe naming ONE entity twice — what a CORRECT answer looks
+    like — must NOT refuse.
+
+# ---------------------------------------------------------------------------
+# Correction 6: engine-required completions of the DECLARED staleness
+# triggers. declared_depth, quay_wall_load, fender_capacity and
+# stack_height_limit are named in staleness_triggers but no currency
+# invariant above governs them — a declared trigger nothing checks is a rule
+# that reports green while gating nothing, and the loader refuses it. These
+# records add only the provider wiring — no new rule, no new event.
+# ---------------------------------------------------------------------------
+
+- id: INV-PM-CURRENCY-DEPTH
+  kind: currency
+  applies_to: {quantity: declared_depth}
+  window: {provider: survey_current, max_age: event}
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "staleness_triggers"}
+  message: "declared depth is stale once dredging, silting or a survey supersession has happened"
+  measurement: >-
+    Probe declared_depth x20 after a dredging event, then x20 with survey_current
+    unreachable. Before: n answers quoted the superseded figure, and the
+    unreachable case fell back to the design basis. After: 0 superseded figures; 20
+    refusals naming dredging and 20 reporting state UNKNOWN with no design figure
+    in the refusal.
+
+- id: INV-PM-CURRENCY-QUAY
+  kind: currency
+  applies_to: {quantity: quay_wall_load}
+  window: {provider: berth_maintenance, max_age: shift}
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "staleness_triggers"}
+  message: "quay wall load is stale once a modification or an inspection finding has been recorded"
+  measurement: >-
+    Probe quay_wall_load x20 after a inspection_finding event, then x20 with
+    berth_maintenance unreachable. Before: n answers quoted the superseded figure,
+    and the unreachable case fell back to the design basis. After: 0 superseded
+    figures; 20 refusals naming inspection_finding and 20 reporting state UNKNOWN
+    with no design figure in the refusal.
+
+- id: INV-PM-CURRENCY-FENDER-CAPACITY
+  kind: currency
+  applies_to: {quantity: fender_capacity}
+  window: {provider: fender_bollard_condition, max_age: shift}
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "staleness_triggers"}
+  message: "fender capacity is stale once its certification interval has lapsed or an incident has occurred"
+  measurement: >-
+    Probe fender_capacity x20 after a certification_interval event, then x20 with
+    fender_bollard_condition unreachable. Before: n answers quoted the superseded
+    figure, and the unreachable case fell back to the design basis. After: 0
+    superseded figures; 20 refusals naming certification_interval and 20 reporting
+    state UNKNOWN with no design figure in the refusal.
+
+- id: INV-PM-CURRENCY-STACK-LIMIT
+  kind: currency
+  applies_to: {quantity: stack_height_limit}
+  window: {provider: berth_maintenance, max_age: shift}
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "staleness_triggers"}
+  message: "stack height limit is stale once the operating manual has been revised"
+  measurement: >-
+    Probe stack_height_limit x20 after a operating_manual_revision event, then x20
+    with berth_maintenance unreachable. Before: n answers quoted the superseded
+    figure, and the unreachable case fell back to the design basis. After: 0
+    superseded figures; 20 refusals naming operating_manual_revision and 20
+    reporting state UNKNOWN with no design figure in the refusal.

@@ -1,0 +1,178 @@
+{
+  "manifest": {
+    "domain_id": "finance_ops",
+    "version": "0.1.0",
+    "name": "Finance Ops — candidate pack",
+    "description": "Candidate pack extracted from <private-repo>: Decimal-safe variance tolerance, the fail-closed approval gate over named high-impact actions, and the approval-request lifecycle. CANDIDATE: requires domain-expert review before production authority.",
+    "certification": "candidate",
+    "donor_repo": "https://github.com/bopoadz-del/<private-repo>",
+    "donor_commit": "2367463"
+  },
+  "ontology": {
+    "terms": {
+      "coa": {"definition": "Chart of Accounts", "aliases": ["chart of accounts"]},
+      "coa_version": {"definition": "A versioned CoA; activation is a gated action", "aliases": ["coa release"]},
+      "budget_lock": {"definition": "Locking a budget version against further edits", "aliases": ["budget freeze"]},
+      "scenario_publish": {"definition": "Publishing a planning scenario", "aliases": ["publish scenario"]},
+      "journal_post": {"definition": "Posting a journal entry", "aliases": ["journal entry"]},
+      "variance": {"definition": "actual minus plan", "aliases": ["delta"]},
+      "tolerance": {"definition": "The bound within which a variance is acceptable", "aliases": ["threshold"]}
+    }
+  },
+  "entities": {
+    "approval_request": {"fields": ["id", "tenant_id", "project_id", "action_type", "target_id", "requester_id", "reviewer_id", "status", "payload", "evidence"]},
+    "coa_version": {"fields": ["id", "tenant_id", "version", "status"]}
+  },
+  "permissions": {
+    "role_permissions": {
+      "fp_and_a_manager": ["*"],
+      "controller": ["fin.journal_post", "fin.coa_activation", "fin.budget_lock"],
+      "viewer": []
+    },
+    "action_requirements": {
+      "fin.coa_activation": "fin.coa_activation",
+      "fin.journal_post": "fin.journal_post",
+      "fin.budget_lock": "fin.budget_lock",
+      "fin.scenario_publish": "fin.scenario_publish",
+      "fin.export_distribution": "fin.export_distribution"
+    }
+  },
+  "evidence_policy": {
+    "fin.budget_lock": ["budget_version"],
+    "fin.coa_activation": ["coa_version_id"]
+  },
+  "authority_sources": {
+    "finops.governance": {"kind": "product_policy", "reference": "governance/service.py fail-closed gate", "tier": "controlled"},
+    "finops.tolerance": {"kind": "product_policy", "reference": "reconciliation/service.py DEFAULT_TOLERANCE", "tier": "controlled"}
+  },
+  "refusal_policy": {
+    "unsupported_operations": "refuse_by_name",
+    "missing_approval": "approval_required",
+    "mixed_currency_aggregation": "validation_error"
+  },
+  "formulas": [
+    {
+      "formula_id": "fin.variance_exceeds_tolerance",
+      "name": "Variance exceeds tolerance",
+      "domain": "finance_ops",
+      "version": "0.1.0",
+      "description": "actual vs plan with the donor's tolerance chain: explicit tolerance amount, else percentage of plan, else the default 0.01. Decimal throughout.",
+      "expression": "abs(actual - plan) > max(explicit, plan*pct/100, default)",
+      "inputs": [{"name": "actual", "type": "decimal"}, {"name": "plan", "type": "decimal"}, {"name": "tolerance_amount", "type": "decimal"}, {"name": "tolerance_percent", "type": "decimal"}],
+      "output": {"name": "exceeds", "type": "boolean"},
+      "currency": "SAR",
+      "precision": 4,
+      "rounding": "half_even",
+      "preconditions": ["plan ge 0"],
+      "authority_source": "finops.tolerance",
+      "implementation": "tests.core.test_reasoning_kernel_packs._variance_impl",
+      "verification_oracle": "tests.core.test_reasoning_kernel_packs._variance_oracle",
+      "certification": "candidate",
+      "provenance": {
+        "donor_repo": "https://github.com/bopoadz-del/<private-repo>",
+        "donor_commit": "2367463",
+        "donor_path": "backend/app/reconciliation/service.py",
+        "donor_symbol": "_variance_exceeds_tolerance",
+        "note": "donor returns the variance record; the pack keeps the boolean + record split"
+      }
+    }
+  ],
+  "rules": [
+    {
+      "rule_id": "fin.action_type_allowlist",
+      "version": "0.1.0",
+      "conditions": [{"field": "action_type_known", "op": "eq", "value": false}],
+      "decision": {"outcome": "refuse", "message": "Invalid action_type — the governed set is coa_activation, journal_post, budget_lock, scenario_publish, export_distribution."},
+      "severity": "critical",
+      "precedence": 100,
+      "refusal_behavior": "refuse",
+      "authority_source": "finops.governance",
+      "certification": "candidate",
+      "provenance": {"donor_repo": "https://github.com/bopoadz-del/<private-repo>", "donor_commit": "2367463", "donor_path": "backend/app/governance/service.py", "donor_symbol": "_VALID_ACTION_TYPES"}
+    },
+    {
+      "rule_id": "fin.project_must_belong_to_tenant",
+      "version": "0.1.0",
+      "conditions": [{"field": "project_in_tenant", "op": "eq", "value": false}],
+      "decision": {"outcome": "refuse", "message": "Project does not belong to tenant."},
+      "severity": "critical",
+      "precedence": 100,
+      "refusal_behavior": "refuse",
+      "authority_source": "finops.governance",
+      "certification": "candidate",
+      "provenance": {"donor_repo": "https://github.com/bopoadz-del/<private-repo>", "donor_commit": "2367463", "donor_path": "backend/app/governance/service.py", "donor_symbol": "_verify_project_in_tenant"}
+    }
+  ],
+  "decision_tables": [],
+  "workflows": [
+    {
+      "workflow_id": "fin.approval_request",
+      "version": "0.1.0",
+      "states": ["pending", "approved", "rejected"],
+      "initial_state": "pending",
+      "terminal_states": ["approved", "rejected"],
+      "transitions": [
+        {"from": "pending", "to": "approved", "permitted_actors": ["controller"], "approval_required": true},
+        {"from": "pending", "to": "rejected", "permitted_actors": ["controller"], "evidence_required": ["rejection_reason"]}
+      ],
+      "immutable_states": ["approved", "rejected"],
+      "certification": "candidate",
+      "provenance": {"donor_repo": "https://github.com/bopoadz-del/<private-repo>", "donor_commit": "2367463", "donor_path": "backend/app/governance/service.py", "donor_symbol": "approve_request/reject_request"}
+    }
+  ],
+  "approvals": [
+    {
+      "action": "fin.budget_lock",
+      "version": "0.1.0",
+      "risk_tier": "high",
+      "requester_roles": ["fp_and_a_manager"],
+      "approver_roles": ["controller"],
+      "minimum_approvals": 1,
+      "self_approval": "prohibited",
+      "payload_binding": "required",
+      "expiry_seconds": 86400,
+      "replay_prevention": "required",
+      "certification": "candidate",
+      "provenance": {
+        "donor_repo": "https://github.com/bopoadz-del/<private-repo>",
+        "donor_commit": "2367463",
+        "donor_path": "backend/app/governance/service.py",
+        "donor_symbol": "require_approved_action",
+        "note": "donor gate is fail-closed but has NO self-approval refusal; the kernel engine adds it"
+      }
+    },
+    {
+      "action": "fin.coa_activation",
+      "version": "0.1.0",
+      "risk_tier": "high",
+      "requester_roles": ["fp_and_a_manager"],
+      "approver_roles": ["controller"],
+      "minimum_approvals": 1,
+      "self_approval": "prohibited",
+      "payload_binding": "required",
+      "expiry_seconds": 86400,
+      "replay_prevention": "required",
+      "certification": "candidate",
+      "provenance": {"donor_repo": "https://github.com/bopoadz-del/<private-repo>", "donor_commit": "2367463", "donor_path": "backend/app/governance/service.py", "donor_symbol": "require_approved_action"}
+    }
+  ],
+  "actions": {
+    "fin.coa_activation": {"risk": "high"},
+    "fin.journal_post": {"risk": "low"},
+    "fin.budget_lock": {"risk": "high"},
+    "fin.scenario_publish": {"risk": "medium"},
+    "fin.export_distribution": {"risk": "medium"}
+  },
+  "verification_oracles": {
+    "fin.variance_exceeds_tolerance": {
+      "cases": [
+        {"inputs": {"actual": "100.00", "plan": "100.00", "tolerance_amount": "0", "tolerance_percent": "0"}, "expected": "false"},
+        {"inputs": {"actual": "100.50", "plan": "100.00", "tolerance_amount": "0", "tolerance_percent": "0"}, "expected": "true"}
+      ]
+    }
+  },
+  "fixtures": {},
+  "tests": {
+    "kernel": "tests/core/test_reasoning_kernel_packs.py"
+  }
+}

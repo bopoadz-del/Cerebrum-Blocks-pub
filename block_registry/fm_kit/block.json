@@ -1,0 +1,122 @@
+{
+  "acceptance": [
+    {
+      "check": "INV-FM-AUTH-COMPLIANCE (authority at H1, severity refuse): compliance status governed by statute or authority notice \u2014 {value} from a lesser class is not proof",
+      "id": "inv_fm_auth_compliance",
+      "status": "refused"
+    },
+    {
+      "check": "INV-FM-REGIME (qualifier at H3, severity refuse): statutory/contractual/manufacturer/warranty/discretionary not named \u2014 {missing}",
+      "id": "inv_fm_regime",
+      "status": "refused"
+    },
+    {
+      "check": "INV-FM-INSERVICE (derivation at H3, severity refuse): current resilience state unavailable \u2014 BMS reading and manual log both required",
+      "id": "inv_fm_inservice",
+      "status": "refused"
+    },
+    {
+      "check": "INV-FM-SLA (qualifier at H3, severity flag): response/rectification time without clock-start and clock-stop definitions \u2014 {missing}",
+      "id": "inv_fm_sla",
+      "status": "partial"
+    },
+    {
+      "check": "INV-FM-PROVENANCE (provenance at H3, severity refuse): figure inferred from register / work order / PPM schedule rather than verified: {value}",
+      "id": "inv_fm_provenance",
+      "status": "refused"
+    },
+    {
+      "check": "INV-FM-CURRENCY (currency at H3, severity refuse): state reported as current but no live source confirms it",
+      "id": "inv_fm_currency",
+      "status": "refused"
+    },
+    {
+      "check": "INV-FM-RECORD-CURRENCY (currency at H3, severity refuse): a register entry, a condition survey and a warranty are all invalidated by a physical change; the manual log is the verification, the register is not",
+      "id": "inv_fm_record_currency",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Declarative fm reasoning kit on the shared reasoning layer. 7 invariants declared in app/blocks/fm/invariants.yaml across the kinds the portable spec defines (grounding, qualifier, unit_discipline, authority, provenance, currency, scope, derivation, band) and the five hooks (H0 pre-retrieval, H1 ranking, H2 tool-time, H3 answer-time, H4 export-time). Vocabulary in app/blocks/fm/manifest.yaml. Scope refusals classify BEFORE retrieval. Fail closed: a kit that does not parse is DISABLED and refuses every statement rather than passing them through with no invariants. NO INTERVIEW HAS RUN, so every declared figure value is null and the block refuses rather than inventing one (app/blocks/fm/KNOWN_GAPS.md). Measured by tests/blocks/test_reasoning_kits.py.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "4df968deb9444180540e9459f2dbf8e4f95864400ab4d83fbd0ba545c887d5c7",
+    "block.py": "0055e06a40c4cb70639a24abeb86979acbf5bf6c6c6b209deca37e118534652a"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/fm_kit:latest",
+    "type": "docker"
+  },
+  "id": "fm_kit",
+  "inputs": [
+    {
+      "description": "the operator question, classified at H0 BEFORE any retrieval",
+      "name": "question",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "description": "figures to gate: quantity, value, unit, origin, source_id, source_class, revision, qualifiers, claim_class, derivations, conditions, steps, bounds, asked_about, span, text",
+      "name": "figures",
+      "required": false,
+      "type": "array"
+    },
+    {
+      "description": "state records by provider name, each {as_of: <epoch>}; an absent provider yields UNKNOWN, never a design-basis fallback",
+      "name": "state",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "description": "events that have happened, matched against the kit's staleness_triggers",
+      "name": "events",
+      "required": false,
+      "type": "array"
+    },
+    {
+      "description": "subset of H0..H4 to run; all five by default, because a partial sweep is a silent coverage gap",
+      "name": "hooks",
+      "required": false,
+      "type": "array"
+    }
+  ],
+  "layer": 3,
+  "name": "fm_kit",
+  "never": [],
+  "outputs": [
+    {
+      "description": "pass | annotated | flagged | refused, with findings, blocked_reason, hooks_run, retrieval_permitted, interview_status, unfilled_figures, unmeasured_invariants, ships and kit_disabled",
+      "name": "verdict",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "U9iaXpS1gQBsj8jUtIL5fIO2hJF0mM0CGfiJdcivRPG510QoFgmP5azWUjNKl15Tn2XpRCU1n+17mlyaFW9zAA==",
+  "tags": [
+    "fm",
+    "gate",
+    "kit",
+    "reasoning"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

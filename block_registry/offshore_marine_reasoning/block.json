@@ -1,0 +1,185 @@
+{
+  "acceptance": [
+    {
+      "check": "AC1: a single-sided lay tension / strain / stress figure is refused, naming INV-1 (band or nothing)",
+      "id": "single_sided_band",
+      "status": "refused"
+    },
+    {
+      "check": "AC2: an allowable without static_or_dynamic AND region is refused, naming INV-2",
+      "id": "allowable_without_case_or_region",
+      "status": "refused"
+    },
+    {
+      "check": "AC3: an envelope figure carried between two distinct spread types is refused; an envelope without spread_type names INV-3",
+      "id": "cross_spread_carry",
+      "status": "refused"
+    },
+    {
+      "check": "AC4: a DP / station-keeping answer without failure_case or live_state_ref is refused, naming INV-4 and which one is missing",
+      "id": "dp_without_failure_case_or_live_ref",
+      "status": "refused"
+    },
+    {
+      "check": "AC5: go/no-go questions (start the lift, pull-in, lay; is the weather OK; run on two thrusters; safe to dive; get closer) are refused BEFORE retrieval, asserted by a retrieval counter that stays empty",
+      "id": "go_decision_refused_before_retrieval",
+      "status": "refused"
+    },
+    {
+      "check": "AC6: Hs alone cited for a weather criterion is refused as evidence substitution (REJECT_AS_PROOF)",
+      "id": "hs_alone_as_proof",
+      "status": "refused"
+    },
+    {
+      "check": "AC7: applying a static allowable to a dynamic case is refused by the derivation guard, naming the inference",
+      "id": "static_to_dynamic",
+      "status": "refused"
+    },
+    {
+      "check": "AC8: with vessel monitoring unreachable the spread state is UNKNOWN and no design-basis figure appears in the refusal",
+      "id": "monitoring_unreachable_unknown",
+      "status": "refused"
+    },
+    {
+      "check": "AC9: a missing or stale manual log is refused, naming the monitoring + manual-log both-required rule",
+      "id": "manual_log_missing_or_stale",
+      "status": "refused"
+    },
+    {
+      "check": "AC10: a sister-vessel capability plot cited as evidence is refused as a VESSEL TRAP",
+      "id": "sister_vessel_trap",
+      "status": "refused"
+    },
+    {
+      "check": "manifest loader: a partially-qualified figure is refused at LOAD time, naming the figure and every mandatory qualifier it lacks",
+      "id": "partially_qualified_figure",
+      "status": "refused"
+    },
+    {
+      "check": "all ten never-allowed derivations block and each names which inference was attempted",
+      "id": "derivation_guard_complete",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Deterministic offshore marine operations reasoning gate (structure only \u2014 domain encoding sheet, Offshore Oil & Gas Marine Operations; reference pattern app/blocks/datacentre/ and app/blocks/aviation_grounding_gate.py). INV-1..5 enforced, ten never-allowed derivations each naming itself, vessel-monitoring + manual-log two-source live-state gate, REJECT_AS_PROOF and the sister-vessel trap. Go/no-go questions refuse BEFORE retrieval. NO INTERVIEW HAS RUN: every manifest value is null and the block refuses rather than supplying a figure it does not have (app/blocks/offshore_marine/KNOWN_GAPS.md). All refusals are measured by tests/blocks/test_offshore_marine_reasoning.py.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "8c1a3eb0e4d537ce618493a37e3caaf7fd28b37e614e96f262cfd187afc58f8a",
+    "block.py": "88d1d5538ac1ff21d39c05e0c9e73af7e2a095e22758720848e77542408aa0ef"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/offshore_marine_reasoning:latest",
+    "type": "docker"
+  },
+  "id": "offshore_marine_reasoning",
+  "inputs": [
+    {
+      "description": "operator question",
+      "name": "query",
+      "required": true,
+      "type": "string"
+    },
+    {
+      "description": "candidate answer to gate",
+      "name": "answer",
+      "required": true,
+      "type": "string"
+    },
+    {
+      "description": "spread type: s_lay | j_lay | reel_lay | heavy_lift",
+      "name": "spread_type",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "description": "region the figure applies to: overbend | sagbend | touchdown | none",
+      "name": "region",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "description": "analysis case: static | dynamic",
+      "name": "static_or_dynamic",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "description": "DP failure case the capability figure belongs to (intact, WCSF, thruster out)",
+      "name": "failure_case",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "description": "reference to the live spread state the DP answer was read against",
+      "name": "live_state_ref",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "description": "forecast qualifiers: horizon_hours, confidence, operation_duration_hours, contingency_hours, window_covers",
+      "name": "forecast",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "description": "citations offered as evidence",
+      "name": "evidence",
+      "required": false,
+      "type": "array"
+    },
+    {
+      "description": "vessel monitoring + manual log two-source live state ({monitoring, manual_log, fetched_at})",
+      "name": "live_state",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "description": "the vessel, stinger, tensioner, pipe or route changed since the installation analysis",
+      "name": "analysis_changed_since",
+      "required": false,
+      "type": "boolean"
+    }
+  ],
+  "layer": 3,
+  "name": "offshore_marine_reasoning",
+  "never": [],
+  "outputs": [
+    {
+      "description": "verdict: pass | block | refused, with blocked_reason, optional corrected state, interview_status and unfilled_figures",
+      "name": "verdict",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "GXsDwyDPWjoLmiXVAIWEh3mXtfIe0uPs2+n+gC20JFoBpeRxgQ3AumMDpNg6qjp+N8cRFSy0BVPfhmQvwDGDAA==",
+  "tags": [
+    "offshore",
+    "marine",
+    "installation",
+    "grounding",
+    "gate",
+    "dp"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

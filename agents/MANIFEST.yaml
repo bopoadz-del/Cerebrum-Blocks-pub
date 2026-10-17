@@ -1,0 +1,49 @@
+# Cerebrum agent pack — vendor-neutral, portable
+pack_id: cerebrum-agents
+version: "1.0.0"
+architecture_ref: docs/CEREBRUM_V2_NORTH_STAR.md#pillar-a
+distinct_from: carry-back  # run-time store maintenance; not this pack
+
+pillar_a:
+  - id: 1
+    name: pydantic_both_sides
+  - id: 2
+    name: mandatory_block_base
+  - id: 3
+    name: connection_registry
+  - id: 4
+    name: auto_contract_tests
+  - id: 5
+    name: seam_test_every_connection
+    keystone: true
+
+chain:
+  happy_path:
+    - block-architect
+    - block-implementer  # or coder
+    - test-writer
+    - docs-writer
+  on_failure: chain-debugger
+
+agents:
+  - id: block-architect
+    file: block-architect.md
+    handoff: [block-implementer, coder]
+  - id: block-implementer
+    file: block-implementer.md
+    handoff: [test-writer]
+  - id: coder
+    file: coder.md
+    handoff: [test-writer]
+  - id: test-writer
+    file: test-writer.md
+    handoff: [docs-writer]
+    requires_examples:
+      - examples/contract_test_example.py
+      - examples/seam_test_example.py
+  - id: docs-writer
+    file: docs-writer.md
+    handoff: []
+  - id: chain-debugger
+    file: chain-debugger.md
+    handoff: [block-implementer, coder, test-writer]

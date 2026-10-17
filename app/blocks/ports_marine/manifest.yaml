@@ -1,0 +1,80 @@
+kit: ports_marine
+version: 1
+serves_verticals: [ports_marine, ports]
+hooks_used: [H0, H1, H2, H3]
+
+quantities:
+  quay_wall_load:         {units: [kN_m2]}
+  deck_load:              {units: [kN_m2]}
+  declared_depth:         {units: [m]}
+  bollard_swl:            {units: [t]}
+  fender_reaction:        {units: [kN]}
+  fender_energy:          {units: [kNm]}
+  crane_rail_load:        {units: [kN_m]}
+  wheel_load:             {units: [kN]}
+  stack_height:           {units: [tiers]}
+  wind_limit:             {units: [ms]}
+
+  # Correction 6 (spec §1): a staleness_triggers KEY must be a declared
+  # quantity. fender_capacity and stack_height_limit are artifacts the
+  # sheet's triggers name, not figures — declared unitless so the trigger
+  # has something to be keyed on.
+  fender_capacity:        {units: [—]}
+  stack_height_limit:     {units: [—]}
+
+qualifier_fields:
+  terminal_id:            {type: string}
+  berth_id:               {type: string}
+  asset_id:               {type: string}
+  depth_datum:            {type: enum,   values: [chart_datum, berth_datum, LAT, MHWS]}
+  survey_date:            {type: date}
+  tide_state_assumed:     {type: string}
+  certification_ref:      {type: string}
+  stack_area:             {type: string}
+  wind_state:             {type: string}
+
+source_classes:
+  flag_statutory:         {rank: 1}
+  classification_society: {rank: 2}
+  design_dossier:         {rank: 3, reject_as_proof: [verbal_engineering, undated_calculation]}
+  as_built_drawings:      {rank: 4}
+  operating_manual:       {rank: 5, reject_as_proof: [unversioned]}
+  berth_procedure:        {rank: 6}
+  harbour_master:         {rank: 7}
+  shift_instruction:      {rank: 8}
+  # Correction 1: every class named in reject_as_proof or demote must itself
+  # be a declared source class, or the rule that names it can never fire and
+  # the loader refuses. Ranked below every governing class.
+  verbal_engineering:     {rank: 9}
+  undated_calculation:    {rank: 10}
+  unversioned:            {rank: 11}
+
+state_providers:
+  survey_current:         {kind: revision, max_age: event}
+  berth_maintenance:      {kind: status,   max_age: shift}
+  fender_bollard_condition: {kind: status, max_age: shift}
+  weather_tide:           {kind: status,   max_age: realtime}
+
+staleness_triggers:
+  declared_depth:         [dredging, silting, survey_superseded]
+  quay_wall_load:         [modification, inspection_finding]
+  bollard_swl:            [certification_interval]
+  fender_capacity:        [certification_interval, incident]
+  stack_height_limit:     [operating_manual_revision]
+  crane_rail_load:        [crane_change, quay_modification]
+
+scope_refusals:
+  - pattern: "is it safe to berth this vessel"
+    authority: "harbour master / marine operations"
+  - pattern: "can this crane lift this load"
+    authority: "lifting engineer + design dossier"
+  - pattern: "is this berth available"
+    authority: "berth scheduling + harbour master"
+  - pattern: "is the depth adequate today"
+    authority: "harbour master — current survey and tide"
+  - pattern: "can we stack higher"
+    authority: "terminal operations + operating manual"
+
+spec_extensions:
+  claim_class:            true
+  same_source:            true

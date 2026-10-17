@@ -1,0 +1,55 @@
+{
+  "id": "mep_coordination",
+  "name": "MEP Coordination — Clash Judge",
+  "version": "0.1.0",
+  "learning_engine_enabled": false,
+  "description": "Takes an IFC model, finds true clashes and clearance violations in MEP services, triages by congestion and programme, and proposes sourced resolutions on a clone. The original model is never written to.",
+  "status": "in_development",
+  "author": "bopoadz-del",
+  "tags": ["domain", "construction", "bim", "ifc", "mep", "clash", "coordination"],
+  "source": {
+    "repo": "https://github.com/bopoadz-del/Cerebrum-Blocks",
+    "ref": "main",
+    "publish_script": "scripts/publish_kit.py"
+  },
+  "standalone": {
+    "extractable": true,
+    "note": "Built kit-first so extraction to a standalone product is a manifest change, not a rewrite. No code depends on the construction container."
+  },
+  "blocks": [
+    "geometry_engine",
+    "clearance_rules",
+    "clash_triage",
+    "clash_resolver",
+    "bcf_export",
+    "version_diff",
+    "model_clone"
+  ],
+  "planned_blocks": [],
+  "flow": [
+    ["geometry_engine"],
+    ["clearance_rules"],
+    ["clash_triage"],
+    ["clash_resolver"],
+    ["model_clone"],
+    ["version_diff"],
+    ["bcf_export"]
+  ],
+  "contracts": {
+    "READS": ["IFC file path", "element pairs", "clearance rule table"],
+    "WRITES": ["findings list", "BCF issues", "change sets on a clone"],
+    "NEVER": [
+      "writes to the original IFC model or any authoring tool",
+      "parses .rvt/.nwd/.nwc — export-to-IFC instruction stands",
+      "proposes a move that cannot be sourced to a rule without flagging it unsourced",
+      "reports an element with no geometry as clear"
+    ]
+  },
+  "requires": {
+    "python": ["ifcopenshell==0.8.5", "trimesh>=5.1.0", "manifold3d", "numpy", "scipy"],
+    "note": "manifold3d supplies the boolean backend. Without it the engine degrades to surface intersection and says so in every finding."
+  },
+  "prompts": [],
+  "data": [],
+  "core_modules": []
+}

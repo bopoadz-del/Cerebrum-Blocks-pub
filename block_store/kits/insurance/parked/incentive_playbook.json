@@ -1,0 +1,31 @@
+{
+  "id": "incentive_playbook",
+  "title": "Producer Incentive Targeting Playbook Snippets",
+  "version": "1.0.0",
+  "scope": "Use with incentive_targeting heuristic eligibility, ranking, and budget simulation output.",
+  "disclaimer": "Incentive recommendations are formula-like heuristics and should be reviewed against approved compensation plans.",
+  "eligibility_checks": [
+    "Confirm producer appointment and compensation-plan eligibility.",
+    "Block or review payouts when open compliance findings exist.",
+    "Verify retention rate, loss ratio, complaint count, and premium data before communicating an award.",
+    "Apply state, carrier, and plan-specific compensation limits before final approval."
+  ],
+  "bonus_formula_notes": [
+    "Base bonus is a configurable percentage of production.",
+    "Growth bonus uses incremental premium above target or growth-derived incremental premium.",
+    "Strategic product bonus is a configurable flat amount per strategic placement.",
+    "Per-producer cap should match the active compensation plan."
+  ],
+  "budget_simulation_sop": [
+    "Rank producers before allocation and review top rank factors for reasonableness.",
+    "Fund eligible producers in rank order until budget is exhausted.",
+    "Document unfunded eligible producers for next-cycle review.",
+    "Re-run simulation after any manual compliance or data corrections."
+  ],
+  "provenance": {
+    "kind": "contributor_unverified",
+    "recorded_on": "2026-08-29",
+    "reference": "The_Fork-published bundle orphan; no checkable source recovered",
+    "parked": true
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "name": "authorization_policy",
+  "version": "0.1.0",
+  "sha256": "ebc78283198dfde55daed0c1b8e022735b7bddb13d8ddea3e072d8206c2100e7",
+  "dependencies": [],
+  "provenance": "fork",
+  "acceptance_test": "tests/test_authorization_policy.py",
+  "tier": "premium",
+  "note": "Premium-only; not available in the freemium tier."
+}

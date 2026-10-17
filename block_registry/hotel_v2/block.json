@@ -1,0 +1,68 @@
+{
+  "acceptance": [
+    {
+      "check": "an empty payload is refused, not silently accepted",
+      "id": "empty_payload",
+      "status": "refused"
+    },
+    {
+      "check": "an unknown action is refused, not silently accepted",
+      "id": "unknown_action",
+      "status": "refused"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Hotel domain analysis: keyword-based document-type detection across 8 hotel document types with ADR/RevPAR/GOPPAR/risk extraction.",
+  "digests": {
+    "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
+    "block.json": "fe3e11eb4d37b0cf3140cb1f7a3c182621225c96463c6752fb66a19dcb2251f8",
+    "block.py": "e9f8b5bdcd7791ddb6f55fa72135985b3e0f4eb2064640d48a53455973bcb28e"
+  },
+  "id": "hotel_v2",
+  "inputs": [
+    {
+      "description": "Document text to analyze",
+      "name": "text",
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 3,
+  "name": "hotel_v2",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Capability result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "signature": "FHcvoUA3MD5FWBadRG3UI+j9vxt0hVupZQDRviq9N1SKueaSaAa6UdWEHuvhTgwWnDZDbwn0iitJ9jWgNx92AA==",
+  "tags": [
+    "domain",
+    "vertical",
+    "hotel"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

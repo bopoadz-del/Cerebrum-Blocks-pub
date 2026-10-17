@@ -1,0 +1,23 @@
+{
+  "acceptance": [],
+  "description": "Read-only revenue management intelligence: yield, load factor, and pricing analysis grounded in project documents.",
+  "digests": {
+    "block.json": "f49c09b1c9ff8da5bd46d99775bbeee02c7d568c17673587848ee3f0a848acf1",
+    "block.py": "8f65bfc33463299ad7e3c6c755f934c9625d242fb6107ec2aa5f81195ac2c8ed"
+  },
+  "id": "aviation_revenue_kit",
+  "name": "Aviation Revenue Kit",
+  "never": [],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [],
+  "signature": "/SUDcxtTE+/qCqBD7834iFwRawRwNyf6wXYkq2SYLPN7TJqv6JWDLA54KL8AbNGkz3e2FCEGLkvYbnlzX7MoBg==",
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": []
+}

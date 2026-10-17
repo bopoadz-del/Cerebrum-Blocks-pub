@@ -1,0 +1,76 @@
+{
+  "corpus_id": "hkia_gn16_corpus",
+  "version": "2026.1-pilot",
+  "title": "HKIA GN16 / GL16 compliance corpus pointers",
+  "copyright_policy": "Original summaries and public-source pointers only. This file does not reproduce copyrighted regulatory text.",
+  "jurisdiction": "Hong Kong",
+  "issuer": "Hong Kong Insurance Authority",
+  "scope_note": "GN16 is represented for pilot purposes alongside the current GL16 public guideline name for underwriting long term insurance business other than Class C business.",
+  "sources": [
+    {
+      "source_id": "hkia-gl16-2026",
+      "title": "Guideline on Underwriting Long Term Insurance Business (Other than Class C Business)",
+      "public_pointer": "https://www.ia.org.hk/en/legislative_framework/files/GL16_2026_EN.pdf",
+      "authority": "Primary public guideline",
+      "access_note": "Consult the official HKIA publication for authoritative text."
+    },
+    {
+      "source_id": "hkia-gn16-qa",
+      "title": "Questions and Answers on GN16",
+      "public_pointer": "https://www.ia.org.hk/en/legislative_framework/files/Q&A-gn16.pdf",
+      "authority": "Public interpretive reference",
+      "access_note": "Use as a reference aid; it does not replace the primary guideline or legal advice."
+    }
+  ],
+  "section_summaries": [
+    {
+      "summary_id": "scope",
+      "citation": "HKIA GL16/GN16 sections 1.2 and 3.2",
+      "summary": "The guideline is scoped to authorized insurers underwriting long term business other than Class C business, and compliance assessment focuses on substance over the label of an arrangement.",
+      "rule_ids": ["GN16-SCOPE-001"]
+    },
+    {
+      "summary_id": "product_design",
+      "citation": "HKIA GL16/GN16 section 5",
+      "summary": "Product governance should consider fair treatment from design through post-launch monitoring, including target customers, affordability, risk profile, distribution channel, fees, charges, and surrender effects.",
+      "rule_ids": ["GN16-PROD-001"]
+    },
+    {
+      "summary_id": "customer_information",
+      "citation": "HKIA GL16/GN16 sections 6 and 8.3",
+      "summary": "Customer-facing materials should be understandable and should cover material risks, exclusions, fees, charges, surrender consequences, and cooling-off rights before the customer commits.",
+      "rule_ids": ["GN16-DISC-001"]
+    },
+    {
+      "summary_id": "suitability",
+      "citation": "HKIA GL16/GN16 section 7 and Annex sales process",
+      "summary": "Before advice or sale, records should show a needs and suitability review that considers customer knowledge, experience, priorities, circumstances, affordability, and premium payment horizon where relevant.",
+      "rule_ids": ["GN16-SUIT-001", "GN16-ADVICE-001"]
+    },
+    {
+      "summary_id": "remuneration",
+      "citation": "HKIA GL16/GN16 sections 9.2 and 9.3",
+      "summary": "Intermediary remuneration should avoid misaligned incentives, should not permit indemnity or advance commission, and should include clawback for proven fraud, money laundering, or mis-selling.",
+      "rule_ids": ["GN16-REM-001", "GN16-CLAW-001"]
+    },
+    {
+      "summary_id": "ongoing_monitoring",
+      "citation": "HKIA GL16/GN16 section 10",
+      "summary": "Controls should manage conflicts of interest and maintain policyholder communication, including expectation management for non-guaranteed or illustrated benefits.",
+      "rule_ids": ["GN16-CONF-001", "GN16-ANNUAL-001"]
+    },
+    {
+      "summary_id": "policy_loan",
+      "citation": "HKIA GL16/GN16 section 6.7",
+      "summary": "Where policy loan features exist, customer information should cover loan terms, interest rates, notices, rate changes, balances, and account statement controls.",
+      "rule_ids": ["GN16-LOAN-001"]
+    },
+    {
+      "summary_id": "post_sale_controls",
+      "citation": "HKIA GL16/GN16 sections 11.2 to 11.5",
+      "summary": "Vulnerable-customer controls should identify applicable customers, run audio-recorded post-sale confirmation calls, handle unsuccessful calls with follow-up notices, and retain quality-control records.",
+      "rule_ids": ["GN16-VULN-001", "GN16-PSC-001"]
+    }
+  ],
+  "non_authoritative_notice": "This corpus is for deterministic Layer-1 triage. It is not legal advice and is not an HKIA submission artifact."
+}

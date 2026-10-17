@@ -1,0 +1,103 @@
+{
+  "acceptance": [],
+  "author": "Cerebrum Team",
+  "description": "Construction semantic router: maps user messages to action queues with TF-IDF similarity scoring",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "33fbf8a12de70ba14249c2a734aac7a49a0a7bd9f0dfab51d9c099679bc02905",
+    "block.py": "bd495852e0d87716d6f4c50389bb300c02e0618056d9fa0073343718b748bf42"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/smart_orchestrator:latest",
+    "type": "docker"
+  },
+  "id": "smart_orchestrator",
+  "inputs": [
+    {
+      "description": "Describe what you need (e.g. 'analyze the BOQ and check specs')...",
+      "name": "input",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": 5,
+      "description": "Configuration parameter: max_actions",
+      "name": "max_actions",
+      "required": false,
+      "type": "number"
+    },
+    {
+      "default": 0.15,
+      "description": "Configuration parameter: confidence_threshold",
+      "name": "confidence_threshold",
+      "required": false,
+      "type": "number"
+    }
+  ],
+  "layer": 2,
+  "name": "Smart Orchestrator",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Action Queue",
+      "name": "action_queue",
+      "type": "list"
+    },
+    {
+      "description": "Run Parallel",
+      "name": "parallel_flag",
+      "type": "boolean"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    }
+  ],
+  "requires": [],
+  "signature": "SyFIaRzU+e27zlYRiUkR0oS7Z1oCA04eHn6OJwc58gPBLSfxkuYEazc35v2RKBFBhynGf32EnLBmuenyFVBZCA==",
+  "tags": [
+    "infrastructure",
+    "construction",
+    "orchestration",
+    "routing",
+    "nlp"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "Describe what you need (e.g. 'analyze the BOQ and check specs')...",
+      "name": "input",
+      "widget": "text"
+    },
+    {
+      "label": "Max Actions",
+      "name": "max_actions",
+      "widget": "number"
+    },
+    {
+      "label": "Confidence Threshold",
+      "name": "confidence_threshold",
+      "widget": "number"
+    }
+  ],
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

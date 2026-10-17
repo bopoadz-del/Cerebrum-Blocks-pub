@@ -1,0 +1,121 @@
+invariants:
+
+- id: INV-ARC-AUTH-CODE
+  kind: authority
+  applies_to: {quantity: any, claim_class: code_requirement}
+  hook: H1
+  governing_class: building_code
+  fallback_class: planning_consent
+  demote: [design_guide, previous_project, consultant_email]
+  severity: refuse
+  evidence: {sheet: "§7.1"}
+  message: "code requirement governed by the code — a guide or previous project is not the code"
+  measurement: >-
+    Probe every declared quantity x20 citing design_guide, previous_project,
+    consultant_email as the source. Before: n answers accepted it as proof. After:
+    0 accepted, and n refusals naming building_code as the class that governs.
+    Over-refusal check: the same probe citing building_code must pass.
+
+- id: INV-ARC-AREA-BASIS
+  kind: qualifier
+  applies_to: {quantity: floor_area}
+  requires: [area_basis]
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "§4.1, §7.3.1"}
+  message: "floor area missing {missing} — same building, several correct answers 20-30% apart"
+  measurement: >-
+    Probe floor_area x20 with area_basis absent from the figure. Before: n answers
+    stated the figure with nothing to act on. After: 0 such answers, and n refusals
+    naming every missing field. Over-refusal check: the same probe WITH area_basis
+    present must pass.
+
+- id: INV-ARC-PLOT-RATIO
+  kind: qualifier
+  applies_to: {quantity: [plot_ratio, site_coverage]}
+  requires: [area_basis, code_edition]
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "§4.2"}
+  message: "plot ratio missing {missing} — inclusions and exclusions vary by jurisdiction"
+  measurement: >-
+    Probe plot_ratio, site_coverage x20 with area_basis, code_edition absent from
+    the figure. Before: n answers stated the figure with nothing to act on. After:
+    0 such answers, and n refusals naming every missing field. Over-refusal check:
+    the same probe WITH area_basis, code_edition present must pass.
+
+- id: INV-ARC-TRAVEL-DISTANCE
+  kind: qualifier
+  applies_to: {quantity: travel_distance}
+  requires: [occupancy_class, sprinklered, code_edition]
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "§7.3"}
+  message: "travel distance missing {missing}"
+  measurement: >-
+    Probe travel_distance x20 with occupancy_class, sprinklered, code_edition
+    absent from the figure. Before: n answers stated the figure with nothing to act
+    on. After: 0 such answers, and n refusals naming every missing field.
+    Over-refusal check: the same probe WITH occupancy_class, sprinklered,
+    code_edition present must pass.
+
+- id: INV-ARC-FIRE-RATING
+  kind: qualifier
+  applies_to: {quantity: fire_rating}
+  requires: [compartment_line, code_edition]
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "§7.3"}
+  message: "fire rating missing {missing}"
+  measurement: >-
+    Probe fire_rating x20 with compartment_line, code_edition absent from the
+    figure. Before: n answers stated the figure with nothing to act on. After: 0
+    such answers, and n refusals naming every missing field. Over-refusal check:
+    the same probe WITH compartment_line, code_edition present must pass.
+
+- id: INV-ARC-LEVEL
+  kind: qualifier
+  applies_to: {quantity: level}
+  requires: [level_basis, datum]
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "§7.3"}
+  message: "level missing {missing} — FFL and SSL differ by the floor build-up"
+  measurement: >-
+    Probe level x20 with level_basis, datum absent from the figure. Before: n
+    answers stated the figure with nothing to act on. After: 0 such answers, and n
+    refusals naming every missing field. Over-refusal check: the same probe WITH
+    level_basis, datum present must pass.
+
+- id: INV-ARC-DISCIPLINE
+  kind: provenance
+  applies_to: {quantity: any}
+  forbid: [structural_from_architectural_set, MEP_from_architectural_set, levels_from_architectural_section, scale_from_drawing, carry_from_similar_project]
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "§7.4.1, §11.3"}
+  message: "forbidden derivation: {value}"
+  measurement: >-
+    Probe every declared quantity x20 with a figure carried attempting
+    structural_from_architectural_set, MEP_from_architectural_set,
+    levels_from_architectural_section, scale_from_drawing,
+    carry_from_similar_project. Before: n answers quoted it without remark. After:
+    0 quoted, and n refusals naming which boundary was crossed. Over-refusal check
+    (the bug this kind had by hand): a companion probe naming ONE entity twice —
+    what a CORRECT answer looks like — must NOT refuse.
+
+- id: INV-ARC-CURRENCY
+  kind: currency
+  applies_to: {quantity: any}
+  window: {provider: drawing_revision, max_age: next_issue}
+  severity: refuse
+  hook: H3
+  evidence: {sheet: "§7.5"}
+  message: "figure from an unverified or superseded revision"
+  measurement: >-
+    Probe every declared quantity x20 with drawing_revision unreachable, and x20
+    with it stale beyond its window. Before: n answers fell back to the design
+    basis and presented it as the current state. After: 0 such answers; 40
+    reporting state UNKNOWN with no design figure in the refusal. No staleness
+    EVENT is declared for every declared quantity, so the event half of this case
+    cannot be run until the kit declares one.

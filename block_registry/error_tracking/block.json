@@ -1,0 +1,176 @@
+{
+  "acceptance": [
+    {
+      "check": "errors on an unknown or missing action",
+      "id": "unknown_action",
+      "status": "failed"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "67d30335da2ddba0688665309efddbf787c56fde1c97ffef552833f5d534f5f3",
+    "block.py": "b837d813ad93a58638525af586e836e4be1b170ca5a41f23961c3dd38f0e568b"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/error_tracking:latest",
+    "type": "docker"
+  },
+  "id": "error_tracking",
+  "inputs": [
+    {
+      "description": "JSON payload for the selected action",
+      "name": "input",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "default": "capture_exception",
+      "description": "Action",
+      "name": "action",
+      "options": [
+        "capture_exception",
+        "capture_message",
+        "get_issue",
+        "resolve_issue",
+        "performance_trace",
+        "end_trace",
+        "get_issues",
+        "get_stats",
+        "add_breadcrumb"
+      ],
+      "required": false,
+      "type": "string"
+    },
+    {
+      "default": 1.0,
+      "description": "Configuration parameter: sample_rate",
+      "name": "sample_rate",
+      "required": false,
+      "type": "number"
+    },
+    {
+      "default": true,
+      "description": "Configuration parameter: auto_create_issues",
+      "name": "auto_create_issues",
+      "required": false,
+      "type": "boolean"
+    },
+    {
+      "default": 10,
+      "description": "Configuration parameter: alert_threshold",
+      "name": "alert_threshold",
+      "required": false,
+      "type": "number"
+    },
+    {
+      "default": 1000,
+      "description": "Configuration parameter: max_events_per_issue",
+      "name": "max_events_per_issue",
+      "required": false,
+      "type": "number"
+    },
+    {
+      "default": 30,
+      "description": "Configuration parameter: retention_days",
+      "name": "retention_days",
+      "required": false,
+      "type": "number"
+    }
+  ],
+  "layer": 1,
+  "name": "Error Tracking",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Result",
+      "name": "result",
+      "type": "json"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    }
+  ],
+  "requires": [
+    "database",
+    "notification"
+  ],
+  "signature": "i95UvbUi0Pn1ZytVV38XtPnUDt+Nq93sq2IHnV6wOgLdIzzibMXXwmeDZrWSvRY/KUykQJmBkQ5qdmYvqeL+Dg==",
+  "tags": [
+    "observability",
+    "debugging",
+    "devops",
+    "error_tracking"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "JSON payload for the selected action",
+      "name": "input",
+      "widget": "json"
+    },
+    {
+      "label": "Action",
+      "name": "action",
+      "options": [
+        "capture_exception",
+        "capture_message",
+        "get_issue",
+        "resolve_issue",
+        "performance_trace",
+        "end_trace",
+        "get_issues",
+        "get_stats",
+        "add_breadcrumb"
+      ],
+      "widget": "select"
+    },
+    {
+      "label": "Sample Rate",
+      "name": "sample_rate",
+      "widget": "number"
+    },
+    {
+      "label": "Auto Create Issues",
+      "name": "auto_create_issues",
+      "widget": "toggle"
+    },
+    {
+      "label": "Alert Threshold",
+      "name": "alert_threshold",
+      "widget": "number"
+    },
+    {
+      "label": "Max Events Per Issue",
+      "name": "max_events_per_issue",
+      "widget": "number"
+    },
+    {
+      "label": "Retention Days",
+      "name": "retention_days",
+      "widget": "number"
+    }
+  ],
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

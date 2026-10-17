@@ -1,0 +1,10 @@
+{
+  "name": "rate_limit_guard",
+  "version": "0.1.0",
+  "sha256": "39ab38e954a4dfc5045fb879ef746cc907da1fe172ba21957b5734035cda3783",
+  "dependencies": [],
+  "provenance": "fork",
+  "acceptance_test": "tests/test_rate_limit_guard.py",
+  "tier": "premium",
+  "note": "Premium-only; not available in the freemium tier."
+}

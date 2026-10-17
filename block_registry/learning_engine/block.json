@@ -1,0 +1,141 @@
+{
+  "acceptance": [
+    {
+      "check": "errors on an unknown or missing action",
+      "id": "unknown_action",
+      "status": "failed"
+    },
+    {
+      "check": "fails loud when a required credential or key is absent",
+      "id": "missing_credential",
+      "status": "failed"
+    }
+  ],
+  "author": "Cerebrum Team",
+  "description": "Tier promotion + coefficient tuning: learns from user corrections to improve formula accuracy",
+  "digests": {
+    "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
+    "block.json": "5f512ffdef7f2b58cd9fbe96d9428ad7fe240e02d9e0f312c0f03990a4a72296",
+    "block.py": "708de7abf63404b178e9cc0529914945df71e184c866f964e9729fa5cb936439"
+  },
+  "execution": {
+    "image": "ghcr.io/cerebrum-blocks/learning_engine:latest",
+    "type": "docker"
+  },
+  "id": "learning_engine",
+  "inputs": [
+    {
+      "description": "{\"correction_data\": {\"formula_id\": \"concrete_cost\", \"predicted\": 125000, \"actual\": 118000}, \"operation\": \"record_correction\"}",
+      "name": "input",
+      "required": false,
+      "type": "json"
+    },
+    {
+      "default": 0.05,
+      "description": "Configuration parameter: promotion_mae_threshold",
+      "name": "promotion_mae_threshold",
+      "required": false,
+      "type": "number"
+    },
+    {
+      "default": 5,
+      "description": "Configuration parameter: min_samples_for_training",
+      "name": "min_samples_for_training",
+      "required": false,
+      "type": "number"
+    },
+    {
+      "default": "/tmp/cerebrum_learning_engine.json",
+      "description": "Configuration parameter: storage_path",
+      "name": "storage_path",
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "layer": 3,
+  "name": "Learning Engine",
+  "never": [],
+  "outputs": [
+    {
+      "description": "Tier",
+      "name": "tier_level",
+      "type": "text"
+    },
+    {
+      "description": "Coefficients",
+      "name": "updated_coefficients",
+      "type": "json"
+    },
+    {
+      "description": "Promoted",
+      "name": "promotion_flag",
+      "type": "boolean"
+    }
+  ],
+  "permissions": {
+    "blocks": [],
+    "filesystem": false,
+    "imports": [],
+    "network": false
+  },
+  "provenance_policy": "independently_labeled_only",
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    },
+    {
+      "kind": "env",
+      "scope": "process"
+    },
+    {
+      "kind": "config",
+      "scope": "runtime"
+    },
+    {
+      "kind": "queue",
+      "scope": "jobs"
+    }
+  ],
+  "requires": [],
+  "signature": "Z7MiM3kIdOno38goEuYNZ/jHsVRSKHrCA3yHaWjI8ObI8RMmer6q7lfGukColntzM9yzBBKS0GK23G2Vy2jmDg==",
+  "tags": [
+    "domain",
+    "construction",
+    "ml",
+    "learning",
+    "coefficients",
+    "tier"
+  ],
+  "trust_tier": "platform",
+  "ui_schema": [
+    {
+      "label": "{\"correction_data\": {\"formula_id\": \"concrete_cost\", \"predicted\": 125000, \"actual\": 118000}, \"operation\": \"record_correction\"}",
+      "name": "input",
+      "widget": "json"
+    },
+    {
+      "label": "Promotion Mae Threshold",
+      "name": "promotion_mae_threshold",
+      "widget": "number"
+    },
+    {
+      "label": "Min Samples For Training",
+      "name": "min_samples_for_training",
+      "widget": "number"
+    },
+    {
+      "label": "Storage Path",
+      "name": "storage_path",
+      "widget": "text"
+    }
+  ],
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}

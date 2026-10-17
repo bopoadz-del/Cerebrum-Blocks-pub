@@ -1,0 +1,206 @@
+{
+  "kit": "mep_coordination",
+  "tools": [
+    "geometry_engine",
+    "clearance_rules",
+    "clash_triage",
+    "clash_resolver",
+    "bcf_export",
+    "version_diff",
+    "model_clone"
+  ],
+  "rows": [
+    {
+      "utterance": "run clash detection on this model",
+      "expect_tool": "geometry_engine",
+      "expect_action": "detect_clashes",
+      "note": "explicit phrasing from the order; full mesh judgement, not a bounding-box pass"
+    },
+    {
+      "utterance": "check clashes in the IFC",
+      "expect_tool": "geometry_engine",
+      "expect_action": "detect_clashes",
+      "note": "explicit phrasing from the order"
+    },
+    {
+      "utterance": "clashes L3",
+      "expect_tool": "geometry_engine",
+      "expect_action": "detect_clashes",
+      "note": "terse level-scoped phrasing; still a detection request, filtered to one storey"
+    },
+    {
+      "utterance": "clash report",
+      "expect_tool": "clash_triage",
+      "expect_action": "triage_queue",
+      "note": "terse phrasing; 'report' implies the deduplicated, prioritised queue, not raw findings"
+    },
+    {
+      "utterance": "coordination report",
+      "expect_tool": "clash_triage",
+      "expect_action": "triage_queue",
+      "note": "terse phrasing; the order's own name for the prioritised queue deliverable"
+    },
+    {
+      "utterance": "coordination report for the schependomlaan model",
+      "expect_tool": "clash_triage",
+      "expect_action": "triage_queue",
+      "note": "same terse intent, model-scoped"
+    },
+    {
+      "utterance": "is there enough clearance between the gas main and the LV cable",
+      "expect_tool": "clearance_rules",
+      "expect_action": "check_clearance",
+      "note": "clearance-specific phrasing naming the two systems MEP-GAS-LV-400 governs"
+    },
+    {
+      "utterance": "what is the minimum clearance between gas mains and low voltage electrical",
+      "expect_tool": "clearance_rules",
+      "expect_action": "check_clearance",
+      "note": "clearance-specific phrasing asking for the rule value, not a fresh geometry judgement"
+    },
+    {
+      "utterance": "does the drainage run have 300mm clearance from the structure",
+      "expect_tool": "clearance_rules",
+      "expect_action": "check_clearance",
+      "note": "clearance-specific phrasing citing the wildcard rule's threshold"
+    },
+    {
+      "utterance": "run a full MEP coordination pass on this IFC",
+      "expect_tool": "geometry_engine",
+      "expect_action": "run_coordination_pass",
+      "note": "explicit end-to-end phrasing; entry action of the kit"
+    },
+    {
+      "utterance": "export a BCF for the clash results",
+      "expect_tool": "bcf_export",
+      "expect_action": "export_bcf",
+      "note": "explicit phrasing naming the BCF deliverable"
+    },
+    {
+      "utterance": "generate BCF issues for Navisworks",
+      "expect_tool": "bcf_export",
+      "expect_action": "export_bcf",
+      "note": "explicit phrasing naming a downstream coordination tool"
+    },
+    {
+      "utterance": "bcf export",
+      "expect_tool": "bcf_export",
+      "expect_action": "export_bcf",
+      "note": "terse phrasing"
+    },
+    {
+      "utterance": "give me a prioritised clash queue",
+      "expect_tool": "clash_triage",
+      "expect_action": "triage_queue",
+      "note": "explicit phrasing naming the queue deliverable"
+    },
+    {
+      "utterance": "how congested is zone B on level 2",
+      "expect_tool": "clash_triage",
+      "expect_action": "triage_queue",
+      "note": "congestion is computed and carried on the triage queue, not a separate tool"
+    },
+    {
+      "utterance": "what changed between this run and the last one",
+      "expect_tool": "version_diff",
+      "expect_action": "diff_versions",
+      "note": "explicit phrasing for the resolved/new/regressed/persisting comparison"
+    },
+    {
+      "utterance": "did the reroute fix the duct clash without creating a new one",
+      "expect_tool": "version_diff",
+      "expect_action": "diff_versions",
+      "note": "explicit phrasing for regression detection between two clash runs"
+    },
+    {
+      "utterance": "compare this IFC to the previous version for clashes",
+      "expect_tool": "version_diff",
+      "expect_action": "diff_versions",
+      "note": "explicit phrasing"
+    },
+    {
+      "utterance": "propose a fix for this clash",
+      "expect_tool": "clash_resolver",
+      "expect_action": "propose_resolution",
+      "note": "explicit phrasing; a checked, sourced move or a flag/escalation"
+    },
+    {
+      "utterance": "suggest how to resolve the pipe vs duct clash",
+      "expect_tool": "clash_resolver",
+      "expect_action": "propose_resolution",
+      "note": "explicit phrasing"
+    },
+    {
+      "utterance": "resolve clash queue item 4",
+      "expect_tool": "clash_resolver",
+      "expect_action": "propose_resolution",
+      "note": "terse phrasing naming a queue position rather than an element pair"
+    },
+    {
+      "utterance": "apply the proposed moves to a clone",
+      "expect_tool": "model_clone",
+      "expect_action": "apply_to_clone",
+      "note": "explicit phrasing; the original model is never written, only a clone"
+    },
+    {
+      "utterance": "write a change set for these clashes",
+      "expect_tool": "model_clone",
+      "expect_action": "apply_to_clone",
+      "note": "explicit phrasing naming the change_set.json deliverable"
+    },
+    {
+      "utterance": "does this duct clash with the sprinkler main",
+      "expect_tool": "geometry_engine",
+      "expect_action": "detect_clashes",
+      "note": "element-pair phrasing rather than a whole-model request"
+    },
+    {
+      "utterance": "is the drainage pipe clashing with the beam",
+      "expect_tool": "geometry_engine",
+      "expect_action": "detect_clashes",
+      "note": "element-pair phrasing"
+    },
+    {
+      "utterance": "generate a WBS",
+      "expect_tool": null,
+      "expect_action": null,
+      "note": "negative: scheduling, not clash/clearance coordination"
+    },
+    {
+      "utterance": "what is the contract completion date",
+      "expect_tool": null,
+      "expect_action": null,
+      "note": "negative: contracts domain, no geometry involved"
+    },
+    {
+      "utterance": "extract quantities from this IFC",
+      "expect_tool": null,
+      "expect_action": null,
+      "note": "negative and a real confusion risk: this is bim_extractor's job (QTO from IFC), not clash/clearance judgement"
+    },
+    {
+      "utterance": "produce a bill of quantities from the drawings",
+      "expect_tool": null,
+      "expect_action": null,
+      "note": "negative: BOQ processing, not clash coordination"
+    },
+    {
+      "utterance": "what's the critical path for this schedule",
+      "expect_tool": null,
+      "expect_action": null,
+      "note": "negative: primavera/CPM scheduling, not MEP coordination"
+    },
+    {
+      "utterance": "summarize the specification section on concrete",
+      "expect_tool": null,
+      "expect_action": null,
+      "note": "negative: spec analysis, not geometry or clearance"
+    },
+    {
+      "utterance": "calculate the earned value for this project",
+      "expect_tool": null,
+      "expect_action": null,
+      "note": "negative: EVM/finance, unrelated to clash detection"
+    }
+  ]
+}

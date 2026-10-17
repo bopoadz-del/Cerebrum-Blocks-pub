@@ -1,0 +1,10 @@
+{
+  "name": "provenance_verification",
+  "version": "0.1.0",
+  "sha256": "cabf9e7264568eafa81def9a7372f4be916d8ca9af341a4af178bc844171fed7",
+  "dependencies": [],
+  "provenance": "factory",
+  "acceptance_test": "tests/test_provenance_verification.py",
+  "tier": "premium",
+  "note": "Premium-only; not available in the freemium tier."
+}
