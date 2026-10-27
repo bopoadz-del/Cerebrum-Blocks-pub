@@ -1,23 +1,27 @@
 # The Store - Cerebrum Blocks 
 
-**Independent.** Cerebrum Blocks is **not** Cerebrum — it is a separate
-project with its own repo, its own API, and its own kits. The block store is
-open source; CerebrumDev is a separate proprietary product that *consumes*
-blocks and kits through the public API, exactly like any other client.
+Cerebrum Blocks is **The Store** of the Cerebrum platform: the certified,
+MIT-licensed capability inventory that the CerebrumDev.ai Factory assembles
+vertical platforms from. Blocks and kits are reached through one public API.
 
-[![CI](https://github.com/bopoadz-del/Cerebrum-Blocks/actions/workflows/ci.yml/badge.svg)](https://github.com/bopoadz-del/Cerebrum-Blocks/actions/workflows/ci.yml)
+[![CI](https://github.com/bopoadz-del/Cerebrum-Blocks-pub/actions/workflows/ci.yml/badge.svg)](https://github.com/bopoadz-del/Cerebrum-Blocks-pub/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 ---
 
-> ### Part of the CEREBRUM ecosystem — industrialized AI delivery
+> ### Part of the CEREBRUM ecosystem
 >
-> **The Store — [Cerebrum-Blocks](https://github.com/bopoadz-del/Cerebrum-Blocks):** 150 block modules (136 registry entries, all manifested + signed), 19 domain kits + universal kernel, one API. Build a capability once; every sector inherits it.  
-> **The Factory — [<private-repo>](https://github.com/bopoadz-del/<private-repo>):** the client-facing interface that assembles blocks into governed, deployable vertical platforms — evaluation gates in CI, release certification, honest closure reporting.  
-> **The Products — [The Fork](https://github.com/bopoadz-del/The_Fork)** (construction AI — enterprise client pilot) **· [RetailOps](https://github.com/bopoadz-del/<private-product>)** (retail operations — assembled, CI-gated and deployed in under three days).  
-> **The Edge:** sovereign deployment proven — zero-egress on-premise profile, executed air-gap acceptance test, signed sovereignty report.
+> **The Store — Cerebrum-Blocks (this repo):** the certified capability
+> inventory — typed execution blocks and domain kits, manifested and signed,
+> reached through one API. Build a capability once; every sector inherits it.
+> **The Factory — CerebrumDev.ai:** assembles Store blocks into governed,
+> deployable vertical platforms, with evaluation gates in CI and release
+> certification.
+> **The Builds — cerebrum-builds:** the certified platform builds the Factory
+> produces.
 >
-> **You are here: THE STORE** — the certified capability inventory every product is assembled from.
+> **You are here: THE STORE** — the certified capability inventory every
+> platform is assembled from.
 
 ---
 
@@ -34,11 +38,11 @@ products, clients, and domain kits.
 
 | Component | Path | Purpose |
 |---|---|---|
-| Blocks | `app/blocks/` | 150 typed execution modules (chat, RAG, documents, domain analysis, workbench, …) |
+| Blocks | `app/blocks/` | typed execution modules (chat, RAG, documents, domain analysis, workbench, …) |
 | Block runtime | `app/core/` | TypedBlock base with fail-closed I/O validation, trust-scope enforcement, grounding stage, capability model |
 | Execute API | `app/routers/execute.py` | `/v1/execute` — auth, tier boundary, trust scope, grounding, capability dispatch |
-| Block registry | `block_registry/` | 115 manifest + adapter entries for discovery and subprocess execution |
-| Store | `app/routers/store.py` + `block_store/` | Kit catalog, provenance-verified install, 19 domain kits + the universal kernel |
+| Block registry | `block_registry/` | manifest + adapter entries for discovery and subprocess execution |
+| Store | `app/routers/store.py` + `block_store/` | Kit catalog, provenance-verified install, domain kits + the universal kernel |
 | Sandbox runner | `sandbox-runner/` | Out-of-process execution service for blocks with elevated capabilities |
 | Containers | `app/containers/` | Domain containers assembling blocks per vertical |
 
@@ -50,7 +54,7 @@ products, clients, and domain kits.
 | **Retrieval** | vector_search, knowledge, zvec |
 | **Formulas** | formula_executor, formula_executor_v2, construction_advisor (cited construction KB) |
 | **Documents** | pdf, ocr, xlsx_schedule, spec_analyzer, bim_extractor |
-| **Domain analysis** | construction_v2, aviation_v2, finance_v2, medical_v2, … (19 verticals) |
+| **Domain analysis** | construction_v2, aviation_v2, finance_v2, medical_v2, … (domain verticals) |
 | **Workbench** | workbench (bounded coding-agent CLI editing with diff + safety gates) |
 
 ## Unregistered material (COLLECTOR rung 2 — by design)
@@ -65,14 +69,14 @@ COLLECTOR can survey and promote, not certified inventory:
 - **Library helpers** (`ifc_loader`, `_knowledge`, `_procedure_routing`) —
   shared modules consumed by registered blocks, not blocks themselves.
 
-Newly registered in the close-out: estate blocks (5), `retail_v2`,
+Newly registered in the close-out: estate blocks, `retail_v2`,
 `safety_world_detector`, `mcp_adapter`, `inbound_webhook`, `workbench`.
 All registry blocks are signed (publisher `cerebrum_platform`) and the
 signing + manifest-contract gates run in CI.
 
 ## Domain kits
 
-19 domain kits ship under `block_store/kits/` (construction, aviation,
+Domain kits ship under `block_store/kits/` (construction, aviation,
 finance, medical, legal, retail, insurance, education, agriculture,
 manufacturing, oil & gas, pharma, real estate, hotel management, HR,
 supply chain, automotive, finance ops, mep coordination), plus the
@@ -82,8 +86,8 @@ installs are provenance-verified (see Security model).
 ## Quick start
 
 ```bash
-git clone https://github.com/bopoadz-del/Cerebrum-Blocks.git
-cd Cerebrum-Blocks
+git clone https://github.com/bopoadz-del/Cerebrum-Blocks-pub.git
+cd Cerebrum-Blocks-pub
 pip install -r requirements.txt
 
 # Required env (see .env.example):
@@ -141,22 +145,22 @@ readiness, and the known-defect list) lives in
 **[docs/STORE_INVENTORY.md](docs/STORE_INVENTORY.md)** and is re-verified
 against the files themselves, not memory. The short version:
 
-- **198 registry blocks** — all manifested and signed, **zero stubs**
-  (verified by pattern sweep; census 0 missing). All 20 vertical `*_v2`
-  domain blocks are registered and signed, plus the full wave-2 clone
-  program across 14 donor repos (provenance-labelled: real /
-  honest-stub / mock-functional).
-- **21 kit directories** — 19 domain kits + `universal_kernel` +
-  `_template` — including the eight declared-ready verticals: **hotels,
-  insurance, construction, finance, retail, real estate, legal, mep
-  coordination** — each with real domain blocks beyond the generic core
+- **Registry blocks** — all manifested and signed, verified by pattern
+  sweep against the files themselves. The vertical `*_v2` domain blocks are
+  registered and signed.
+- **Kit directories** — the domain kits plus `universal_kernel` and
+  `_template`, including the declared-ready verticals (hotels, insurance,
+  construction, finance, retail, real estate, legal, mep coordination), each
+  with real domain blocks beyond the generic core
   (`pdf, ocr, chat, image, formula_executor(_v2)`).
 - **Excluded from testing** (no authoritative domain content): medical,
   veterinary, pharma.
-- **Known defects are listed, not hidden**: the five estate blocks are
-  real and registered in the Store (always-ok stubs replaced on `main`,
-  `9b8d781f`); `admin_block._preflight`'s database check is tracked in
-  the inventory file.
+- **Known defects are listed, not hidden** in the inventory file (for
+  example `admin_block._preflight`'s database check).
+
+Exact per-block and per-kit counts live in the generated inventory
+([docs/STORE_INVENTORY.md](docs/STORE_INVENTORY.md)), re-verified against the
+files, so they are not hand-maintained here.
 
 ## Contribute — build kits and blocks
 
