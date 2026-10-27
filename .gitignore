@@ -113,6 +113,12 @@ diagnose_retrieval.py
 # Odd artifacts
 =1.6.0
 storage/
+# ...but block_registry/storage is a Store PLATFORM BLOCK, not a runtime dir.
+# The bare `storage/` rule above silently dropped it from the public mirror in
+# the r4 scrub, which left the steward estate_registry capability (and any other
+# capability whose block_ids include `storage`) non-dual-registered.
+!block_registry/storage/
+!block_registry/storage/**
 
 # MEP kit fixture: 47MB public model, fetched by fixtures/fetch_fixtures.sh
 block_store/kits/mep_coordination/fixtures/*.ifc
