@@ -1,0 +1,77 @@
+{
+  "demo_path": {
+    "embedding_provider": "local_feature_hash_v1",
+    "notes": "Zero-deps CI/local fallback when STEWARD_DATABASE_URL is unset.",
+    "routes": [
+      "/v1/rag/query",
+      "/v1/rag/ingest",
+      "/v1/rag/dual"
+    ],
+    "vector_adapter": "local_flat_json_v1"
+  },
+  "embedding_provider": "env:STEWARD_EMBED_BACKEND",
+  "honesty": "/v1/rag/* serves the live dual RAG path. With STEWARD_DATABASE_URL set, chunks/embeddings persist in Postgres (postgres_jsonb_v1). With STEWARD_EMBED_BACKEND=fastembed, live embedding_provider is fastembed:BAAI/bge-small-en-v1.5. STEWARD_REQUIRE_PRODUCTION_EMBEDDINGS=1 and STEWARD_REQUIRE_PERSISTENT_RAG=1 fail closed (no silent hash/JSONL). Full hybrid RRF + governed packs remain on /v1/steward/rag/*.",
+  "layers": {
+    "1": {
+      "blocks": [
+        "document_engine",
+        "knowledge",
+        "vector_search",
+        "database"
+      ],
+      "id": "sop_standards",
+      "index": "steward_sop_v1",
+      "name": "SOP / House Manual / global standards",
+      "project": "prebuilt_steward_core",
+      "source_field": "sop_corpus",
+      "tenant": "platform"
+    },
+    "2": {
+      "blocks": [
+        "document_engine",
+        "knowledge",
+        "vector_search",
+        "database"
+      ],
+      "id": "estate_documents",
+      "index": "steward_estate_docs_v1",
+      "name": "Estate documents (separately indexed)",
+      "source_field": "estate_documents"
+    }
+  },
+  "pilot_path": {
+    "embedding_provider": "fastembed:BAAI/bge-small-en-v1.5",
+    "env": [
+      "STEWARD_DATABASE_URL",
+      "STEWARD_EMBED_BACKEND=fastembed",
+      "STEWARD_REQUIRE_PRODUCTION_EMBEDDINGS=1",
+      "STEWARD_REQUIRE_PERSISTENT_RAG=1"
+    ],
+    "routes": [
+      "/v1/rag/query",
+      "/v1/rag/ingest",
+      "/v1/rag/dual",
+      "/v1/rag/bootstrap"
+    ],
+    "vector_adapter": "postgres_jsonb_v1"
+  },
+  "production_path": {
+    "embedding_provider": "fastembed:BAAI/bge-small-en-v1.5",
+    "packs": [
+      "steward_service_core_open_v1",
+      "steward_hospitality_intents_v1",
+      "steward_facilities_open_v1",
+      "steward_fleet_open_v1"
+    ],
+    "routes": [
+      "/v1/steward/rag/query",
+      "/v1/steward/rag/ingest",
+      "/v1/steward/packs",
+      "/v1/steward/facilities",
+      "/v1/steward/fleet"
+    ],
+    "vector_adapter": "postgres_pgvector_v1"
+  },
+  "schema_version": "1.1.0",
+  "vector_adapter": "env:STEWARD_RAG_PERSISTENCE"
+}

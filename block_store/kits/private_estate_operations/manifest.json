@@ -1,0 +1,381 @@
+{
+ "learning_engine_enabled": false,
+ "id": "private_estate_operations",
+ "name": "Private Estate Operations",
+ "version": "1.3.0",
+ "description": "Full Steward estate kit: registry, House Manual SOP, vendor/budget, preventive maintenance, staff scheduling, principal dashboard, onboarding, dual RAG with Postgres+FastEmbed pilot path + live oracle suite. IoT connectors are honest placeholders.",
+ "status": "available",
+ "serves_verticals": [
+  "estate"
+ ],
+ "author": "bopoadz-del",
+ "tags": [
+  "domain",
+  "estate",
+  "steward",
+  "certification"
+ ],
+ "source": {
+  "repo": "https://github.com/bopoadz-del/Cerebrum-Blocks",
+  "ref": "main",
+  "publish_script": "scripts/publish_kit.py",
+  "note": "Moved from the Factory (kits/private_estate_operations) under the owner rule: the Factory holds no kits."
+ },
+ "blueprint": "blueprints/steward/steward.v1.yaml",
+ "container": {
+  "class": "app.containers.private_estate_operations.PrivateEstateOperationsContainer",
+  "default_chat_prompt": null
+ },
+ "blocks": [
+  "estate_registry",
+  "estate_maintenance",
+  "evidence_verifier",
+  "readiness_engine",
+  "portfolio_rollup",
+  "database",
+  "storage",
+  "validation",
+  "document_engine",
+  "knowledge",
+  "vector_search",
+  "formula_executor",
+  "audit",
+  "notification",
+  "workflow",
+  "event_bus",
+  "queue",
+  "team",
+  "dashboard",
+  "analytics",
+  "spec_analyzer",
+  "recommendation_template",
+  "capture"
+ ],
+ "capabilities": [
+  "estate_registry",
+  "estate_maintenance",
+  "house_manual_sop",
+  "vendor_budget",
+  "preventive_maintenance",
+  "staff_scheduling",
+  "principal_dashboard",
+  "property_onboarding",
+  "dual_rag_sop",
+  "dual_rag_estate_docs",
+  "composed_ops_loop",
+  "evidence_capture",
+  "human_authority_gate"
+ ],
+ "dual_rag": {
+  "layer_1": {
+   "id": "sop_standards",
+   "description": "House Manual / SOP / global standards corpus",
+   "index": "steward_sop_v1"
+  },
+  "layer_2": {
+   "id": "estate_documents",
+   "description": "Per-estate documents, separately indexed",
+   "index": "steward_estate_docs_v1"
+  }
+ },
+ "connectors": {
+  "implemented": [],
+  "placeholders": [
+   "cmms_stub",
+   "iot_stub",
+   "document_vault_stub",
+   "smart_home_placeholder"
+  ],
+  "honesty": "Smart-home/IoT integrations are PLACEHOLDER connectors only — honestly labeled not_implemented."
+ },
+ "demo_fixtures": "fixtures/demo_estate.json",
+ "prompts": [],
+ "data": [
+  "fixtures/demo_estate.json"
+ ],
+ "core_modules": [],
+ "artifacts": [],
+ "price_cents": 0,
+ "install_requires": {
+  "min_platform_version": "2.0.0",
+  "python": ">=3.10"
+ },
+ "block_groups": {
+  "estate_core": [
+   "estate_registry",
+   "estate_maintenance",
+   "evidence_verifier",
+   "readiness_engine",
+   "portfolio_rollup"
+  ],
+  "platform_compose": [
+   "database",
+   "storage",
+   "validation",
+   "document_engine",
+   "knowledge",
+   "vector_search",
+   "formula_executor",
+   "audit",
+   "notification",
+   "workflow",
+   "event_bus",
+   "queue",
+   "team",
+   "dashboard",
+   "analytics",
+   "spec_analyzer",
+   "recommendation_template",
+   "capture"
+  ]
+ },
+ "product_surface": {
+  "why": "What a product of a vertical this kit serves receives. The Factory applies it; it names nothing itself.",
+  "files": [
+   {
+    "src": "fixtures/demo_estate.json",
+    "dest": "data/demo/estate_fixtures.json"
+   },
+   {
+    "src": "surface/dual_rag.json",
+    "dest": "docs/rag/dual_rag.json"
+   },
+   {
+    "src": "surface/estate_kit_init.py",
+    "dest": "app/estate_kit/__init__.py"
+   },
+   {
+    "src": "estate_kit_router.py",
+    "dest": "app/estate_kit/router.py"
+   },
+   {
+    "src": "rag",
+    "dest": "app/estate_kit/rag"
+   },
+   {
+    "src": "steward_runtime",
+    "dest": "app/steward"
+   },
+   {
+    "src": "steward_runtime/deploy/docker-compose.yml",
+    "dest": "deploy/docker-compose.steward-rag.yml"
+   },
+   {
+    "src": "surface/deepLinks.ts",
+    "dest": "frontend/src/routes/deepLinks.ts"
+   }
+  ],
+  "main_py": "surface/main.py.tmpl",
+  "requirements": "steward_runtime/deploy/requirements-rag.txt",
+  "env_example": [
+   "",
+   "# Estate vertical — dual RAG (pilot path)",
+   "# STEWARD_DATABASE_URL=postgresql://user:pass@host:5432/db",
+   "# STEWARD_EMBED_BACKEND=fastembed",
+   "# STEWARD_REQUIRE_PRODUCTION_EMBEDDINGS=1",
+   "# STEWARD_REQUIRE_PERSISTENT_RAG=1",
+   "# STEWARD_ALLOW_DEMO_AUTH_BYPASS=false"
+  ],
+  "honesty": [
+   "- `data/demo/` fixtures are demonstration data, labeled as such — not real estate records."
+  ],
+  "docker_build": [
+   "RUN python -c \"from fastembed import TextEmbedding; TextEmbedding(model_name='BAAI/bge-small-en-v1.5')\" || echo 'fastembed warm skipped'"
+  ],
+  "render_env": [
+   {
+    "key": "STEWARD_EMBED_BACKEND",
+    "value": "fastembed"
+   },
+   {
+    "key": "STEWARD_REQUIRE_PRODUCTION_EMBEDDINGS",
+    "value": "1"
+   },
+   {
+    "key": "STEWARD_REQUIRE_PERSISTENT_RAG",
+    "value": "1"
+   },
+   {
+    "key": "STEWARD_LEGACY_RAG_ENABLED",
+    "value": "false"
+   },
+   {
+    "key": "STEWARD_ALLOW_DEMO_AUTH_BYPASS",
+    "value": "false"
+   },
+   {
+    "key": "STEWARD_ADMIN_ROUTES_ENABLED",
+    "value": "false"
+   },
+   {
+    "key": "STEWARD_RAG_PERSISTENCE",
+    "value": "postgres"
+   },
+   {
+    "key": "STEWARD_DATABASE_URL",
+    "from_database": true
+   }
+  ],
+  "entity_model": "entity_model.json"
+ },
+ "hats": {
+  "disciplines": {
+   "estate_registry": "registry",
+   "estate_maintenance": "maintenance",
+   "evidence_verifier": "evidence",
+   "readiness_engine": "readiness",
+   "portfolio_rollup": "portfolio",
+   "composed_ops_loop": "operations",
+   "evidence_capture": "evidence",
+   "human_authority_gate": "authority",
+   "house_manual_sop": "house_manual",
+   "vendor_budget": "vendors",
+   "preventive_maintenance": "maintenance",
+   "staff_scheduling": "staff",
+   "principal_dashboard": "principal",
+   "property_onboarding": "onboarding",
+   "dual_rag_sop": "rag_sop",
+   "dual_rag_estate_docs": "rag_estate",
+   "audit_trail": "audit",
+   "health_surface": "platform"
+  },
+  "handoffs": [
+   {
+    "from": "operations",
+    "to": "registry",
+    "when": "needs_registry_detail"
+   },
+   {
+    "from": "operations",
+    "to": "readiness",
+    "when": "needs_readiness_gate"
+   }
+  ],
+  "workflows": [
+   {
+    "id": "ops_loop",
+    "name": "Estate operations loop",
+    "description": "Compose registry → maintenance → readiness with human authority gate.",
+    "when_all": [
+     "estate_registry",
+     "estate_maintenance",
+     "readiness_engine"
+    ],
+    "steps": [
+     {
+      "capability_id": "estate_registry",
+      "role": "inventory"
+     },
+     {
+      "capability_id": "estate_maintenance",
+      "role": "plan_work"
+     },
+     {
+      "capability_id": "readiness_engine",
+      "role": "gate"
+     },
+     {
+      "capability_id": "human_authority_gate",
+      "role": "confirm",
+      "required": "$human_authority"
+     }
+    ]
+   },
+   {
+    "id": "evidence_chain",
+    "name": "Evidence capture and verify",
+    "description": "Capture artifacts then verify without PII in learning.",
+    "when_all": [
+     "evidence_verifier"
+    ],
+    "steps": [
+     {
+      "capability_id": "evidence_capture",
+      "role": "capture"
+     },
+     {
+      "capability_id": "evidence_verifier",
+      "role": "verify"
+     }
+    ]
+   },
+   {
+    "id": "portfolio_rollup",
+    "name": "Portfolio rollup",
+    "description": "Roll up readiness and maintenance across properties.",
+    "when_all": [
+     "portfolio_rollup"
+    ],
+    "steps": [
+     {
+      "capability_id": "portfolio_rollup",
+      "role": "aggregate"
+     }
+    ]
+   },
+   {
+    "id": "preventive_maintenance",
+    "name": "Preventive maintenance",
+    "description": "Asset register → calendar → work orders → escalation.",
+    "when_all": [
+     "preventive_maintenance"
+    ],
+    "steps": [
+     {
+      "capability_id": "estate_registry",
+      "role": "assets"
+     },
+     {
+      "capability_id": "preventive_maintenance",
+      "role": "schedule"
+     },
+     {
+      "capability_id": "principal_dashboard",
+      "role": "escalate_if_overdue"
+     }
+    ]
+   },
+   {
+    "id": "property_onboarding",
+    "name": "New property onboarding",
+    "description": "Template-driven framework application to a new asset.",
+    "when_all": [
+     "property_onboarding"
+    ],
+    "steps": [
+     {
+      "capability_id": "property_onboarding",
+      "role": "apply_template"
+     },
+     {
+      "capability_id": "readiness_engine",
+      "role": "gate"
+     },
+     {
+      "capability_id": "human_authority_gate",
+      "role": "confirm"
+     }
+    ]
+   },
+   {
+    "id": "dual_rag_query",
+    "name": "Dual RAG query",
+    "description": "Query Layer 1 SOP corpus and Layer 2 estate documents separately with citations.",
+    "when_all": [
+     "dual_rag_sop",
+     "dual_rag_estate_docs"
+    ],
+    "steps": [
+     {
+      "capability_id": "dual_rag_sop",
+      "role": "layer_1"
+     },
+     {
+      "capability_id": "dual_rag_estate_docs",
+      "role": "layer_2"
+     }
+    ]
+   }
+  ]
+ }
+}
