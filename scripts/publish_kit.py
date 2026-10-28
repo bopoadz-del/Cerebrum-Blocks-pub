@@ -174,13 +174,17 @@ def _build_manifest(domain: str, identity: Optional[dict] = None) -> dict[str, o
     ]
 
     artifacts = [_artifact(path) for path in source_files + shared_files]
+    # "available" is a claim about the kit's real state: every file it ships
+    # exists in this checkout. Anything missing keeps it in development.
+    missing = [p for p in source_files + shared_files if not (PROJECT_ROOT / p).is_file()]
+    status = "in_development" if missing else "available"
 
     return {
         "id": domain,
         "name": title,
         "version": "1.0.0",
         "description": description,
-        "status": "available",
+        "status": status,
         "author": identity["owner"],
         "tags": ["domain", "container", domain],
         "source": {

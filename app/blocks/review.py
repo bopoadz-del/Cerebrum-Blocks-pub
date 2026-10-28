@@ -60,12 +60,10 @@ class ReviewBlock(UniversalBlock):
         print(f"   Min reviews for public: {self.config['min_reviews_for_public']}")
         print(f"   Auto-moderate: {self.config['auto_moderate']}")
         
-        # TODO: Create database tables
-        # - reviews: id, block_id, user_id, rating, text, created_at, status
-        # - ratings: block_id, avg_rating, total_reviews, distribution
-        # - verified_purchases: user_id, block_id, verified_at
-        # - review_flags: review_id, flagged_by, reason, created_at
-        
+        # No database tables exist for reviews: they live in this process's
+        # memory and are lost on restart. Stated in health(), never implied.
+        self.persistent = False
+
         self.initialized = True
         return True
         
@@ -542,6 +540,12 @@ class ReviewBlock(UniversalBlock):
         h = {"name": self.name, "version": self.version}
         h["total_reviews"] = sum(len(r) for r in self.reviews.values())
         h["blocks_reviewed"] = len(self.reviews)
+        persistent = getattr(self, "persistent", False)
+        h["persistent"] = persistent
+        h["storage"] = (
+            "database" if persistent
+            else "in-memory: reviews are not saved to a database and are lost on restart"
+        )
         h["verified_purchases"] = len(self.verified_purchases)
         h["pending_moderation"] = sum(
             1 for block_reviews in self.reviews.values()

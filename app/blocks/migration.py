@@ -148,7 +148,12 @@ class MigrationBlock(UniversalBlock):
                     
                 break
                 
+        failed = [r for r in results if not r.get("would_run") and not r.get("success")]
         return {
+            # A failed migration makes the run an error, computed from the
+            # results -- never a success-shaped dict with a buried failure.
+            "status": "error" if failed else "success",
+            "failed_version": failed[0]["version"] if failed else None,
             "migrations_run": len([r for r in results if r.get("success")]),
             "from_version": self.current_version,
             "to_version": target_version or pending[-1]["version"],
@@ -237,7 +242,9 @@ async def up(migration_block):
     """Apply migration"""
     db = migration_block.get_dependency("database")
     
-    # TODO: Add your migration logic here
+    # Write the migration logic here. Until then this refuses: an unedited
+    # template must never be recorded as applied.
+    raise NotImplementedError("migration {version} ({name}) has no up() logic yet")
     # Example:
     # await db.execute("""
     #     CREATE TABLE new_table (
@@ -245,18 +252,16 @@ async def up(migration_block):
     #         name TEXT
     #     )
     # """)
-    
-    return {{"created_table": "new_table"}}
+
 
 async def down(migration_block):
     """Rollback migration"""
     db = migration_block.get_dependency("database")
     
-    # TODO: Add rollback logic
+    # Write the rollback logic here. Until then this refuses.
+    raise NotImplementedError("migration {version} ({name}) has no down() logic yet")
     # Example:
     # await db.execute("DROP TABLE new_table")
-    
-    return {{"dropped_table": "new_table"}}
 '''
         
         migration = {

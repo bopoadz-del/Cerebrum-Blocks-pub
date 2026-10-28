@@ -15,6 +15,8 @@ from datetime import datetime, timedelta
 import hashlib
 import traceback
 import time
+import asyncio
+import sys
 
 
 class ErrorTrackingBlock(UniversalBlock):
@@ -33,7 +35,9 @@ class ErrorTrackingBlock(UniversalBlock):
         "auto_create_issues": True,
         "alert_threshold": 10,  # errors per minute
         "max_events_per_issue": 1000,
-        "retention_days": 30
+        "retention_days": 30,
+        # Process-global: opt in to capture uncaught exceptions via sys.excepthook.
+        "install_excepthook": False,
     }
 
     ui_schema = {
@@ -56,8 +60,10 @@ class ErrorTrackingBlock(UniversalBlock):
         print(f"   Sample rate: {self.config['sample_rate']}")
         print(f"   Alert threshold: {self.config['alert_threshold']}/min")
         
-        # TODO: Setup exception hooks
-        
+        self.excepthook_installed = False
+        if self.config.get("install_excepthook"):
+            self._install_excepthook()
+
         self.initialized = True
         return True
         
@@ -385,8 +391,35 @@ class ErrorTrackingBlock(UniversalBlock):
         
         return len(recent_events) >= self.config["alert_threshold"]
         
+    def _install_excepthook(self) -> None:
+        """Capture uncaught exceptions as events, then hand them on unchanged
+        to the previous hook (the interpreter still reports and exits)."""
+        previous = sys.excepthook
+
+        def hook(exc_type, exc, tb):
+            try:
+                coro = self._capture_exception({
+                    "exception": str(exc),
+                    "exc_type": exc_type.__name__,
+                    "traceback": "".join(traceback.format_exception(exc_type, exc, tb)),
+                    "tags": {"uncaught": "true"},
+                })
+                try:
+                    loop = asyncio.get_running_loop()
+                except RuntimeError:
+                    asyncio.run(coro)
+                else:
+                    loop.create_task(coro)
+            finally:
+                previous(exc_type, exc, tb)
+
+        self._previous_excepthook = previous
+        sys.excepthook = hook
+        self.excepthook_installed = True
+
     def health(self) -> Dict:
         h = {"name": self.name, "version": self.version}
+        h["excepthook_installed"] = getattr(self, "excepthook_installed", False)
         h["tracked_issues"] = len(self.issues)
         h["open_issues"] = len([i for i in self.issues.values() if i["status"] == "open"])
         h["recent_events"] = len(self.events)

@@ -5,7 +5,7 @@
   "description": "{{description}}",
   "status": "{{status}}",
   "author": "bopoadz-del",
-  "tags": {{tags_json}},
+  "tags": "{{tags_json}}",
   "source": {
     "repo": "https://github.com/bopoadz-del/The_Fork",
     "ref": "main",
