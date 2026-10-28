@@ -33,7 +33,14 @@ _PYTEST_COND = re.compile(
 )
 # The only "||" fallbacks that keep a failure a failure (ORDERS 1030Z):
 # "exit <non-zero>" and a bare "exit" (which returns pytest's own status).
-_OR_EXIT_NONZERO = re.compile(r"^[ \t]*exit(?:[ \t]+0*[1-9][0-9]*)?[ \t]*$")
+# Exit codes wrap modulo 256 (ORDERS_28OCT_1045Z): "exit 256" / "exit 512"
+# leave the job with status 0, so only N % 256 != 0 keeps the failure.
+_OR_EXIT = re.compile(r"^[ \t]*exit(?:[ \t]+([0-9]+))?[ \t]*$")
+
+
+def _keeps_failure(fallback: str) -> bool:
+    m = _OR_EXIT.match(fallback)
+    return bool(m) and (m.group(1) is None or int(m.group(1)) % 256 != 0)
 
 
 def _logical_lines(code: str) -> list[str]:
@@ -55,7 +62,7 @@ def _pytest_exit_swallowed(code: str, shell: str) -> list[str]:
         # ANY "||" fallback, unless it is exit with a non-zero (or no) code
         for alt in line.split("||")[1:]:
             first = re.split(r"[;&|]", alt, maxsplit=1)[0]
-            if not _OR_EXIT_NONZERO.match(first):
+            if not _keeps_failure(first):
                 reasons.append("|| fallback")
                 break
         head = line.split("||", 1)[0]
@@ -220,6 +227,20 @@ jobs:
     steps:
       - name: Run every test file
         run: pytest -v tests/
+""",
+    "|| exit 256": """
+jobs:
+  backend:
+    steps:
+      - name: Run every test file
+        run: pytest -v tests/ || exit 256
+""",
+    "|| exit 512": """
+jobs:
+  backend:
+    steps:
+      - name: Run every test file
+        run: pytest -v tests/ || exit 512
 """,
     "|| echo failed": """
 jobs:
