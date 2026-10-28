@@ -184,6 +184,9 @@ jobs:
       - name: Run FinanceOps foundation tests
         run: pytest -q tests/finance_ops/
 
+      - name: Publisher key rotation + re-sign workflow tests (ST-5)
+        run: pytest -q tests/test_rotate_publisher_key.py
+
       - name: Run regression security tests
         run: |
           pytest -q tests/test_regression_security.py \

@@ -1,0 +1,78 @@
+name: re-sign
+
+# Manual only. Re-signs block_registry with the publisher private key held in
+# the repo secret CEREBRUM_PUBLISHER_PRIVATE_KEY (read by NAME; the value is
+# written to a 0600 temp file outside the checkout, never printed, removed in
+# an always() step). Verifies every block, then commits as the bot to a new
+# branch for a normal PR; it never pushes to the default branch.
+
+on:
+  workflow_dispatch:
+    inputs:
+      publisher:
+        description: Publisher id (empty = the single publisher in data/publishers.json)
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+concurrency:
+  group: re-sign
+  cancel-in-progress: false
+
+jobs:
+  re-sign:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      KEY_FILE: ${{ runner.temp }}/publisher_signing_key.pem
+      PUBLISHER: ${{ inputs.publisher }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Write signing key to a temp file (value never echoed)
+        env:
+          SIGNING_KEY: ${{ secrets.CEREBRUM_PUBLISHER_PRIVATE_KEY }}
+        run: |
+          if [ -z "$SIGNING_KEY" ]; then
+            echo "::error::repo secret CEREBRUM_PUBLISHER_PRIVATE_KEY is not set"
+            exit 1
+          fi
+          umask 077
+          printf '%s\n' "$SIGNING_KEY" > "$KEY_FILE"
+
+      - name: Re-sign and verify every block
+        run: |
+          args=(--private-key "$KEY_FILE")
+          if [ -n "$PUBLISHER" ]; then args+=(--publisher "$PUBLISHER"); fi
+          python scripts/rotate_publisher_key.py "${args[@]}"
+
+      - name: Remove signing key
+        if: always()
+        run: rm -f "$KEY_FILE"
+
+      - name: Signing gate (every registry block signed and verifies)
+        run: python -m pytest -q tests/core/test_signing_operational.py
+
+      - name: Commit as the bot to a new branch
+        run: |
+          git config user.name "cerebrum-factory-bot"
+          git config user.email "cerebrum-factory-bot@users.noreply.github.com"
+          git add block_registry data/publishers.json data/publishers/*.pub
+          if git diff --cached --quiet; then
+            echo "nothing to commit"
+            exit 0
+          fi
+          branch="bot/re-sign-${GITHUB_RUN_ID}"
+          git checkout -b "$branch"
+          git commit -m "chore(store): re-sign block_registry (run ${GITHUB_RUN_ID})"
+          git push origin "$branch"
+          echo "pushed $branch; open a PR for grading"
