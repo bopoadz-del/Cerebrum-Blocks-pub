@@ -333,3 +333,34 @@ def test_a_pdf_with_no_text_layer_is_not_reported_as_an_error_reading_it(monkeyp
     out = asyncio.run(block._process_image(img, {}))
     assert "no PDF text layer found" in out["error"]
     assert "could not be read" not in out["error"]
+
+
+# -- ocr: a missing PyMuPDF is named, never a silent empty result ---------------------------
+
+
+@pytest.mark.parametrize("name, payload", [
+    # (a) an image-named input PIL cannot decode falls through to the PDF rasteriser
+    ("scan.png", b"\x89PNG-but-not-really"),
+    # (b) a .pdf input goes straight to the PDF rasteriser
+    ("doc.pdf", b"%PDF-1.4 not a real document"),
+])
+def test_a_missing_pdf_rasteriser_is_named_in_errors_and_result(monkeypatch, tmp_path, name, payload):
+    from app.blocks.ocr import OCRBlock
+
+    # None in sys.modules makes `import fitz` raise ImportError
+    monkeypatch.setitem(sys.modules, "fitz", None)
+    src = tmp_path / name
+    src.write_bytes(payload)
+    block = OCRBlock()
+    monkeypatch.setattr(block, "_detect_markup", lambda path: {"has_markup": False})
+
+    errors: list = []
+    assert block._prepare_images(str(src), False, errors=errors) == []
+    assert len(errors) == 1 and "PDF rasteriser unavailable" in errors[0]
+    assert "fitz" in errors[0]  # the underlying import failure is carried, not dropped
+
+    out = asyncio.run(block._process_image(str(src), {"preprocess": False}))
+    assert out["status"] == "error" and out["status"] != "success"
+    assert out["text"] == ""
+    assert "PDF rasteriser unavailable" in out["error"]
+    assert "no pages produced" not in out["error"]
