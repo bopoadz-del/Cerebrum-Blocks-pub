@@ -12,8 +12,10 @@ Steps:
    absent; update the public key when present (PublisherRegistry.register,
    which keeps created_at). Write data/publishers/<publisher>.pub.
 4. With a private key (``--private-key`` or a new ``--private-key-out``):
-   re-sign every block_registry/*/block.json whose publisher_id is this
-   publisher (or which has no publisher_id yet), then verify EVERY block.
+   refuse if ANY block declares no publisher_id -- an unclaimed block is
+   never silently absorbed into the rotating publisher -- then re-sign every
+   block_registry/*/block.json whose publisher_id is this publisher, then
+   verify EVERY block.
 
 The PRIVATE key is read from / written to a path OUTSIDE the repository
 only. It is never committed and never printed.
@@ -56,6 +58,18 @@ class RotateError(Exception):
 
 class ManifestRefused(RotateError):
     """A block.json fails the BlockValidator manifest schema; nothing is signed."""
+
+
+class UnclaimedBlockRefused(RotateError):
+    """A block.json declares no publisher_id; re-signing refuses to claim it.
+
+    Rotation signs only blocks that already name their publisher. A block
+    with no publisher_id used to be absorbed into the rotating publisher,
+    which let an unowned block ride in on a key rotation. It is now refused
+    by name; the owner must set publisher_id deliberately. All 233 registry
+    blocks already carry one, so this changes nothing on the real repo -- it
+    closes the claim hole for any future unclaimed block.
+    """
 
 
 def _raw_b64(public_key: Ed25519PublicKey) -> str:
@@ -119,10 +133,32 @@ def _owned_block_dirs(registry_root: Path, publisher_id: str) -> list[Path]:
         if not manifest_path.exists():
             continue
         owner = json.loads(manifest_path.read_text(encoding="utf-8")).get("publisher_id")
-        if owner not in (None, "", publisher_id):
+        if owner != publisher_id:
             continue
         owned.append(block_dir)
     return owned
+
+
+def refuse_unclaimed_blocks(registry_root: Path) -> None:
+    """Raise UnclaimedBlockRefused if any block.json declares no publisher_id.
+
+    An unclaimed block must not be silently claimed by whichever publisher is
+    being rotated. Every block has to name its owner before it is signed, so
+    the refusal names the offending block(s) and nothing is signed.
+    """
+    unclaimed = []
+    for block_dir in sorted(p for p in registry_root.iterdir() if p.is_dir()):
+        manifest_path = block_dir / "block.json"
+        if not manifest_path.exists():
+            continue
+        owner = json.loads(manifest_path.read_text(encoding="utf-8")).get("publisher_id")
+        if owner in (None, ""):
+            unclaimed.append(block_dir.name)
+    if unclaimed:
+        raise UnclaimedBlockRefused(
+            "refusing to claim block(s) that declare no publisher_id: "
+            + ", ".join(sorted(unclaimed))
+        )
 
 
 def refuse_invalid_manifests(registry_root: Path, publisher_id: str) -> None:
@@ -152,7 +188,13 @@ def refuse_invalid_manifests(registry_root: Path, publisher_id: str) -> None:
 def resign_blocks(
     registry_root: Path, publisher_id: str, private_key: Ed25519PrivateKey
 ) -> list[str]:
-    """Sign blocks owned by ``publisher_id`` (or unowned); return their names."""
+    """Sign blocks owned by ``publisher_id``; return their names.
+
+    Refuses first if any block is unclaimed (no publisher_id) or if any block
+    this publisher owns fails the manifest schema. Nothing is signed on a
+    refusal.
+    """
+    refuse_unclaimed_blocks(registry_root)
     refuse_invalid_manifests(registry_root, publisher_id)
     signed = []
     for block_dir in _owned_block_dirs(registry_root, publisher_id):
@@ -233,6 +275,7 @@ def run(argv: list[str] | None = None, root: Path = ROOT) -> int:
         registry = PublisherRegistry(path=reg_path)
         publisher_id = resolve_publisher(registry, args.publisher)
         if private_key is not None:
+            refuse_unclaimed_blocks(blocks_root)
             refuse_invalid_manifests(blocks_root, publisher_id)
         action = upsert_publisher(
             registry, publisher_id, public_b64, args.name, args.contact, args.tier

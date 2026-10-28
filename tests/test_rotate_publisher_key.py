@@ -159,7 +159,7 @@ def test_default_publisher_is_the_single_registered_one(tmp_path):
     for pub_id in ("pub_alpha", "pub_beta"):
         root = _repo(tmp_path / pub_id)
         _, priv, pub = _keypair(tmp_path / pub_id, "k")
-        blk = _block(root, "b1")
+        blk = _block(root, "b1", publisher_id=pub_id)
         assert rot.run(["--public-key", str(pub), "--publisher", pub_id], root=root) == 0
         assert rot.run(["--private-key", str(priv)], root=root) == 0
         assert _manifest(blk)["publisher_id"] == pub_id
@@ -209,16 +209,16 @@ def test_rotation_resigns_old_blocks_and_new_key_verifies(tmp_path):
     old, old_priv, old_pub = _keypair(tmp_path, "old")
     assert rot.run(["--public-key", str(old_pub), "--publisher", "p"], root=root) == 0
     blk = _block(root, "b1", publisher_id="p")
-    unowned = _block(root, "b2")
+    second = _block(root, "b2", publisher_id="p")
     BlockSigner.sign_block(blk, "p", old)
     sig_old = _manifest(blk)["signature"]
     out = tmp_path / "outside" / "new.pem"
     assert rot.run(["--private-key-out", str(out)], root=root) == 0
     assert _manifest(blk)["signature"] != sig_old
-    assert _manifest(unowned)["publisher_id"] == "p"
+    assert _manifest(second)["publisher_id"] == "p"
     assert _reg(root).get("p").public_key != _b64(old)
     v = BlockVerifier(registry=_reg(root))
-    assert v.verify_block(blk)["verified"] and v.verify_block(unowned)["verified"]
+    assert v.verify_block(blk)["verified"] and v.verify_block(second)["verified"]
 
 
 def test_verification_failure_exits_1(tmp_path):
@@ -262,11 +262,13 @@ def test_guard_signs_valid_manifest_and_refuses_contentless_one(tmp_path):
     root = _repo(tmp_path)
     _, priv, pub = _keypair(tmp_path, "k")
     assert rot.run(["--public-key", str(pub), "--publisher", "p"], root=root) == 0
-    valid = _block(root, "valid")
+    valid = _block(root, "valid", publisher_id="p")
     rot.refuse_invalid_manifests(root / "block_registry", "p")  # valid only: no raise
+    # Owned (publisher_id set) but schema-hollow: this is the manifest-schema
+    # guard, not the unclaimed guard, so it must raise ManifestRefused by name.
     hollow = root / "block_registry" / "hollow"
     hollow.mkdir()
-    (hollow / "block.json").write_text("{}", encoding="utf-8")
+    (hollow / "block.json").write_text('{"publisher_id": "p"}', encoding="utf-8")
     with pytest.raises(rot.ManifestRefused) as exc:
         rot.refuse_invalid_manifests(root / "block_registry", "p")
     assert "hollow" in str(exc.value) and "valid:" not in str(exc.value)
@@ -274,7 +276,7 @@ def test_guard_signs_valid_manifest_and_refuses_contentless_one(tmp_path):
     with pytest.raises(rot.ManifestRefused):  # the signing function guards itself too
         rot.resign_blocks(root / "block_registry", "p", rot._load_private_key(priv))
     assert "signature" not in _manifest(valid)  # nothing signed when any is refused
-    assert _manifest(hollow) == {}
+    assert _manifest(hollow) == {"publisher_id": "p"}
     (hollow / "block.json").unlink()
     hollow.rmdir()
     assert rot.run(["--private-key", str(priv)], root=root) == 0
@@ -287,6 +289,66 @@ def test_guard_is_the_block_validator_schema():
     from app.core.block_validation import BlockValidator, check_manifest_schema
     m = {"id": "x"}
     assert BlockValidator._check_required_fields(None, m) == check_manifest_schema(m)
+
+
+def test_guard_refuses_manifest_missing_exactly_one_required_field(tmp_path):
+    """G6 Q2: a manifest missing a single required field is refused BY NAME.
+
+    refuse_invalid_manifests supplies publisher_id, digests and signature, so
+    the one missing field must be another required one (here ``permissions``).
+    The refusal must name both the block and the field -- which is exactly what
+    the M5 mutant (validator result forced to ``[]``) would suppress, letting
+    the incomplete manifest be signed.
+    """
+    root = _repo(tmp_path)
+    _, priv, pub = _keypair(tmp_path, "k")
+    assert rot.run(["--public-key", str(pub), "--publisher", "p"], root=root) == 0
+    d = root / "block_registry" / "oneoff"
+    d.mkdir()
+    manifest = {
+        "id": "oneoff",
+        "name": "oneoff",
+        "version": "1.0.0",
+        "publisher_id": "p",
+        "permissions": {"blocks": [], "filesystem": False, "imports": [], "network": False},
+        "trust_tier": "platform",
+    }
+    del manifest["permissions"]  # exactly one required field removed
+    (d / "block.json").write_text(json.dumps(manifest), encoding="utf-8")
+    (d / "block.py").write_text("NAME = 'oneoff'\n", encoding="utf-8")
+
+    with pytest.raises(rot.ManifestRefused) as exc:
+        rot.refuse_invalid_manifests(root / "block_registry", "p")
+    msg = str(exc.value)
+    assert "oneoff" in msg and "permissions" in msg
+    assert rot.run(["--private-key", str(priv)], root=root) == 2
+    assert "signature" not in _manifest(d)  # nothing signed
+
+
+# ---- (C) a block with no publisher_id is refused, never auto-claimed -------
+
+def test_block_without_publisher_id_is_refused_not_claimed(tmp_path):
+    """G6 1742Z Q2: an unclaimed block is refused by name, never absorbed.
+
+    A block that declares no publisher_id used to be claimed into the rotating
+    publisher. It is now refused by name and nothing is signed; the block keeps
+    its (absent) publisher_id. Reverting to the auto-claim behaviour (the
+    Item-C mutant) makes this fail: the block would be claimed and signed.
+    """
+    root = _repo(tmp_path)
+    _, priv, pub = _keypair(tmp_path, "k")
+    assert rot.run(["--public-key", str(pub), "--publisher", "p"], root=root) == 0
+    orphan = _block(root, "orphan")  # deliberately no publisher_id
+    mine = _block(root, "mine", publisher_id="p")
+
+    with pytest.raises(rot.UnclaimedBlockRefused) as exc:
+        rot.refuse_unclaimed_blocks(root / "block_registry")
+    assert "orphan" in str(exc.value) and "mine" not in str(exc.value)
+
+    assert rot.run(["--private-key", str(priv)], root=root) == 2
+    assert "publisher_id" not in _manifest(orphan)  # not claimed
+    assert "signature" not in _manifest(orphan)  # not signed
+    assert "signature" not in _manifest(mine)  # refusal stops before any signing
 
 
 # ---- (5) re-sign workflow --------------------------------------------------
@@ -318,6 +380,25 @@ def test_resign_workflow_signs_verifies_and_commits_as_bot():
     assert "--force" not in joined and "push -f" not in joined
     assert joined.index("rotate_publisher_key.py") < joined.index("git commit")
     assert 'rm -f "$KEY_FILE"' in joined
+
+
+def test_resign_workflow_refreshes_bundles_and_runs_freshness_before_commit():
+    """Item A: the rotation PR must stay green on tests/test_kit_bundle_freshness.
+
+    After re-signing, the workflow re-mirrors the affected kits and runs the
+    bundle-freshness test, and both happen BEFORE the commit step. Dropping the
+    freshness run (a declared Item-A mutant) makes this fail.
+    """
+    steps = [s.get("run", "") for s in _workflow()["jobs"]["re-sign"]["steps"]]
+    joined = "\n".join(steps)
+    assert "scripts/refresh_kit_bundles.py" in joined
+    assert "tests/test_kit_bundle_freshness.py" in joined
+    # re-sign -> refresh -> freshness -> commit, in that order
+    assert joined.index("rotate_publisher_key.py") < joined.index("refresh_kit_bundles.py")
+    assert joined.index("refresh_kit_bundles.py") < joined.index("test_kit_bundle_freshness.py")
+    assert joined.index("test_kit_bundle_freshness.py") < joined.index("git commit")
+    # the commit must stage the refreshed bundles
+    assert "block_store/kits" in joined
 
 
 def test_every_backend_step_after_integration_runs_unless_cancelled():
