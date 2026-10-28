@@ -44,16 +44,49 @@ def test_factors_come_from_the_data_file_with_its_source(tmp_path, place, factor
     out = _lookup({"location_factors_path": str(path)}, place)
     assert out["status"] == "success"
     f = out["factors"]
-    assert f["location_factor"] == factor and f["location_factor_matched"] is True
+    assert f["location_factor"] == factor
     assert f["location_factor_source"]["origin"] == f"test index {place}"
     assert out["rates"]["adjusted_usd"] == round(out["rates"]["base_usd"] * factor, 2)
 
 
 @pytest.mark.parametrize("place", ["Atlantis", "Nowhere"])
-def test_an_unlisted_location_is_flagged_not_passed_off(tmp_path, place):
+def test_an_unlisted_location_is_unknown_not_priced(tmp_path, place):
     path = _write(tmp_path, "f.json", {"source": {"origin": "x"}, "factors": {"elsewhere": 3.0}})
-    f = _lookup({"location_factors_path": str(path)}, place)["factors"]
-    assert f["location_factor"] == 1.0 and f["location_factor_matched"] is False
+    out = _lookup({"location_factors_path": str(path)}, place)
+    assert out["status"] == "unknown"
+    assert "rates" not in out and "adjusted_usd" not in json.dumps(out)
+    assert place in out["error"]
+
+
+def test_a_listed_location_is_priced_beside_an_unlisted_one(tmp_path):
+    path = _write(tmp_path, "f.json", {"source": {"origin": "x"}, "factors": {"elsewhere": 3.0}})
+    assert _lookup({"location_factors_path": str(path)}, "elsewhere")["status"] == "success"
+    assert _lookup({"location_factors_path": str(path)}, "Atlantis")["status"] == "unknown"
+
+
+@pytest.mark.parametrize("doc,msg", [
+    ({"source": {"origin": "o"}, "factors": {}}, "missing or empty"),
+    ({"source": {"origin": "o"}}, "missing or empty"),
+    ({"source": {"origin": "o"}, "factors": {"a": -1}}, "finite positive"),
+    ({"source": {"origin": "o"}, "factors": {"a": 0}}, "finite positive"),
+    ({"source": {"origin": "o"}, "factors": {"a": "nan"}}, "finite positive"),
+    ({"source": {"origin": "o"}, "factors": {"a": "inf"}}, "finite positive"),
+    ({"source": {"origin": "o"}, "factors": {"a": "cheap"}}, "not a number"),
+])
+def test_bad_factor_tables_are_refused(tmp_path, doc, msg):
+    from app.blocks.historical_benchmark import load_location_factors
+
+    p = _write(tmp_path, "f.json", doc)
+    with pytest.raises(ValueError, match=msg):
+        load_location_factors(p)
+    out = _lookup({"location_factors_path": str(p)}, "a")
+    assert out["status"] == "error" and "location factors unavailable" in out["error"]
+
+
+def test_the_shipped_lookup_reports_its_factors_as_unverified():
+    out = _lookup({}, "Dubai")
+    assert out["status"] == "success"
+    assert out["factors"]["location_factor_source"]["evidence_class"] == "unverified"
 
 
 @pytest.mark.parametrize("doc", [{"factors": {"a": 1.1}}, {"source": {}, "factors": {"a": 1.1}}])
@@ -94,12 +127,32 @@ def test_market_sets_load_from_any_file(tmp_path, demo, unsupported):
     ({"demo_markets": ["a"]}, "no source record"),
     ({"source": {"origin": "o"}, "demo_markets": []}, "no demo markets"),
     ({"source": {"origin": "o"}, "demo_markets": ["a"], "unsupported_markets": ["a"]}, "both demo and unsupported"),
+    ({"source": {"origin": "o"}, "demo_markets": "uae"}, "must be a list"),
+    ({"source": {"origin": "o"}, "demo_markets": ["a"], "unsupported_markets": "ksa"}, "must be a list"),
+    ({"source": {"origin": "o"}, "demo_markets": ["a", ""]}, "blank or non-string"),
+    ({"source": {"origin": "o"}, "demo_markets": ["a", "  "]}, "blank or non-string"),
+    ({"source": {"origin": "o"}, "demo_markets": ["a", 7]}, "blank or non-string"),
 ])
 def test_bad_market_files_are_refused(tmp_path, doc, msg):
     from app.blocks.ppm_licensing_resolver import load_markets
 
     with pytest.raises(ValueError, match=msg):
         load_markets(_write(tmp_path, "m.json", doc))
+
+
+def test_the_guard_reads_a_substituted_markets_file(tmp_path):
+    from app.blocks.ppm_licensing_resolver import GuardError, guard_request
+
+    p = _write(tmp_path, "m.json", {"source": {"origin": "o"}, "demo_markets": ["zz"],
+                                    "unsupported_markets": ["uae"]})
+    guard_request(market="zz", markets_path=p, demo_only=True)
+    with pytest.raises(GuardError) as e:
+        guard_request(market="uae", markets_path=p)
+    assert e.value.code == "market_unsupported"
+    # the shipped file says the opposite, so the outcome is the file's, not a literal's
+    guard_request(market="uae")
+    with pytest.raises(GuardError):
+        guard_request(market="zz")
 
 
 # -- one generic publisher -------------------------------------------------------------------
@@ -113,3 +166,21 @@ def test_finance_ops_is_published_by_the_generic_publisher():
     run = subprocess.run([sys.executable, str(ROOT / script), "--domain", "finance_ops", "--check"],
                          capture_output=True, text=True, cwd=ROOT, timeout=120)
     assert run.returncode == 0, run.stdout + run.stderr
+
+
+@pytest.mark.parametrize("slug", ["acme/widgets", "someone-else/fork"])
+def test_publisher_identity_comes_from_the_repository_not_a_literal(slug):
+    sys.path.insert(0, str(ROOT / "scripts"))
+    import publish_kit
+
+    ident = publish_kit.repo_identity({"GITHUB_REPOSITORY": slug})
+    assert ident == {"owner": slug.split("/")[0], "repo": f"https://github.com/{slug}"}
+    m = publish_kit._build_manifest("finance_ops", ident)
+    assert m["author"] == slug.split("/")[0] and m["source"]["repo"] == ident["repo"]
+
+
+def test_publisher_and_finance_manifest_carry_no_owner_handle():
+    text = (ROOT / "scripts/publish_kit.py").read_text(encoding="utf-8")
+    manifest = json.loads((ROOT / "block_store/kits/finance_ops/manifest.json").read_text(encoding="utf-8"))
+    assert "bopoadz" not in text
+    assert "author" not in manifest and "repo" not in manifest["source"]

@@ -92,8 +92,18 @@ def load_markets(path: Optional[Path] = None) -> Tuple[set, set, Dict[str, Any]]
     source = doc.get("source")
     if not isinstance(source, dict) or not source.get("origin"):
         raise ValueError(f"{path}: market sets carry no source record")
-    demo = {str(m).lower() for m in doc.get("demo_markets") or []}
-    unsupported = {str(m).lower() for m in doc.get("unsupported_markets") or []}
+    sets = []
+    for key in ("demo_markets", "unsupported_markets"):
+        value = doc.get(key, [])
+        if not isinstance(value, list):
+            raise ValueError(f"{path}: {key} must be a list of market codes, got {type(value).__name__}")
+        codes = set()
+        for m in value:
+            if not isinstance(m, str) or not m.strip():
+                raise ValueError(f"{path}: {key} holds a blank or non-string market code: {m!r}")
+            codes.add(m.strip().lower())
+        sets.append(codes)
+    demo, unsupported = sets
     if not demo:
         raise ValueError(f"{path}: no demo markets declared")
     if demo & unsupported:
@@ -123,20 +133,25 @@ def guard_request(
     asset_sources: Optional[Iterable[str]] = None,
     construction_pm: bool = False,
     demo_only: bool = False,
+    markets_path: Optional[Path] = None,
 ) -> None:
     if market:
+        if markets_path:
+            demo, unsupported, _ = load_markets(markets_path)
+        else:
+            demo, unsupported = DEMO_MARKETS, UNSUPPORTED_MARKETS
         code = market.lower()
-        if code in UNSUPPORTED_MARKETS:
+        if code in unsupported:
             raise GuardError(
                 "market_unsupported",
                 "KSA is unsupported and stripped. Supported markets: UAE and generic only.",
             )
-        if demo_only and code not in DEMO_MARKETS:
+        if demo_only and code not in demo:
             raise GuardError(
                 "market_not_demo_geography",
                 "Pilot demo fixtures are UAE + generic only.",
             )
-        if code not in SUPPORTED_MARKETS:
+        if code not in demo:
             raise GuardError(
                 "market_unsupported",
                 "Supported markets: UAE and generic only.",

@@ -8,6 +8,7 @@ the platform accumulates real project data over time.
 """
 
 import json
+import math
 from pathlib import Path
 from typing import Any, Dict, Optional, Tuple
 
@@ -110,7 +111,18 @@ def load_location_factors(path: Optional[Path] = None) -> Tuple[Dict[str, float]
     source = doc.get("source")
     if not isinstance(source, dict) or not source.get("origin"):
         raise ValueError(f"{path}: location factors carry no source record")
-    factors = {_normalize(k): float(v) for k, v in (doc.get("factors") or {}).items()}
+    table = doc.get("factors")
+    if not isinstance(table, dict) or not table:
+        raise ValueError(f"{path}: location factors table is missing or empty")
+    factors: Dict[str, float] = {}
+    for k, v in table.items():
+        try:
+            f = float(v)
+        except (TypeError, ValueError):
+            raise ValueError(f"{path}: location factor for {k!r} is not a number: {v!r}") from None
+        if not math.isfinite(f) or f <= 0:
+            raise ValueError(f"{path}: location factor for {k!r} must be a finite positive number, got {v!r}")
+        factors[_normalize(k)] = f
     return factors, {**source, "path": str(path)}
 
 # Project-type factors.
@@ -152,13 +164,9 @@ def _match_item(name: str) -> Optional[str]:
     return None
 
 
-def _location_factor(location: str, factors: Dict[str, float]) -> Tuple[float, bool]:
-    """(factor, matched). An unlisted location applies no adjustment (1.0)
-    and says so via matched=False rather than passing as a real factor."""
-    norm = _normalize(location)
-    if norm in factors:
-        return factors[norm], True
-    return 1.0, False
+def _location_factor(location: str, factors: Dict[str, float]) -> Optional[float]:
+    """The listed factor, or None for an unlisted location (no price is made up)."""
+    return factors.get(_normalize(location))
 
 
 def _project_factor(project_type: str) -> float:
@@ -249,7 +257,17 @@ class HistoricalBenchmarkBlock(UniversalBlock):
                 "item": item,
                 "error": f"location factors unavailable: {type(exc).__name__}: {exc}",
             }
-        loc_factor, loc_matched = _location_factor(location, factors)
+        loc_factor = _location_factor(location, factors)
+        if loc_factor is None:
+            return {
+                "status": "unknown",
+                "action": "lookup",
+                "item": item,
+                "matched_key": key,
+                "location": location,
+                "location_factor_source": factor_source,
+                "error": f"No location factor listed for {location!r}; no adjusted rate is given.",
+            }
         proj_factor = _project_factor(project_type)
         adjusted = round(base["base_usd"] * loc_factor * proj_factor, 2)
 
@@ -266,7 +284,6 @@ class HistoricalBenchmarkBlock(UniversalBlock):
             },
             "factors": {
                 "location_factor": loc_factor,
-                "location_factor_matched": loc_matched,
                 "location_factor_source": factor_source,
                 "project_type_factor": proj_factor,
                 "location": location,

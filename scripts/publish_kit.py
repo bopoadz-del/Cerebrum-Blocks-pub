@@ -47,7 +47,10 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
+import re
 import shutil
+import subprocess
 import sys
 from pathlib import Path
 from typing import Any, List, Optional
@@ -91,6 +94,33 @@ _FILE_NAME_OVERRIDES = {
 }
 
 
+def repo_identity(env: Optional[dict] = None) -> dict[str, str]:
+    """Owner and repo URL of the checkout this script lives in.
+
+    Read from GITHUB_REPOSITORY (set by Actions) or else the git remote
+    ``origin`` of this checkout. Nothing is assumed: no source, no identity.
+    """
+    env = os.environ if env is None else env
+    slug = (env.get("GITHUB_REPOSITORY") or "").strip()
+    if not slug:
+        try:
+            url = subprocess.run(
+                ["git", "config", "--get", "remote.origin.url"],
+                cwd=Path(__file__).resolve().parent, capture_output=True, text=True, timeout=10,
+            ).stdout.strip()
+        except (OSError, subprocess.SubprocessError):
+            url = ""
+        m = re.search(r"github\.com[:/]+([^/\s]+/[^/\s]+?)(?:\.git)?/?$", url)
+        slug = m.group(1) if m else ""
+    if not re.fullmatch(r"[^/\s]+/[^/\s]+", slug):
+        raise RuntimeError(
+            "cannot determine the repository owner: set GITHUB_REPOSITORY=owner/repo "
+            "or run from a checkout whose origin is a GitHub URL"
+        )
+    owner = slug.split("/", 1)[0]
+    return {"owner": owner, "repo": f"https://github.com/{slug}"}
+
+
 def _file_prefix(domain: str, component: str) -> str:
     return _FILE_NAME_OVERRIDES.get(domain, {}).get(component, domain)
 
@@ -106,7 +136,8 @@ def _artifact(src: str) -> dict[str, str]:
     return {"src": src, "dest": src}
 
 
-def _build_manifest(domain: str) -> dict[str, object]:
+def _build_manifest(domain: str, identity: Optional[dict] = None) -> dict[str, object]:
+    identity = identity or repo_identity()
     pascal = _pascal_name(domain)
     container_class = f"app.containers.{domain}.{pascal}Container"
     block_name = f"{domain}_v2"
@@ -150,10 +181,10 @@ def _build_manifest(domain: str) -> dict[str, object]:
         "version": "1.0.0",
         "description": description,
         "status": "available",
-        "author": "bopoadz-del",
+        "author": identity["owner"],
         "tags": ["domain", "container", domain],
         "source": {
-            "repo": "https://github.com/bopoadz-del/Cerebrum-Blocks",
+            "repo": identity["repo"],
             "ref": "main",
             "publish_script": "scripts/publish_kit.py",
         },
