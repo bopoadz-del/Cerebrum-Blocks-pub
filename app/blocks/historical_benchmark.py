@@ -7,7 +7,10 @@ Rates can be overridden per-item via the learning_engine / record action so
 the platform accumulates real project data over time.
 """
 
-from typing import Any, Dict, Optional
+import json
+import math
+from pathlib import Path
+from typing import Any, Dict, Optional, Tuple
 
 from app.core.universal_base import UniversalBlock
 
@@ -93,31 +96,40 @@ _BASE_RATES: Dict[str, Dict[str, Any]] = {
     },
 }
 
-# Regional location factors applied to base rates.
-_LOCATION_FACTORS: Dict[str, float] = {
-    "us national average": 1.0,
-    "united states": 1.0,
-    "usa": 1.0,
-    "saudi arabia": 0.85,
-    "riyadh": 0.85,
-    "jeddah": 0.88,
-    "uae": 0.95,
-    "dubai": 0.95,
-    "abudhabi": 0.95,
-    "abu dhabi": 0.95,
-    "qatar": 0.98,
-    "doha": 0.98,
-    "kuwait": 0.92,
-    "bahrain": 0.90,
-    "egypt": 0.55,
-    "cairo": 0.55,
-    "uk": 1.25,
-    "london": 1.35,
-    "australia": 1.30,
-    "sydney": 1.35,
-    "india": 0.35,
-    "mumbai": 0.35,
-}
+# Regional location factors are data, not code. No table ships with the
+# block: the earlier inlined figures named no published source and were
+# removed (ORDERS 1030Z). A table is supplied via config["location_factors_path"];
+# every row must name its own published source, and a row that does not is
+# not used (the location then answers no_location_factor).
+
+
+def load_location_factors(path: Path) -> Tuple[Dict[str, Tuple[float, Dict[str, Any]]], Dict[str, str], Dict[str, Any]]:
+    """Return (sourced rows {loc: (factor, row source)}, unsourced {loc: reason}, table source)."""
+    path = Path(path)
+    doc = json.loads(path.read_text(encoding="utf-8"))
+    source = doc.get("source")
+    if not isinstance(source, dict) or not source.get("origin"):
+        raise ValueError(f"{path}: location factors carry no source record")
+    table = doc.get("factors")
+    if not isinstance(table, dict) or not table:
+        raise ValueError(f"{path}: location factors table is missing or empty")
+    sourced: Dict[str, Tuple[float, Dict[str, Any]]] = {}
+    unsourced: Dict[str, str] = {}
+    for k, row in table.items():
+        v = row.get("factor") if isinstance(row, dict) else row
+        try:
+            f = float(v)
+        except (TypeError, ValueError):
+            raise ValueError(f"{path}: location factor for {k!r} is not a number: {v!r}") from None
+        if not math.isfinite(f) or f <= 0:
+            raise ValueError(f"{path}: location factor for {k!r} must be a finite positive number, got {v!r}")
+        row_src = row.get("source") if isinstance(row, dict) else None
+        if isinstance(row_src, dict) and str(row_src.get("publication") or "").strip():
+            sourced[_normalize(k)] = (f, row_src)
+        else:
+            unsourced[_normalize(k)] = "its row names no published source"
+    return sourced, unsourced, {**source, "path": str(path)}
+
 
 # Project-type factors.
 _PROJECT_TYPE_FACTORS: Dict[str, float] = {
@@ -156,11 +168,6 @@ def _match_item(name: str) -> Optional[str]:
         if key in norm or norm in key:
             return key
     return None
-
-
-def _location_factor(location: str) -> float:
-    norm = _normalize(location)
-    return _LOCATION_FACTORS.get(norm, 1.0)
 
 
 def _project_factor(project_type: str) -> float:
@@ -242,7 +249,36 @@ class HistoricalBenchmarkBlock(UniversalBlock):
             }
 
         base = _BASE_RATES[key]
-        loc_factor = _location_factor(location)
+        def _no_factor(reason: str, table_source: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+            return {
+                "status": "no_location_factor",
+                "action": "lookup",
+                "item": item,
+                "matched_key": key,
+                "location": location,
+                "location_factor_source": table_source,
+                "reason": reason,
+            }
+
+        table_path = self.config.get("location_factors_path")
+        if not table_path:
+            return _no_factor("no location factor table is configured (config location_factors_path)")
+        try:
+            sourced, unsourced, table_source = load_location_factors(table_path)
+        except (OSError, ValueError) as exc:
+            return {
+                "status": "error",
+                "action": "lookup",
+                "item": item,
+                "error": f"location factors unavailable: {type(exc).__name__}: {exc}",
+            }
+        norm = _normalize(location)
+        if norm in unsourced:
+            return _no_factor(f"{location!r} is in {table_source['path']} but {unsourced[norm]}", table_source)
+        if norm not in sourced:
+            return _no_factor(f"{location!r} is not listed in {table_source['path']} ({len(sourced)} sourced rows)", table_source)
+        loc_factor, row_source = sourced[norm]
+        factor_source = {**table_source, **row_source}
         proj_factor = _project_factor(project_type)
         adjusted = round(base["base_usd"] * loc_factor * proj_factor, 2)
 
@@ -259,6 +295,7 @@ class HistoricalBenchmarkBlock(UniversalBlock):
             },
             "factors": {
                 "location_factor": loc_factor,
+                "location_factor_source": factor_source,
                 "project_type_factor": proj_factor,
                 "location": location,
                 "project_type": project_type,
