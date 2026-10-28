@@ -183,7 +183,7 @@ def guard_request(
     markets_path: Optional[Path] = None,
 ) -> None:
     if market:
-        scope = load_market_scope(markets_path) if markets_path else MARKET_SCOPE
+        scope = load_market_scope(markets_path)  # default: MARKETS_PATH, read per call
         demo, unsupported = scope["demo"], scope["unsupported"]
         code = market.lower()
         msg = market_messages(scope, code)

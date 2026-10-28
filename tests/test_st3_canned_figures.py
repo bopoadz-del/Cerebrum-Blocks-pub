@@ -186,6 +186,19 @@ def _scope_file(tmp_path, **over):
     return _write(tmp_path, "m.json", doc)
 
 
+@pytest.mark.parametrize("allowed,refused", [("zz", "uae"), ("uae", "zz")])
+def test_the_default_guard_reads_markets_path_not_literals(tmp_path, monkeypatch, allowed, refused):
+    from app.blocks import ppm_licensing_resolver as ppm
+
+    p = _write(tmp_path, "m.json", {"source": {"origin": "o"}, "demo_markets": [allowed],
+                                    "unsupported_markets": [refused]})
+    monkeypatch.setattr(ppm, "MARKETS_PATH", p)
+    ppm.guard_request(market=allowed)
+    with pytest.raises(ppm.GuardError) as e:
+        ppm.guard_request(market=refused)
+    assert e.value.code == "market_unsupported"
+
+
 def test_guard_messages_are_generated_from_the_market_data(tmp_path):
     from app.blocks.ppm_licensing_resolver import GuardError, guard_request
 
