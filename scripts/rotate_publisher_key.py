@@ -1,17 +1,29 @@
 #!/usr/bin/env python3
-"""Rotate the platform publisher key and re-sign every registry block.
+"""Register/rotate a publisher key and re-sign that publisher's registry blocks.
 
-Generates a fresh Ed25519 keypair, updates data/publishers.json and
-data/publishers/<publisher>.pub, re-signs every block_registry/*/block.json,
-and verifies 100% before exiting.
+Steps:
+1. Resolve the publisher: ``--publisher`` if given; otherwise the single
+   publisher in data/publishers.json. With zero or several registered
+   publishers and no ``--publisher``, the script refuses (exit 2).
+2. Resolve the public key: from ``--public-key FILE`` (base64 raw Ed25519 as
+   written by scripts/generate_publisher_key.py, or a PEM public key) and/or
+   derived from the private key. If both are given they must match.
+3. Create the registry entry when data/publishers.json or the publisher is
+   absent; update the public key when present (PublisherRegistry.register,
+   which keeps created_at). Write data/publishers/<publisher>.pub.
+4. With a private key (``--private-key`` or a new ``--private-key-out``):
+   refuse if ANY block declares no publisher_id -- an unclaimed block is
+   never silently absorbed into the rotating publisher -- then re-sign every
+   block_registry/*/block.json whose publisher_id is this publisher, then
+   verify EVERY block.
 
-The PRIVATE key is written ONLY to --private-key-out, which must be OUTSIDE
-the repository — store it in your secrets manager and delete the file.
-It is never committed and never printed.
+The PRIVATE key is read from / written to a path OUTSIDE the repository
+only. It is never committed and never printed.
 
 Usage:
-  python scripts/rotate_publisher_key.py --private-key-out /secure/path/key.pem
-  python scripts/rotate_publisher_key.py --private-key /secure/path/key.pem   # reuse existing
+  python scripts/rotate_publisher_key.py --private-key-out /secure/key.pem [--publisher ID]
+  python scripts/rotate_publisher_key.py --private-key /secure/key.pem [--publisher ID]
+  python scripts/rotate_publisher_key.py --public-key ID.pub --publisher ID   # register only
 """
 
 from __future__ import annotations
@@ -20,89 +32,275 @@ import argparse
 import base64
 import json
 import sys
-from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from cryptography.hazmat.primitives import serialization
-from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
+from cryptography.hazmat.primitives import serialization  # noqa: E402
+from cryptography.hazmat.primitives.asymmetric.ed25519 import (  # noqa: E402
+    Ed25519PrivateKey,
+    Ed25519PublicKey,
+)
 
-from app.core.publisher_registry import BlockSigner, BlockVerifier, _load_private_key
+from app.core.block_validation import check_manifest_schema  # noqa: E402
+from app.core.publisher_registry import (  # noqa: E402
+    BlockSigner,
+    BlockVerifier,
+    PublisherRegistry,
+    _load_private_key,
+)
 
-PUBLISHER_ID = "cerebrum_platform"
+
+class RotateError(Exception):
+    """A refusal that maps to exit code 2."""
 
 
-def main() -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
-    group = parser.add_mutually_exclusive_group(required=True)
-    group.add_argument("--private-key-out", type=Path, help="Write a NEW private key here (outside the repo)")
-    group.add_argument("--private-key", type=Path, help="Reuse an existing PEM private key")
-    args = parser.parse_args()
+class ManifestRefused(RotateError):
+    """A block.json fails the BlockValidator manifest schema; nothing is signed."""
 
-    if args.private_key_out:
-        out = args.private_key_out.resolve()
-        if str(out).startswith(str(ROOT)):
-            print("refusing: --private-key-out must be OUTSIDE the repository", file=sys.stderr)
-            return 2
-        private_key = Ed25519PrivateKey.generate()
-        out.parent.mkdir(parents=True, exist_ok=True)
-        out.write_bytes(
-            private_key.private_bytes(
-                serialization.Encoding.PEM,
-                serialization.PrivateFormat.PKCS8,
-                serialization.NoEncryption(),
-            )
+
+class UnclaimedBlockRefused(RotateError):
+    """A block.json declares no publisher_id; re-signing refuses to claim it.
+
+    Rotation signs only blocks that already name their publisher. A block
+    with no publisher_id used to be absorbed into the rotating publisher,
+    which let an unowned block ride in on a key rotation. It is now refused
+    by name; the owner must set publisher_id deliberately. All 233 registry
+    blocks already carry one, so this changes nothing on the real repo -- it
+    closes the claim hole for any future unclaimed block.
+    """
+
+
+def _raw_b64(public_key: Ed25519PublicKey) -> str:
+    raw = public_key.public_bytes(serialization.Encoding.Raw, serialization.PublicFormat.Raw)
+    return base64.b64encode(raw).decode("ascii")
+
+
+def read_public_key_file(path: Path) -> str:
+    """Return the base64 raw Ed25519 public key held in ``path`` (b64 or PEM)."""
+    data = path.read_bytes().strip()
+    if data.startswith(b"-----BEGIN"):
+        key = serialization.load_pem_public_key(data)
+        if not isinstance(key, Ed25519PublicKey):
+            raise RotateError(f"{path} is not an Ed25519 public key")
+        return _raw_b64(key)
+    try:
+        key = Ed25519PublicKey.from_public_bytes(base64.b64decode(data, validate=True))
+    except Exception as exc:
+        raise RotateError(f"{path} is not a base64 Ed25519 public key: {exc}") from exc
+    return _raw_b64(key)
+
+
+def resolve_publisher(registry: PublisherRegistry, requested: str | None) -> str:
+    """``requested`` if given, else the only registered publisher."""
+    if requested:
+        return requested
+    ids = registry.publisher_ids()
+    if len(ids) == 1:
+        return ids[0]
+    if not ids:
+        raise RotateError(
+            f"no publisher registered in {registry.path}; pass --publisher ID"
         )
-        out.chmod(0o600)
-        print(f"new private key written to {out} — store in your secrets manager, then delete the file")
-    else:
-        private_key = _load_private_key(args.private_key)
+    raise RotateError(f"several publishers registered {ids}; pass --publisher ID")
 
-    public_raw = private_key.public_key().public_bytes(
-        serialization.Encoding.Raw, serialization.PublicFormat.Raw
+
+def upsert_publisher(
+    registry: PublisherRegistry,
+    publisher_id: str,
+    public_b64: str,
+    name: str | None,
+    contact: str | None,
+    tier: str | None,
+) -> str:
+    """Create or update the registry entry; return 'created' or 'updated'."""
+    existing = registry.get(publisher_id)
+    registry.register(
+        publisher_id=publisher_id,
+        name=name or (existing.name if existing else publisher_id),
+        contact=contact if contact is not None else (existing.contact if existing else ""),
+        public_key=public_b64,
+        tier=tier or (existing.tier if existing else "community"),
     )
-    public_b64 = base64.b64encode(public_raw).decode("ascii")
+    return "updated" if existing else "created"
 
-    # Update the publisher registry with the new public key.
-    reg_path = ROOT / "data" / "publishers.json"
-    registry = json.loads(reg_path.read_text(encoding="utf-8"))
-    for pub in registry["publishers"]:
-        if pub["publisher_id"] == PUBLISHER_ID:
-            pub["public_key"] = public_b64
-            break
-    else:
-        print(f"publisher {PUBLISHER_ID} not found in {reg_path}", file=sys.stderr)
-        return 2
-    registry["updated_at"] = datetime.now(timezone.utc).isoformat()
-    reg_path.write_text(json.dumps(registry, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    (ROOT / "data" / "publishers" / f"{PUBLISHER_ID}.pub").write_text(
-        public_b64 + "\n", encoding="utf-8"
-    )
 
-    signed = 0
-    for block_dir in sorted((ROOT / "block_registry").iterdir()):
-        if not (block_dir / "block.json").exists():
+def _owned_block_dirs(registry_root: Path, publisher_id: str) -> list[Path]:
+    owned = []
+    for block_dir in sorted(p for p in registry_root.iterdir() if p.is_dir()):
+        manifest_path = block_dir / "block.json"
+        if not manifest_path.exists():
             continue
-        BlockSigner.sign_block(
-            block_path=block_dir, publisher_id=PUBLISHER_ID, private_key=private_key
-        )
-        signed += 1
+        owner = json.loads(manifest_path.read_text(encoding="utf-8")).get("publisher_id")
+        if owner != publisher_id:
+            continue
+        owned.append(block_dir)
+    return owned
 
-    verifier = BlockVerifier()
+
+def refuse_unclaimed_blocks(registry_root: Path) -> None:
+    """Raise UnclaimedBlockRefused if any block.json declares no publisher_id.
+
+    An unclaimed block must not be silently claimed by whichever publisher is
+    being rotated. Every block has to name its owner before it is signed, so
+    the refusal names the offending block(s) and nothing is signed.
+    """
+    unclaimed = []
+    for block_dir in sorted(p for p in registry_root.iterdir() if p.is_dir()):
+        manifest_path = block_dir / "block.json"
+        if not manifest_path.exists():
+            continue
+        owner = json.loads(manifest_path.read_text(encoding="utf-8")).get("publisher_id")
+        if owner in (None, ""):
+            unclaimed.append(block_dir.name)
+    if unclaimed:
+        raise UnclaimedBlockRefused(
+            "refusing to claim block(s) that declare no publisher_id: "
+            + ", ".join(sorted(unclaimed))
+        )
+
+
+def refuse_invalid_manifests(registry_root: Path, publisher_id: str) -> None:
+    """Raise ManifestRefused if any block to be signed fails the validator schema.
+
+    Reuses app.core.block_validation.check_manifest_schema (the same check
+    BlockValidator applies at load time). The manifest is checked as it will
+    be after signing: signing supplies publisher_id, digests and signature,
+    so those are filled in; every other field must already be valid.
+    """
+    refused = []
+    for block_dir in _owned_block_dirs(registry_root, publisher_id):
+        manifest = json.loads((block_dir / "block.json").read_text(encoding="utf-8"))
+        candidate = dict(manifest)
+        candidate["publisher_id"] = publisher_id
+        candidate["digests"] = BlockSigner._compute_digests(
+            block_dir, manifest=candidate, normalize_eol="\n"
+        )
+        candidate["signature"] = manifest.get("signature") or "to-be-signed"
+        reasons = check_manifest_schema(candidate)
+        if reasons:
+            refused.append(f"{block_dir.name}: {'; '.join(reasons)}")
+    if refused:
+        raise ManifestRefused("refusing to sign invalid manifests: " + " | ".join(refused))
+
+
+def resign_blocks(
+    registry_root: Path, publisher_id: str, private_key: Ed25519PrivateKey
+) -> list[str]:
+    """Sign blocks owned by ``publisher_id``; return their names.
+
+    Refuses first if any block is unclaimed (no publisher_id) or if any block
+    this publisher owns fails the manifest schema. Nothing is signed on a
+    refusal.
+    """
+    refuse_unclaimed_blocks(registry_root)
+    refuse_invalid_manifests(registry_root, publisher_id)
+    signed = []
+    for block_dir in _owned_block_dirs(registry_root, publisher_id):
+        BlockSigner.sign_block(
+            block_path=block_dir, publisher_id=publisher_id, private_key=private_key
+        )
+        signed.append(block_dir.name)
+    return signed
+
+
+def verify_all(
+    registry_root: Path, registry: PublisherRegistry
+) -> list[tuple[str, str | None]]:
+    """Verify every block dir; return (name, reason) for each failure."""
+    verifier = BlockVerifier(registry=registry)
     failures = []
-    for block_dir in sorted((ROOT / "block_registry").iterdir()):
+    for block_dir in sorted(p for p in registry_root.iterdir() if p.is_dir()):
         if not (block_dir / "block.json").exists():
             continue
         result = verifier.verify_block(block_dir)
         if not result.get("verified"):
             failures.append((block_dir.name, result.get("reason")))
+    return failures
 
-    print(f"signed {signed} blocks; verification failures: {len(failures)}")
+
+def run(argv: list[str] | None = None, root: Path = ROOT) -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument("--private-key-out", type=Path, help="Write a NEW private key here (outside the repo)")
+    group.add_argument("--private-key", type=Path, help="Reuse an existing PEM private key")
+    parser.add_argument("--public-key", type=Path, help="Public key file (base64 raw or PEM)")
+    parser.add_argument("--publisher", help="Publisher id (default: the single registered publisher)")
+    parser.add_argument("--name", help="Publisher name when creating the entry (default: the id)")
+    parser.add_argument("--contact", help="Publisher contact when creating the entry")
+    parser.add_argument(
+        "--tier",
+        choices=["community", "reviewed", "certified"],
+        help="Trust tier when creating (default: existing tier, else community)",
+    )
+    parser.add_argument("--registry", type=Path, help="Registry JSON (default: <root>/data/publishers.json)")
+    parser.add_argument("--blocks", type=Path, help="Block registry dir (default: <root>/block_registry)")
+    args = parser.parse_args(argv)
+
+    root = Path(root).resolve()
+    reg_path = args.registry or root / "data" / "publishers.json"
+    blocks_root = args.blocks or root / "block_registry"
+
+    try:
+        if not (args.private_key_out or args.private_key or args.public_key):
+            raise RotateError("give --private-key-out, --private-key, or --public-key")
+
+        private_key: Ed25519PrivateKey | None = None
+        if args.private_key_out:
+            out = args.private_key_out.resolve()
+            if out == root or root in out.parents:
+                raise RotateError("--private-key-out must be OUTSIDE the repository")
+            private_key = Ed25519PrivateKey.generate()
+            out.parent.mkdir(parents=True, exist_ok=True)
+            out.write_bytes(
+                private_key.private_bytes(
+                    serialization.Encoding.PEM,
+                    serialization.PrivateFormat.PKCS8,
+                    serialization.NoEncryption(),
+                )
+            )
+            out.chmod(0o600)
+            print(f"new private key written to {out}; store it in your secrets manager, then delete the file")
+        elif args.private_key:
+            private_key = _load_private_key(args.private_key)
+
+        public_b64 = read_public_key_file(args.public_key) if args.public_key else None
+        if private_key is not None:
+            derived = _raw_b64(private_key.public_key())
+            if public_b64 is not None and public_b64 != derived:
+                raise RotateError("--public-key does not match the private key")
+            public_b64 = derived
+
+        registry = PublisherRegistry(path=reg_path)
+        publisher_id = resolve_publisher(registry, args.publisher)
+        if private_key is not None:
+            refuse_unclaimed_blocks(blocks_root)
+            refuse_invalid_manifests(blocks_root, publisher_id)
+        action = upsert_publisher(
+            registry, publisher_id, public_b64, args.name, args.contact, args.tier
+        )
+        key_dir = reg_path.parent / "publishers"
+        key_dir.mkdir(parents=True, exist_ok=True)
+        (key_dir / f"{publisher_id}.pub").write_text(public_b64 + "\n", encoding="utf-8")
+        print(f"publisher {publisher_id}: registry entry {action} in {reg_path}")
+    except RotateError as exc:
+        print(f"refusing: {exc}", file=sys.stderr)
+        return 2
+
+    if private_key is None:
+        return 0
+
+    signed = resign_blocks(blocks_root, publisher_id, private_key)
+    failures = verify_all(blocks_root, PublisherRegistry(path=reg_path))
+    print(f"signed {len(signed)} blocks for {publisher_id}; verification failures: {len(failures)}")
     for name, reason in failures:
         print(f"  FAIL {name}: {reason}")
     return 1 if failures else 0
+
+
+def main() -> int:
+    return run()
 
 
 if __name__ == "__main__":

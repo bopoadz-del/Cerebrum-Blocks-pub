@@ -187,6 +187,35 @@ class CertificationStore:
         return datetime.now(timezone.utc) < expires
 
 
+def check_manifest_schema(manifest: Dict[str, Any]) -> List[str]:
+    """Return a list of reasons for missing required manifest fields.
+
+    ``trust_tier`` is a provenance claim (``platform`` /
+    ``contributor_reviewed``), not ``publisher_tier``. Values are pinned
+    to Factory ``ACCEPTED_TRUST_TIERS`` via ``app.core.trust_tier``.
+    """
+    reasons: List[str] = []
+    required = (
+        "id",
+        "name",
+        "version",
+        "publisher_id",
+        "signature",
+        "digests",
+        "permissions",
+        "trust_tier",
+    )
+    for field_name in required:
+        if field_name not in manifest or manifest[field_name] in (None, ""):
+            reasons.append(f"missing required manifest field: {field_name}")
+    if "trust_tier" in manifest and manifest.get("trust_tier") not in (None, ""):
+        reasons.extend(check_trust_tier(manifest))
+    # Contract fields are optional in this phase; only declared ones are
+    # checked. See app/core/manifest_contract.py.
+    reasons.extend(check_contract_fields(manifest))
+    return reasons
+
+
 class _ForbiddenNodeVisitor(ast.NodeVisitor):
     """Collect forbidden imports, builtins, and names from a block source AST."""
 
@@ -270,32 +299,8 @@ class BlockValidator:
         return json.loads(manifest_path.read_text(encoding="utf-8"))
 
     def _check_required_fields(self, manifest: Dict[str, Any]) -> List[str]:
-        """Return a list of reasons for missing required manifest fields.
-
-        ``trust_tier`` is a provenance claim (``platform`` /
-        ``contributor_reviewed``), not ``publisher_tier``. Values are pinned
-        to Factory ``ACCEPTED_TRUST_TIERS`` via ``app.core.trust_tier``.
-        """
-        reasons: List[str] = []
-        required = (
-            "id",
-            "name",
-            "version",
-            "publisher_id",
-            "signature",
-            "digests",
-            "permissions",
-            "trust_tier",
-        )
-        for field_name in required:
-            if field_name not in manifest or manifest[field_name] in (None, ""):
-                reasons.append(f"missing required manifest field: {field_name}")
-        if "trust_tier" in manifest and manifest.get("trust_tier") not in (None, ""):
-            reasons.extend(check_trust_tier(manifest))
-        # Contract fields are optional in this phase; only declared ones are
-        # checked. See app/core/manifest_contract.py.
-        reasons.extend(check_contract_fields(manifest))
-        return reasons
+        """Return a list of reasons for missing required manifest fields."""
+        return check_manifest_schema(manifest)
 
     def _verify_signature(self, block_path: Path, publisher_id: Optional[str]) -> List[str]:
         """Verify publisher signature/integrity; return reasons on failure."""
