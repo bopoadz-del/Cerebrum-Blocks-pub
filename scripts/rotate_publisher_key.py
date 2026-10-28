@@ -41,6 +41,7 @@ from cryptography.hazmat.primitives.asymmetric.ed25519 import (  # noqa: E402
     Ed25519PublicKey,
 )
 
+from app.core.block_validation import check_manifest_schema  # noqa: E402
 from app.core.publisher_registry import (  # noqa: E402
     BlockSigner,
     BlockVerifier,
@@ -51,6 +52,10 @@ from app.core.publisher_registry import (  # noqa: E402
 
 class RotateError(Exception):
     """A refusal that maps to exit code 2."""
+
+
+class ManifestRefused(RotateError):
+    """A block.json fails the BlockValidator manifest schema; nothing is signed."""
 
 
 def _raw_b64(public_key: Ed25519PublicKey) -> str:
@@ -107,11 +112,8 @@ def upsert_publisher(
     return "updated" if existing else "created"
 
 
-def resign_blocks(
-    registry_root: Path, publisher_id: str, private_key: Ed25519PrivateKey
-) -> list[str]:
-    """Sign blocks owned by ``publisher_id`` (or unowned); return their names."""
-    signed = []
+def _owned_block_dirs(registry_root: Path, publisher_id: str) -> list[Path]:
+    owned = []
     for block_dir in sorted(p for p in registry_root.iterdir() if p.is_dir()):
         manifest_path = block_dir / "block.json"
         if not manifest_path.exists():
@@ -119,6 +121,41 @@ def resign_blocks(
         owner = json.loads(manifest_path.read_text(encoding="utf-8")).get("publisher_id")
         if owner not in (None, "", publisher_id):
             continue
+        owned.append(block_dir)
+    return owned
+
+
+def refuse_invalid_manifests(registry_root: Path, publisher_id: str) -> None:
+    """Raise ManifestRefused if any block to be signed fails the validator schema.
+
+    Reuses app.core.block_validation.check_manifest_schema (the same check
+    BlockValidator applies at load time). The manifest is checked as it will
+    be after signing: signing supplies publisher_id, digests and signature,
+    so those are filled in; every other field must already be valid.
+    """
+    refused = []
+    for block_dir in _owned_block_dirs(registry_root, publisher_id):
+        manifest = json.loads((block_dir / "block.json").read_text(encoding="utf-8"))
+        candidate = dict(manifest)
+        candidate["publisher_id"] = publisher_id
+        candidate["digests"] = BlockSigner._compute_digests(
+            block_dir, manifest=candidate, normalize_eol="\n"
+        )
+        candidate["signature"] = manifest.get("signature") or "to-be-signed"
+        reasons = check_manifest_schema(candidate)
+        if reasons:
+            refused.append(f"{block_dir.name}: {'; '.join(reasons)}")
+    if refused:
+        raise ManifestRefused("refusing to sign invalid manifests: " + " | ".join(refused))
+
+
+def resign_blocks(
+    registry_root: Path, publisher_id: str, private_key: Ed25519PrivateKey
+) -> list[str]:
+    """Sign blocks owned by ``publisher_id`` (or unowned); return their names."""
+    refuse_invalid_manifests(registry_root, publisher_id)
+    signed = []
+    for block_dir in _owned_block_dirs(registry_root, publisher_id):
         BlockSigner.sign_block(
             block_path=block_dir, publisher_id=publisher_id, private_key=private_key
         )
@@ -195,6 +232,8 @@ def run(argv: list[str] | None = None, root: Path = ROOT) -> int:
 
         registry = PublisherRegistry(path=reg_path)
         publisher_id = resolve_publisher(registry, args.publisher)
+        if private_key is not None:
+            refuse_invalid_manifests(blocks_root, publisher_id)
         action = upsert_publisher(
             registry, publisher_id, public_b64, args.name, args.contact, args.tier
         )

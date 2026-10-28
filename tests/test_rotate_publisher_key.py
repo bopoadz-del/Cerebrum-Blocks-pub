@@ -56,7 +56,13 @@ def _repo(tmp: Path) -> Path:
 def _block(root: Path, name: str, publisher_id=None) -> Path:
     d = root / "block_registry" / name
     d.mkdir()
-    manifest = {"name": name, "version": "1.0.0"}
+    manifest = {
+        "id": name,
+        "name": name,
+        "version": "1.0.0",
+        "permissions": {"blocks": [], "filesystem": False, "imports": [], "network": False},
+        "trust_tier": "platform",
+    }
     if publisher_id:
         manifest["publisher_id"] = publisher_id
     (d / "block.json").write_text(json.dumps(manifest), encoding="utf-8")
@@ -250,6 +256,39 @@ def test_script_has_no_hardcoded_publisher_id():
     assert "cerebrum_platform" not in src
 
 
+# ---- re-sign guard: BlockValidator manifest schema -------------------------
+
+def test_guard_signs_valid_manifest_and_refuses_contentless_one(tmp_path):
+    root = _repo(tmp_path)
+    _, priv, pub = _keypair(tmp_path, "k")
+    assert rot.run(["--public-key", str(pub), "--publisher", "p"], root=root) == 0
+    valid = _block(root, "valid")
+    rot.refuse_invalid_manifests(root / "block_registry", "p")  # valid only: no raise
+    hollow = root / "block_registry" / "hollow"
+    hollow.mkdir()
+    (hollow / "block.json").write_text("{}", encoding="utf-8")
+    with pytest.raises(rot.ManifestRefused) as exc:
+        rot.refuse_invalid_manifests(root / "block_registry", "p")
+    assert "hollow" in str(exc.value) and "valid:" not in str(exc.value)
+    assert rot.run(["--private-key", str(priv)], root=root) == 2
+    with pytest.raises(rot.ManifestRefused):  # the signing function guards itself too
+        rot.resign_blocks(root / "block_registry", "p", rot._load_private_key(priv))
+    assert "signature" not in _manifest(valid)  # nothing signed when any is refused
+    assert _manifest(hollow) == {}
+    (hollow / "block.json").unlink()
+    hollow.rmdir()
+    assert rot.run(["--private-key", str(priv)], root=root) == 0
+    assert _manifest(valid)["signature"]
+
+
+def test_guard_is_the_block_validator_schema():
+    src = (ROOT / "scripts" / "rotate_publisher_key.py").read_text(encoding="utf-8")
+    assert "from app.core.block_validation import check_manifest_schema" in src
+    from app.core.block_validation import BlockValidator, check_manifest_schema
+    m = {"id": "x"}
+    assert BlockValidator._check_required_fields(None, m) == check_manifest_schema(m)
+
+
 # ---- (5) re-sign workflow --------------------------------------------------
 
 def _workflow():
@@ -279,3 +318,14 @@ def test_resign_workflow_signs_verifies_and_commits_as_bot():
     assert "--force" not in joined and "push -f" not in joined
     assert joined.index("rotate_publisher_key.py") < joined.index("git commit")
     assert 'rm -f "$KEY_FILE"' in joined
+
+
+def test_every_backend_step_after_integration_runs_unless_cancelled():
+    yaml = pytest.importorskip("yaml")
+    ci = yaml.safe_load((ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8"))
+    backend = next(j for j in ci["jobs"].values() if j.get("name") == "Backend (pytest)")
+    names = [s.get("name", "") for s in backend["steps"]]
+    after = backend["steps"][names.index("Run integration tests") + 1:]
+    assert after
+    missing = [s.get("name") for s in after if "!cancelled()" not in str(s.get("if", ""))]
+    assert not missing, f"Backend steps that would be skipped after a red: {missing}"
