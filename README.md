@@ -4,8 +4,10 @@ The Fork (the-shovel) was built first, by hand, from block code; its blocks were
 
 Its role: a reusable library of typed, signed AI execution blocks and domain kits behind one API.
 
-[![CI](https://github.com/bopoadz-del/Cerebrum-Blocks/actions/workflows/ci.yml/badge.svg)](https://github.com/bopoadz-del/Cerebrum-Blocks/actions/workflows/ci.yml)
+[![CI](https://github.com/bopoadz-del/Cerebrum-Blocks-pub/actions/workflows/ci.yml/badge.svg)](https://github.com/bopoadz-del/Cerebrum-Blocks-pub/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
+---
 
 ## Why this exists
 
@@ -20,11 +22,11 @@ products, clients, and domain kits.
 
 | Component | Path | Purpose |
 |---|---|---|
-| Blocks | `app/blocks/` | 150 typed execution modules (chat, RAG, documents, domain analysis, workbench, …) |
+| Blocks | `app/blocks/` | typed execution modules (chat, RAG, documents, domain analysis, workbench, …) |
 | Block runtime | `app/core/` | TypedBlock base with fail-closed I/O validation, trust-scope enforcement, grounding stage, capability model |
 | Execute API | `app/routers/execute.py` | `/v1/execute` — auth, tier boundary, trust scope, grounding, capability dispatch |
-| Block registry | `block_registry/` | 115 manifest + adapter entries for discovery and subprocess execution |
-| Store | `app/routers/store.py` + `block_store/` | Kit catalog, provenance-verified install, 19 domain kits + the universal kernel |
+| Block registry | `block_registry/` | manifest + adapter entries for discovery and subprocess execution |
+| Store | `app/routers/store.py` + `block_store/` | Kit catalog, provenance-verified install, domain kits + the universal kernel |
 | Sandbox runner | `sandbox-runner/` | Out-of-process execution service for blocks with elevated capabilities |
 | Containers | `app/containers/` | Domain containers assembling blocks per vertical |
 
@@ -36,7 +38,7 @@ products, clients, and domain kits.
 | **Retrieval** | vector_search, knowledge, zvec |
 | **Formulas** | formula_executor, formula_executor_v2, construction_advisor (cited construction KB) |
 | **Documents** | pdf, ocr, xlsx_schedule, spec_analyzer, bim_extractor |
-| **Domain analysis** | construction_v2, aviation_v2, finance_v2, medical_v2, … (19 verticals) |
+| **Domain analysis** | construction_v2, aviation_v2, finance_v2, medical_v2, … (domain verticals) |
 | **Workbench** | workbench (bounded coding-agent CLI editing with diff + safety gates) |
 
 ## Unregistered material (COLLECTOR rung 2 — by design)
@@ -51,14 +53,14 @@ COLLECTOR can survey and promote, not certified inventory:
 - **Library helpers** (`ifc_loader`, `_knowledge`, `_procedure_routing`) —
   shared modules consumed by registered blocks, not blocks themselves.
 
-Newly registered in the close-out: estate blocks (5), `retail_v2`,
+Newly registered in the close-out: estate blocks, `retail_v2`,
 `safety_world_detector`, `mcp_adapter`, `inbound_webhook`, `workbench`.
 All registry blocks are signed (publisher `cerebrum_platform`) and the
 signing + manifest-contract gates run in CI.
 
 ## Domain kits
 
-19 domain kits ship under `block_store/kits/` (construction, aviation,
+Domain kits ship under `block_store/kits/` (construction, aviation,
 finance, medical, legal, retail, insurance, education, agriculture,
 manufacturing, oil & gas, pharma, real estate, hotel management, HR,
 supply chain, automotive, finance ops, mep coordination), plus the
@@ -68,8 +70,8 @@ installs are provenance-verified (see Security model).
 ## Quick start
 
 ```bash
-git clone https://github.com/bopoadz-del/Cerebrum-Blocks.git
-cd Cerebrum-Blocks
+git clone https://github.com/bopoadz-del/Cerebrum-Blocks-pub.git
+cd Cerebrum-Blocks-pub
 pip install -r requirements.txt
 
 # Required env (see .env.example):
@@ -127,19 +129,19 @@ readiness, and the known-defect list) lives in
 **[docs/STORE_INVENTORY.md](docs/STORE_INVENTORY.md)** and is re-verified
 against the files themselves, not memory. The short version:
 
-- **198 registry blocks** — all manifested and signed, **zero stubs**
-  (verified by pattern sweep; census 0 missing). All 20 vertical `*_v2`
-  domain blocks are registered and signed, plus the full wave-2 clone
-  program across 14 donor repos (provenance-labelled: real /
-  honest-stub / mock-functional).
-- **21 kit directories** — 19 domain kits + `universal_kernel` +
+- **Registry blocks** — all manifested and signed, verified by pattern
+  sweep against the files themselves. The vertical `*_v2` domain blocks are
+  registered and signed.
+- **Kit directories** — the domain kits plus `universal_kernel` and
   `_template`.
 - **Excluded from testing** (no authoritative domain content): medical,
   veterinary, pharma.
-- **Known defects are listed, not hidden**: the five estate blocks are
-  real and registered in the Store (always-ok stubs replaced on `main`,
-  `9b8d781f`); `admin_block._preflight`'s database check is tracked in
-  the inventory file.
+- **Known defects are listed, not hidden** in the inventory file (for
+  example `admin_block._preflight`'s database check).
+
+Exact per-block and per-kit counts live in the generated inventory
+([docs/STORE_INVENTORY.md](docs/STORE_INVENTORY.md)), re-verified against the
+files, so they are not hand-maintained here.
 
 ## Contribute — build kits and blocks
 
