@@ -320,17 +320,10 @@ jobs:
           python scripts/dep_audit.py --python
 
       - name: Run every test file
-        # REPORT-ONLY, by owner decision (2026-09-19) -- this STEP, not the
-        # job. The Store is a shelf of blocks: they do not run here, they are
-        # cloned into a generated platform, configured there and tested there,
-        # by that platform's own suite and by the Store gate's acceptance run
-        # in Docker. So a red block test reports but does not block a merge.
-        # The steps above it in this job -- ruff, bandit, the registry census
-        # and the fail-closed dependency audit -- are about whether a block is
-        # SAFE to clone, and they still block. That is why this is step-level:
-        # a job-level continue-on-error would have un-gated the audit too
-        # (tests/test_dep_audit.py pins exactly that).
-        continue-on-error: true
+        # BLOCKING (ST-1). This step was report-only (continue-on-error,
+        # owner decision 2026-09-19), which let a red suite show as green; a
+        # gate that cannot fail is no gate. A failing test now fails the job,
+        # like the ruff, bandit, census and dependency-audit steps above it.
         # pytest-timeout turns a deadlock into a named failure instead of
         # burning the job cap with no last-test line. Main's pytest step is
         # ~45s; 90s per test is headroom, not a skip.
@@ -368,8 +361,7 @@ jobs:
           # written so that "green" would stop meaning "green on a fifth of
           # the suite" reported green on a twentieth of it, and printed no
           # skip summary at all because -x exits before pytest writes one.
-          # Report-only means report ALL of it; --timeout=90 (not -x) is what
-          # keeps a hang from eating the job cap.
+          # --timeout=90 (not -x) is what keeps a hang from eating the job cap.
           pytest -v -rs tests/ --timeout=90 --timeout-method=thread             -o faulthandler_timeout=75 --tb=short
 
   lockfile-consistency:
