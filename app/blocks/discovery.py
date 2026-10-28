@@ -110,9 +110,10 @@ class DiscoveryBlock(UniversalBlock):
                     params={"action": "add"},
                 )
 
-        # TODO: Load from vector database
-        # TODO: Load usage patterns from analytics
-        
+        # Usage patterns: no analytics source is implemented, so none are
+        # loaded. health() says so instead of reporting an empty load as real.
+        self.usage_patterns_source = None
+
         self.initialized = True
         return True
         
@@ -761,5 +762,9 @@ class DiscoveryBlock(UniversalBlock):
         h = {"name": self.name, "version": self.version}
         h["indexed_blocks"] = len(self.block_profiles)
         h["usage_patterns_loaded"] = len(self.usage_patterns)
+        h["usage_patterns_source"] = (
+            getattr(self, "usage_patterns_source", None)
+            or "not loaded: no analytics source is implemented"
+        )
         h["model"] = self.config["recommendation_model"]
         return h
