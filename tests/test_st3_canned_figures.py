@@ -210,6 +210,9 @@ def test_guard_messages_are_generated_from_the_market_data(tmp_path):
         guard_request(market="uae", markets_path=p)
     assert e.value.message == "Supported markets: Atlantis and generic only."
     with pytest.raises(GuardError) as e:
+        guard_request(market="zz", markets_path=p, demo_only=True)
+    assert (e.value.code, e.value.message) == ("market_not_demo_geography", "Pilot demo fixtures are Atlantis + generic only.")
+    with pytest.raises(GuardError) as e:
         guard_request(market="ksa")
     assert e.value.message == "KSA is unsupported and stripped. Supported markets: UAE and generic only."
 
