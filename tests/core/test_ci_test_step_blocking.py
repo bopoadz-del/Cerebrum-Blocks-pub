@@ -17,6 +17,11 @@ import yaml
 _REPO_ROOT = Path(__file__).resolve().parents[2]
 _CI = _REPO_ROOT / ".github" / "workflows" / "ci.yml"
 _STEP_NAME = "Run every test file"
+_JOB_ID = "full-suite"
+# "exit 0" as a command anywhere in the script: after ";", "||", "&&", "|",
+# "(", or at the start of any line (newline-separated, own line after pytest),
+# with any amount of whitespace.
+_EXIT_ZERO = re.compile(r"(?:^|[;&|(])[ \t]*exit[ \t]+0+(?![0-9])", re.MULTILINE)
 
 
 def _masking_reasons(step: dict) -> list[str]:
@@ -31,6 +36,8 @@ def _masking_reasons(step: dict) -> list[str]:
         reasons.append("|| true")
     if re.search(r"\bset\s+\+e\b", code):
         reasons.append("set +e")
+    if _EXIT_ZERO.search(code):
+        reasons.append("exit 0")
     if "--continue-on-collection-errors" in code:
         reasons.append("--continue-on-collection-errors")
     return reasons
@@ -64,7 +71,8 @@ jobs:
     steps:
       - name: Run every test file
         run: |
-          # comment mentioning || true and set +e is not code
+          # comment mentioning || true, set +e and exit 0 is not code
+          echo "exit 0 inside a string is not a command" && test -d tests
           pytest -v -rs tests/ --timeout=90
 """
 
@@ -100,6 +108,38 @@ jobs:
       - name: Run every test file
         run: pytest -v tests/ --continue-on-collection-errors
 """,
+    "; exit 0": """
+jobs:
+  backend:
+    steps:
+      - name: Run every test file
+        run: pytest -v tests/ ;   exit 0
+""",
+    "|| exit 0": """
+jobs:
+  backend:
+    steps:
+      - name: Run every test file
+        run: pytest -v tests/ ||exit  0
+""",
+    "newline exit 0": """
+jobs:
+  backend:
+    steps:
+      - name: Run every test file
+        run: |
+          pytest -v tests/
+            exit 0
+""",
+    "newline || exit 0": """
+jobs:
+  backend:
+    steps:
+      - name: Run every test file
+        run: |
+          pytest -v tests/ \\
+            || exit 0
+""",
     "job continue-on-error": """
 jobs:
   backend:
@@ -109,6 +149,19 @@ jobs:
         run: pytest -v tests/
 """,
 }
+
+
+def test_step_lives_in_full_suite_job():
+    workflow = yaml.safe_load(_CI.read_text(encoding="utf-8"))
+    job = (workflow.get("jobs") or {}).get(_JOB_ID)
+    assert job is not None, f"job {_JOB_ID!r} missing from ci.yml"
+    names = [s.get("name") for s in job.get("steps") or []]
+    assert names.count(_STEP_NAME) == 1, (
+        f"{_STEP_NAME!r} must be exactly once in job {_JOB_ID!r}"
+    )
+    assert _find_steps(workflow, _STEP_NAME) == [
+        s for s in job["steps"] if s.get("name") == _STEP_NAME
+    ], f"{_STEP_NAME!r} must not appear outside job {_JOB_ID!r}"
 
 
 def test_checker_passes_unmasked_sample():
