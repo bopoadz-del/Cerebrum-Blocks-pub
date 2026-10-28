@@ -1,25 +1,11 @@
 # The Store - Cerebrum Blocks 
 
-**Independent.** Cerebrum Blocks is **not** Cerebrum — it is a separate
-project with its own repo, its own API, and its own kits. The block store is
-open source; CerebrumDev is a separate proprietary product that *consumes*
-blocks and kits through the public API, exactly like any other client.
+The Fork (the-shovel) was built first, by hand, from block code; its blocks were extracted to create the Store (cerebrum-blocks); the Factory (CerebrumDev.ai) was built on the Store afterwards. The Fork is not a Factory product.
+
+Its role: a reusable library of typed, signed AI execution blocks and domain kits behind one API.
 
 [![CI](https://github.com/bopoadz-del/Cerebrum-Blocks/actions/workflows/ci.yml/badge.svg)](https://github.com/bopoadz-del/Cerebrum-Blocks/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-
----
-
-> ### Part of the CEREBRUM ecosystem — industrialized AI delivery
->
-> **The Store — [Cerebrum-Blocks](https://github.com/bopoadz-del/Cerebrum-Blocks):** 150 block modules (136 registry entries, all manifested + signed), 19 domain kits + universal kernel, one API. Build a capability once; every sector inherits it.  
-> **The Factory — [<private-repo>](https://github.com/bopoadz-del/<private-repo>):** the client-facing interface that assembles blocks into governed, deployable vertical platforms — evaluation gates in CI, release certification, honest closure reporting.  
-> **The Products — [The Fork](https://github.com/bopoadz-del/The_Fork)** (construction AI — enterprise client pilot) **· [RetailOps](https://github.com/bopoadz-del/<private-product>)** (retail operations — assembled, CI-gated and deployed in under three days).  
-> **The Edge:** sovereign deployment proven — zero-egress on-premise profile, executed air-gap acceptance test, signed sovereignty report.
->
-> **You are here: THE STORE** — the certified capability inventory every product is assembled from.
-
----
 
 ## Why this exists
 
@@ -147,10 +133,7 @@ against the files themselves, not memory. The short version:
   program across 14 donor repos (provenance-labelled: real /
   honest-stub / mock-functional).
 - **21 kit directories** — 19 domain kits + `universal_kernel` +
-  `_template` — including the eight declared-ready verticals: **hotels,
-  insurance, construction, finance, retail, real estate, legal, mep
-  coordination** — each with real domain blocks beyond the generic core
-  (`pdf, ocr, chat, image, formula_executor(_v2)`).
+  `_template`.
 - **Excluded from testing** (no authoritative domain content): medical,
   veterinary, pharma.
 - **Known defects are listed, not hidden**: the five estate blocks are
