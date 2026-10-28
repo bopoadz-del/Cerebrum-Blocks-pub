@@ -4,6 +4,8 @@ Cerebrum Blocks is **The Store** of the Cerebrum platform: the certified,
 MIT-licensed capability inventory that the CerebrumDev.ai Factory assembles
 vertical platforms from. Blocks and kits are reached through one public API.
 
+The Fork (the-shovel) was built first, by hand, from block code; its blocks were extracted to create the Store (cerebrum-blocks); the Factory (CerebrumDev.ai) was built on the Store afterwards. The Fork is not a Factory product.
+
 [![CI](https://github.com/bopoadz-del/Cerebrum-Blocks-pub/actions/workflows/ci.yml/badge.svg)](https://github.com/bopoadz-del/Cerebrum-Blocks-pub/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
