@@ -85,8 +85,8 @@ def combine_verdicts(verdicts: Iterable[Verdict]) -> Verdict:
 MARKETS_PATH = Path(__file__).resolve().parents[1] / "knowledge" / "ppm_markets.json"
 
 
-def load_markets(path: Optional[Path] = None) -> Tuple[set, set, Dict[str, Any]]:
-    """Return (demo markets, unsupported markets, source record)."""
+def load_market_scope(path: Optional[Path] = None) -> Dict[str, Any]:
+    """The whole market scope: sets, alias -> canonical market, labels, packs."""
     path = Path(path) if path else MARKETS_PATH
     doc = json.loads(path.read_text(encoding="utf-8"))
     source = doc.get("source")
@@ -108,9 +108,56 @@ def load_markets(path: Optional[Path] = None) -> Tuple[set, set, Dict[str, Any]]
         raise ValueError(f"{path}: no demo markets declared")
     if demo & unsupported:
         raise ValueError(f"{path}: markets both demo and unsupported: {sorted(demo & unsupported)}")
-    return demo, unsupported, {**source, "path": str(path)}
+    aliases = {str(k).strip().lower(): str(v).strip().lower()
+               for k, v in (doc.get("market_aliases") or {}).items()}
+    for code in demo | unsupported:
+        aliases.setdefault(code, code)
+    labels = {str(k).lower(): str(v) for k, v in (doc.get("market_labels") or {}).items()}
+    packs = doc.get("market_packs") or {}
+    if not isinstance(packs, dict):
+        raise ValueError(f"{path}: market_packs must be an object")
+    return {
+        "demo": demo,
+        "unsupported": unsupported,
+        "aliases": aliases,
+        "labels": labels,
+        "packs": {str(k).lower(): v for k, v in packs.items()},
+        "source": {**source, "path": str(path)},
+    }
 
 
+def load_markets(path: Optional[Path] = None) -> Tuple[set, set, Dict[str, Any]]:
+    """Return (demo markets, unsupported markets, source record)."""
+    scope = load_market_scope(path)
+    return scope["demo"], scope["unsupported"], scope["source"]
+
+
+def _label(scope: Dict[str, Any], code: str) -> str:
+    canon = scope["aliases"].get(code, code)
+    return scope["labels"].get(canon, canon)
+
+
+def _supported_labels(scope: Dict[str, Any]) -> List[str]:
+    seen: List[str] = []
+    for code in sorted(scope["demo"]):
+        label = _label(scope, code)
+        if label not in seen:
+            seen.append(label)
+    # the market with a country pack reads first, the generic floor last
+    return sorted(seen, key=lambda l: (scope["aliases"].get(l.lower(), l.lower()) not in scope["packs"], l))
+
+
+def market_messages(scope: Dict[str, Any], code: str) -> Dict[str, str]:
+    labels = _supported_labels(scope)
+    return {
+        "unsupported": f"{_label(scope, code)} is unsupported and stripped. "
+                       f"Supported markets: {' and '.join(labels)} only.",
+        "not_demo": f"Pilot demo fixtures are {' + '.join(labels)} only.",
+        "not_supported": f"Supported markets: {' and '.join(labels)} only.",
+    }
+
+
+MARKET_SCOPE = load_market_scope()
 DEMO_MARKETS, UNSUPPORTED_MARKETS, MARKETS_SOURCE = load_markets()
 SUPPORTED_MARKETS = DEMO_MARKETS
 FORBIDDEN_SOURCES = {"aconex", "procore", "bim", "bim_ifc", "navisworks", "revit"}
@@ -136,25 +183,24 @@ def guard_request(
     markets_path: Optional[Path] = None,
 ) -> None:
     if market:
-        if markets_path:
-            demo, unsupported, _ = load_markets(markets_path)
-        else:
-            demo, unsupported = DEMO_MARKETS, UNSUPPORTED_MARKETS
+        scope = load_market_scope(markets_path) if markets_path else MARKET_SCOPE
+        demo, unsupported = scope["demo"], scope["unsupported"]
         code = market.lower()
+        msg = market_messages(scope, code)
         if code in unsupported:
             raise GuardError(
                 "market_unsupported",
-                "KSA is unsupported and stripped. Supported markets: UAE and generic only.",
+                msg["unsupported"],
             )
         if demo_only and code not in demo:
             raise GuardError(
                 "market_not_demo_geography",
-                "Pilot demo fixtures are UAE + generic only.",
+                msg["not_demo"],
             )
         if code not in demo:
             raise GuardError(
                 "market_unsupported",
-                "Supported markets: UAE and generic only.",
+                msg["not_supported"],
             )
     if construction_pm:
         raise GuardError(
@@ -261,27 +307,52 @@ PPM_UAE: Dict[str, Any] = {
 }
 
 
+# Packs the market data may name (market_packs in ppm_markets.json).
+PACKS: Dict[str, Dict[str, Any]] = {
+    "LICENSING_UAE": LICENSING_UAE,
+    "PREREQ_UAE": PREREQ_UAE,
+    "PPM_UAE": PPM_UAE,
+}
+
+
 # ---------------------------------------------------------------- market_router.py
 
 class MarketRouter:
-    DEMO = {"uae", "generic"}
+    """Routes a market to its pack. Aliases, labels and which market has a
+    country pack all come from the market data (ppm_markets.json)."""
+
+    def __init__(self, scope: Optional[Dict[str, Any]] = None) -> None:
+        self.scope = scope or MARKET_SCOPE
+        self.DEMO = {self.scope["aliases"].get(c, c) for c in self.scope["demo"]}
 
     def normalize(self, market: Optional[str], *, demo_only: bool = False) -> str:
         code = (market or "generic").lower().strip()
-        guard_request(market=code, demo_only=demo_only)
-        if code in {"dubai", "abu_dhabi", "abudhabi", "sharjah", "ajman", "uae"}:
-            return "uae"
-        if code == "generic":
-            return "generic"
-        raise GuardError("market_unsupported", f"Market {market!r} is not UAE or generic.")
+        guard_request(market=code, demo_only=demo_only, markets_path=self._path())
+        canon = self.scope["aliases"].get(code, code)
+        if canon in self.DEMO:
+            return canon
+        raise GuardError("market_unsupported", market_messages(self.scope, code)["not_supported"])
+
+    def _path(self) -> Optional[Path]:
+        return None if self.scope is MARKET_SCOPE else Path(self.scope["source"]["path"])
+
+    def _pack(self, code: str, kind: str) -> Optional[Dict[str, Any]]:
+        name = (self.scope["packs"].get(code) or {}).get(kind)
+        if not name:
+            return None
+        if name not in PACKS:
+            raise GuardError("market_pack_missing", f"Market data names pack {name!r}, which is not loaded.")
+        return PACKS[name]
 
     def licensing_pack(self, market: Optional[str]) -> Dict[str, Any]:
         code = self.normalize(market)
-        if code == "uae":
+        licensing = self._pack(code, "licensing")
+        if licensing is not None:
+            prereq = self._pack(code, "prerequisites") or {}
             return {
-                "market": "uae",
-                "licenses": LICENSING_UAE["licenses"],
-                "prerequisites": PREREQ_UAE["maps"],
+                "market": code,
+                "licenses": licensing["licenses"],
+                "prerequisites": prereq.get("maps") or {},
                 **class_b_meta(),
             }
         return {
@@ -293,8 +364,9 @@ class MarketRouter:
 
     def ppm_pack(self, market: Optional[str]) -> Dict[str, Any]:
         code = self.normalize(market)
-        if code == "uae":
-            return PPM_UAE
+        pack = self._pack(code, "ppm")
+        if pack is not None:
+            return pack
         return {
             "market": code,
             "layer": "statutory_floor",
@@ -387,10 +459,11 @@ class PPMResolver:
                 break
         duty = self._duty_for(pack, asset_type)
 
-        if match is None and duty is None and code == "uae":
+        if match is None and duty is None and code in self.router.scope["packs"]:
             raise PPMRefuse(
                 "statutory_missing",
-                f"No statutory-floor duty for asset_type={asset_type!r} in UAE (fire/lift/pressure/water).",
+                f"No statutory-floor duty for asset_type={asset_type!r} in "
+                f"{_label(self.router.scope, code)} (fire/lift/pressure/water).",
             )
 
         named = operator_sop and operator_sop.strip() and len(operator_sop.strip()) > 8

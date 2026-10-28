@@ -94,7 +94,7 @@ _FILE_NAME_OVERRIDES = {
 }
 
 
-def repo_identity(env: Optional[dict] = None) -> dict[str, str]:
+def repo_identity(env: Optional[dict] = None, checkout: Optional[Path] = None) -> dict[str, str]:
     """Owner and repo URL of the checkout this script lives in.
 
     Read from GITHUB_REPOSITORY (set by Actions) or else the git remote
@@ -106,7 +106,7 @@ def repo_identity(env: Optional[dict] = None) -> dict[str, str]:
         try:
             url = subprocess.run(
                 ["git", "config", "--get", "remote.origin.url"],
-                cwd=Path(__file__).resolve().parent, capture_output=True, text=True, timeout=10,
+                cwd=checkout or Path(__file__).resolve().parent, capture_output=True, text=True, timeout=10,
             ).stdout.strip()
         except (OSError, subprocess.SubprocessError):
             url = ""
@@ -325,6 +325,18 @@ def composition_audit(domain: str, kit_dir: Path) -> int:
     return 0
 
 
+def stamp_identity(manifest_path: Path, identity: Optional[dict] = None) -> dict:
+    """Regenerate an authored manifest's author and source.repo from the
+    repository config (repo_identity), leaving every other field as authored."""
+    identity = identity or repo_identity()
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["author"] = identity["owner"]
+    source = manifest.get("source") if isinstance(manifest.get("source"), dict) else {}
+    manifest["source"] = {"repo": identity["repo"], **{k: v for k, v in source.items() if k != "repo"}}
+    manifest_path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+    return manifest
+
+
 def mirror(
     kit_dir: Path,
     manifest_path: Path,
@@ -519,6 +531,12 @@ def main() -> int:
         help="Copy artifacts whose source exists and report the rest, for kits "
              "whose sources are no longer reachable (construction, insurance)",
     )
+    parser.add_argument(
+        "--stamp-identity",
+        action="store_true",
+        help="Regenerate the manifest's author and source.repo from the repository "
+             "config (GITHUB_REPOSITORY or git remote origin)",
+    )
     args = parser.parse_args()
 
     domain = args.domain.strip().lower()
@@ -544,6 +562,13 @@ def main() -> int:
             return 1
         print(f"No manifest for '{domain}' -- scaffolding a new kit.")
         return scaffold(kit_dir, manifest_path, domain, args.dry_run, args.regenerate)
+
+    if args.stamp_identity:
+        manifest = stamp_identity(manifest_path)
+        print(f"Stamped {manifest_path}: author={manifest['author']} repo={manifest['source']['repo']}")
+        if args.check:
+            return mirror(kit_dir, manifest_path, args.dry_run, True, args.refresh)
+        return 0
 
     return mirror(kit_dir, manifest_path, args.dry_run, args.check, args.refresh)
 

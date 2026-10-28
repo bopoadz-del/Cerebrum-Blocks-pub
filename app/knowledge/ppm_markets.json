@@ -19,5 +19,29 @@
     "ksa",
     "saudi",
     "saudi_arabia"
-  ]
+  ],
+  "market_aliases": {
+    "uae": "uae",
+    "dubai": "uae",
+    "abu_dhabi": "uae",
+    "abudhabi": "uae",
+    "sharjah": "uae",
+    "ajman": "uae",
+    "generic": "generic",
+    "ksa": "ksa",
+    "saudi": "ksa",
+    "saudi_arabia": "ksa"
+  },
+  "market_labels": {
+    "uae": "UAE",
+    "generic": "generic",
+    "ksa": "KSA"
+  },
+  "market_packs": {
+    "uae": {
+      "licensing": "LICENSING_UAE",
+      "prerequisites": "PREREQ_UAE",
+      "ppm": "PPM_UAE"
+    }
+  }
 }
