@@ -23,8 +23,10 @@ Ported exactly:
 """
 from __future__ import annotations
 
+import json
 from dataclasses import dataclass
 from enum import Enum
+from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Tuple
 
 from app.core.universal_base import UniversalBlock
@@ -78,8 +80,28 @@ def combine_verdicts(verdicts: Iterable[Verdict]) -> Verdict:
 
 # ---------------------------------------------------------------- guard.py
 
-DEMO_MARKETS = {"uae", "generic", "dubai", "abu_dhabi", "abudhabi", "sharjah", "ajman"}
-UNSUPPORTED_MARKETS = {"ksa", "saudi", "saudi_arabia"}
+# Market scope is data, not code: app/knowledge/ppm_markets.json carries the
+# market sets together with their source record.
+MARKETS_PATH = Path(__file__).resolve().parents[1] / "knowledge" / "ppm_markets.json"
+
+
+def load_markets(path: Optional[Path] = None) -> Tuple[set, set, Dict[str, Any]]:
+    """Return (demo markets, unsupported markets, source record)."""
+    path = Path(path) if path else MARKETS_PATH
+    doc = json.loads(path.read_text(encoding="utf-8"))
+    source = doc.get("source")
+    if not isinstance(source, dict) or not source.get("origin"):
+        raise ValueError(f"{path}: market sets carry no source record")
+    demo = {str(m).lower() for m in doc.get("demo_markets") or []}
+    unsupported = {str(m).lower() for m in doc.get("unsupported_markets") or []}
+    if not demo:
+        raise ValueError(f"{path}: no demo markets declared")
+    if demo & unsupported:
+        raise ValueError(f"{path}: markets both demo and unsupported: {sorted(demo & unsupported)}")
+    return demo, unsupported, {**source, "path": str(path)}
+
+
+DEMO_MARKETS, UNSUPPORTED_MARKETS, MARKETS_SOURCE = load_markets()
 SUPPORTED_MARKETS = DEMO_MARKETS
 FORBIDDEN_SOURCES = {"aconex", "procore", "bim", "bim_ifc", "navisworks", "revit"}
 

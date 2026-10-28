@@ -7,7 +7,9 @@ Rates can be overridden per-item via the learning_engine / record action so
 the platform accumulates real project data over time.
 """
 
-from typing import Any, Dict, Optional
+import json
+from pathlib import Path
+from typing import Any, Dict, Optional, Tuple
 
 from app.core.universal_base import UniversalBlock
 
@@ -93,31 +95,23 @@ _BASE_RATES: Dict[str, Dict[str, Any]] = {
     },
 }
 
-# Regional location factors applied to base rates.
-_LOCATION_FACTORS: Dict[str, float] = {
-    "us national average": 1.0,
-    "united states": 1.0,
-    "usa": 1.0,
-    "saudi arabia": 0.85,
-    "riyadh": 0.85,
-    "jeddah": 0.88,
-    "uae": 0.95,
-    "dubai": 0.95,
-    "abudhabi": 0.95,
-    "abu dhabi": 0.95,
-    "qatar": 0.98,
-    "doha": 0.98,
-    "kuwait": 0.92,
-    "bahrain": 0.90,
-    "egypt": 0.55,
-    "cairo": 0.55,
-    "uk": 1.25,
-    "london": 1.35,
-    "australia": 1.30,
-    "sydney": 1.35,
-    "india": 0.35,
-    "mumbai": 0.35,
-}
+# Regional location factors are data, not code: loaded from a JSON file that
+# carries its own source record (default app/knowledge/location_factors.json,
+# overridable per block via config["location_factors_path"]).
+_DEFAULT_LOCATION_FACTORS_PATH = (
+    Path(__file__).resolve().parents[1] / "knowledge" / "location_factors.json"
+)
+
+
+def load_location_factors(path: Optional[Path] = None) -> Tuple[Dict[str, float], Dict[str, Any]]:
+    """Return (factors keyed by normalized location, source record)."""
+    path = Path(path) if path else _DEFAULT_LOCATION_FACTORS_PATH
+    doc = json.loads(path.read_text(encoding="utf-8"))
+    source = doc.get("source")
+    if not isinstance(source, dict) or not source.get("origin"):
+        raise ValueError(f"{path}: location factors carry no source record")
+    factors = {_normalize(k): float(v) for k, v in (doc.get("factors") or {}).items()}
+    return factors, {**source, "path": str(path)}
 
 # Project-type factors.
 _PROJECT_TYPE_FACTORS: Dict[str, float] = {
@@ -158,9 +152,13 @@ def _match_item(name: str) -> Optional[str]:
     return None
 
 
-def _location_factor(location: str) -> float:
+def _location_factor(location: str, factors: Dict[str, float]) -> Tuple[float, bool]:
+    """(factor, matched). An unlisted location applies no adjustment (1.0)
+    and says so via matched=False rather than passing as a real factor."""
     norm = _normalize(location)
-    return _LOCATION_FACTORS.get(norm, 1.0)
+    if norm in factors:
+        return factors[norm], True
+    return 1.0, False
 
 
 def _project_factor(project_type: str) -> float:
@@ -242,7 +240,16 @@ class HistoricalBenchmarkBlock(UniversalBlock):
             }
 
         base = _BASE_RATES[key]
-        loc_factor = _location_factor(location)
+        try:
+            factors, factor_source = load_location_factors(self.config.get("location_factors_path"))
+        except (OSError, ValueError) as exc:
+            return {
+                "status": "error",
+                "action": "lookup",
+                "item": item,
+                "error": f"location factors unavailable: {type(exc).__name__}: {exc}",
+            }
+        loc_factor, loc_matched = _location_factor(location, factors)
         proj_factor = _project_factor(project_type)
         adjusted = round(base["base_usd"] * loc_factor * proj_factor, 2)
 
@@ -259,6 +266,8 @@ class HistoricalBenchmarkBlock(UniversalBlock):
             },
             "factors": {
                 "location_factor": loc_factor,
+                "location_factor_matched": loc_matched,
+                "location_factor_source": factor_source,
                 "project_type_factor": proj_factor,
                 "location": location,
                 "project_type": project_type,

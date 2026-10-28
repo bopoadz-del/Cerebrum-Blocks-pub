@@ -9,7 +9,7 @@
   "status": "available",
   "author": "bopoadz-del",
   "tags": ["domain", "container", "finance_ops", "fp&a", "epm", "saas", "governance"],
-  "source": {"repo": "https://github.com/bopoadz-del/Cerebrum-Blocks", "ref": "main", "publish_script": "scripts/publish_finance_ops_kit.py"},
+  "source": {"repo": "https://github.com/bopoadz-del/Cerebrum-Blocks", "ref": "main", "publish_script": "scripts/publish_kit.py"},
   "container": {"class": "app.containers.finance_ops.FinanceOpsContainer", "default_chat_prompt": null},
   "blocks": ["pdf", "ocr", "chat", "finance_v2", "formula_executor_v2", "finance_canonical_model", "finance_import", "finance_data_quality", "finance_reconciliation", "finance_coa_governance", "finance_saas_metrics"],
   "prompts": ["app/prompts/codegen_system.py"],
