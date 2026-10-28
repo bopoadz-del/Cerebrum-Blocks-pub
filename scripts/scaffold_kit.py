@@ -303,6 +303,10 @@ def build_entity_schema(item: Dict[str, Any], kit: str) -> Tuple[str, Dict[str, 
 
 def substitute(text: str, values: Dict[str, str]) -> str:
     for key, value in values.items():
+        if key.endswith("_json"):
+            # JSON-valued placeholders sit quoted so the template is valid
+            # JSON; the quotes go with the placeholder.
+            text = text.replace('"{{%s}}"' % key, value)
         text = text.replace("{{%s}}" % key, value)
     return text
 

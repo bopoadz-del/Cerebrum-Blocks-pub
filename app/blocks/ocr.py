@@ -135,12 +135,16 @@ class OCRBlock(TypedBlock):
         all_confs = []
         engine_used = None
         tesseract_available = True
+        # Why tesseract was not used, stated in the result -- never swallowed.
+        tesseract_error = None
+        confidence_errors = []
 
         try:
             import pytesseract
             pytesseract.get_tesseract_version()  # raises if not installed
-        except Exception:
+        except Exception as e:
             tesseract_available = False
+            tesseract_error = f"tesseract unavailable: {type(e).__name__}: {e}"
 
         word_confidences = []
         if tesseract_available:
@@ -167,10 +171,16 @@ class OCRBlock(TypedBlock):
                                 continue
                             if c >= 0:
                                 word_confidences.append(c / 100.0)
-                    except Exception:
-                        pass
+                    except Exception as e:
+                        # Text was read but its confidence was not: say so
+                        # rather than score the page as if it had none.
+                        confidence_errors.append(
+                            f"{os.path.basename(str(page_img_path))}: {type(e).__name__}: {e}"
+                        )
             except Exception as e:
                 tesseract_available = False
+                tesseract_error = f"tesseract failed: {type(e).__name__}: {e}"
+                all_texts, word_confidences, confidence_errors = [], [], []
 
         if not tesseract_available:
             # Local-only fallback: PyMuPDF text extraction (text-layer PDFs only).
@@ -187,17 +197,19 @@ class OCRBlock(TypedBlock):
                     "engine": "pymupdf_fallback",
                     "preprocessed": False,
                     "pages": 1,
-                    "note": "Tesseract not installed; used PyMuPDF text extraction",
+                    "note": f"{tesseract_error}; used PyMuPDF text extraction",
                 }
             return {
                 "status": "error",
                 "text": "",
                 "confidence": 0,
-                "error": "Tesseract not installed and no PDF text layer found. Install tesseract-ocr to enable local OCR.",
+                "error": f"{tesseract_error} and no PDF text layer found. Install tesseract-ocr to enable local OCR.",
             }
 
         from app.core.image_quality import summarize_ocr_quality
         quality = summarize_ocr_quality(word_confidences)
+        if confidence_errors:
+            quality = {**quality, "confidence_errors": confidence_errors}
 
         if not all_texts:
             return {
