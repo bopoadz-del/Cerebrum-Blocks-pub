@@ -185,6 +185,8 @@ jobs:
         run: pytest -q tests/finance_ops/
 
       - name: Publisher key rotation + re-sign workflow tests (ST-5)
+        # Runs even when an earlier (ruled-red) step failed, so the result is visible.
+        if: ${{ !cancelled() }}
         run: pytest -q tests/test_rotate_publisher_key.py
 
       - name: Run regression security tests
