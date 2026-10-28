@@ -12,12 +12,12 @@ python-dotenv==1.2.2
 redis==8.0.1
 
 # Marketplace security — publisher identity and Ed25519 block signing.
-# Must stay >=43,<51: mlflow 3.16.0 declares cryptography<51,>=43.0.0.
+# Must stay >=43,<51: mlflow 3.17.2 declares cryptography<51,>=43.0.0.
 # 50.0.1 is the Linux fix for PYSEC-2026-3552/3553/3554 (highest fix 50.0.0).
 cryptography==50.0.1
 
 # HTTP Client
-aiohttp==3.14.3
+aiohttp==3.14.4
 httpx==0.28.1
 requests==2.33.1
 
@@ -26,7 +26,7 @@ beautifulsoup4==4.15.0
 ddgs==9.14.4
 
 # Image Processing
-pillow==12.3.0
+pillow==13.0.0
 
 # Vector Search / RAG — local embedding model required for pgvector ingestion
 # and retrieval. sentence-transformers pulls torch; installs cleanly on Linux
@@ -42,7 +42,7 @@ pytesseract==0.3.13
 # PDF Processing
 pymupdf==1.28.0
 pdfplumber==0.11.10
-pypdf==6.19.0
+pypdf==6.21.2
 
 # Construction Intelligence Blocks (Week 1)
 sympy==1.14.0
@@ -116,7 +116,7 @@ QuantLib==1.43  # quantitative finance — PyPI name is `QuantLib` (imports as `
 
 # ML experiment tracking — used by app/core/mlflow_tracker.py.
 # No-ops gracefully when MLFLOW_TRACKING_URI is unset.
-mlflow==3.16.0
+mlflow==3.17.2
 
 # PostgreSQL async driver — activates the Postgres backend for the
 # historical_benchmark block when DATABASE_URL is set; otherwise the block
@@ -182,7 +182,7 @@ fakeredis==2.38.0
 
 # Image processing (capture, OCR, image blocks)
 opencv-python-headless==5.0.0.93
-mcp==2.0.0
+mcp==2.2.0
 
 # Error tracking — optional. Activated when SENTRY_DSN is set.
 sentry-sdk[fastapi]==2.66.1
