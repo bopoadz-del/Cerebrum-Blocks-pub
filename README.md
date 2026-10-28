@@ -1,29 +1,11 @@
 # The Store - Cerebrum Blocks 
 
-Cerebrum Blocks is **The Store** of the Cerebrum platform: the certified,
-MIT-licensed capability inventory that the CerebrumDev.ai Factory assembles
-vertical platforms from. Blocks and kits are reached through one public API.
-
 The Fork (the-shovel) was built first, by hand, from block code; its blocks were extracted to create the Store (cerebrum-blocks); the Factory (CerebrumDev.ai) was built on the Store afterwards. The Fork is not a Factory product.
+
+Its role: the certified, MIT-licensed capability inventory the CerebrumDev.ai Factory assembles vertical platforms from, reached through one public API.
 
 [![CI](https://github.com/bopoadz-del/Cerebrum-Blocks-pub/actions/workflows/ci.yml/badge.svg)](https://github.com/bopoadz-del/Cerebrum-Blocks-pub/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-
----
-
-> ### Part of the CEREBRUM ecosystem
->
-> **The Store — Cerebrum-Blocks (this repo):** the certified capability
-> inventory — typed execution blocks and domain kits, manifested and signed,
-> reached through one API. Build a capability once; every sector inherits it.
-> **The Factory — CerebrumDev.ai:** assembles Store blocks into governed,
-> deployable vertical platforms, with evaluation gates in CI and release
-> certification.
-> **The Builds — cerebrum-builds:** the certified platform builds the Factory
-> produces.
->
-> **You are here: THE STORE** — the certified capability inventory every
-> platform is assembled from.
 
 ---
 
@@ -151,9 +133,7 @@ against the files themselves, not memory. The short version:
   sweep against the files themselves. The vertical `*_v2` domain blocks are
   registered and signed.
 - **Kit directories** — the domain kits plus `universal_kernel` and
-  `_template`, including the declared-ready verticals (hotels, insurance,
-  construction, finance, retail, real estate, legal, mep coordination), each
-  with real domain blocks beyond the generic core
+  `_template`, each with real domain blocks beyond the generic core
   (`pdf, ocr, chat, image, formula_executor(_v2)`).
 - **Excluded from testing** (no authoritative domain content): medical,
   veterinary, pharma.
