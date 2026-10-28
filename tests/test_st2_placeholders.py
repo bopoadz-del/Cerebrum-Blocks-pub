@@ -129,9 +129,9 @@ def _ocr(monkeypatch, tmp_path):
     img = tmp_path / "p.png"
     Image.new("RGB", (8, 8), "white").save(img)
     block = OCRBlock()
-    monkeypatch.setattr(block, "_prepare_images", lambda path, pre: [str(img)])
+    monkeypatch.setattr(block, "_prepare_images", lambda path, pre, errors=None: [str(img)])
     monkeypatch.setattr(block, "_detect_markup", lambda path: {"has_markup": False})
-    monkeypatch.setattr(block, "_extract_pdf_text", lambda path: "layer text")
+    monkeypatch.setattr(block, "_extract_pdf_text", lambda path, errors=None: "layer text")
     return block, str(img)
 
 
@@ -244,7 +244,7 @@ def test_a_failing_image_to_string_is_named_and_resets_the_partial_text(monkeypa
 
     sys.modules["pytesseract"].image_to_string = image_to_string
     block, img = _ocr(monkeypatch, tmp_path)
-    monkeypatch.setattr(block, "_prepare_images", lambda path, pre: [img, img])
+    monkeypatch.setattr(block, "_prepare_images", lambda path, pre, errors=None: [img, img])
 
     # all_texts is a local that never reaches the result once the fallback
     # returns, so read it off the frame as _process_image returns.
@@ -270,3 +270,66 @@ def test_a_failing_image_to_string_is_named_and_resets_the_partial_text(monkeypa
     assert type(err).__name__ in out["note"] and str(err) in out["note"]
     assert "partial page one" not in json.dumps(out)
     assert seen_locals == {"all_texts": []}
+
+
+# -- ocr: _prepare_images / _extract_pdf_text failures reach the result ---------------------
+
+
+@pytest.mark.parametrize("err", [RuntimeError("cannot open document"), ValueError("bad xref")])
+def test_an_unreadable_input_names_the_rasteriser_error(monkeypatch, tmp_path, err):
+    from app.blocks.ocr import OCRBlock
+
+    fitz = types.ModuleType("fitz")
+
+    def open_(path):
+        raise err
+
+    fitz.open = open_
+    monkeypatch.setitem(sys.modules, "fitz", fitz)
+    bad = tmp_path / "not_an_image.bin"
+    bad.write_bytes(b"\x00garbage")
+    block = OCRBlock()
+    monkeypatch.setattr(block, "_detect_markup", lambda path: {"has_markup": False})
+    errors: list = []
+    assert block._prepare_images(str(bad), False, errors=errors) == []
+    assert len(errors) == 1 and type(err).__name__ in errors[0] and str(err) in errors[0]
+    out = asyncio.run(block._process_image(str(bad), {"preprocess": False}))
+    assert out["status"] == "error"
+    assert type(err).__name__ in out["error"] and str(err) in out["error"]
+
+
+def test_a_failed_prepare_with_no_exception_still_says_why(monkeypatch, tmp_path):
+    block, img = _ocr(monkeypatch, tmp_path)
+    monkeypatch.setattr(block, "_prepare_images", lambda path, pre, errors=None: [])
+    out = asyncio.run(block._process_image(img, {}))
+    assert out["error"] == "Could not process input file: no pages produced"
+
+
+@pytest.mark.parametrize("err", [RuntimeError("encrypted"), OSError("truncated stream")])
+def test_an_unreadable_pdf_text_layer_names_its_error(monkeypatch, tmp_path, err):
+    fitz = types.ModuleType("fitz")
+
+    def open_(path):
+        raise err
+
+    fitz.open = open_
+    monkeypatch.setitem(sys.modules, "fitz", fitz)
+    _fake_tesseract(monkeypatch, version_error=RuntimeError("no tesseract"))
+    block, img = _ocr(monkeypatch, tmp_path)
+    from app.blocks.ocr import OCRBlock
+    monkeypatch.setattr(block, "_extract_pdf_text", OCRBlock._extract_pdf_text.__get__(block))
+    errors: list = []
+    assert block._extract_pdf_text(img, errors=errors) == ""
+    assert errors == [f"{type(err).__name__}: {err}"]
+    out = asyncio.run(block._process_image(img, {}))
+    assert out["status"] == "error"
+    assert "PDF text layer could not be read" in out["error"] and str(err) in out["error"]
+
+
+def test_a_pdf_with_no_text_layer_is_not_reported_as_an_error_reading_it(monkeypatch, tmp_path):
+    _fake_tesseract(monkeypatch, version_error=RuntimeError("no tesseract"))
+    block, img = _ocr(monkeypatch, tmp_path)
+    monkeypatch.setattr(block, "_extract_pdf_text", lambda path, errors=None: "")
+    out = asyncio.run(block._process_image(img, {}))
+    assert "no PDF text layer found" in out["error"]
+    assert "could not be read" not in out["error"]

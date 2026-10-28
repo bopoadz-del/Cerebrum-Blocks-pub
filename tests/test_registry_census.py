@@ -166,3 +166,56 @@ def test_ci_runs_the_census_and_does_not_allow_it_to_fail():
     assert census_idx != -1
     window = backend[max(0, census_idx - 400) : census_idx]
     assert "continue-on-error: true" not in window
+
+
+# -- ST-2 B2: the code-less-looking entries (construction, insurance) resolve to
+# the existing container code, and the gate goes red if that link breaks. ----
+
+_CONTAINER_ENTRIES = {
+    "construction": ("app.containers.construction", "ConstructionContainer"),
+    "insurance": ("app.containers.insurance", "InsuranceContainer"),
+}
+
+
+@pytest.mark.parametrize("name", sorted(_CONTAINER_ENTRIES))
+def test_container_entry_resolves_to_existing_code_with_actions(name):
+    import importlib
+
+    assert census.resolve_entrypoint(name) == _CONTAINER_ENTRIES[name]
+    # Both declarations of the link must hold: the census map and the kit
+    # manifest the runtime loads the container from.
+    assert census.SPECIAL_ENTRYPOINTS.get(name) == _CONTAINER_ENTRIES[name]
+    kit = json.loads(
+        (Path(census.REGISTRY_ROOT).parent / "block_store" / "kits" / name / "manifest.json")
+        .read_text(encoding="utf-8")
+    )
+    assert kit["container"]["class"] == ".".join(_CONTAINER_ENTRIES[name])
+    live = census.REGISTRY_ROOT / name
+    assert census.inspect_block(live) is None
+    module_path, entry = _CONTAINER_ENTRIES[name]
+    cls = getattr(importlib.import_module(module_path), entry)
+    assert cls.name == name
+    actions = cls().get_actions()
+    assert actions, f"{name} exposes no actions"
+    assert all(callable(h) for h in actions.values())
+
+
+@pytest.mark.parametrize("name", sorted(_CONTAINER_ENTRIES))
+@pytest.mark.parametrize(
+    "broken, reason",
+    [
+        (("app.containers.zz_no_such_module", "X"), "failed to import"),
+        (("app.containers.insurance", "NoSuchEntrypoint"), "has no entrypoint"),
+    ],
+)
+def test_a_missing_or_broken_container_entrypoint_is_a_finding(monkeypatch, name, broken, reason):
+    monkeypatch.setitem(census.SPECIAL_ENTRYPOINTS, name, broken)
+    finding = census.inspect_block(census.REGISTRY_ROOT / name)
+    assert finding is not None and finding.block == name and reason in finding.reason
+
+
+def test_every_registry_entry_has_an_entrypoint_whose_module_imports():
+    """Store CI check (run by ci.yml's store-honesty step): every advertised
+    entry resolves to an importable module with a callable entrypoint."""
+    findings = census.all_findings()
+    assert findings == [], [str(f) for f in findings]

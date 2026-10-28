@@ -129,9 +129,12 @@ class OCRBlock(TypedBlock):
         markup = self._detect_markup(image_path)
 
         # Detect if input is a PDF and convert pages to images
-        page_images = self._prepare_images(image_path, preprocess)
+        prepare_errors: list = []
+        page_images = self._prepare_images(image_path, preprocess, errors=prepare_errors)
         if not page_images:
-            return {"status": "error", "text": "", "confidence": 0, "error": "Could not process input file"}
+            reason = "; ".join(prepare_errors) or "no pages produced"
+            return {"status": "error", "text": "", "confidence": 0,
+                    "error": f"Could not process input file: {reason}"}
         
         # Try pytesseract first, then fall back to PyMuPDF text-layer extraction.
         all_texts = []
@@ -188,7 +191,8 @@ class OCRBlock(TypedBlock):
         if not tesseract_available:
             # Local-only fallback: PyMuPDF text extraction (text-layer PDFs only).
             # No cloud vision dependency — the OCR block stays fully on-prem.
-            pdf_text = self._extract_pdf_text(image_path)
+            pdf_errors: list = []
+            pdf_text = self._extract_pdf_text(image_path, errors=pdf_errors)
             if pdf_text:
                 return {
                     "status": "success",
@@ -206,7 +210,11 @@ class OCRBlock(TypedBlock):
                 "status": "error",
                 "text": "",
                 "confidence": 0,
-                "error": f"{tesseract_error} and no PDF text layer found. Install tesseract-ocr to enable local OCR.",
+                "error": (
+                    f"{tesseract_error} and the PDF text layer could not be read: {'; '.join(pdf_errors)}"
+                    if pdf_errors else
+                    f"{tesseract_error} and no PDF text layer found. Install tesseract-ocr to enable local OCR."
+                ),
             }
 
         from app.core.image_quality import summarize_ocr_quality
@@ -285,8 +293,11 @@ class OCRBlock(TypedBlock):
         except Exception:
             return clean
 
-    def _prepare_images(self, file_path: str, preprocess: bool = True) -> list:
-        """Convert input to a list of image file paths (handles PDFs and images)."""
+    def _prepare_images(self, file_path: str, preprocess: bool = True, errors: list | None = None) -> list:
+        """Convert input to a list of image file paths (handles PDFs and images).
+
+        A failure returns [] and appends its reason to ``errors`` so the caller
+        can put it in the result."""
         from PIL import Image
         
         is_pdf = file_path.lower().endswith(".pdf")
@@ -319,15 +330,21 @@ class OCRBlock(TypedBlock):
                 return images
             except ImportError as e:
                 logger.warning("ocr: cannot rasterise %s, PyMuPDF not importable: %s", file_path, e)
+                if errors is not None:
+                    errors.append(f"PDF rasteriser unavailable: {type(e).__name__}: {e}")
                 return []
             except Exception as e:
                 logger.warning("ocr: cannot rasterise %s as PDF: %s: %s", file_path, type(e).__name__, e)
+                if errors is not None:
+                    errors.append(f"not a readable image or PDF: {type(e).__name__}: {e}")
                 return []
         
         return []
     
-    def _extract_pdf_text(self, file_path: str) -> str:
-        """Extract text from a PDF using PyMuPDF (fallback when OCR is unavailable)."""
+    def _extract_pdf_text(self, file_path: str, errors: list | None = None) -> str:
+        """Extract text from a PDF using PyMuPDF (fallback when OCR is unavailable).
+
+        A failure returns "" and appends its reason to ``errors``."""
         try:
             import fitz
             doc = fitz.open(file_path)
@@ -338,6 +355,8 @@ class OCRBlock(TypedBlock):
             return text.strip()
         except Exception as e:
             logger.warning("ocr: no PDF text layer read from %s: %s: %s", file_path, type(e).__name__, e)
+            if errors is not None:
+                errors.append(f"{type(e).__name__}: {e}")
             return ""
     
     def _preprocess_image(self, image_path: str) -> str:
