@@ -1,10 +1,13 @@
 """OCR Block - Extract text from images with Typed Schema"""
 
+import logging
 import os
 import io
 import tempfile
 from typing import Any, Dict
 from app.core.typed_block import TypedBlock, Schema, ContentType
+
+logger = logging.getLogger(__name__)
 
 
 def _ocr_lang() -> str:
@@ -314,9 +317,11 @@ class OCRBlock(TypedBlock):
                     images.append(img_path)
                 doc.close()
                 return images
-            except ImportError:
+            except ImportError as e:
+                logger.warning("ocr: cannot rasterise %s, PyMuPDF not importable: %s", file_path, e)
                 return []
-            except Exception:
+            except Exception as e:
+                logger.warning("ocr: cannot rasterise %s as PDF: %s: %s", file_path, type(e).__name__, e)
                 return []
         
         return []
@@ -331,7 +336,8 @@ class OCRBlock(TypedBlock):
                 text += page.get_text()
             doc.close()
             return text.strip()
-        except Exception:
+        except Exception as e:
+            logger.warning("ocr: no PDF text layer read from %s: %s: %s", file_path, type(e).__name__, e)
             return ""
     
     def _preprocess_image(self, image_path: str) -> str:
@@ -359,8 +365,8 @@ class OCRBlock(TypedBlock):
             try:
                 from app.core.image_quality import deskew as _deskew
                 gray, _angle = _deskew(gray)
-            except Exception:
-                pass
+            except Exception as e:
+                logger.warning("ocr: deskew skipped for %s: %s: %s", image_path, type(e).__name__, e)
 
         # Enhance contrast
         contrast_factor = self.config.get("contrast_factor", 1.5)

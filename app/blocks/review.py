@@ -540,8 +540,12 @@ class ReviewBlock(UniversalBlock):
         h = {"name": self.name, "version": self.version}
         h["total_reviews"] = sum(len(r) for r in self.reviews.values())
         h["blocks_reviewed"] = len(self.reviews)
-        h["persistent"] = False
-        h["storage"] = "in-memory: reviews are not saved to a database and are lost on restart"
+        persistent = getattr(self, "persistent", False)
+        h["persistent"] = persistent
+        h["storage"] = (
+            "database" if persistent
+            else "in-memory: reviews are not saved to a database and are lost on restart"
+        )
         h["verified_purchases"] = len(self.verified_purchases)
         h["pending_moderation"] = sum(
             1 for block_reviews in self.reviews.values()

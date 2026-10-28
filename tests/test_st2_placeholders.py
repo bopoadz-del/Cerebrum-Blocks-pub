@@ -157,14 +157,34 @@ def test_an_unread_confidence_is_reported_not_swallowed(monkeypatch, tmp_path, e
 # -- review / discovery / error_tracking: state is stated -----------------------------------
 
 
-def test_review_and_discovery_health_state_what_is_not_there():
-    from app.blocks.discovery import DiscoveryBlock
+@pytest.mark.parametrize("persistent, storage_word", [(False, "in-memory"), (True, "database")])
+def test_review_health_reads_the_blocks_persistence(persistent, storage_word):
     from app.blocks.review import ReviewBlock
 
-    r = ReviewBlock().health()
-    assert r["persistent"] is False and "in-memory" in r["storage"]
-    d = DiscoveryBlock().health()
-    assert d["usage_patterns_source"].startswith("not loaded")
+    block = ReviewBlock()
+    block.persistent = persistent
+    h = block.health()
+    assert h["persistent"] is persistent and h["storage"].startswith(storage_word)
+
+
+def test_review_health_after_initialize_is_not_persistent():
+    from app.blocks.review import ReviewBlock
+
+    block = ReviewBlock()
+    assert asyncio.run(block._legacy_initialize()) is True
+    assert block.health()["persistent"] is False
+
+
+@pytest.mark.parametrize("source, expected", [
+    (None, "not loaded: no analytics source is implemented"),
+    ("analytics:warehouse", "analytics:warehouse"),
+])
+def test_discovery_health_reads_the_usage_patterns_source(source, expected):
+    from app.blocks.discovery import DiscoveryBlock
+
+    block = DiscoveryBlock()
+    block.usage_patterns_source = source
+    assert block.health()["usage_patterns_source"] == expected
 
 
 @pytest.mark.parametrize("exc", [ValueError("boom"), KeyError("missing")])
@@ -182,10 +202,71 @@ def test_the_error_tracking_excepthook_captures_and_hands_on(monkeypatch, exc):
                or type(exc).__name__ in json.dumps(e, default=str) for e in block.events)
 
 
-def test_error_tracking_installs_no_hook_unless_asked(monkeypatch):
+@pytest.mark.parametrize("config", [{}, {"install_excepthook": False}])
+def test_error_tracking_installs_no_hook_unless_asked(monkeypatch, config):
     from app.blocks.error_tracking import ErrorTrackingBlock
 
-    before = sys.excepthook
-    block = ErrorTrackingBlock()
+    before = lambda *a: None  # noqa: E731
+    monkeypatch.setattr(sys, "excepthook", before)
+    block = ErrorTrackingBlock(config=config)
     assert block.config.get("install_excepthook") is False
+    assert asyncio.run(block._legacy_initialize()) is True
     assert sys.excepthook is before
+    assert block.health()["excepthook_installed"] is False
+
+
+def test_legacy_initialize_follows_install_excepthook(monkeypatch):
+    """M14: same block, {} vs {install_excepthook: True}, different outcome."""
+    from app.blocks.error_tracking import ErrorTrackingBlock
+
+    outcomes = {}
+    for label, config in (("off", {}), ("on", {"install_excepthook": True})):
+        before = lambda *a: None  # noqa: E731
+        monkeypatch.setattr(sys, "excepthook", before)
+        block = ErrorTrackingBlock(config=config)
+        assert asyncio.run(block._legacy_initialize()) is True
+        outcomes[label] = (sys.excepthook is before, block.health()["excepthook_installed"])
+    assert outcomes == {"off": (True, False), "on": (False, True)}
+
+
+@pytest.mark.parametrize("err", [RuntimeError("engine crashed"), MemoryError("page too big")])
+def test_a_failing_image_to_string_is_named_and_resets_the_partial_text(monkeypatch, tmp_path, err):
+    """M17: page 1 reads, page 2 raises. The note names the error and the
+    partial page-1 text is discarded (all_texts reset), not half-reported."""
+    _fake_tesseract(monkeypatch)
+    calls = []
+
+    def image_to_string(*a, **k):
+        calls.append(1)
+        if len(calls) == 2:
+            raise err
+        return "partial page one"
+
+    sys.modules["pytesseract"].image_to_string = image_to_string
+    block, img = _ocr(monkeypatch, tmp_path)
+    monkeypatch.setattr(block, "_prepare_images", lambda path, pre: [img, img])
+
+    # all_texts is a local that never reaches the result once the fallback
+    # returns, so read it off the frame as _process_image returns.
+    seen_locals = {}
+    target = type(block)._process_image.__code__
+
+    def tracer(frame, event, arg):
+        if frame.f_code is target:
+            def local(frame, event, arg):
+                if event == "return":
+                    seen_locals.update(all_texts=list(frame.f_locals.get("all_texts", ["<missing>"])))
+                return local
+            return local
+        return None
+
+    sys.settrace(tracer)
+    try:
+        out = asyncio.run(block._process_image(img, {}))
+    finally:
+        sys.settrace(None)
+    assert out["engine"] == "pymupdf_fallback" and out["text"] == "layer text"
+    assert out["note"].startswith("tesseract failed")
+    assert type(err).__name__ in out["note"] and str(err) in out["note"]
+    assert "partial page one" not in json.dumps(out)
+    assert seen_locals == {"all_texts": []}
