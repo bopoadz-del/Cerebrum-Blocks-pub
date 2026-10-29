@@ -44,8 +44,9 @@ products, clients, and domain kits.
 ## Unregistered material (COLLECTOR rung 2 — by design)
 
 Some real block code deliberately has no registry entry yet. Registration
-means "certified, versioned, signed" — these are candidate material the
-COLLECTOR can survey and promote, not certified inventory:
+means "certified and versioned" (signature verification is parked, see
+Security below) — these are candidate material the COLLECTOR can survey
+and promote, not certified inventory:
 
 - **Alias** (`document_engine_block`) — a path shim of the
   already-registered `document_engine` block (the package shadows the
@@ -131,9 +132,11 @@ readiness, and the known-defect list) lives in
 **[docs/STORE_INVENTORY.md](docs/STORE_INVENTORY.md)** and is re-verified
 against the files themselves, not memory. The short version:
 
-- **Registry blocks** — all manifested and signed, verified by pattern
-  sweep against the files themselves. The vertical `*_v2` domain blocks are
-  registered and signed.
+- **Registry blocks** — all manifested, verified by pattern sweep against
+  the files themselves. The vertical `*_v2` domain blocks are registered.
+  Each `block.json` carries a `signature` field, but nothing in this tree
+  can verify it: the publisher registry (`data/publishers.json`) is not
+  shipped, so no block counts as signed until it does (see Security).
 - **Kit directories** — the domain kits plus `universal_kernel` and
   `_template`, each with real domain blocks beyond the generic core
   (`pdf, ocr, chat, image, formula_executor(_v2)`).
