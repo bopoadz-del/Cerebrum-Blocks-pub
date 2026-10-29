@@ -104,3 +104,48 @@ def test_duplicate_gates_checker(tmp_path, extra, certs, expect):
     (tmp_path / "block_certifications.json").write_text(
         json.dumps({"blocks": [{"block": c} for c in certs]}), encoding="utf-8")
     assert sorted(duplicate_gates(tmp_path)) == sorted(expect)
+
+
+# ---- the helper branches no real tree reaches (G6 9405a46 H1-H4) ----------
+def _run(fn, root):
+    """The checker's answer, or the exception it raised, as a comparable value:
+    a crash on an input is a wrong answer, asserted, not a collection error."""
+    try:
+        return fn(root)
+    except Exception as exc:  # noqa: BLE001 -- turned into an assertion below
+        return f"raised {type(exc).__name__}"
+
+
+@pytest.mark.parametrize("invariants_in, expect", [
+    (("ka", "kz"), ["ka", "kz"]),
+    (("ka",), ["ka"]),          # kz has manifest.yaml but no invariants.yaml: not a kit
+])
+def test_kit_dirs_needs_invariants_beside_the_manifest(tmp_path, invariants_in, expect):
+    for name in ("ka", "kz"):
+        d = _kit(tmp_path, name, ["null"])
+        if name not in invariants_in:
+            (d / "invariants.yaml").unlink()
+    assert [p.name for p in _run(kit_dirs, tmp_path)] == expect
+
+
+@pytest.mark.parametrize("with_basis, expect", [
+    (True, {"ka": ["f0"]}),
+    (False, {}),                # no design_basis.yaml: nothing to be filled
+])
+def test_filled_registers_skips_a_kit_with_no_register(tmp_path, with_basis, expect):
+    d = _kit(tmp_path, "ka", [5])
+    if not with_basis:
+        (d / "design_basis.yaml").unlink()
+    assert _run(filled_registers, tmp_path) == expect
+
+
+@pytest.mark.parametrize("certs_text, expect", [
+    (None, []),                                         # no certifications file
+    ("{}", []),                                         # a certs file with no blocks key
+    ('{"blocks": [{"block": "ka_reasoning"}]}', ["block_certifications.json:ka_reasoning"]),
+])
+def test_duplicate_gates_reads_certifications_only_when_they_exist(tmp_path, certs_text, expect):
+    _kit(tmp_path, "ka", ["null"])
+    if certs_text is not None:
+        (tmp_path / "block_certifications.json").write_text(certs_text, encoding="utf-8")
+    assert _run(duplicate_gates, tmp_path) == expect

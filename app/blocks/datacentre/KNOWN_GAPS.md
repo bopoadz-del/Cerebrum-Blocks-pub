@@ -21,9 +21,10 @@ The one real incident from the sheet is encoded as a test:
 
 - chiller failure at IST; temperature rose faster than expected due to pump
   sequence time delay; corrected by re-modifying the control sequence.
-- it was asserted by the hand-written gate's test, deleted with that gate in
-  K-S5 (the declarative kit replaces it); the staleness rule it exercised is
-  INV-DC-CURRENCY-* in invariants.yaml, run by the shared kit_engine.
+- `tests/blocks/test_ks5_restored_kits.py::test_datacentre_chiller_incident_pump_sequence_regression`
+  asserts (1) the pre-correction IST result is stale after the control change
+  and is refused (INV-DC-CURRENCY-TESTED), (2) the retested post-modification
+  sequence is citable.
 
 ## Reference-pattern note
 
