@@ -210,6 +210,11 @@ class PublisherRegistry:
             self._save_unlocked()
             return record
 
+    def publisher_ids(self) -> list[str]:
+        """Return the sorted ids of every registered publisher."""
+        with self._lock:
+            return sorted(self._publishers)
+
     def is_trusted(self, publisher_id: str) -> bool:
         """Return ``True`` if the publisher exists and is not revoked."""
         record = self.get(publisher_id)

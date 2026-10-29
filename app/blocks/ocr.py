@@ -1,10 +1,13 @@
 """OCR Block - Extract text from images with Typed Schema"""
 
+import logging
 import os
 import io
 import tempfile
 from typing import Any, Dict
 from app.core.typed_block import TypedBlock, Schema, ContentType
+
+logger = logging.getLogger(__name__)
 
 
 def _ocr_lang() -> str:
@@ -126,21 +129,28 @@ class OCRBlock(TypedBlock):
         markup = self._detect_markup(image_path)
 
         # Detect if input is a PDF and convert pages to images
-        page_images = self._prepare_images(image_path, preprocess)
+        prepare_errors: list = []
+        page_images = self._prepare_images(image_path, preprocess, errors=prepare_errors)
         if not page_images:
-            return {"status": "error", "text": "", "confidence": 0, "error": "Could not process input file"}
+            reason = "; ".join(prepare_errors) or "no pages produced"
+            return {"status": "error", "text": "", "confidence": 0,
+                    "error": f"Could not process input file: {reason}"}
         
         # Try pytesseract first, then fall back to PyMuPDF text-layer extraction.
         all_texts = []
         all_confs = []
         engine_used = None
         tesseract_available = True
+        # Why tesseract was not used, stated in the result -- never swallowed.
+        tesseract_error = None
+        confidence_errors = []
 
         try:
             import pytesseract
             pytesseract.get_tesseract_version()  # raises if not installed
-        except Exception:
+        except Exception as e:
             tesseract_available = False
+            tesseract_error = f"tesseract unavailable: {type(e).__name__}: {e}"
 
         word_confidences = []
         if tesseract_available:
@@ -167,15 +177,22 @@ class OCRBlock(TypedBlock):
                                 continue
                             if c >= 0:
                                 word_confidences.append(c / 100.0)
-                    except Exception:
-                        pass
+                    except Exception as e:
+                        # Text was read but its confidence was not: say so
+                        # rather than score the page as if it had none.
+                        confidence_errors.append(
+                            f"{os.path.basename(str(page_img_path))}: {type(e).__name__}: {e}"
+                        )
             except Exception as e:
                 tesseract_available = False
+                tesseract_error = f"tesseract failed: {type(e).__name__}: {e}"
+                all_texts, word_confidences, confidence_errors = [], [], []
 
         if not tesseract_available:
             # Local-only fallback: PyMuPDF text extraction (text-layer PDFs only).
             # No cloud vision dependency — the OCR block stays fully on-prem.
-            pdf_text = self._extract_pdf_text(image_path)
+            pdf_errors: list = []
+            pdf_text = self._extract_pdf_text(image_path, errors=pdf_errors)
             if pdf_text:
                 return {
                     "status": "success",
@@ -187,17 +204,23 @@ class OCRBlock(TypedBlock):
                     "engine": "pymupdf_fallback",
                     "preprocessed": False,
                     "pages": 1,
-                    "note": "Tesseract not installed; used PyMuPDF text extraction",
+                    "note": f"{tesseract_error}; used PyMuPDF text extraction",
                 }
             return {
                 "status": "error",
                 "text": "",
                 "confidence": 0,
-                "error": "Tesseract not installed and no PDF text layer found. Install tesseract-ocr to enable local OCR.",
+                "error": (
+                    f"{tesseract_error} and the PDF text layer could not be read: {'; '.join(pdf_errors)}"
+                    if pdf_errors else
+                    f"{tesseract_error} and no PDF text layer found. Install tesseract-ocr to enable local OCR."
+                ),
             }
 
         from app.core.image_quality import summarize_ocr_quality
         quality = summarize_ocr_quality(word_confidences)
+        if confidence_errors:
+            quality = {**quality, "confidence_errors": confidence_errors}
 
         if not all_texts:
             return {
@@ -270,8 +293,11 @@ class OCRBlock(TypedBlock):
         except Exception:
             return clean
 
-    def _prepare_images(self, file_path: str, preprocess: bool = True) -> list:
-        """Convert input to a list of image file paths (handles PDFs and images)."""
+    def _prepare_images(self, file_path: str, preprocess: bool = True, errors: list | None = None) -> list:
+        """Convert input to a list of image file paths (handles PDFs and images).
+
+        A failure returns [] and appends its reason to ``errors`` so the caller
+        can put it in the result."""
         from PIL import Image
         
         is_pdf = file_path.lower().endswith(".pdf")
@@ -302,15 +328,23 @@ class OCRBlock(TypedBlock):
                     images.append(img_path)
                 doc.close()
                 return images
-            except ImportError:
+            except ImportError as e:
+                logger.warning("ocr: cannot rasterise %s, PyMuPDF not importable: %s", file_path, e)
+                if errors is not None:
+                    errors.append(f"PDF rasteriser unavailable: {type(e).__name__}: {e}")
                 return []
-            except Exception:
+            except Exception as e:
+                logger.warning("ocr: cannot rasterise %s as PDF: %s: %s", file_path, type(e).__name__, e)
+                if errors is not None:
+                    errors.append(f"not a readable image or PDF: {type(e).__name__}: {e}")
                 return []
         
         return []
     
-    def _extract_pdf_text(self, file_path: str) -> str:
-        """Extract text from a PDF using PyMuPDF (fallback when OCR is unavailable)."""
+    def _extract_pdf_text(self, file_path: str, errors: list | None = None) -> str:
+        """Extract text from a PDF using PyMuPDF (fallback when OCR is unavailable).
+
+        A failure returns "" and appends its reason to ``errors``."""
         try:
             import fitz
             doc = fitz.open(file_path)
@@ -319,7 +353,10 @@ class OCRBlock(TypedBlock):
                 text += page.get_text()
             doc.close()
             return text.strip()
-        except Exception:
+        except Exception as e:
+            logger.warning("ocr: no PDF text layer read from %s: %s: %s", file_path, type(e).__name__, e)
+            if errors is not None:
+                errors.append(f"{type(e).__name__}: {e}")
             return ""
     
     def _preprocess_image(self, image_path: str) -> str:
@@ -347,8 +384,8 @@ class OCRBlock(TypedBlock):
             try:
                 from app.core.image_quality import deskew as _deskew
                 gray, _angle = _deskew(gray)
-            except Exception:
-                pass
+            except Exception as e:
+                logger.warning("ocr: deskew skipped for %s: %s: %s", image_path, type(e).__name__, e)
 
         # Enhance contrast
         contrast_factor = self.config.get("contrast_factor", 1.5)

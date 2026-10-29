@@ -47,7 +47,10 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
+import re
 import shutil
+import subprocess
 import sys
 from pathlib import Path
 from typing import Any, List, Optional
@@ -91,6 +94,33 @@ _FILE_NAME_OVERRIDES = {
 }
 
 
+def repo_identity(env: Optional[dict] = None, checkout: Optional[Path] = None) -> dict[str, str]:
+    """Owner and repo URL of the checkout this script lives in.
+
+    Read from GITHUB_REPOSITORY (set by Actions) or else the git remote
+    ``origin`` of this checkout. Nothing is assumed: no source, no identity.
+    """
+    env = os.environ if env is None else env
+    slug = (env.get("GITHUB_REPOSITORY") or "").strip()
+    if not slug:
+        try:
+            url = subprocess.run(
+                ["git", "config", "--get", "remote.origin.url"],
+                cwd=checkout or Path(__file__).resolve().parent, capture_output=True, text=True, timeout=10,
+            ).stdout.strip()
+        except (OSError, subprocess.SubprocessError):
+            url = ""
+        m = re.search(r"github\.com[:/]+([^/\s]+/[^/\s]+?)(?:\.git)?/?$", url)
+        slug = m.group(1) if m else ""
+    if not re.fullmatch(r"[^/\s]+/[^/\s]+", slug):
+        raise RuntimeError(
+            "cannot determine the repository owner: set GITHUB_REPOSITORY=owner/repo "
+            "or run from a checkout whose origin is a GitHub URL"
+        )
+    owner = slug.split("/", 1)[0]
+    return {"owner": owner, "repo": f"https://github.com/{slug}"}
+
+
 def _file_prefix(domain: str, component: str) -> str:
     return _FILE_NAME_OVERRIDES.get(domain, {}).get(component, domain)
 
@@ -106,7 +136,8 @@ def _artifact(src: str) -> dict[str, str]:
     return {"src": src, "dest": src}
 
 
-def _build_manifest(domain: str) -> dict[str, object]:
+def _build_manifest(domain: str, identity: Optional[dict] = None) -> dict[str, object]:
+    identity = identity or repo_identity()
     pascal = _pascal_name(domain)
     container_class = f"app.containers.{domain}.{pascal}Container"
     block_name = f"{domain}_v2"
@@ -143,17 +174,21 @@ def _build_manifest(domain: str) -> dict[str, object]:
     ]
 
     artifacts = [_artifact(path) for path in source_files + shared_files]
+    # "available" is a claim about the kit's real state: every file it ships
+    # exists in this checkout. Anything missing keeps it in development.
+    missing = [p for p in source_files + shared_files if not (PROJECT_ROOT / p).is_file()]
+    status = "in_development" if missing else "available"
 
     return {
         "id": domain,
         "name": title,
         "version": "1.0.0",
         "description": description,
-        "status": "available",
-        "author": "bopoadz-del",
+        "status": status,
+        "author": identity["owner"],
         "tags": ["domain", "container", domain],
         "source": {
-            "repo": "https://github.com/bopoadz-del/Cerebrum-Blocks",
+            "repo": identity["repo"],
             "ref": "main",
             "publish_script": "scripts/publish_kit.py",
         },
@@ -292,6 +327,18 @@ def composition_audit(domain: str, kit_dir: Path) -> int:
         return 1
     print("Composition audit: clean.")
     return 0
+
+
+def stamp_identity(manifest_path: Path, identity: Optional[dict] = None) -> dict:
+    """Regenerate an authored manifest's author and source.repo from the
+    repository config (repo_identity), leaving every other field as authored."""
+    identity = identity or repo_identity()
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["author"] = identity["owner"]
+    source = manifest.get("source") if isinstance(manifest.get("source"), dict) else {}
+    manifest["source"] = {"repo": identity["repo"], **{k: v for k, v in source.items() if k != "repo"}}
+    manifest_path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+    return manifest
 
 
 def mirror(
@@ -488,6 +535,12 @@ def main() -> int:
         help="Copy artifacts whose source exists and report the rest, for kits "
              "whose sources are no longer reachable (construction, insurance)",
     )
+    parser.add_argument(
+        "--stamp-identity",
+        action="store_true",
+        help="Regenerate the manifest's author and source.repo from the repository "
+             "config (GITHUB_REPOSITORY or git remote origin)",
+    )
     args = parser.parse_args()
 
     domain = args.domain.strip().lower()
@@ -513,6 +566,13 @@ def main() -> int:
             return 1
         print(f"No manifest for '{domain}' -- scaffolding a new kit.")
         return scaffold(kit_dir, manifest_path, domain, args.dry_run, args.regenerate)
+
+    if args.stamp_identity:
+        manifest = stamp_identity(manifest_path)
+        print(f"Stamped {manifest_path}: author={manifest['author']} repo={manifest['source']['repo']}")
+        if args.check:
+            return mirror(kit_dir, manifest_path, args.dry_run, True, args.refresh)
+        return 0
 
     return mirror(kit_dir, manifest_path, args.dry_run, args.check, args.refresh)
 

@@ -88,45 +88,54 @@ jobs:
         run: python -m pytest tests/integration/ -v
 
       - name: Run typed-block tests
+        if: ${{ !cancelled() }}
         run: pytest -q tests/test_typed_block.py
 
       - name: Block certification (three bars, control-delete)
+        if: ${{ !cancelled() }}
         run: python scripts/certify_block.py --all
 
       - name: Run kit intake tests (stage K1)
+        if: ${{ !cancelled() }}
         # The source gate: no source, no encode. Exercised against real .xlsx
         # and .docx, not just structured fixtures.
         run: pytest -q tests/test_intake_kit.py
 
       - name: Run formula intake tests
+        if: ${{ !cancelled() }}
         # Encoded figures enter through intake_formulas.py. Unverified
         # insurance rates are parked, not given invented regulator cites.
         run: pytest -q tests/test_intake_formulas.py
 
       - name: Run kit scaffold tests (stage K3)
+        if: ${{ !cancelled() }}
         # K1 -> K3 -> K2: the scaffold writes the domain overlay to the exact
         # path formula_definitions reads, so a formula that survived the
         # source gate becomes a grounded definition without a further step.
         run: pytest -q tests/test_scaffold_kit.py
 
       - name: Run kit eval-seed tests (stage K6)
+        if: ${{ !cancelled() }}
         # Pins that a generated eval can never be mistaken for an authored
         # one: authored stays null, and the method string says the set is
         # corpus-sighted by construction.
         run: pytest -q tests/test_build_kit_eval.py
 
       - name: Run kit pipeline runner tests (K7)
+        if: ${{ !cancelled() }}
         # Pins that the runner blocks at K4 and calls it the expected
         # terminal state -- a runner reporting "done" after scaffolding would
         # invite exactly the outcome the pipeline exists to refuse.
         run: pytest -q tests/test_pipeline_kit.py
 
       - name: Run kit review tests (stage K4)
+        if: ${{ !cancelled() }}
         # Pins that sign-off cannot manufacture a judgement: it refuses while
         # the reviewer's work is outstanding, demands a name, and records it.
         run: pytest -q tests/test_review_kit.py
 
       - name: Run kit publisher tests
+        if: ${{ !cancelled() }}
         # Publishing decides whether a kit the store advertises can be
         # installed. CI names test files explicitly rather than running
         # tests/, so a new file runs only once it is listed here.
@@ -137,9 +146,11 @@ jobs:
         run: pytest -q tests/test_publish_kit.py tests/test_publish_construction_kit.py
 
       - name: Run core RAG + vector + registry tests
+        if: ${{ !cancelled() }}
         run: pytest -q tests/core/test_registry_integrity.py tests/core/test_block_contracts.py tests/core/test_activation.py
 
       - name: Run kit bundle freshness fence
+        if: ${{ !cancelled() }}
         # Completeness is not freshness: a kit can hold every declared
         # artifact and still ship a copy from months ago. All 17 kits shipped
         # a pre-grounding formula_executor_v2 while the current one sat in the
@@ -147,6 +158,7 @@ jobs:
         run: pytest -q tests/test_kit_bundle_freshness.py
 
       - name: Run kit bundle completeness fence
+        if: ${{ !cancelled() }}
         # CI names test files explicitly rather than running tests/, so a new
         # test file is not executed until it is listed here. This fence went
         # green on its own PR without ever running; that is the failure mode
@@ -154,11 +166,13 @@ jobs:
         run: pytest -q tests/test_kit_bundle_completeness.py
 
       - name: Run formula grounding + executor tests
+        if: ${{ !cancelled() }}
         # test_formula_executor_v2.py was among the 103 test files this repo
         # never ran: CI names files explicitly rather than running tests/.
         run: pytest -q tests/test_formula_grounding.py tests/test_formula_executor_v2.py tests/test_grounding_end_to_end.py
 
       - name: Run block contract tests (Lane 2)
+        if: ${{ !cancelled() }}
         # The contract type and its adapter. A real gate, not one of the
         # report-only conformance checks: this covers a module added in
         # the same PR, so a red here is this PR's own defect.
@@ -166,6 +180,7 @@ jobs:
           pytest -q tests/core/test_block_result.py tests/core/test_manifest_contract.py tests/core/test_template_three_tests.py tests/core/test_lane2_conformance.py tests/core/test_block_config.py tests/core/test_answer_contract.py tests/core/test_learning_engine_config.py tests/core/test_registry_reuse.py tests/routers/test_registry_reuse.py
 
       - name: Run lockfile-consistency mutation tests
+        if: ${{ !cancelled() }}
         # A pin change that does not touch the lock must fail. These tests
         # apply synthetic diffs so the gate cannot rot into a no-op that
         # only ever sees a clean tree. CI names test files explicitly,
@@ -173,18 +188,30 @@ jobs:
         run: pytest -q tests/test_lockfile_consistency.py
 
       - name: Run store-honesty gates (B04 census, B07 return twin, pip-audit twins)
+        if: ${{ !cancelled() }}
         run: |
           pytest -q tests/test_registry_census.py \
                     tests/test_scan_exception_return.py \
                     tests/test_dep_audit.py
 
       - name: Run all-blocks tests
+        if: ${{ !cancelled() }}
         run: pytest -q tests/test_all_blocks.py tests/blocks/test_document_engine_layout.py
 
       - name: Run FinanceOps foundation tests
+        if: ${{ !cancelled() }}
         run: pytest -q tests/finance_ops/
 
+      - name: Publisher key rotation + re-sign workflow tests (ST-5, ST-6b)
+        # Runs even when an earlier (ruled-red) step failed, so the result is visible.
+        if: ${{ !cancelled() }}
+        # test_refresh_kit_bundles.py holds the ST-6 mutant kills (A6/A7/A9); CI
+        # names files explicitly, so it only runs in CI if it is listed here;
+        # test_ci_lists_resign_tests.py fails if any of them is dropped.
+        run: pytest -q tests/test_rotate_publisher_key.py tests/test_refresh_kit_bundles.py tests/test_ci_lists_resign_tests.py
+
       - name: Run regression security tests
+        if: ${{ !cancelled() }}
         run: |
           pytest -q tests/test_regression_security.py \
                     tests/core/test_sentry_scrubbing.py \
@@ -320,17 +347,10 @@ jobs:
           python scripts/dep_audit.py --python
 
       - name: Run every test file
-        # REPORT-ONLY, by owner decision (2026-09-19) -- this STEP, not the
-        # job. The Store is a shelf of blocks: they do not run here, they are
-        # cloned into a generated platform, configured there and tested there,
-        # by that platform's own suite and by the Store gate's acceptance run
-        # in Docker. So a red block test reports but does not block a merge.
-        # The steps above it in this job -- ruff, bandit, the registry census
-        # and the fail-closed dependency audit -- are about whether a block is
-        # SAFE to clone, and they still block. That is why this is step-level:
-        # a job-level continue-on-error would have un-gated the audit too
-        # (tests/test_dep_audit.py pins exactly that).
-        continue-on-error: true
+        # BLOCKING (ST-1). This step was report-only (continue-on-error,
+        # owner decision 2026-09-19), which let a red suite show as green; a
+        # gate that cannot fail is no gate. A failing test now fails the job,
+        # like the ruff, bandit, census and dependency-audit steps above it.
         # pytest-timeout turns a deadlock into a named failure instead of
         # burning the job cap with no last-test line. Main's pytest step is
         # ~45s; 90s per test is headroom, not a skip.
@@ -368,8 +388,7 @@ jobs:
           # written so that "green" would stop meaning "green on a fifth of
           # the suite" reported green on a twentieth of it, and printed no
           # skip summary at all because -x exits before pytest writes one.
-          # Report-only means report ALL of it; --timeout=90 (not -x) is what
-          # keeps a hang from eating the job cap.
+          # --timeout=90 (not -x) is what keeps a hang from eating the job cap.
           pytest -v -rs tests/ --timeout=90 --timeout-method=thread             -o faulthandler_timeout=75 --tb=short
 
   lockfile-consistency:

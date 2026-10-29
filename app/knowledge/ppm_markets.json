@@ -1,0 +1,47 @@
+{
+  "kind": "ppm_markets",
+  "source": {
+    "origin": "reasoning/guard.py market sets, ported with this block (see module docstring)",
+    "evidence_class": "B",
+    "document_status": "UNVERIFIED",
+    "note": "Pilot demo geography. Promote only with owner-supplied market scope."
+  },
+  "demo_markets": [
+    "uae",
+    "generic",
+    "dubai",
+    "abu_dhabi",
+    "abudhabi",
+    "sharjah",
+    "ajman"
+  ],
+  "unsupported_markets": [
+    "ksa",
+    "saudi",
+    "saudi_arabia"
+  ],
+  "market_aliases": {
+    "uae": "uae",
+    "dubai": "uae",
+    "abu_dhabi": "uae",
+    "abudhabi": "uae",
+    "sharjah": "uae",
+    "ajman": "uae",
+    "generic": "generic",
+    "ksa": "ksa",
+    "saudi": "ksa",
+    "saudi_arabia": "ksa"
+  },
+  "market_labels": {
+    "uae": "UAE",
+    "generic": "generic",
+    "ksa": "KSA"
+  },
+  "market_packs": {
+    "uae": {
+      "licensing": "LICENSING_UAE",
+      "prerequisites": "PREREQ_UAE",
+      "ppm": "PPM_UAE"
+    }
+  }
+}

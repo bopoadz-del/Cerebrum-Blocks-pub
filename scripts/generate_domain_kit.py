@@ -102,6 +102,10 @@ def _pascal_case(domain_id: str) -> str:
 def _render(template_text: str, context: dict[str, Any]) -> str:
     rendered = template_text
     for key, value in context.items():
+        if key.endswith("_json"):
+            # A JSON-valued placeholder sits quoted in the template so the
+            # template itself is valid JSON; the quotes go with it.
+            rendered = rendered.replace(f'"{{{{{key}}}}}"', str(value))
         rendered = rendered.replace(f"{{{{{key}}}}}", str(value))
     return rendered
 
