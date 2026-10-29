@@ -87,6 +87,10 @@ jobs:
       - name: Run integration tests
         run: python -m pytest tests/integration/ -v
 
+      - name: Deploy workflow OIDC pin (ST-AWS-OIDC)
+        if: ${{ !cancelled() }}
+        run: pytest -q tests/test_deploy_aws_oidc.py
+
       - name: ST-7 restored-data gates (ST-7)
         # tests/test_ci_named_followup_steps.py fails if this step is
         # renamed, dropped, made continue-on-error, or loses its !cancelled() guard.
