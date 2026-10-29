@@ -235,3 +235,17 @@ def test_arn_detector_ignores_a_non_aws_partition():  # P2
 def test_arn_detector_reads_a_regional_arn(region):
     acct = _synthetic_account()[::-1]
     assert account_id_literals(f'R = "arn:aws:ecr:{region}:{acct}:repository/x"\n', False) == [acct]
+
+
+@pytest.mark.parametrize(  # D7: a wrong trigger set reports only the trigger error
+    "text, errs",
+    [
+        ("on:\n  workflow_dispatch:\n", ["triggers ['workflow_dispatch']"]),
+        (
+            "on:\n  push:\n    branches: [dev]\n  workflow_dispatch:\n  pull_request:\n",
+            ["triggers ['pull_request', 'push', 'workflow_dispatch']"],
+        ),
+    ],
+)
+def test_trigger_detector_wrong_set_stops_before_push_filter(text, errs):
+    assert trigger_errors(text) == errs
