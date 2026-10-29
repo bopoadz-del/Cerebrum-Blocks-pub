@@ -206,8 +206,9 @@ jobs:
         # Runs even when an earlier (ruled-red) step failed, so the result is visible.
         if: ${{ !cancelled() }}
         # test_refresh_kit_bundles.py holds the ST-6 mutant kills (A6/A7/A9); CI
-        # names files explicitly, so it only runs in CI if it is listed here.
-        run: pytest -q tests/test_rotate_publisher_key.py tests/test_refresh_kit_bundles.py
+        # names files explicitly, so it only runs in CI if it is listed here;
+        # test_ci_lists_resign_tests.py fails if any of them is dropped.
+        run: pytest -q tests/test_rotate_publisher_key.py tests/test_refresh_kit_bundles.py tests/test_ci_lists_resign_tests.py
 
       - name: Run regression security tests
         if: ${{ !cancelled() }}
