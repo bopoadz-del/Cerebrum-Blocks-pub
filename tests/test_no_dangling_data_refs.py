@@ -149,7 +149,7 @@ def _local_consts(fn: ast.AST) -> Env:
             bad |= {(al.asname or al.name).split(".")[0] for al in n.names}
         elif isinstance(n, (ast.Global, ast.Nonlocal)):
             bad |= set(n.names)
-    if isinstance(fn, (ast.FunctionDef, ast.AsyncFunctionDef, ast.Lambda)):
+    if isinstance(fn, (ast.FunctionDef, ast.AsyncFunctionDef)):
         a = fn.args
         bad |= {x.arg for x in [*a.posonlyargs, *a.args, *a.kwonlyargs, a.vararg, a.kwarg] if x}
     return {k: v for k, v in vals.items() if k not in bad}
@@ -363,6 +363,26 @@ def test_kit_reader_missing_files_fail(tmp_path):
     assert dangling(root, ("block_store/kits",), ()) == [
         f"block_store/kits/k1/packs/__init__.py:5 -> {KP}pa/mini/a.jsonl",
         f"block_store/kits/k1/packs/__init__.py:8 -> {KP}pb/manifest.json",
+    ]
+
+
+@pytest.mark.parametrize("pack_id", ["pa", "pb"])
+def test_async_reader_constants_are_resolved(tmp_path, pack_id):
+    """An ``async def`` reader is scoped like a def: its local pack_id
+    constant resolves the path it reads (the AsyncFunctionDef arm of _scoped)."""
+    pk = tmp_path / "block_store" / "kits" / "k2" / "packs"
+    pk.mkdir(parents=True)
+    (pk / "__init__.py").write_text(
+        "from pathlib import Path\n"
+        "ROOT = Path(__file__).resolve().parent\n"
+        "async def load():\n"
+        f"    pack_id = '{pack_id}'\n"
+        "    return ROOT / pack_id / 'data.json'\n"
+    )
+    ref = f"block_store/kits/k2/packs/{pack_id}/data.json"
+    assert [r for _, _, r in iter_data_refs(tmp_path, ("block_store/kits",))] == [ref]
+    assert dangling(tmp_path, ("block_store/kits",), ()) == [
+        f"block_store/kits/k2/packs/__init__.py:5 -> {ref}"
     ]
 
 
