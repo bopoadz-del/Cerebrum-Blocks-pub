@@ -149,7 +149,7 @@ def _local_consts(fn: ast.AST) -> Env:
             bad |= {(al.asname or al.name).split(".")[0] for al in n.names}
         elif isinstance(n, (ast.Global, ast.Nonlocal)):
             bad |= set(n.names)
-    if isinstance(fn, (ast.FunctionDef, ast.AsyncFunctionDef, ast.Lambda)):
+    if isinstance(fn, (ast.FunctionDef, ast.AsyncFunctionDef)):
         a = fn.args
         bad |= {x.arg for x in [*a.posonlyargs, *a.args, *a.kwonlyargs, a.vararg, a.kwarg] if x}
     return {k: v for k, v in vals.items() if k not in bad}
@@ -483,6 +483,9 @@ def test_root_gitignore_on_concrete_runtime_and_source_paths(path, ignored):
         ("def f():\n    pack_id = 'alpha'\n    import os as pack_id\n", {}),
         ("def f():\n    pack_id = 'alpha'\n    from os import sep as pack_id\n", {}),
         ("def f():\n    global pack_id\n    pack_id = 'alpha'\n", {}),
+        ("def f():\n    pack_id = 'alpha'\n    def g():\n        nonlocal pack_id\n", {}),
+        ("def f():\n    pack_id = 'alpha'\n    import pack_id.sub\n", {}),
+        ("def f():\n    pack_id = 'alpha'\n    import other.pack_id\n", {"pack_id": ["alpha"]}),
     ],
 )
 def test_local_consts_constant_vs_rebound(src, expected):
