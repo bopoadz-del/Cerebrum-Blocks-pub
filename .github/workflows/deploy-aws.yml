@@ -23,14 +23,20 @@ env:
 
 jobs:
   deploy:
+    # workflow_dispatch can target any branch; deploy only from main.
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    # GitHub OIDC: the job mints a short-lived token and assumes the deploy
+    # role; no long-lived AWS keys are stored as repository secrets.
+    permissions:
+      id-token: write
+      contents: read
     steps:
       - uses: actions/checkout@v4
 
       - uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
 
       - id: login-ecr
