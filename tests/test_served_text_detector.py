@@ -43,3 +43,26 @@ def test_served_text_hits_two_inputs(text, expected):
 ])
 def test_provider_leading_word_boundary(text, expected):
     assert served_text_hits(text) == expected
+
+
+@pytest.mark.parametrize("text", [
+    "a <> b\n",              # L2: empty brackets are not a placeholder
+    "if x < y and y > z\n",  # L2: comparison operators are not a placeholder
+    "<store repo url>\n",    # L2: spaces are not a placeholder token
+    "<1st-url>\n",           # L3: leading digit
+    "<-url>\n",              # L3: leading dash
+    "<Store-Repo-URL>\n",    # L4: placeholders are lower-case only
+    "<B>bold</B>\n",         # L4: an upper-case tag is not a placeholder
+])
+def test_placeholder_negative_inputs(text):
+    assert served_text_hits(text) == []
+
+
+@pytest.mark.parametrize("text, expected", [
+    ("deploy on aws or heroku\n", [(1, "provider", "aws"), (1, "provider", "heroku")]),
+    ("Render, then Netlify\n", [(1, "provider", "Render"), (1, "provider", "Netlify")]),
+    ("push <repo-url> to vercel and <branch>\n",
+     [(1, "provider", "vercel"), (1, "placeholder", "<repo-url>"), (1, "placeholder", "<branch>")]),
+])
+def test_every_hit_on_one_line_reports(text, expected):
+    assert served_text_hits(text) == expected
