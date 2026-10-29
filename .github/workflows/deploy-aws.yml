@@ -23,6 +23,8 @@ env:
 
 jobs:
   deploy:
+    # workflow_dispatch can target any branch; deploy only from main.
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     # GitHub OIDC: the job mints a short-lived token and assumes the deploy
     # role; no long-lived AWS keys are stored as repository secrets.
@@ -34,7 +36,7 @@ jobs:
 
       - uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::059020085816:role/gh-store-deploy
+          role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
 
       - id: login-ecr
