@@ -386,3 +386,55 @@ def test_glob_entry_does_not_hide_a_missing_file(tmp_path):
 def test_gitignore_does_not_blanket_ignore_a_data_suffix_in_source(suffix):
     probes = [f"{d}/st7_probe{suffix}" for d in SCAN_DIRS]
     assert ignored_reads(ROOT, probes) == []
+
+
+# --- repair 2: pin the runtime-exemption boundary (G2 M9) -------------------
+
+EXPECTED_RUNTIME_GENERATED = {
+    "data/storage/",
+    "data/vector/",
+    "data/captures/",
+    "data/uploads/",
+    "data/installed_container_kits.json",
+    "data/domain_kit_registry.json",
+    "data/block_certifications.json",
+}
+
+
+def test_runtime_generated_is_pinned_exactly():
+    assert set(RUNTIME_GENERATED) == EXPECTED_RUNTIME_GENERATED
+    assert len(RUNTIME_GENERATED) == len(EXPECTED_RUNTIME_GENERATED)
+
+
+@pytest.mark.parametrize(
+    "ref, expect_dangling",
+    [
+        ("data/uploads/blob.json", False),  # runtime-written: exempt
+        ("data/fabricated_ref.json", True),  # stray non-runtime data/ read: caught
+    ],
+)
+def test_data_dir_read_runtime_vs_stray(tmp_path, ref, expect_dangling):
+    root = _mini_repo(tmp_path, ref, create=False)
+    found = dangling(root, ("app",), gaps=())
+    expected = [f"app/reader.py:2 -> {ref}", f"app/reader.py:3 -> {ref}"] if expect_dangling else []
+    assert found == expected
+
+
+# --- repair 2: the runtime ignore rules really ignore concrete paths (M17/M18)
+
+
+def _concrete(entry: str) -> str:
+    """A concrete runtime-written file for a RUNTIME_GENERATED entry."""
+    return entry + "st7_runtime_probe.bin" if entry.endswith("/") else entry
+
+
+@pytest.mark.parametrize(
+    "path, ignored",
+    [(_concrete(e), True) for e in sorted(EXPECTED_RUNTIME_GENERATED)]
+    + [
+        ("data/x.db", True),  # runtime sqlite file
+        ("data/CEREBRUM_SKILL.md", False),  # a path the code reads: must stay tracked
+    ],
+)
+def test_root_gitignore_on_concrete_runtime_and_source_paths(path, ignored):
+    assert (ignored_reads(ROOT, [path]) == [path]) is ignored
