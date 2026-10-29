@@ -197,3 +197,7 @@ scope_refusals:
   - label: firestopping adequacy
     pattern: "is\\s+(?:this|the)\\s+fire\\s*stopping\\s+ok"
     authority: "the AHJ"
+
+# Every figure in design_basis.yaml carries these keys (a null value is
+# legal, a missing key is not); kit_engine.load_design_basis refuses otherwise.
+mandatory_qualifiers: ["value", "unit", "code_edition", "classification_source", "design_area_basis", "tested_assembly_ref", "in_service", "impairment_log_ref", "source", "date"]

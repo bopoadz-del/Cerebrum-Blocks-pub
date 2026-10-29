@@ -202,3 +202,7 @@ derivation_patterns:
   scale_clearance_off_drawing: "(?=.*clearance)(?=.*(?:scale|scaled|scaling))(?=.*drawing)"
   carry_face_pressure_from_similar_drive: "(?=.*face\\s+pressure)(?=.*similar\\s+drive)(?=.*(?:apply|use|same|carry|equivalent))"
   twist_without_base_length: "(?=.*\\btwist\\b)(?=.*\\bwithout\\b)(?=.*\\bbase\\s+length\\b)"
+
+# Every figure in design_basis.yaml carries these keys (a null value is
+# legal, a missing key is not); kit_engine.load_design_basis refuses otherwise.
+mandatory_qualifiers: ["value", "unit", "route", "line", "category", "tier", "SFT_verified_date", "method", "disturbed_since", "envelope_type", "line_speed", "source", "revision", "date"]

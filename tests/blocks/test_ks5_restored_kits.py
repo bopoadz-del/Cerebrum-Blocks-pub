@@ -215,3 +215,83 @@ def test_datacentre_chiller_incident_pump_sequence_regression():
     retested = Figure(quantity="tested_result", origin="document", source_id="syn-ist-retest",
                       text="per the retested control sequence, rise is within limits")
     assert kit._one(inv, retested, [retested], state, (), now) is None
+
+
+# ---- load-time mandatory qualifiers (restored from the deleted *Basis loaders) --
+import shutil  # noqa: E402
+
+from app.blocks.kit_engine import InterviewError, load_design_basis  # noqa: E402
+
+
+def _load(directory):
+    """'loaded:<n figures>' or 'refused:<message>' -- comparable, so a wrong
+    outcome is an assertion, never an uncaught error."""
+    try:
+        db = load_design_basis(directory)
+    except InterviewError as exc:
+        return f"refused:{exc}"
+    return f"loaded:{len(db.figures)}"
+
+
+def _register(tmp_path, required, figure_text):
+    d = tmp_path / "kx"
+    d.mkdir()
+    if required is not None:
+        (d / "manifest.yaml").write_text(
+            "kit: kx\nmandatory_qualifiers: " + required + "\n", encoding="utf-8")
+    (d / "design_basis.yaml").write_text("design_basis:\n" + figure_text, encoding="utf-8")
+    return d
+
+
+FULL = "  f_a:\n    value: null\n    unit: u\n    q1: null\n"
+HALF = "  f_a:\n    value: null\n    unit: u\n"
+
+
+@pytest.mark.parametrize("required, figures, expect", [
+    ("[value, unit, q1]", FULL, "loaded:1"),
+    ("[value, unit, q1]", HALF, "refused:half-qualified f_a q1"),
+    ("[value, unit, q1]", "  f_a: 3\n", "refused:not a mapping f_a"),
+    (None, HALF, "loaded:1"),            # no manifest: nothing declared
+    ("[]", HALF, "loaded:1"),            # declared empty
+    ("[value]", "  f_a: 3\n", "refused:not a mapping f_a"),
+    ("{q1: yes}", FULL, "refused:must be a list"),
+])
+def test_a_half_qualified_figure_is_refused_at_load_time(tmp_path, required, figures, expect):
+    got = _load(_register(tmp_path, required, figures))
+    if expect.startswith("refused:"):
+        words = expect[len("refused:"):].split()
+        assert got.startswith("refused:") and all(w in got for w in words), got
+    else:
+        assert got == expect
+
+
+def test_a_figure_register_without_a_requirement_loads_a_non_mapping_entry(tmp_path):
+    d = tmp_path / "ky"
+    d.mkdir()
+    (d / "manifest.yaml").write_text("kit: ky\n", encoding="utf-8")
+    (d / "design_basis.yaml").write_text("design_basis:\n  f_a: 3\n", encoding="utf-8")
+    assert _load(d) == "loaded:1"
+
+
+QUALIFIED_KITS = ("fire_protection", "offshore_marine", "og_operations", "rail", "water_treatment")
+
+
+@pytest.mark.parametrize("kit_name", QUALIFIED_KITS)
+def test_each_kit_declares_its_qualifiers_and_refuses_a_figure_missing_one(tmp_path, kit_name):
+    src = BLOCKS / kit_name
+    import yaml
+    declared = (yaml.safe_load((src / "manifest.yaml").read_text(encoding="utf-8")) or {}).get(
+        "mandatory_qualifiers") or []
+    assert "value" in declared and "unit" in declared and len(declared) > 2
+    assert _load(src).startswith("loaded:")
+    d = tmp_path / kit_name
+    shutil.copytree(src, d)
+    raw = yaml.safe_load((d / "design_basis.yaml").read_text(encoding="utf-8"))
+    block = next(b for b in raw if isinstance(raw[b], dict) and raw[b]
+                 and all(isinstance(v, dict) for v in raw[b].values()))
+    first = next(iter(raw[block]))
+    dropped = declared[-1]
+    raw[block][first].pop(dropped, None)
+    (d / "design_basis.yaml").write_text(yaml.safe_dump(raw), encoding="utf-8")
+    got = _load(d)
+    assert got.startswith("refused:") and first in got and dropped in got, got
