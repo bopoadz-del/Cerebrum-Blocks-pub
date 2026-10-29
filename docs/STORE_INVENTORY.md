@@ -2,14 +2,16 @@
 
 **Verified on 2026-09-23** by a programmatic scan of the Cerebrum-Blocks
 checkout (`block_registry/`, `block_store/`, `block_store/kits/`),
-`scripts/census_registry.py`, a manifest/signature sweep, and an author
+`scripts/census_registry.py`, a manifest sweep, and an author
 sweep. Every claim below is from the files themselves, not from memory.
 
 ## Trust summary
 
-- **232 registry blocks advertised** (census). 17 declarative reasoning kits added 2026-09-24, all certified and signed. Manifest/signature sweep:
-  212 `block.json` manifests, signatures verified against the registered
-  `cerebrum_platform` publisher key (2026-09-23). Author sweep: **190 declare
+- **232 registry blocks advertised** (census). 17 declarative reasoning kits added 2026-09-24, all certified. Manifest sweep:
+  212 `block.json` manifests (2026-09-23). Each `block.json` carries a
+  `signature` field, but block signing is parked until the publisher registry
+  ships: `data/publishers.json` is not in this tree, so no signature here can
+  be verified and no block counts as signed (see README, Security). Author sweep: **190 declare
   `Cerebrum Team`**, 22 declare no author.
 - **Zero stub-like blocks in the Store registry.** The echo-stub pattern
   (`run()` returning `{"status": "ok", "result": <input>}` unconditionally)
@@ -35,8 +37,10 @@ knows nothing about any domain.
 Block ids are `<kit>_kit`. The five `<kit>_reasoning` blocks built on hand-written
 gates are untouched and still published beside them.
 
-All 17 are **certified** (three bars, control-delete included) and **signed**
-with the `cerebrum_platform` key; `scripts/verify_block.py` verifies every one.
+All 17 are **certified** (three bars, control-delete included). They carry a
+`signature` field, but `scripts/verify_block.py` cannot verify it in this tree:
+the publisher registry (`data/publishers.json`) is not shipped, so signing is
+parked.
 
 **NO INTERVIEW HAS RUN for any of these domains.** Every declared figure value is
 null, and each kit reports `interview_status`, `unfilled_figures` and
@@ -78,8 +82,8 @@ of these domains do not have yet.
 | retail | retail | retail_v2 |
 | real estate | real_estate | estate_registry, estate_maintenance, evidence_verifier, readiness_engine, portfolio_rollup (real since `main` `9b8d781f`) |
 | legal | legal | legal_v2, legal_knowledge (compliance flags, risk keywords, custom rules) |
-| mep coordination | mep_coordination | geometry_engine, clearance_rules, clash_triage, clash_resolver, bcf_export, version_diff, model_clone (registered + signed 2026-09-19) |
-| marketplaces | marketplace_ops (domain pack) | transaction_state_machine, payment_escrow, task_listing, offer_bidding, review_reputation, task_messaging, dispatch_matching, geolocation_tracking, pricing_surge, dispute_resolution, insurance_compliance, loyalty_referrals, vendor_catalog (13 blocks: certified, signed, verified; pack domain-approved 2026-09-23) |
+| mep coordination | mep_coordination | geometry_engine, clearance_rules, clash_triage, clash_resolver, bcf_export, version_diff, model_clone (registered 2026-09-19; signing parked) |
+| marketplaces | marketplace_ops (domain pack) | transaction_state_machine, payment_escrow, task_listing, offer_bidding, review_reputation, task_messaging, dispatch_matching, geolocation_tracking, pricing_surge, dispute_resolution, insurance_compliance, loyalty_referrals, vendor_catalog (13 blocks: certified; signing parked; pack domain-approved 2026-09-23) |
 
 Legal is declared with the honest note: the knowledge layer is
 rules-based (compliance flags / risk keywords / custom rules), not an
@@ -133,7 +137,7 @@ removed from this inventory.
   formula_executor_v2, hotel_v2, hr_v2, insurance_v2, legal_v2,
   manufacturing_v2, medical_v2, ocr_v2, oil_gas_v2, pdf_v2, pharma_v2,
   real_estate_v2, retail_v2, supply_chain_v2 — every vertical v2 now
-  registered and signed (the 12 remaining were registered 2026-09-20).
+  registered; signing parked (the 12 remaining were registered 2026-09-20).
 - **Unregistered modules (4, by design)**: `document_engine_block` (alias
   shim for the registered `document_engine` package), and the library
   helpers `ifc_loader`, `_knowledge`, `_procedure_routing` — helpers, not
