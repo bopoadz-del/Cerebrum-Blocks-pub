@@ -410,3 +410,41 @@ def test_every_backend_step_after_integration_runs_unless_cancelled():
     assert after
     missing = [s.get("name") for s in after if "!cancelled()" not in str(s.get("if", ""))]
     assert not missing, f"Backend steps that would be skipped after a red: {missing}"
+
+
+def test_resign_blocks_called_directly_refuses_unclaimed(tmp_path):
+    """C2: resign_blocks() itself refuses an unclaimed block (not only run()),
+    and signs nothing -- including the publisher's own block."""
+    root = _repo(tmp_path)
+    key = Ed25519PrivateKey.generate()
+    orphan = _block(root, "orphan")
+    mine = _block(root, "mine", publisher_id="p")
+    with pytest.raises(rot.UnclaimedBlockRefused) as exc:
+        rot.resign_blocks(root / "block_registry", "p", key)
+    assert "orphan" in str(exc.value)
+    assert "signature" not in _manifest(mine)
+    assert "publisher_id" not in _manifest(orphan)
+
+
+@pytest.mark.parametrize("name", ["mine", "ledger"])
+def test_resign_blocks_called_directly_signs_when_all_claimed(tmp_path, name):
+    """Second input for C2: with no orphan, the same call signs the owned block
+    (two block names give two results, so a constant return is caught)."""
+    root = _repo(tmp_path)
+    key = Ed25519PrivateKey.generate()
+    mine = _block(root, name, publisher_id="p")
+    _block(root, "theirs", publisher_id="q")
+    assert rot.resign_blocks(root / "block_registry", "p", key) == [name]
+    assert "signature" in _manifest(mine)
+
+
+def test_owned_block_dirs_excludes_unclaimed_and_other_publishers(tmp_path):
+    """C1: ownership is strict -- an unclaimed block is never counted as owned,
+    even if a future caller skips the unclaimed guard."""
+    root = _repo(tmp_path)
+    _block(root, "orphan")
+    _block(root, "mine", publisher_id="p")
+    _block(root, "theirs", publisher_id="q")
+    names = lambda pid: [d.name for d in rot._owned_block_dirs(root / "block_registry", pid)]
+    assert names("p") == ["mine"]
+    assert names("q") == ["theirs"]
