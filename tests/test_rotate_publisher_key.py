@@ -329,3 +329,73 @@ def test_every_backend_step_after_integration_runs_unless_cancelled():
     assert after
     missing = [s.get("name") for s in after if "!cancelled()" not in str(s.get("if", ""))]
     assert not missing, f"Backend steps that would be skipped after a red: {missing}"
+
+
+# ---- (6) re-sign refreshes the bundles of affected kits ---------------------
+
+def _load_affected():
+    spec = importlib.util.spec_from_file_location("affected_kits", ROOT / "scripts" / "affected_kits.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def _kit(kits_dir, name, srcs, status="available"):
+    d = kits_dir / name
+    d.mkdir(parents=True)
+    (d / "manifest.json").write_text(
+        json.dumps({"id": name, "status": status, "artifacts": [{"src": s, "dest": s} for s in srcs]}),
+        encoding="utf-8",
+    )
+
+
+@pytest.mark.parametrize(
+    "changed, expected",
+    [
+        (["block_registry/blk_one/block.json"], ["kit_a"]),
+        (["block_registry/blk_two/block.json"], ["kit_b"]),
+        (["block_registry/blk_shared/block.json"], ["kit_a", "kit_b"]),
+        (["block_registry/blk_unused/block.json"], []),
+    ],
+)
+def test_affected_kits_are_derived_from_manifest_artifacts(tmp_path, changed, expected):
+    mod = _load_affected()
+    kits = tmp_path / "kits"
+    _kit(kits, "kit_a", ["block_registry/blk_one/block.json", "block_registry/blk_shared/block.json", "app/x.py"])
+    _kit(kits, "kit_b", ["block_registry/blk_two/block.json", "block_registry/blk_shared/block.json"])
+    _kit(kits, "kit_draft", ["block_registry/blk_one/block.json", "block_registry/blk_two/block.json"], status="draft")
+    _kit(kits, "_template", ["block_registry/blk_one/block.json"])
+    assert mod.affected_kits(changed, kits) == expected
+
+
+def test_affected_kits_accepts_dot_slash_and_empty(tmp_path):
+    mod = _load_affected()
+    kits = tmp_path / "kits"
+    _kit(kits, "kit_a", ["block_registry/blk_one/block.json"])
+    assert mod.affected_kits(["./block_registry/blk_one/block.json"], kits) == ["kit_a"]
+    assert mod.affected_kits([], kits) == []
+
+
+def test_affected_kits_script_names_no_kit():
+    text = (ROOT / "scripts" / "affected_kits.py").read_text(encoding="utf-8")
+    wf = (ROOT / ".github" / "workflows" / "re-sign.yml").read_text(encoding="utf-8")
+    kits_dir = ROOT / "block_store" / "kits"
+    names = [p.name for p in kits_dir.iterdir() if p.is_dir() and not p.name.startswith("_")]
+    assert names
+    for name in names:
+        assert f'"{name}"' not in text and f"'{name}'" not in text
+        assert f"--domain {name}" not in wf
+
+
+def test_resign_workflow_refreshes_affected_bundles_and_runs_freshness_before_commit():
+    steps = [s.get("run", "") for s in _workflow()["jobs"]["re-sign"]["steps"]]
+    joined = "\n".join(steps)
+    rotate = joined.index("rotate_publisher_key.py")
+    affected = joined.index("scripts/affected_kits.py")
+    publish = joined.index('scripts/publish_kit.py --domain "$kit"')
+    fresh = joined.index("tests/test_kit_bundle_freshness.py")
+    commit = joined.index("git commit")
+    assert rotate < affected < publish < fresh < commit
+    assert "git diff --name-only -- block_registry" in joined
+    add_line = next(line for line in joined.splitlines() if line.strip().startswith("git add"))
+    assert "block_store/kits" in add_line

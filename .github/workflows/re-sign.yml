@@ -59,14 +59,28 @@ jobs:
         if: always()
         run: rm -f "$KEY_FILE"
 
+      - name: Refresh bundles of kits that mirror a re-signed block
+        # Kits are derived from manifest data (artifact src among the changed
+        # block_registry paths); no kit names here. Uses the existing mirror.
+        run: |
+          mapfile -t changed < <(git diff --name-only -- block_registry)
+          if [ "${#changed[@]}" -eq 0 ]; then echo "no re-signed paths"; exit 0; fi
+          mapfile -t kits < <(python scripts/affected_kits.py "${changed[@]}")
+          for kit in "${kits[@]}"; do
+            python scripts/publish_kit.py --domain "$kit"
+          done
+
       - name: Signing gate (every registry block signed and verifies)
         run: python -m pytest -q tests/core/test_signing_operational.py
+
+      - name: Bundle freshness gate (every mirrored copy equals its source)
+        run: python -m pytest -q tests/test_kit_bundle_freshness.py
 
       - name: Commit as the bot to a new branch
         run: |
           git config user.name "cerebrum-factory-bot"
           git config user.email "cerebrum-factory-bot@users.noreply.github.com"
-          git add block_registry data/publishers.json data/publishers/*.pub
+          git add block_registry data/publishers.json data/publishers/*.pub block_store/kits
           if git diff --cached --quiet; then
             echo "nothing to commit"
             exit 0
