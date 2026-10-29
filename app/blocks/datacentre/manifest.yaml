@@ -1,9 +1,9 @@
 # Data centre — kit VOCABULARY for the shared reasoning-layer evaluator.
 #
-# This is the declarative half of the kit. The facility_01 design basis (real
-# values, from the completed domain encoding sheet) stays in design_basis.yaml,
-# which the hand-written gate in reasoning.py still reads; this file is what the
-# shared evaluator needs, and nothing in the evaluator knows what a chiller is.
+# This is the declarative half of the kit. The figure register is
+# design_basis.yaml, which the platform kit ships NULL: a facility's figures are
+# that facility's interview, never platform content (K-S5). This file is what
+# the shared evaluator needs, and nothing in the evaluator knows what a chiller is.
 #
 # Why the datacentre kit was rewritten to this shape: the hand-written gate
 # enforced four invariants. Reading it against the portable spec, four of the
@@ -15,7 +15,7 @@
 kit: datacentre
 version: 1
 serves_verticals: [datacentre, data_centre, data_center]
-interview_status: "run — facility_01 design basis complete (design_basis.yaml); gaps in KNOWN_GAPS.md"
+interview_status: "not run — design_basis.yaml ships null; gaps in KNOWN_GAPS.md"
 
 quantities:
   tested_result:

@@ -2,7 +2,7 @@ all figures — pending interview, domain encoding sheet, Railway & Metro Constr
 
 No interview has run. Every `value` in `design_basis.yaml` is `null` and
 stays null until it does. The qualifiers are present and enforced at load
-time (TrackBasis, in reasoning.py); the values are not, and this layer
+time by the hand-written TrackBasis until K-S5 deleted it; the values are not, and this layer
 refuses rather than supplying a figure it does not have. The gate itself is
 `manifest.yaml` + `invariants.yaml`, evaluated by app.blocks.kit_engine, and
 never reads a value out of design_basis.yaml — it is provenance/interview
@@ -39,3 +39,9 @@ open, can we put the crane here, can we stress the rail today, is this
 building at risk, can we go into the four-foot — stays refused after the
 interview. Those are named-person decisions and no manifest value changes
 that.
+
+## Dropped with the hand-written gate (K-S5)
+
+The four derivation-guard entries the shared kit_engine has no declarative
+home for were host-side pattern checks in the deleted `reasoning.py`. They are
+not enforced by this kit until kit_engine gains a kind for them.

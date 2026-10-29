@@ -1,4 +1,8 @@
-# KNOWN_GAPS — data centre reasoning layer (facility_01)
+# KNOWN_GAPS — data centre reasoning layer
+
+The platform kit's figure register (design_basis.yaml) ships null: every figure
+is a gap until a facility's own interview fills it. The gaps below are what the
+original encoding sheet also left blank.
 
 Not supplied by the domain encoding sheet. These are GAPS — nothing here is
 filled in by the kit. The kit fails closed on every one of them.
@@ -17,9 +21,9 @@ The one real incident from the sheet is encoded as a test:
 
 - chiller failure at IST; temperature rose faster than expected due to pump
   sequence time delay; corrected by re-modifying the control sequence.
-- `tests/blocks/test_datacentre_reasoning.py::test_chiller_incident_pump_sequence_regression`
-  asserts (1) the pre-correction IST result is stale after the control change
-  and blocks, (2) the retested post-modification sequence is citable.
+- it was asserted by the hand-written gate's test, deleted with that gate in
+  K-S5 (the declarative kit replaces it); the staleness rule it exercised is
+  INV-DC-CURRENCY-* in invariants.yaml, run by the shared kit_engine.
 
 ## Reference-pattern note
 
