@@ -63,7 +63,7 @@ OPEN_GAPS: Tuple[Tuple[str, str], ...] = (
     ),
     (
         "block_store/docs/rag/dual_rag.json",
-        "estate_kit_router._dual_rag_meta reads parents[2]/docs/rag/dual_rag.json (is_file-guarded); the file lives at block_store/kits/private_estate_operations/surface/dual_rag.json, so the reader path is wrong; code fix is out of ST-7 scope",
+        "reader: block_store/kits/private_estate_operations/estate_kit_router.py::_dual_rag_meta, Path(__file__).parents[2]/docs/rag/dual_rag.json (is_file-guarded); the file lives at block_store/kits/private_estate_operations/surface/dual_rag.json, so the reader path is wrong; code fix is out of ST-7 scope",
     ),
 )
 GLOB_CHARS = set("*?[]")
@@ -433,6 +433,8 @@ def _concrete(entry: str) -> str:
     [(_concrete(e), True) for e in sorted(EXPECTED_RUNTIME_GENERATED)]
     + [
         ("data/x.db", True),  # runtime sqlite file
+        ("data/x.db-wal", True),  # sqlite write-ahead log
+        ("data/x.db-shm", True),  # sqlite shared-memory file
         ("data/CEREBRUM_SKILL.md", False),  # a path the code reads: must stay tracked
     ],
 )
