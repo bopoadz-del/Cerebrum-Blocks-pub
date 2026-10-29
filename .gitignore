@@ -79,6 +79,8 @@ frontend/dist
 /data/vector/
 /data/captures/
 /data/uploads/
+# Written by block_validation.py (DEFAULT_CERTIFICATION_STORE_PATH) at runtime.
+/data/block_certifications.json
 # Automotive foundation pack build artifacts (harvests, embeddings, indexes).
 # The old blanket *.csv / *.jsonl rules dropped authored kit data; the runtime
 # jsonl writers go to storage/ (grounding verdicts) and indexes/ (rag records).
