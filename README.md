@@ -55,8 +55,9 @@ COLLECTOR can survey and promote, not certified inventory:
 
 Newly registered in the close-out: estate blocks, `retail_v2`,
 `safety_world_detector`, `mcp_adapter`, `inbound_webhook`, `workbench`.
-All registry blocks are signed (publisher `cerebrum_platform`) and the
-signing + manifest-contract gates run in CI.
+Block signing is parked until the publisher registry ships (see
+Security below and [PARKED_BLOCKERS.md](PARKED_BLOCKERS.md)); the
+manifest-contract gates run in CI.
 
 ## Domain kits
 
@@ -102,14 +103,15 @@ uvicorn app.main:app --reload           # serve on :8000  (GET /health -> {"stat
 - Kit installs verify a `provenance.json` (sha256 digests + root hash)
   when present; kits without one are labeled `absent — unverified` in the
   install response.
-- Ed25519 block signing is **operating**: all `block_registry/*` manifests
-  are signed by the `cerebrum_platform` publisher and verify at load
-  (`scripts/verify_block.py`; the runtime admission gate in
-  `app/core/block_validation.py` excludes a registry block whose signature
-  fails). The publisher public key ships in `data/publishers.json`; the
-  private key is held by the operator (rotate/re-sign with
-  `scripts/rotate_publisher_key.py`, which writes the private key OUTSIDE the
-  repo). A restricted primitive (`database`/`code`/`sandbox`/`secrets`/…) is
+- Ed25519 block signing is parked until the publisher registry ships.
+  What the tree has today: the signing and verification code
+  (`app/core/publisher_registry.py`, `scripts/verify_block.py`, the
+  runtime admission gate in `app/core/block_validation.py`) and the
+  rotate/re-sign script (`scripts/rotate_publisher_key.py`, which writes
+  the private key outside the repo). The publisher registry
+  (`data/publishers.json`) is NOT shipped, so a registry block whose
+  publisher is unknown is excluded at load.
+- A restricted primitive (`database`/`code`/`sandbox`/`secrets`/…) is
   additionally gated to unlimited-tier at block resolution, failing closed on
   an unauthenticated request.
 
@@ -120,7 +122,7 @@ uvicorn app.main:app --reload           # serve on :8000  (GET /health -> {"stat
 - [REPO_STATUS.md](REPO_STATUS.md) — current inventory and status
 - [SKILLS_BLOCK_LOGIC.md](SKILLS_BLOCK_LOGIC.md) — block logic notes
 - [docs/decisions/phase1-dead-controls.md](docs/decisions/phase1-dead-controls.md) — control dispositions (wired vs deleted)
-- [PARKED_BLOCKERS.md](PARKED_BLOCKERS.md) — honestly parked work (e.g. block signing)
+- [PARKED_BLOCKERS.md](PARKED_BLOCKERS.md) — honestly parked work (block signing is parked until the publisher registry ships)
 
 ## Inventory — verified, honest
 
