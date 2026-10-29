@@ -13,7 +13,7 @@
 2. **Offline-First** — Core workflows run locally (Jetson Orin/Nano, Termux, Windows). Cloud is optional, not mandatory.
 3. **Green-Build Feedback** — Every deliverable must pass validation before handoff. No broken files.
 4. **Short Commands** — User prefers direct, copy-paste Termux/GitHub CLI commands. No options, no questions.
-5. **One Source of Truth** — All data lives in GitHub repo first. Render/Codespace is ephemeral; filesystem is disposable.
+5. **One Source of Truth** — All data lives in GitHub repo first. Hosted runtimes and Codespaces are ephemeral; filesystem is disposable.
 
 ---
 
@@ -60,7 +60,7 @@ FOR each artifact:
 ### 3.3 Post-Delivery Gate
 
 - All files must be committed to GitHub BEFORE sharing
-- No direct Render shell edits (ephemeral filesystem)
+- No direct edits in a hosted shell (ephemeral filesystem)
 - Every external data point requires citation (Source Name + Source URL)
 
 ---
@@ -219,7 +219,7 @@ FOR each artifact:
 ### 9.1 Technology Stack
 - **API:** FastAPI (Python) or Hono (Node)
 - **ORM:** Drizzle ORM or SQLAlchemy 2.0
-- **DB:** PostgreSQL (Render) or SQLite (local/Jetson)
+- **DB:** PostgreSQL (cloud) or SQLite (local/Jetson)
 - **Validation:** Pydantic v2
 - **Auth:** JWT + RBAC (from Cerebrum security phase)
 
@@ -234,7 +234,7 @@ FOR each artifact:
 - `GET /api/bim/quantities` — Return IFC-derived BOQ
 - `GET /api/progress` — Earned value metrics
 - `POST /api/reports/generate` — Trigger xlsx/pdf generation
-- `GET /api/health` — Must return green (hardcoded if needed for Render)
+- `GET /api/health` — Must return green (hardcoded if needed for the cloud health check)
 
 ---
 
@@ -252,7 +252,7 @@ PDF Report (reportlab) — photos + annotations + pass/fail
     ↓
 XLSX Log (openpyxl) — defect register with formulas for trend analysis
     ↓
-COMMIT to GitHub → Render serves download link
+COMMIT to GitHub → the deployed service serves the download link
 ```
 
 ### 10.2 BIM → BOQ Pipeline
@@ -276,11 +276,11 @@ Site data (daily logs, drone, BIM)
     ↓
 FastAPI ingestion endpoint
     ↓
-PostgreSQL (Render) or SQLite (Jetson local)
+PostgreSQL (cloud) or SQLite (Jetson local)
     ↓
 React dashboard (Vite + Tailwind)
     ↓
-Docker build → Deploy to Render / Orin
+Docker build → Deploy to cloud / Orin
 ```
 
 ---
@@ -307,7 +307,7 @@ Cerebrum must detect runtime environment and adapt:
 
 | Environment | Detection | Adaptation |
 |-------------|-----------|------------|
-| **Cloud (Render)** | `RENDER=true` env var | PostgreSQL, full API, cloud LLM |
+| **Cloud** | cloud deploy environment | PostgreSQL, full API, cloud LLM |
 | **Jetson Orin** | `/etc/nv_tegra_release` exists | SQLite, local LLM (Tinker LoRA), ZVec vector DB |
 | **Jetson Nano** | Same as above + memory < 8GB | Reduced model (Llama-3.2-1B), no heavy CV |
 | **Termux (Android)** | `$PREFIX` contains `com.termux` | GitHub CLI operations, lightweight scripts only |
@@ -320,7 +320,7 @@ Cerebrum must detect runtime environment and adapt:
 
 | Anti-Pattern | Why Forbidden | Correct Approach |
 |--------------|-------------|------------------|
-| Editing in Render shell | Filesystem is ephemeral | Edit in Codespace → commit → push |
+| Editing in a hosted shell | Filesystem is ephemeral | Edit in Codespace → commit → push |
 | Static values for derived outputs | Breaks audit trail | Excel formulas, SQL views, computed fields |
 | Excel 365-only functions | Client may use Excel 2019 | Use `INDEX/MATCH`, `SUMIFS`, `OFFSET` |
 | Hardcoding secrets in code | Security risk | `.env` file + GitHub Secrets |
@@ -346,10 +346,10 @@ cd Cerebrum-Blocks && git pull origin main
 python scripts/xlsx_recheck.py deliverables/boq.xlsx
 python scripts/xlsx_validate.py deliverables/boq.xlsx
 
-# Deploy to Render (after commit)
+# Deploy to the cloud (after commit)
 git add . && git commit -m "deliverable: [type] [description]"
 git push origin main
-# Then: Render Dashboard → Manual Deploy → Clear Build Cache → Deploy
+# Then: the deploy workflow (deploy-aws) ships the pushed commit
 ```
 
 ---
