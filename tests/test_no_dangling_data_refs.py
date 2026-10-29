@@ -125,15 +125,26 @@ def _module_roots(tree: ast.Module, here: Path) -> Env:
 def _local_consts(fn: ast.AST) -> Env:
     """Names assigned only string constants inside ``fn``."""
     vals: Dict[str, List[str]] = {}
-    bad = set()
+    const_targets = set()
     for n in ast.walk(fn):
-        if isinstance(n, ast.Assign):
+        if (
+            isinstance(n, ast.Assign)
+            and isinstance(n.value, ast.Constant)
+            and isinstance(n.value.value, str)
+        ):
             for t in n.targets:
                 if isinstance(t, ast.Name):
-                    if isinstance(n.value, ast.Constant) and isinstance(n.value.value, str):
-                        vals.setdefault(t.id, []).append(n.value.value)
-                    else:
-                        bad.add(t.id)
+                    vals.setdefault(t.id, []).append(n.value.value)
+                    const_targets.add(id(t))
+    # Any other binding of the name (non-constant assign, +=, annotated
+    # assign, for/with/except/walrus target, a parameter) makes it non-constant.
+    bad = {
+        n.id for n in ast.walk(fn)
+        if isinstance(n, ast.Name) and isinstance(n.ctx, ast.Store) and id(n) not in const_targets
+    }
+    if isinstance(fn, (ast.FunctionDef, ast.AsyncFunctionDef, ast.Lambda)):
+        a = fn.args
+        bad |= {x.arg for x in [*a.posonlyargs, *a.args, *a.kwonlyargs, a.vararg, a.kwarg] if x}
     return {k: v for k, v in vals.items() if k not in bad}
 
 
@@ -440,3 +451,22 @@ def _concrete(entry: str) -> str:
 )
 def test_root_gitignore_on_concrete_runtime_and_source_paths(path, ignored):
     assert (ignored_reads(ROOT, [path]) == [path]) is ignored
+
+
+# --- G2 N13: a name rebound to a non-constant is not a constant -------------
+
+@pytest.mark.parametrize(
+    "src, expected",
+    [
+        ("def f():\n    pack_id = 'alpha'\n", {"pack_id": ["alpha"]}),
+        ("def f():\n    pack_id = 'alpha'\n    pack_id += suffix\n", {}),
+        ("def f():\n    pack_id = 'alpha'\n    for pack_id in ids:\n        pass\n", {}),
+        ("def f():\n    pack_id = 'alpha'\n    pack_id: str = other\n", {}),
+        ("def f(pack_id='beta'):\n    pack_id = 'alpha'\n", {}),
+        ("def f():\n    pack_id = 'alpha'\n    with open(p) as pack_id:\n        pass\n", {}),
+        ("def f():\n    pack_id = 'alpha'\n    if (pack_id := other):\n        pass\n", {}),
+    ],
+)
+def test_local_consts_constant_vs_rebound(src, expected):
+    fn = ast.parse(src).body[0]
+    assert _local_consts(fn) == expected

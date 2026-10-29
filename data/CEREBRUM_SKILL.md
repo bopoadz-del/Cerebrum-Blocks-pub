@@ -339,8 +339,8 @@ pkg install python git nodejs-lts
 pip install openpyxl pandas reportlab python-pptx python-docx requests
 
 # Clone / update Cerebrum
-git clone https://github.com/bopoadz-del/Cerebrum-Blocks.git
-cd Cerebrum-Blocks && git pull origin main
+git clone <store-repo-url>
+cd <store-repo> && git pull origin main
 
 # Run validation suite
 python scripts/xlsx_recheck.py deliverables/boq.xlsx
