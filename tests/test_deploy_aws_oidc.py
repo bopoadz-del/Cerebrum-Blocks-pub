@@ -148,6 +148,10 @@ def test_account_id_detector_two_inputs():
     assert account_id_literals(f"role-to-assume: arn:aws:iam::{acct}:role/r\n", True) == [acct]
     assert account_id_literals(f'ROLE = "arn:aws:iam::{acct}:role/r"\n', False) == [acct]
     assert account_id_literals(f"role-to-assume: {ROLE_EXPR}\n", True) == []
+    # bare id outside any ARN (an ECR registry host) is still caught in a workflow
+    assert account_id_literals(f"image: {acct}.dkr.ecr.us-west-2.amazonaws.com/x:1\n", True) == [acct]
+    other = _synthetic_account()[::-1]
+    assert account_id_literals(f"REGISTRY: {other}.dkr.ecr.eu-west-1.amazonaws.com\n", True) == [other]
     assert account_id_literals('ROLE = "${{ vars.X }}"\nTS = 1234567890123\n', False) == []
 
 
