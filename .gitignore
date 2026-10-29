@@ -81,6 +81,9 @@ frontend/dist
 /data/uploads/
 # Written by block_validation.py (DEFAULT_CERTIFICATION_STORE_PATH) at runtime.
 /data/block_certifications.json
+# Install state / kit registry written by container_kit_store.py and domain_kit_registry.py.
+/data/installed_container_kits.json
+/data/domain_kit_registry.json
 # Automotive foundation pack build artifacts (harvests, embeddings, indexes).
 # The old blanket *.csv / *.jsonl rules dropped authored kit data; the runtime
 # jsonl writers go to storage/ (grounding verdicts) and indexes/ (rag records).

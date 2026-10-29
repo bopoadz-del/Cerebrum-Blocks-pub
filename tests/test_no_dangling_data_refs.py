@@ -17,42 +17,124 @@ from __future__ import annotations
 import ast
 import subprocess
 from pathlib import Path
-from typing import Iterator, List, Optional, Tuple
+from typing import Dict, Iterator, List, Optional, Tuple
 
 import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
-SCAN_DIRS = ("app", "block_registry")
+SCAN_DIRS = ("app", "block_registry", "block_store/kits")
 SUFFIXES = (".json", ".jsonl", ".yaml", ".yml", ".md", ".csv")
 # Written at runtime under DATA_DIR (default ./data); never source.
-RUNTIME_GENERATED = ("data/storage/", "data/vector/", "data/captures/", "data/uploads/")
+RUNTIME_GENERATED = (
+    "data/storage/",
+    "data/vector/",
+    "data/captures/",
+    "data/uploads/",
+    "data/installed_container_kits.json",  # container_kit_store.py writes it (install state)
+    "data/domain_kit_registry.json",  # domain_kit_registry.py json.dump()s it
+    "data/block_certifications.json",  # block_validation.py certification store
+)
+
+# OPEN-GAP REGISTER, NOT AN ALLOWLIST. Each entry is one exact path the code
+# reads that is absent from the tree today, with the reason it cannot be
+# restored in this PR. Entries are never globs; an entry whose file exists (or
+# that the scan no longer finds) fails the gate, so the register can only
+# shrink as gaps close. It exists so a known hole is stated, not hidden.
+OPEN_GAPS: Tuple[Tuple[str, str], ...] = (
+    (
+        "block_store/kits/private_estate_operations/steward_runtime/packs/steward_hospitality_intents_v1/mini/intents.jsonl",
+        "never committed: absent from every commit of the pre-snapshot mirror (691fb177bd80); needs recovery from the owner's source or re-authoring (ST-7 ruling 1)",
+    ),
+    (
+        "block_store/kits/private_estate_operations/steward_runtime/packs/steward_facilities_open_v1/mini/assets.jsonl",
+        "never committed: absent from every commit of the pre-snapshot mirror (691fb177bd80); needs recovery from the owner's source or re-authoring (ST-7 ruling 1)",
+    ),
+    (
+        "block_store/kits/private_estate_operations/steward_runtime/packs/steward_fleet_open_v1/mini/vehicles.jsonl",
+        "never committed: absent from every commit of the pre-snapshot mirror (691fb177bd80); needs recovery from the owner's source or re-authoring (ST-7 ruling 1)",
+    ),
+    (
+        "data/publishers.json",
+        "platform publisher registry: held for ST-4 key rotation under the key-gap ruling; not shipped in ST-7",
+    ),
+    (
+        "block_store/data/demo/estate_fixtures.json",
+        "estate_kit_router._fixtures reads it (404 when absent); never authored in this repo or the mirror",
+    ),
+    (
+        "block_store/docs/rag/dual_rag.json",
+        "estate_kit_router._dual_rag_meta reads parents[2]/docs/rag/dual_rag.json (is_file-guarded); the file lives at block_store/kits/private_estate_operations/surface/dual_rag.json, so the reader path is wrong; code fix is out of ST-7 scope",
+    ),
+)
+GLOB_CHARS = set("*?[]")
 
 
-def _file_path_expr(node: ast.AST, here: Path) -> Optional[Path]:
-    """Resolve Path(__file__)[.parent|.parents[n]|.resolve()]* / "lit" ... or None."""
+Env = Dict[str, List]  # name -> list of Path (roots) or list of str (constants)
+
+
+def _resolve(node: ast.AST, here: Path, roots: Env, consts: Env) -> Optional[List[Path]]:
+    """Resolve a path expression rooted at Path(__file__) or a module-level root
+    variable built from it. A ``/ <name>`` join where ``<name>`` is a local
+    string constant joins each value; an unresolvable name (e.g. a pack_id read
+    from a manifest) expands over the directories that actually exist."""
+    if isinstance(node, ast.Name):
+        return list(roots[node.id]) if node.id in roots else None
     if isinstance(node, ast.BinOp) and isinstance(node.op, ast.Div):
-        left = _file_path_expr(node.left, here)
-        if left is not None and isinstance(node.right, ast.Constant) and isinstance(node.right.value, str):
-            return left / node.right.value
+        left = _resolve(node.left, here, roots, consts)
+        if left is None:
+            return None
+        r = node.right
+        if isinstance(r, ast.Constant) and isinstance(r.value, str):
+            return [p / r.value for p in left]
+        if isinstance(r, ast.Name) and r.id in consts:
+            return [p / v for p in left for v in consts[r.id]]
+        if isinstance(r, ast.Name):
+            return [c for p in left if p.is_dir() for c in sorted(p.iterdir()) if c.is_dir()]
         return None
     if isinstance(node, ast.Call):
         f = node.func
         if isinstance(f, ast.Name) and f.id == "Path" and len(node.args) == 1:
             a = node.args[0]
             if isinstance(a, ast.Name) and a.id == "__file__":
-                return here
+                return [here]
+            return None
         if isinstance(f, ast.Attribute) and f.attr == "resolve" and not node.args:
-            return _file_path_expr(f.value, here)
+            return _resolve(f.value, here, roots, consts)
         return None
     if isinstance(node, ast.Attribute) and node.attr == "parent":
-        base = _file_path_expr(node.value, here)
-        return base.parent if base is not None else None
+        base = _resolve(node.value, here, roots, consts)
+        return [p.parent for p in base] if base is not None else None
     if isinstance(node, ast.Subscript) and isinstance(node.value, ast.Attribute) and node.value.attr == "parents":
-        base = _file_path_expr(node.value.value, here)
+        base = _resolve(node.value.value, here, roots, consts)
         idx = node.slice
         if base is not None and isinstance(idx, ast.Constant) and isinstance(idx.value, int):
-            return base.parents[idx.value]
+            return [p.parents[idx.value] for p in base]
     return None
+
+
+def _module_roots(tree: ast.Module, here: Path) -> Env:
+    roots: Env = {}
+    for stmt in tree.body:
+        if isinstance(stmt, ast.Assign) and len(stmt.targets) == 1 and isinstance(stmt.targets[0], ast.Name):
+            got = _resolve(stmt.value, here, roots, {})
+            if got is not None and not any(p.suffix for p in got):
+                roots[stmt.targets[0].id] = got
+    return roots
+
+
+def _local_consts(fn: ast.AST) -> Env:
+    """Names assigned only string constants inside ``fn``."""
+    vals: Dict[str, List[str]] = {}
+    bad = set()
+    for n in ast.walk(fn):
+        if isinstance(n, ast.Assign):
+            for t in n.targets:
+                if isinstance(t, ast.Name):
+                    if isinstance(n.value, ast.Constant) and isinstance(n.value.value, str):
+                        vals.setdefault(t.id, []).append(n.value.value)
+                    else:
+                        bad.add(t.id)
+    return {k: v for k, v in vals.items() if k not in bad}
 
 
 def _top_dirs(root: Path) -> set:
@@ -62,24 +144,38 @@ def _top_dirs(root: Path) -> set:
 def iter_data_refs(root: Path, scan_dirs=SCAN_DIRS) -> Iterator[Tuple[str, int, str]]:
     """Yield (source_file, line, repo-relative referenced path)."""
     tops = _top_dirs(root)
+    rroot = root.resolve()
     for d in scan_dirs:
         for py in sorted((root / d).rglob("*.py")):
-            if "/tests/" in py.as_posix():
+            posix = py.as_posix()
+            if "/tests/" in posix or "/bundle/" in posix:
                 continue
             try:
                 tree = ast.parse(py.read_text(encoding="utf-8"))
             except (SyntaxError, UnicodeDecodeError):
                 continue
             here = py.resolve()
-            for node in ast.walk(tree):
-                target: Optional[str] = None
+            roots = _module_roots(tree, here)
+            seen = set()
+
+            def _scoped(node: ast.AST, consts: Env) -> Iterator[Tuple[ast.AST, Env]]:
+                # Each node is visited once, with the constants of its innermost function.
+                for child in ast.iter_child_nodes(node):
+                    if isinstance(child, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                        yield from _scoped(child, _local_consts(child))
+                    else:
+                        yield child, consts
+                        yield from _scoped(child, consts)
+
+            for node, consts in _scoped(tree, {}):
+                targets: List[str] = []
                 if isinstance(node, ast.BinOp) and isinstance(node.op, ast.Div):
-                    p = _file_path_expr(node, here)
-                    if p is not None and p.suffix in SUFFIXES:
-                        try:
-                            target = p.relative_to(root.resolve()).as_posix()
-                        except ValueError:
-                            continue
+                    for p in _resolve(node, here, roots, consts) or []:
+                        if p.suffix in SUFFIXES:
+                            try:
+                                targets.append(p.relative_to(rroot).as_posix())
+                            except ValueError:
+                                pass
                 elif isinstance(node, ast.Constant) and isinstance(node.value, str):
                     s = node.value.removeprefix("./")
                     if (
@@ -90,23 +186,58 @@ def iter_data_refs(root: Path, scan_dirs=SCAN_DIRS) -> Iterator[Tuple[str, int, 
                         and "*" not in s
                         and s.split("/", 1)[0] in tops
                     ):
-                        target = s
-                if target is not None:
-                    yield py.relative_to(root).as_posix(), node.lineno, target
+                        targets.append(s)
+                for t in targets:
+                    key = (node.lineno, t)
+                    if key not in seen:
+                        seen.add(key)
+                        yield py.relative_to(root).as_posix(), node.lineno, t
 
 
-def dangling(root: Path, scan_dirs=SCAN_DIRS) -> List[str]:
+def dangling(root: Path, scan_dirs=SCAN_DIRS, gaps=OPEN_GAPS) -> List[str]:
+    gap_paths = {p for p, _ in gaps}
     out = []
     for src, line, ref in iter_data_refs(root, scan_dirs):
         if ref.startswith(RUNTIME_GENERATED):
+            continue
+        if ref in gap_paths:
             continue
         if not (root / ref).exists():
             out.append(f"{src}:{line} -> {ref}")
     return sorted(set(out))
 
 
+def gap_register_errors(root: Path, gaps, refs) -> List[str]:
+    """Every register entry: exact (no glob), reasoned, still absent, still read."""
+    errs = []
+    for path, reason in gaps:
+        if GLOB_CHARS & set(path):
+            errs.append(f"glob entry: {path}")
+        if not reason.strip():
+            errs.append(f"no reason: {path}")
+        if (root / path).exists():
+            errs.append(f"gap closed, remove entry: {path}")
+        if path not in refs:
+            errs.append(f"not read by scanned code: {path}")
+    return errs
+
+
 def test_every_literal_data_path_the_code_reads_exists():
     assert dangling(ROOT) == []
+
+
+def test_open_gap_register_is_exact_reasoned_and_current():
+    refs = {r for _, _, r in iter_data_refs(ROOT)}
+    assert gap_register_errors(ROOT, OPEN_GAPS, refs) == []
+
+
+def test_steward_kit_readers_are_resolved_per_pack():
+    refs = {r for _, _, r in iter_data_refs(ROOT)}
+    base = "block_store/kits/private_estate_operations/steward_runtime/packs/"
+    assert base + "steward_hospitality_intents_v1/mini/intents.jsonl" in refs
+    assert base + "steward_fleet_open_v1/mini/vehicles.jsonl" in refs
+    # pack_id is a local constant: no cross-pack phantom paths
+    assert base + "steward_fleet_open_v1/mini/intents.jsonl" not in refs
 
 
 def test_scan_finds_the_known_readers():
@@ -174,3 +305,84 @@ def test_ignored_reads_two_inputs(tmp_path, rule, ignored):
     subprocess.run(["git", "init", "-q"], cwd=tmp_path, check=True)
     (tmp_path / ".gitignore").write_text(rule)
     assert ignored_reads(tmp_path, ["app/data/x.json", "data/y.md"]) == ignored
+
+
+# ── kit readers: module-level root + local pack id ─────────────────────────
+
+
+def _kit_repo(tmp_path: Path, files: List[str]) -> Path:
+    pk = tmp_path / "block_store" / "kits" / "k1" / "packs"
+    (pk / "pa").mkdir(parents=True)
+    (pk / "pb").mkdir(parents=True)
+    (pk / "__init__.py").write_text(
+        "from pathlib import Path\n"
+        "ROOT = Path(__file__).resolve().parent\n"
+        "def load_a():\n"
+        "    pack_id = 'pa'\n"
+        "    return ROOT / pack_id / 'mini' / 'a.jsonl'\n"
+        "def load_any(manifest):\n"
+        "    pid = manifest['id']\n"
+        "    return ROOT / pid / 'manifest.json'\n"
+    )
+    for f in files:
+        (pk / f).parent.mkdir(parents=True, exist_ok=True)
+        (pk / f).write_text("{}")
+    return tmp_path
+
+
+KP = "block_store/kits/k1/packs/"
+
+
+def test_kit_reader_existing_files_pass(tmp_path):
+    root = _kit_repo(tmp_path, ["pa/mini/a.jsonl", "pa/manifest.json", "pb/manifest.json"])
+    refs = sorted(r for _, _, r in iter_data_refs(root, ("block_store/kits",)))
+    assert refs == [KP + "pa/manifest.json", KP + "pa/mini/a.jsonl", KP + "pb/manifest.json"]
+    assert dangling(root, ("block_store/kits",), ()) == []
+
+
+def test_kit_reader_missing_files_fail(tmp_path):
+    root = _kit_repo(tmp_path, ["pa/manifest.json"])
+    assert dangling(root, ("block_store/kits",), ()) == [
+        f"block_store/kits/k1/packs/__init__.py:5 -> {KP}pa/mini/a.jsonl",
+        f"block_store/kits/k1/packs/__init__.py:8 -> {KP}pb/manifest.json",
+    ]
+
+
+# ── open-gap register: two inputs each way ────────────────────────────────
+
+
+def test_gap_entry_hides_only_its_exact_path(tmp_path):
+    root = _kit_repo(tmp_path, ["pa/manifest.json", "pb/manifest.json"])
+    gaps = ((KP + "pa/mini/a.jsonl", "unrecovered"),)
+    assert dangling(root, ("block_store/kits",), gaps) == []
+    refs = {r for _, _, r in iter_data_refs(root, ("block_store/kits",))}
+    assert gap_register_errors(root, gaps, refs) == []
+
+
+@pytest.mark.parametrize(
+    "entry, err",
+    [
+        ((KP + "pa/mini/*.jsonl", "x"), "glob entry: "),
+        ((KP + "pa/mini/a.jsonl", "  "), "no reason: "),
+        ((KP + "pa/manifest.json", "x"), "gap closed, remove entry: "),
+        ((KP + "pc/never_read.json", "x"), "not read by scanned code: "),
+    ],
+)
+def test_gap_register_rejects_bad_entries(tmp_path, entry, err):
+    root = _kit_repo(tmp_path, ["pa/manifest.json", "pb/manifest.json"])
+    refs = {r for _, _, r in iter_data_refs(root, ("block_store/kits",))}
+    assert err + entry[0] in gap_register_errors(root, (entry,), refs)
+
+
+def test_glob_entry_does_not_hide_a_missing_file(tmp_path):
+    root = _kit_repo(tmp_path, ["pa/manifest.json", "pb/manifest.json"])
+    assert dangling(root, ("block_store/kits",), ((KP + "pa/mini/*.jsonl", "x"),)) != []
+
+
+# ── no blanket extension rule over source dirs ────────────────────────────
+
+
+@pytest.mark.parametrize("suffix", SUFFIXES)
+def test_gitignore_does_not_blanket_ignore_a_data_suffix_in_source(suffix):
+    probes = [f"{d}/st7_probe{suffix}" for d in SCAN_DIRS]
+    assert ignored_reads(ROOT, probes) == []
