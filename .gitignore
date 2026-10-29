@@ -68,25 +68,24 @@ vault/secrets.tar.gz
 claudebot/KEYS.md
 frontend/dist
 
-# Runtime data — uploads, captures, the SQLite db file. Generated at runtime.
-data/
-# ...except data a kit AUTHORS at its kit root (publish_kit resolves the kit
-# root first); that is source, not runtime output.
-!block_store/kits/*/app/data/
-# Automotive foundation pack build artifacts (harvests, embeddings, indexes)
-*.csv
+# Runtime data written under DATA_DIR (default ./data) at runtime: the SQLite
+# files (database.py, auth.py, api_keys.py), storage/vector blocks, captures and
+# uploads. Anchored to the repo root and listed explicitly (ST-7): the old bare
+# `data/` rule also matched app/data/ and dropped source the code reads.
+/data/*.db
+/data/*.db-wal
+/data/*.db-shm
+/data/storage/
+/data/vector/
+/data/captures/
+/data/uploads/
+# Automotive foundation pack build artifacts (harvests, embeddings, indexes).
+# The old blanket *.csv / *.jsonl rules dropped authored kit data; the runtime
+# jsonl writers go to storage/ (grounding verdicts) and indexes/ (rag records).
 *.zip
-*.jsonl
 harvests/
 embeddings/
 indexes/
-# Published container kit bundles ship Fork artifacts (override data/ above)
-!block_store/kits/**/bundle/app/data/
-!block_store/kits/**/bundle/app/data/**
-# Platform publisher identity is required for block signature verification.
-!data/publishers.json
-!data/publishers/
-!data/publishers/*.pub
 # Never commit publisher private keys.
 data/publishers/*.key
 uploads/
