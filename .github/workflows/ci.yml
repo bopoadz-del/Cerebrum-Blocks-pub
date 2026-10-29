@@ -202,10 +202,12 @@ jobs:
         if: ${{ !cancelled() }}
         run: pytest -q tests/finance_ops/
 
-      - name: Publisher key rotation + re-sign workflow tests (ST-5)
+      - name: Publisher key rotation + re-sign workflow tests (ST-5, ST-6b)
         # Runs even when an earlier (ruled-red) step failed, so the result is visible.
         if: ${{ !cancelled() }}
-        run: pytest -q tests/test_rotate_publisher_key.py
+        # test_refresh_kit_bundles.py holds the ST-6 mutant kills (A6/A7/A9); CI
+        # names files explicitly, so it only runs in CI if it is listed here.
+        run: pytest -q tests/test_rotate_publisher_key.py tests/test_refresh_kit_bundles.py
 
       - name: Run regression security tests
         if: ${{ !cancelled() }}
