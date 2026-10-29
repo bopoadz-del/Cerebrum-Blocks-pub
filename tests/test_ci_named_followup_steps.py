@@ -23,7 +23,7 @@ import yaml
 REPO = Path(__file__).resolve().parents[1]
 WORKFLOW = REPO / ".github" / "workflows" / "ci.yml"
 BACKEND_JOB = "backend"
-RUNS_AFTER_FAILURE = {"${{ !cancelled() }}", "!cancelled()", "${{ always() }}", "always()"}
+RUNS_AFTER_FAILURE = "${{ !cancelled() }}"  # the one guard form ci.yml uses
 
 # step name -> test files it must run
 REQUIRED_STEPS = {
@@ -37,10 +37,10 @@ REQUIRED_STEPS = {
 
 def _pytest_files(run: str) -> set[str]:
     found: set[str] = set()
-    for line in run.replace("\\\n", " ").splitlines():
+    for line in run.splitlines():
         try:
             tokens = shlex.split(line, comments=True)
-        except ValueError:
+        except ValueError:  # ci.yml has lines shlex cannot parse; skip just that line
             continue
         if "pytest" in tokens:
             found.update(t for t in tokens if t.startswith("tests/") and t.endswith(".py"))
@@ -48,20 +48,21 @@ def _pytest_files(run: str) -> set[str]:
 
 
 def blocking_named_steps(workflow: dict, job_id: str) -> dict[str, set[str]]:
-    """name -> pytest files, for steps of job_id that run after a red step
+    """name -> pytest files, for run steps of job_id that run after a red step
     and can fail the job. Steps failing either condition are dropped."""
     job = (workflow.get("jobs") or {}).get(job_id) or {}
     if job.get("continue-on-error"):
         return {}
     out: dict[str, set[str]] = {}
     for step in job.get("steps") or []:
-        run, name = step.get("run"), step.get("name")
-        if not isinstance(run, str) or not isinstance(name, str):
+        run = step.get("run") or ""
+        if not run:
             continue
         if step.get("continue-on-error"):
             continue
-        if str(step.get("if", "")).strip() not in RUNS_AFTER_FAILURE:
+        if step.get("if") != RUNS_AFTER_FAILURE:
             continue
+        name = step.get("name")
         out[name] = out.get(name, set()) | _pytest_files(run)
     return out
 
@@ -113,3 +114,27 @@ def test_helper_ignores_other_jobs_and_comments():
     assert blocking_named_steps(wf, "backend") == {}
     wf2 = _wf([_s("A", "echo hi  # pytest tests/test_a.py")])
     assert blocking_named_steps(wf2, "backend") == {"A": set()}
+
+
+def test_helper_drops_uses_only_step():
+    wf = _wf([{"name": "U", "uses": "actions/checkout@v4", "if": "${{ !cancelled() }}"}])
+    assert blocking_named_steps(wf, "backend") == {}
+
+
+def test_helper_reads_only_pytest_lines_and_tests_py_tokens():
+    run = "python tools/gen.py tests/test_x.py\npytest -q tools/check.py tests/data tests/test_a.py"
+    assert blocking_named_steps(_wf([_s("A", run)]), "backend") == {"A": {"tests/test_a.py"}}
+
+
+def test_helper_unions_files_of_same_named_steps():
+    wf = _wf([_s("A", "pytest -q tests/test_a.py"), _s("A", "pytest -q tests/test_b.py")])
+    assert blocking_named_steps(wf, "backend") == {"A": {"tests/test_a.py", "tests/test_b.py"}}
+
+
+def test_helper_skips_unparsable_line_and_keeps_the_rest():
+    run = "echo \"don't stop\npytest -q tests/test_a.py"
+    try:
+        got = blocking_named_steps(_wf([_s("A", run)]), "backend")
+    except ValueError as exc:  # a raising helper is reported as a wrong result
+        got = exc
+    assert got == {"A": {"tests/test_a.py"}}
