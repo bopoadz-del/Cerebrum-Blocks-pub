@@ -71,9 +71,9 @@ invariants:
     severity: refuse
     message: "A figure does not carry across facility, system or revision — and
       'the other hall is the same design' is not this hall."
-    measurement: "Probe a two-facility corpus x20 asking about facility_01 only.
-      Before: facility_02 figures appear. After: 0, each refused naming the facility
-      the figure belongs to."
+    measurement: "Probe a two-facility corpus x20 asking about one facility only.
+      Before: the other facility's figures appear. After: 0, each refused naming
+      the facility the figure belongs to."
 
   - id: INV-DC-CURRENCY-BMS
     kind: currency

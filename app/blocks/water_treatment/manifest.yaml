@@ -79,3 +79,7 @@ scope_refusals:
     authority: "water quality lead + regulator"
   - pattern: "can I enter the chlorine room"
     authority: "permit process — atmospheric test required"
+
+# Every figure in design_basis.yaml carries these keys (a null value is
+# legal, a missing key is not); kit_engine.load_design_basis refuses otherwise.
+mandatory_qualifiers: ["value", "unit", "plant", "train", "parameter", "averaging_basis", "regulation", "contact_time_basis", "CT_T_pH", "dose_basis", "source", "revision", "date"]

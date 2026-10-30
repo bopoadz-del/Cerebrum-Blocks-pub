@@ -19,7 +19,7 @@
 #   design   the vessel/line design basis (MAWP, design pressure)
 # Nothing carries between them, and nothing carries between pressure_kind
 # (design | mawp | operating) and envelope_tier — they are two different axes
-# of the same figure. See reasoning.py.
+# of the same figure. See invariants.yaml.
 source: "domain encoding sheet, Oil & Gas Operations"
 scope: "asset- and tag-specific — never carry a figure to another facility, unit or sister asset"
 interview_status: "not run — every value is null (KNOWN_GAPS.md)"

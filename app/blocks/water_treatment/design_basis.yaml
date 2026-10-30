@@ -15,7 +15,7 @@
 #   theoretical   hydraulic design value only — never proof where T10 is required
 #   T10           10th-percentile detention from a tracer study, baffling factor applied
 #   tracer        the tracer study result itself
-# Nothing carries between them. See DERIVATION_GUARD in reasoning.py.
+# Nothing carries between them. See invariants.yaml (derivation).
 #
 # dose_basis is likewise part of the identity of every dose figure:
 #   as_product    the commercial product as delivered (e.g. 12.5% trade NaOCl)

@@ -37,7 +37,7 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 BLOCKS = ROOT / "app" / "blocks"
 REGISTRY = ROOT / "block_registry"
 CERTS = ROOT / "block_certifications.json"
-REFERENCE_DOCKERFILE = REGISTRY / "datacentre_reasoning" / "Dockerfile"
+REFERENCE_DOCKERFILE = REGISTRY / "datacentre_kit" / "Dockerfile"
 
 ADAPTER = '''#!/usr/bin/env python3
 """

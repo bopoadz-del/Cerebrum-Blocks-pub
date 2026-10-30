@@ -127,6 +127,30 @@ def test_an_incomplete_or_mixed_qualifier_band_does_not_load(band):
     assert "INV-SYN-QBAND" in refused, f"{band} loaded as a usable band"
 
 
+@pytest.mark.parametrize("band", [
+    {"min_from": "lo", "max": 9},
+    {"max_from": "hi", "min": 0},
+    {"subject": "at", "max": 9},
+    {"subject": "at", "min": 0},
+], ids=["min_from+max", "max_from+min", "subject+max", "subject+min"])
+def test_a_partial_qualifier_band_beside_a_fixed_bound_does_not_load(band):
+    # Any one qualifier-band key makes it a qualifier band; it must not load as a
+    # fixed band and silently drop the qualifier field it names.
+    try:
+        _band_inv(band)
+    except InvariantError as exc:
+        refused = str(exc)
+    else:
+        refused = ""
+    assert "INV-SYN-QBAND" in refused, f"{band} loaded as a fixed band"
+
+
+@pytest.mark.parametrize("point", [100, 0, -5.5])
+def test_a_one_point_band_passes_at_its_point_and_refuses_beside_it(point):
+    assert _verdict(_fig(lo=point, hi=point, at=point)) == "pass"
+    assert _verdict(_fig(lo=point, hi=point, at=point + 1)) == "refused:at"
+
+
 def test_a_fixed_band_still_works_beside_the_qualifier_mode():
     inv = parse_invariant({"id": "INV-SYN-FIXED", "kind": "band", "severity": "flag",
                            "band": {"min": 0, "max": 10}}, {}, "synthetic")
@@ -187,7 +211,7 @@ def test_rail_ac4_a_schedule_without_its_band_is_refused():
 
 # ----------------------------------------------- rail's four derivation guards --
 # These run on #21's declaration (manifest derivation_patterns +
-# INV-RAIL-DERIVATION-GUARD). Until #21 lands they are skipped, by name.
+# INV-RAIL-DERIVATION-GUARD), on main since #21. They must run; a missing manifest entry fails them.
 
 GUARDS = [
     ("sft_from_installation_temperature",
@@ -207,8 +231,8 @@ GUARDS = [
 
 def _guard():
     kit = _rail()
-    if not getattr(kit.manifest, "derivation_patterns", None):
-        pytest.skip("needs #21 (manifest derivation_patterns) on main")
+    assert getattr(kit.manifest, "derivation_patterns", None), (
+        "rail manifest has no derivation_patterns; the guard tests must run, not skip")
     return kit, next(i for i in kit.invariants if i.id == "INV-RAIL-DERIVATION-GUARD")
 
 

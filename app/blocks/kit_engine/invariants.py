@@ -649,6 +649,20 @@ _CARRY_VERB = re.compile(
 )
 
 
+def forbidden_derivations(inv: Invariant, figure: Figure, manifest: Manifest) -> List[str]:
+    """The record's forbidden derivations present on *figure*: named by the host
+    in ``figure.derivations``, or seen in ``figure.text`` by the pattern the
+    kit's manifest declares under ``derivation_patterns``."""
+    named: List[str] = []
+    for name in inv.forbid:
+        pattern = manifest.derivation_patterns.get(name)
+        if name in figure.derivations or (
+            pattern and re.search(pattern, figure.text or "", re.IGNORECASE)
+        ):
+            named.append(name)
+    return named
+
+
 def eval_provenance(inv: Invariant, figure: Figure, manifest: Manifest) -> Optional[Finding]:
     """Was the figure carried from another entity or revision?
 
@@ -661,7 +675,7 @@ def eval_provenance(inv: Invariant, figure: Figure, manifest: Manifest) -> Optio
 
     Live: delay damages computed on another contract's amount.
     """
-    named = [d for d in figure.derivations if d in inv.forbid]
+    named = forbidden_derivations(inv, figure, manifest)
     if named:
         return _finding(inv, figure, f"forbidden derivation: {', '.join(named)}", named)
 

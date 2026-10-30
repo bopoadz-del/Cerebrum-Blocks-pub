@@ -1,7 +1,7 @@
 # Fire protection & firefighting systems — kit VOCABULARY for the shared
 # reasoning-layer evaluator (app/blocks/kit_engine).
 #
-# Migrated from the hand-written gate in reasoning.py. Reading that gate
+# Migrated from the hand-written gate (reasoning.py, deleted in K-S5). Reading that gate
 # against the portable spec: five qualifier-shaped invariants (INV-1..5) were
 # already there; `authority` was one bespoke REJECT_AS_PROOF loop over an
 # `evidence` list; `currency` existed only for the two-source live-state gate
@@ -21,12 +21,12 @@
 # BEHAVIOUR (refuse the same unsafe statement) is reproduced through
 # `qualifier` (the host never extracts an attribution/basis/assembly qualifier
 # from inference language, so the qualifier invariant that already existed
-# for INV-1/2/5 fires on its own) — see fire_protection_reasoning.py and the
+# for INV-1/2/5 fires on its own) — see invariants.yaml and the
 # mapping table in the migration report.
 #
 # design_basis.yaml holds the eleven filled-or-null design-basis figures
 # (unchanged from the old manifest.yaml's `design_basis:` section) and is read
-# only by FireProtectionBasis, for interview-gap reporting. Nothing in the
+# by app.blocks.kit_engine.load_design_basis, for interview-gap reporting. Nothing in the
 # shared evaluator reads it, and nothing in the evaluator knows what a
 # sprinkler is.
 kit: fire_protection
@@ -197,3 +197,7 @@ scope_refusals:
   - label: firestopping adequacy
     pattern: "is\\s+(?:this|the)\\s+fire\\s*stopping\\s+ok"
     authority: "the AHJ"
+
+# Every figure in design_basis.yaml carries these keys (a null value is
+# legal, a missing key is not); kit_engine.load_design_basis refuses otherwise.
+mandatory_qualifiers: ["value", "unit", "code_edition", "classification_source", "design_area_basis", "tested_assembly_ref", "in_service", "impairment_log_ref", "source", "date"]
