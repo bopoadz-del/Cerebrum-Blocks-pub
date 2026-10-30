@@ -96,6 +96,26 @@ def test_a_host_named_derivation_is_still_refused_without_text():
     assert forbidden_derivations(inv, Figure(quantity=q, text=""), kit.manifest) == []
 
 
+
+@pytest.mark.parametrize("text, derivations, expected", [
+    # two text matches on one synthetic statement -> both reported
+    ("the SFT is inferred from the installation temperature and the clearance "
+     "was scaled off the drawing", [],
+     ["sft_from_installation_temperature", "scale_clearance_off_drawing"]),
+    # one host-named plus one text match -> both reported
+    ("the SFT is inferred from the installation temperature",
+     ["twist_without_base_length"],
+     ["sft_from_installation_temperature", "twist_without_base_length"]),
+    # a single hit -> exactly that one
+    ("the clearance was scaled off the drawing", [],
+     ["scale_clearance_off_drawing"]),
+], ids=["two_text_hits", "host_named_plus_text", "single_hit"])
+def test_every_forbidden_derivation_on_a_figure_is_reported(text, derivations, expected):
+    kit, inv = _guard()
+    q = next(iter(kit.manifest.quantities))
+    fig = Figure(quantity=q, text=text, derivations=derivations)
+    assert forbidden_derivations(inv, fig, kit.manifest) == expected
+
 RAIL_GUARD = [
     ("sft_from_installation_temperature",
      "the SFT is inferred from the installation temperature", "the SFT is 27 degC per the stressing record"),

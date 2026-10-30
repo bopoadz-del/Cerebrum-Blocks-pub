@@ -141,7 +141,7 @@ invariants:
       a similar drive, or a twist figure without its base length."
     measurement: "One fixture per forbidden derivation plus a clean companion
       naming the same quantity without the inference (tests/blocks/
-      test_ks5_restored_kits.py). Before (K-S5 head 9405a46): all four passed.
+      test_kit_derivation_patterns.py). Before (K-S5 head 9405a46): all four passed.
       After: each refused naming itself; the companions pass."
 
   # ---- the two-source live-state gate (H3 currency) --------------------------
