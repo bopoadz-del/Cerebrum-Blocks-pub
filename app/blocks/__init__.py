@@ -370,7 +370,7 @@ def _resolve_publisher_tier(name: str, validator: Any) -> Optional[str]:
         try:
             record = validator.publisher_registry.get(publisher_id)
             if record is not None:
-                return record.tier
+                return record.effective_tier
         except Exception as exc:
             logger.warning("could not lookup publisher '%s' for '%s': %s", publisher_id, name, exc)
 

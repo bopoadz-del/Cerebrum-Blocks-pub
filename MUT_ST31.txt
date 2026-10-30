@@ -1,0 +1,56 @@
+MUT_ST31: mutants against tests/core/test_st4_publisher_registry_data.py
+Run: PYTHONDONTWRITEBYTECODE=1 python3 -B -m pytest -q -rf --tb=line -p no:cacheprovider <file>, one mutant at a time, source restored after each
+Tests defined: 13 (def test_*). Tests collected: 17 (one function is parametrized x5).
+Mutants: 13 written, 13 RED, 0 survived. Every failure is an AssertionError (no other exception type in the output).
+
+RED  M1 shipped tier certified->reviewed
+    FAILED tests/core/test_st4_publisher_registry_data.py::test_shipped_platform_publisher_is_certified_exactly
+    FAILED tests/core/test_st4_publisher_registry_data.py::test_resolved_tier_for_a_real_platform_block_is_certified
+        types: AssertionError
+RED  M2 certified forced to sandbox
+    FAILED tests/core/test_st4_publisher_registry_data.py::test_tiers_route_differently[certified-True-False]
+    FAILED tests/core/test_st4_publisher_registry_data.py::test_certified_and_reviewed_differ_for_the_same_elevated_block
+        types: AssertionError
+RED  M3 reviewed never sandboxed
+    FAILED tests/core/test_st4_publisher_registry_data.py::test_tiers_route_differently[reviewed-True-True]
+    FAILED tests/core/test_st4_publisher_registry_data.py::test_certified_and_reviewed_differ_for_the_same_elevated_block
+        types: AssertionError
+RED  M4 is_revoked ignores revoked_at
+    FAILED tests/core/test_st4_publisher_registry_data.py::test_a_publisher_with_revoked_at_is_refused
+    FAILED tests/core/test_st4_publisher_registry_data.py::test_record_level_revoked_at_drives_is_revoked
+    FAILED tests/core/test_st4_publisher_registry_data.py::test_resolved_tier_honours_a_revoked_at_stamp
+        types: AssertionError
+RED  M5 is_trusted uses tier only
+    FAILED tests/core/test_st4_publisher_registry_data.py::test_a_publisher_with_revoked_at_is_refused
+        types: AssertionError
+RED  M6 verify_block uses tier only
+    FAILED tests/core/test_st4_publisher_registry_data.py::test_a_publisher_with_revoked_at_is_refused
+        types: AssertionError
+RED  M7 effective_tier ignores revocation
+    FAILED tests/core/test_st4_publisher_registry_data.py::test_a_publisher_with_revoked_at_is_refused
+    FAILED tests/core/test_st4_publisher_registry_data.py::test_resolved_tier_honours_a_revoked_at_stamp
+        types: AssertionError
+RED  M8 _resolve uses raw tier
+    FAILED tests/core/test_st4_publisher_registry_data.py::test_resolved_tier_honours_a_revoked_at_stamp
+        types: AssertionError
+RED  M9 revoke() drops the stamp
+    FAILED tests/core/test_st4_publisher_registry_data.py::test_revoke_sets_the_stamp_and_refuses
+        types: AssertionError
+RED  M10 shipped key one char changed
+    FAILED tests/core/test_st4_publisher_registry_data.py::test_platform_key_matches_pinned_fingerprint
+    FAILED tests/core/test_st4_publisher_registry_data.py::test_platform_key_verifies_a_known_owner_signed_block
+    FAILED tests/core/test_st4_publisher_registry_data.py::test_pub_file_matches_publishers_json
+        types: AssertionError
+RED  M11 .pub one char changed
+    FAILED tests/core/test_st4_publisher_registry_data.py::test_pub_file_matches_publishers_json
+        types: AssertionError
+RED  M12 shipped revoked_at stamped
+    FAILED tests/core/test_st4_publisher_registry_data.py::test_shipped_platform_publisher_is_certified_exactly
+    FAILED tests/core/test_st4_publisher_registry_data.py::test_resolved_tier_for_a_real_platform_block_is_certified
+    FAILED tests/core/test_st4_publisher_registry_data.py::test_shipped_platform_publisher_is_not_revoked
+    FAILED tests/core/test_st4_publisher_registry_data.py::test_platform_key_verifies_a_known_owner_signed_block
+        types: AssertionError
+RED  M13 register() always stamps revoked_at
+    FAILED tests/core/test_st4_publisher_registry_data.py::test_a_publisher_without_revoked_at_is_accepted
+        types: AssertionError
+ALL RED AS AssertionError: True
