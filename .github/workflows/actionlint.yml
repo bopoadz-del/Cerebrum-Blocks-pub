@@ -21,4 +21,7 @@ jobs:
       - name: Download actionlint 1.7.12
         run: bash <(curl -sSfL https://raw.githubusercontent.com/rhysd/actionlint/v1.7.12/scripts/download-actionlint.bash) 1.7.12
       - name: Lint workflows
-        run: ./actionlint -color
+        # shellcheck/pyflakes integrations off: this check is for workflow syntax and
+        # expressions (the 422 class). Turning them on flags pre-existing script style
+        # in deploy-aws.yml and docker-publish.yml, which is out of scope here.
+        run: ./actionlint -color -shellcheck= -pyflakes=
