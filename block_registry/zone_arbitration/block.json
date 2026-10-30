@@ -17,7 +17,7 @@
     }
   ],
   "author": "Cerebrum Team",
-  "description": "Zone arbitration ported from <private-repo> agents/coordinator.py arbitrate(): a shared clash's proposal commits only when every owning zone's monitor passes (double pass). A single pass is refused \u2014 one zone happy and the other unasked is the failure zoning introduced. The monitors themselves are the product's; this block enforces the double-pass contract. In-process.",
+  "description": "Zone arbitration: a shared clash's proposal commits only when every owning zone's monitor passes (double pass). A single pass is refused \u2014 one zone happy and the other unasked is the failure zoning introduced. The monitors themselves are the product's; this block enforces the double-pass contract. In-process.",
   "digests": {
     "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
     "block.json": "1b6e61ceeeee095af12575da9ea889c79c3a303869a55056803aa506e6f3f8f2",

@@ -12,7 +12,7 @@
     }
   ],
   "author": "Cerebrum Team",
-  "description": "Verified outcome learning ported from <client> retailops/learning/engine.py: per-module payload validation, verified-only profile updates (unverified events are stored but never applied), deterministic deduplication keys, tenant scoping. Store is in-process.",
+  "description": "Verified outcome learning: per-module payload validation, verified-only profile updates (unverified events are stored but never applied), deterministic deduplication keys, tenant scoping. Store is in-process.",
   "digests": {
     "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
     "block.json": "1231d8685bbe5d5c95481095189125d6fb0ef67f8b4f0ffa0ba1f0fb8fd9855a",

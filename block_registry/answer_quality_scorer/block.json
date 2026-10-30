@@ -12,7 +12,7 @@
     }
   ],
   "author": "Cerebrum Team",
-  "description": "Silent-failure scorer ported from <private-repo> level/scorers/silent_failure.py: status-line-as-answer, empty or too-short deliverable, scaffolding leaks, and truncation presented as whole. Runs on every answer; the battery's other scorers are not ported.",
+  "description": "Silent-failure scorer: status-line-as-answer, empty or too-short deliverable, scaffolding leaks, and truncation presented as whole. Runs on every answer; the battery's other scorers are not ported.",
   "digests": {
     "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
     "block.json": "1ca4b01f520270b8b2a954cf11a43f512652e89fcfa67b7613adc190e41dcbb3",

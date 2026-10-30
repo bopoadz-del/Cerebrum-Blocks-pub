@@ -12,7 +12,7 @@
     }
   ],
   "author": "Cerebrum Team",
-  "description": "Commissioning evidence classifier ported from <private-repo> reasoning/evidence.py: A/B/C/D/Unprovable classes with PASS/FAIL/UNPROVABLE verdicts for fire-pump and fire-life-safety packets (test-line-to-tank, covers/clips obscuring the nameplate, serial mismatch, stale unwitnessed factory test, integrated C&E chain).",
+  "description": "Commissioning evidence classifier: A/B/C/D/Unprovable classes with PASS/FAIL/UNPROVABLE verdicts for fire-pump and fire-life-safety packets (test-line-to-tank, covers/clips obscuring the nameplate, serial mismatch, stale unwitnessed factory test, integrated C&E chain).",
   "digests": {
     "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
     "block.json": "80a9ba3e51ca1cc0d3fe5125f6777f649f3d68b65944f3f31b0121230b2d435b",

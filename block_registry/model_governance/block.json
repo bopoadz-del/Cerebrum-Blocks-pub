@@ -22,7 +22,7 @@
     }
   ],
   "author": "Cerebrum Team",
-  "description": "real: AI use-case risk-tier register and model validation records ported from <private-repo> backend/app/governance/service.py (create_ai_use_case, list_ai_use_cases, create_model_governance_record, approve_model). Validates risk_tier against {low,medium,high} and validation_status against {pending,approved,failed}; records may only reference existing use cases. In-process store (SQLAlchemy not ported).",
+  "description": "real: AI use-case risk-tier register and model validation records. Validates risk_tier against {low,medium,high} and validation_status against {pending,approved,failed}; records may only reference existing use cases. In-process store (SQLAlchemy not ported).",
   "digests": {
     "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
     "block.json": "b2eb5da799525286c59781212fdd909952b818402ac45ae49ae9980dfd67a5f2",

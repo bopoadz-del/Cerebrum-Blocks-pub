@@ -7,7 +7,7 @@
     }
   ],
   "author": "Cerebrum Team",
-  "description": "",
+  "description": "Creates, applies and rolls back schema migrations and reports pending ones.",
   "digests": {
     "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
     "block.json": "3a8b1c4c89bee303b79cc75f75ddbbe8efda4a397aa608132c857df6061877fb",

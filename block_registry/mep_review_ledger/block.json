@@ -17,7 +17,7 @@
     }
   ],
   "author": "Cerebrum Team",
-  "description": "real: MEP review discipline ported from <private-repo> app/review.py (approve/reject/edit rules), app/review_package.py (verification_of / enrich_change_set / annotate_bcf) and app/monitors/base.py (three-valued monitor contract). Approve refuses while unacknowledged unprovable checks remain; reject reopens eligible clashes; edit maps a re-monitored verdict to verified/verified_conditional/escalated. In-process ledger; monitor implementations are the caller's.",
+  "description": "real: MEP review discipline. Approve refuses while unacknowledged unprovable checks remain; reject reopens eligible clashes; edit maps a re-monitored verdict to verified/verified_conditional/escalated. In-process ledger; monitor implementations are the caller's.",
   "digests": {
     "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
     "block.json": "b6a9aaf48e2d5e2c8ee84265872f117f97aba5ff394b4f608cce1f900b823f3d",

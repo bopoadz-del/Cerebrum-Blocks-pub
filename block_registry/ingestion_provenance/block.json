@@ -7,7 +7,7 @@
     }
   ],
   "author": "Cerebrum Team",
-  "description": "Ingestion provenance ported from <private-repo> cerebrum_product_kernel/provenance.py: factory provenance payloads, SHA-256 content hash trees, and page/sheet/row source labels for ingested documents.",
+  "description": "Ingestion provenance: factory provenance payloads, SHA-256 content hash trees, and page/sheet/row source labels for ingested documents.",
   "digests": {
     "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
     "block.json": "b157ba5cf6d7d1ec7c3ca883063f6d4998a9e6d34f5d477b240b857234fa6d3e",

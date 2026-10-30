@@ -7,7 +7,7 @@
     }
   ],
   "author": "Cerebrum Team",
-  "description": "Multi-factor stock scoring ported from <private-repo> openbox/engine.ts: the 9-point Piotroski F-score with safe division (ROA positive/improving, CFO positive and above net income, leverage falling, current ratio rising, share count not rising, margin and turnover improving). NEVER the backtest. No network \u2014 statement dicts only.",
+  "description": "Multi-factor stock scoring: the 9-point Piotroski F-score with safe division (ROA positive/improving, CFO positive and above net income, leverage falling, current ratio rising, share count not rising, margin and turnover improving). NEVER the backtest. No network \u2014 statement dicts only.",
   "digests": {
     "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
     "block.json": "943e4813fd994d52004cf6f23077567b29b357dba84c92174431c6bfaf6da9a8",

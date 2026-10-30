@@ -17,7 +17,7 @@
     }
   ],
   "author": "Cerebrum Team",
-  "description": "Twilio WhatsApp webhook handler ported from <private-repo> src/web/whatsapp.ts (real): Twilio Body/From/NumMedia/MediaUrl0 form fields, the COMMON_WORDS/GREETINGS ticker + intent parser, score/explain/screenshot reply formatters with the experimental-study disclaimer, and the TwiML envelope. The OpenBox scoring engine, quote feed and OCR are dependency boundaries (wire scorer/quote/ocr); an unwired scorer answers the donor could-not-score text - never a fabricated number. Media downloads use httpx with basic auth when TWILIO_ACCOUNT_SID + TWILIO_AUTH_TOKEN are set. NEVER the backtest.",
+  "description": "Twilio WhatsApp webhook handler (real): Twilio Body/From/NumMedia/MediaUrl0 form fields, the COMMON_WORDS/GREETINGS ticker + intent parser, score/explain/screenshot reply formatters with the experimental-study disclaimer, and the TwiML envelope. The OpenBox scoring engine, quote feed and OCR are dependency boundaries (wire scorer/quote/ocr); an unwired scorer answers the donor could-not-score text - never a fabricated number. Media downloads use httpx with basic auth when TWILIO_ACCOUNT_SID + TWILIO_AUTH_TOKEN are set. NEVER the backtest.",
   "digests": {
     "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
     "block.json": "29c7a9d0d3c5523d6d3eeab3f967d15c51acb359438903b78701ca9e5bd52e53",

@@ -8,7 +8,7 @@
   ],
   "author": "Cerebrum Team",
   "capability_class": "membership",
-  "description": "",
+  "description": "Teams with members, roles, invitations and permission checks.",
   "digests": {
     "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
     "block.json": "1e8877d1e0abd4c0292e5f16c35d560626eb5d033bea0d7b8073a7f9d58e986a",

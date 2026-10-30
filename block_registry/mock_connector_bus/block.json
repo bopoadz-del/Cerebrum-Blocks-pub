@@ -7,7 +7,7 @@
     }
   ],
   "author": "Cerebrum Team",
-  "description": "Fail-closed connector taxonomy ported from <private-repo>-v2 connectors/base.py + event_bus.py: six enterprise systems (opera, micros, grms, gaming_cms, loyalty_lms, maximo) in mock_unavailable level \u2014 fetch fails closed with a structured refusal and NEVER fabricates operational data; events normalise onto a canonical CRM taxonomy and publish per system topic. In-process bus.",
+  "description": "Fail-closed connector taxonomy: six enterprise systems (opera, micros, grms, gaming_cms, loyalty_lms, maximo) in mock_unavailable level \u2014 fetch fails closed with a structured refusal and NEVER fabricates operational data; events normalise onto a canonical CRM taxonomy and publish per system topic. In-process bus.",
   "digests": {
     "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
     "block.json": "a89971524bafb978486696a941ca6635fb88d3cd7b7cd3f65fc8884f20ff587b",

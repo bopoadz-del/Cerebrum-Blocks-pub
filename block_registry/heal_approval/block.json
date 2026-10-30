@@ -7,7 +7,7 @@
     }
   ],
   "author": "Cerebrum Team",
-  "description": "TTL'd one-time heal approval ported from <private-repo> resident_engineer/heal/approval.py: SHA-256 digest over (tenant, action, principal), one-hour TTL, consume-once with replay refusal. Approval store is in-process.",
+  "description": "TTL'd one-time heal approval: SHA-256 digest over (tenant, action, principal), one-hour TTL, consume-once with replay refusal. Approval store is in-process.",
   "digests": {
     "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
     "block.json": "8c417b1a27fc837ab6f505f25a9936f54f392a9d01df526ffcd3d87f9c965c30",

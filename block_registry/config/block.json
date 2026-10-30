@@ -7,7 +7,7 @@
     }
   ],
   "author": "Cerebrum Team",
-  "description": "",
+  "description": "Gets and sets configuration values held in process memory, starting from in-process defaults.",
   "digests": {
     "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
     "block.json": "5d84232a7211bbe0f10fa21512e28e30622b04740c3e4e4a990710063d8f227c",

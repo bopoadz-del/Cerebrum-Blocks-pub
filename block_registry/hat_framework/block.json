@@ -12,7 +12,7 @@
     }
   ],
   "author": "Cerebrum Team",
-  "description": "Hat framework ported from <client> retailops/agents/catalog.py: a manifest contract (kind base|hat, policies, formulas) and a catalog with register/get/bases/hats/compose. Compose overlays a hat onto its base agent and refuses on a missing base or unknown hat. In-process catalog.",
+  "description": "Hat framework: a manifest contract (kind base|hat, policies, formulas) and a catalog with register/get/bases/hats/compose. Compose overlays a hat onto its base agent and refuses on a missing base or unknown hat. In-process catalog.",
   "digests": {
     "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
     "block.json": "4c0fdc6832fb22840ddd889d3ce8f0265e2bcc50aa35868381583cebc155ec61",

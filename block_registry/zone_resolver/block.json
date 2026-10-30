@@ -27,7 +27,7 @@
     }
   ],
   "author": "Cerebrum Team",
-  "description": "real (clone of <private-repo> app/agents/zone_resolver.py ZoneResolver): per-zone clash resolution with the donor's discipline - kit resolution order, every candidate runs ALL monitors (a candidate missing a declared monitor's verdict is refused), clean-sweep commit with verified vs verified_conditional separation, three-attempt cap escalating with named objections, and boundary-owned clashes handed to the coordinator, never committed on this zone's branch. The monitors themselves are the product's; this block enforces the resolver contract. In-process.",
+  "description": "real: per-zone clash resolution with the donor's discipline - kit resolution order, every candidate runs ALL monitors (a candidate missing a declared monitor's verdict is refused), clean-sweep commit with verified vs verified_conditional separation, three-attempt cap escalating with named objections, and boundary-owned clashes handed to the coordinator, never committed on this zone's branch. The monitors themselves are the product's; this block enforces the resolver contract. In-process.",
   "digests": {
     "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
     "block.json": "247bdf43c166abfbb966fb84939a228840561ce3f6d27cbae926879ab57c44f5",

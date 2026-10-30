@@ -27,7 +27,7 @@
     }
   ],
   "author": "Cerebrum Team",
-  "description": "real (clone of <private-repo> level/certify/gates.py + level/grader/independence.py + level/battery/canary.py + level/core/taxonomy.py): fraction-exact certification gates with CERTIFIED/PROVISIONAL/NOT_CERTIFIED/VOID tiers and recorded waivers (never floats, never rounded), a grader-independence check that REFUSES a run where grader identity == target fingerprint, content-stable canary minting/detection (a canary hit voids the run), and the 11-class failure taxonomy. Scorer implementations and the harness runner are not ported; the gate action takes explicit counts.",
+  "description": "real: fraction-exact certification gates with CERTIFIED/PROVISIONAL/NOT_CERTIFIED/VOID tiers and recorded waivers (never floats, never rounded), a grader-independence check that REFUSES a run where grader identity == target fingerprint, content-stable canary minting/detection (a canary hit voids the run), and the 11-class failure taxonomy. Scorer implementations and the harness runner are not ported; the gate action takes explicit counts.",
   "digests": {
     "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
     "block.json": "73d7bfd13e977fe95ccf10e64e0e12f075d5589ec1ade3010f5c70c99c725dd0",

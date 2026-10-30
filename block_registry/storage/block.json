@@ -1,7 +1,7 @@
 {
   "acceptance": [],
   "author": "Cerebrum Team",
-  "description": "",
+  "description": "Stores, retrieves, lists, checks and deletes files on the local or in-memory backend.",
   "digests": {
     "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
     "block.json": "39965392b60673ae356e3eee31d2a7d616f3183748b0c13608b00205bae86854",

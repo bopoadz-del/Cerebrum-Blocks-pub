@@ -17,7 +17,7 @@
     }
   ],
   "author": "Cerebrum Team",
-  "description": "real: reconciliation run/exception state machine ported from <private-repo> backend/app/reconciliation/service.py. pending->processing->completed/failed across run_type in {actuals_vs_budget, actuals_vs_forecast, bank_vs_ledger, intercompany}; unsupported run types fail the run honestly; per-scope tolerance rules; Decimal control totals; idempotent open-exception dedup; block-level variances merged from the Store finance_reconciliation block. In-process store.",
+  "description": "real: reconciliation run/exception state machine. pending->processing->completed/failed across run_type in {actuals_vs_budget, actuals_vs_forecast, bank_vs_ledger, intercompany}; unsupported run types fail the run honestly; per-scope tolerance rules; Decimal control totals; idempotent open-exception dedup; block-level variances merged from the Store finance_reconciliation block. In-process store.",
   "digests": {
     "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
     "block.json": "a8b71547f3687a53d993aa2eae9cadf8a8d939bb613cce448819312df8a76499",

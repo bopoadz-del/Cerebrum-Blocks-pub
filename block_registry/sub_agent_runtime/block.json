@@ -12,7 +12,7 @@
     }
   ],
   "author": "Cerebrum Team",
-  "description": "Sub-agent spawn contract ported from <private-repo> agent/swarm/spawner.py: the child inherits only the scrub allowlist (PATH/PYTHONPATH/AIRGAP/TEST_MODE/DATA_DIR/OLLAMA_*), the process cap is enforced, and the payload validates before any spawn is admitted. In-process bookkeeping.",
+  "description": "Sub-agent spawn contract: the child inherits only the scrub allowlist (PATH/PYTHONPATH/AIRGAP/TEST_MODE/DATA_DIR/OLLAMA_*), the process cap is enforced, and the payload validates before any spawn is admitted. In-process bookkeeping.",
   "digests": {
     "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
     "block.json": "3bb032cf0f055a40552696898c1acaaf5e82cf61aee1d97a04c9e8aba6a7ed8e",

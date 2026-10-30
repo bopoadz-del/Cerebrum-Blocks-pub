@@ -7,7 +7,7 @@
     }
   ],
   "author": "Cerebrum Team",
-  "description": "",
+  "description": "Ping and deep health checks over registered probes and dependencies, with status history and uptime percentage.",
   "digests": {
     "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
     "block.json": "1e227ca74a418c0d6ce4bef591e72aeb8dacc9649b0cc08a9185687564f97383",

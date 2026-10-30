@@ -7,7 +7,7 @@
     }
   ],
   "author": "Cerebrum Team",
-  "description": "",
+  "description": "Captures exceptions and messages, groups them into issues, records breadcrumbs and performance traces.",
   "digests": {
     "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
     "block.json": "67d30335da2ddba0688665309efddbf787c56fde1c97ffef552833f5d534f5f3",

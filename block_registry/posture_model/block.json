@@ -7,7 +7,7 @@
     }
   ],
   "author": "Cerebrum Team",
-  "description": "Final-answer sampler pinned to <private-repo>@4e167a7. Calls sample_posture against the Tinker posture checkpoint (TINKER_API_KEY). Retrieval stays on The Fork: refuses when fork_context is not attached.",
+  "description": "Final-answer sampler pinned to upstream sampler commit 4e167a7. Calls sample_posture against the Tinker posture checkpoint (TINKER_API_KEY). Retrieval stays on The Fork: refuses when fork_context is not attached.",
   "digests": {
     "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
     "block.json": "f4727fa51cb435c0dd629847cc6ff7a899c2031ab9955784ef58d366ca7a3fae",

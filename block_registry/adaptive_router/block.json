@@ -7,7 +7,7 @@
     }
   ],
   "author": "Cerebrum Team",
-  "description": "",
+  "description": "Scores providers from recorded request results and selects one; actions include select_provider, record_result, get_scores and explain_choice.",
   "digests": {
     "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
     "block.json": "fd0587f6e5ed8a8877b57676542c4fd109ba6d424435eef6679482a91cd5c487",

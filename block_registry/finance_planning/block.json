@@ -12,7 +12,7 @@
     }
   ],
   "author": "Cerebrum Team",
-  "description": "Finance planning ported from <private-repo> planning/service.py: draft budgets lock behind an approved governance request; locked budgets are immutable (edits create version N+1); allocation splits total/count quantized to 0.0001 with the remainder routed to the first member so the total stays exact. Store is in-process.",
+  "description": "Finance planning: draft budgets lock behind an approved governance request; locked budgets are immutable (edits create version N+1); allocation splits total/count quantized to 0.0001 with the remainder routed to the first member so the total stays exact. Store is in-process.",
   "digests": {
     "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
     "block.json": "22e63799b3ce4f95a23bc18e40cf0695ce9c24565f50a3495d3a704a22315d30",

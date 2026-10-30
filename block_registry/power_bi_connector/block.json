@@ -12,7 +12,7 @@
     }
   ],
   "author": "Cerebrum Team",
-  "description": "mock-functional \u2014 Power BI connector ported from C:\\Users\\<owner>\\<private-product>\\backend\\app\\retailops\\integrations\\connectors\\power_bi.py (+ mock_data.py, base.py). KPI dataset pull and CSV/XLSX export are real working paths on deterministic fictional rows (never live data); publish_dataset and refresh_semantic_model are honest not-implemented stubs (refused); embed URL is an explicit placeholder. With all RETAILOPS_POWERBI_* configured, test_connection performs a real Azure AD token request and Power BI workspace check.",
+  "description": "mock-functional \u2014 Power BI connector. KPI dataset pull and CSV/XLSX export are real working paths on deterministic fictional rows (never live data); publish_dataset and refresh_semantic_model are honest not-implemented stubs (refused); embed URL is an explicit placeholder. With all RETAILOPS_POWERBI_* configured, test_connection performs a real Microsoft Entra ID token request and Power BI workspace check.",
   "digests": {
     "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
     "block.json": "12e31d3657bec42491336b975fdf33c29202a2391b2a348999d62691ff030173",

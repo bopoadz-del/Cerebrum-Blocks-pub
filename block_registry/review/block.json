@@ -7,7 +7,7 @@
     }
   ],
   "author": "Cerebrum Team",
-  "description": "",
+  "description": "Ratings and reviews for store blocks, with flagging and moderation (approve, reject, hide).",
   "digests": {
     "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
     "block.json": "78ee9a3016a0690384d555f387757f00cc80c50ad1cd5d348669f1dfb60f4b84",

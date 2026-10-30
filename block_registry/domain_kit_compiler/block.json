@@ -7,7 +7,7 @@
     }
   ],
   "author": "Cerebrum Team",
-  "description": "Domain kit compiler ported from <private-repo> domain-kits/compiler/engine.py: sheet validation (domain required), slugging, table-to-lookup-block conversion, and a failure-mode test per generated block.",
+  "description": "Domain kit compiler: sheet validation (domain required), slugging, table-to-lookup-block conversion, and a failure-mode test per generated block.",
   "digests": {
     "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
     "block.json": "33d60c3e86448321be3c228a979125b3e42aff9efee03b3981a8c0a22edc2a88",

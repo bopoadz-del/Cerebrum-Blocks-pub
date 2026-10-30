@@ -7,7 +7,7 @@
     }
   ],
   "author": "Cerebrum Team",
-  "description": "Market data ported from <private-repo> stockPriceService.ts/alertService.ts: dual-provider failover (Twelve Data -> Alpha Vantage -> cached), per-provider quote normalization, alert evaluation (ABOVE/BELOW/EQUALS). Live quotes need provider API keys via env; unconfigured calls are refused by name. NEVER the backtest.",
+  "description": "Market data: dual-provider failover (Twelve Data -> Alpha Vantage -> cached), per-provider quote normalization, alert evaluation (ABOVE/BELOW/EQUALS). Live quotes need provider API keys via env; unconfigured calls are refused by name. NEVER the backtest.",
   "digests": {
     "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
     "block.json": "f7fc00af785481ed024cf36ab08b5817a3c8001c884e3d62ee1835b9ac23e339",

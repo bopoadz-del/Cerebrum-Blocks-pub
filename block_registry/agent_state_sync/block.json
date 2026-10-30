@@ -7,7 +7,7 @@
     }
   ],
   "author": "Cerebrum Team",
-  "description": "Agent state sync ported from <private-repo> agent/memory.py: deltas carry (key, origin, vector_clock, operation); a delta applies when its clock dominates the stored one; incomparable clocks on the same key are archived as conflicts, never silently dropped. Store is in-process.",
+  "description": "Agent state sync: deltas carry (key, origin, vector_clock, operation); a delta applies when its clock dominates the stored one; incomparable clocks on the same key are archived as conflicts, never silently dropped. Store is in-process.",
   "digests": {
     "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
     "block.json": "446c25ac9d2e2bdbd02872c7a8e8b7111cfa0f26f82dbae555bf652a91c69a31",

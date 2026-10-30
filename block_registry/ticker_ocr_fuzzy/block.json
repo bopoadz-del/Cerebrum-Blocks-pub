@@ -12,7 +12,7 @@
     }
   ],
   "author": "Cerebrum Team",
-  "description": "Ticker extraction with domain confusion correction ported from <private-repo> src/services/ocr.ts (real): four-pass extraction ($cashtag, structural ticker-above-company-name, always-on fallback, known-pattern), KNOWN_TICKER_CORRECTIONS and OCR_CONFUSION tables, DP levenshtein fuzzy matching (distance <= 1, donor universe order) and a correction log on every result. VALID_TICKERS vendored from the donor data/stock_universe.json. The Cloud Vision / Tesseract backends and scoreTickers are NOT ported: image input is refused, never faked. NEVER the backtest.",
+  "description": "Ticker extraction with domain confusion correction (real): four-pass extraction ($cashtag, structural ticker-above-company-name, always-on fallback, known-pattern), KNOWN_TICKER_CORRECTIONS and OCR_CONFUSION tables, DP levenshtein fuzzy matching (distance <= 1, donor universe order) and a correction log on every result. VALID_TICKERS vendored from the donor data/stock_universe.json. The Cloud Vision / Tesseract backends and scoreTickers are NOT ported: image input is refused, never faked. NEVER the backtest.",
   "digests": {
     "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
     "block.json": "5d6d3c6e875e2873b24da9bba8d072cd35662cb837645c3ef5f77febc35a5add",

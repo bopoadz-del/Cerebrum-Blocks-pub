@@ -17,7 +17,7 @@
     }
   ],
   "author": "Cerebrum Team",
-  "description": "real \u2014 Cerebrum self-healing + hot-swap state machine ported from C:\\Users\\<owner>\\Cerebrum\\backend\\app\\agent\\core_real.py (AgentLayer HOTSWAP/HEALING, AgentAction HEAL_ERROR, move_to_layer) and backend/app/healing/patch_generation.py (SelfHealingEngine confidence gating, auto-heal flag, healing history). LLM calls are not ported: handle_error without a caller-supplied deterministic patch fails closed with a structured refusal.",
+  "description": "real \u2014 Cerebrum self-healing + hot-swap state machine (AgentLayer HOTSWAP/HEALING, AgentAction HEAL_ERROR, move_to_layer; SelfHealingEngine confidence gating, auto-heal flag, healing history). LLM calls are not ported: handle_error without a caller-supplied deterministic patch fails closed with a structured refusal.",
   "digests": {
     "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
     "block.json": "b9e84196a8981e99104709bdc5e1e7e101950037fdacbae5055428fdb773b37c",
