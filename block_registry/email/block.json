@@ -12,7 +12,7 @@
     }
   ],
   "author": "Cerebrum Team",
-  "description": "",
+  "description": "Sends plain or templated email through the configured mail provider (SMTP by default) and validates addresses.",
   "digests": {
     "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
     "block.json": "7e27e680293a9426797627b238d83a4d4efe3fcc8bedf4349d5cc7e84be459df",

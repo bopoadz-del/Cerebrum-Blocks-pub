@@ -7,7 +7,7 @@
     }
   ],
   "author": "Cerebrum Team",
-  "description": "",
+  "description": "Records calls for registered providers and reports their status, health and a leaderboard.",
   "digests": {
     "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
     "block.json": "2b64fafb6dc5f53491461e88c7c18bacb195ae4bd1beaf7e997db7c008d96eff",

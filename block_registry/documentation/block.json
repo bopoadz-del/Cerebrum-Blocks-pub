@@ -7,7 +7,7 @@
     }
   ],
   "author": "Cerebrum Team",
-  "description": "",
+  "description": "Generates block documentation and examples from code signatures and outputs it as Markdown.",
   "digests": {
     "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
     "block.json": "f28c2e7e650da1242376d5b99a43de972a4527428b8fb954956dc9a996bb4b83",

@@ -12,7 +12,7 @@
     }
   ],
   "author": "Cerebrum Team",
-  "description": "",
+  "description": "Customers, subscriptions, usage records, quotas and invoices through the configured payment processor.",
   "digests": {
     "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
     "block.json": "3a9cd870dae839cf3c3d2f569a179e710eabbc1a98ae5c58b2b8a972ac4835a1",

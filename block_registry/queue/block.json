@@ -8,7 +8,7 @@
   ],
   "author": "Cerebrum Team",
   "capability_class": "jobs",
-  "description": "",
+  "description": "Job queue (enqueue, dequeue, ack, status, list) on a Redis backend when one is configured, otherwise in memory.",
   "digests": {
     "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
     "block.json": "feb2bb4015491601e41ccf462456778b012d16a33f5a9c0871e5bf656324b893",

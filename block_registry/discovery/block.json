@@ -7,7 +7,7 @@
     }
   ],
   "author": "Cerebrum Team",
-  "description": "",
+  "description": "Searches indexed blocks and recommends blocks, alternatives or a stack for a described project.",
   "digests": {
     "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
     "block.json": "7539422f8ecb43a0add27e93e5784bf5a01c268f69d461d8e55bcd0ec3f1ae49",

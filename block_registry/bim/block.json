@@ -7,7 +7,7 @@
     }
   ],
   "author": "Cerebrum Team",
-  "description": "",
+  "description": "Parses IFC models, reads DWG metadata and extracts PDF text; queries elements by type or space and compares versions.",
   "digests": {
     "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
     "block.json": "1468d80a1aced2b886f30a665e8bc64c957385f3226f4079f46e0a0176183957",

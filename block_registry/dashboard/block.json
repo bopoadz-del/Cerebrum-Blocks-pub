@@ -8,7 +8,7 @@
   ],
   "author": "Cerebrum Team",
   "capability_class": "layout",
-  "description": "",
+  "description": "Widget layouts and metric snapshots aggregated from other blocks for display.",
   "digests": {
     "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
     "block.json": "84eb2d3edbd92c8ada753fa7721056ae23343c7133b8c9d18c58b2d6e4b49335",

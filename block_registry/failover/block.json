@@ -1,7 +1,7 @@
 {
   "acceptance": [],
   "author": "Cerebrum Team",
-  "description": "",
+  "description": "Runs a block through its registered chain of executors, falling back to the next option when one fails.",
   "digests": {
     "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
     "block.json": "daf5bf9b7479c8b69593028bb3cc7773bbec1c62536b0b76ca9587de473d05f1",

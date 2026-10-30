@@ -8,7 +8,7 @@
   ],
   "author": "Cerebrum Team",
   "capability_class": "metrics",
-  "description": "",
+  "description": "Aggregates tracked events into metrics, usage and cost reports, provider comparisons and failure predictions.",
   "digests": {
     "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
     "block.json": "6ca0b4c30d92353abbeadd2728b1892a8aa9b3b701138f6a33c51edf5ff43fad",

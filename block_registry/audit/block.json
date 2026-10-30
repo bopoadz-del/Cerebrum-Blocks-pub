@@ -8,7 +8,7 @@
   ],
   "author": "Cerebrum Team",
   "capability_class": "governance",
-  "description": "",
+  "description": "Appends compliance log entries to a hash chain, and exports the log or its stats.",
   "digests": {
     "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
     "block.json": "057085e19147fed8a68525285214c26209c97e3bc09808ea599e2c896e3091d0",

@@ -7,7 +7,7 @@
     }
   ],
   "author": "Cerebrum Team",
-  "description": "",
+  "description": "Checks and records hits against per-key limits, with custom limits, resets and usage stats.",
   "digests": {
     "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
     "block.json": "a97a05f0f3df6bdf8406466700a06aea2dfb6cfde8348055069793148b18a147",

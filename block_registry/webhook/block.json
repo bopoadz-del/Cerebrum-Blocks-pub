@@ -7,7 +7,7 @@
     }
   ],
   "author": "Cerebrum Team",
-  "description": "",
+  "description": "Registers outgoing webhooks and sends signed payloads to them with retries.",
   "digests": {
     "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
     "block.json": "c792f2f340c9ee52f048b1983e5bc4274d9d1c0b1d5f0c86c8e324b9cf8c23ab",

@@ -7,7 +7,7 @@
     }
   ],
   "author": "Cerebrum Team",
-  "description": "",
+  "description": "Semantic versions for blocks held in process memory: publish, compare, deprecate, rollback and changelogs.",
   "digests": {
     "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
     "block.json": "4507f51ec738d3e1e0427bcf38d733a9100c82df617cd812c4bbb36c80c6ab21",
