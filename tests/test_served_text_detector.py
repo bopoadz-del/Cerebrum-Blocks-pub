@@ -109,3 +109,16 @@ def test_lorem_ipsum_is_flagged(text, expected):
 ])
 def test_empty_or_whitespace_text_is_flagged(text, expected):
     assert served_text_hits(text) == expected
+
+
+# ---- word boundaries pinned on both sides (G6 #26 repair) ----
+@pytest.mark.parametrize("text, expected", [
+    ("mytodo list\n", []),            # leading boundary
+    ("todos and a todolist\n", []),   # trailing boundary
+    ("my todo list\n", [(1, "todo", "todo")]),
+    ("dolorem ipsum\n", []),          # leading boundary
+    ("lorem ipsumx\n", []),           # trailing boundary
+    ("do lorem ipsum.\n", [(1, "lorem", "lorem ipsum")]),
+])
+def test_todo_and_lorem_word_boundaries_both_sides(text, expected):
+    assert served_text_hits(text) == expected
