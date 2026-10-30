@@ -154,6 +154,11 @@ class Manifest:
     state_providers: Dict[str, StateProvider] = field(default_factory=dict)
     staleness_triggers: Dict[str, Tuple[str, ...]] = field(default_factory=dict)
     scope_refusals: List[ScopeRefusal] = field(default_factory=list)
+    #: Named never-allowed derivations the kit can SEE in the statement text,
+    #: name -> regex. A provenance or derivation record's ``forbid`` list names
+    #: them; the evaluator matches the pattern itself, so detecting a forbidden
+    #: inference needs no host-side code per kit.
+    derivation_patterns: Dict[str, str] = field(default_factory=dict)
     interview_status: str = "not run"
     figures: Dict[str, Any] = field(default_factory=dict)
 
@@ -307,6 +312,20 @@ def parse_manifest(raw: Any, where: str = "manifest") -> Manifest:
             label=str(entry.get("label") or "operational authority"),
         ))
 
+    patterns: Dict[str, str] = {}
+    raw_patterns = raw.get("derivation_patterns") or {}
+    if not isinstance(raw_patterns, dict):
+        raise ManifestError(f"{where}: derivation_patterns must map a name to a regex")
+    for name, pattern in raw_patterns.items():
+        if not pattern:
+            raise ManifestError(f"{where}: derivation_patterns['{name}'] is empty")
+        try:
+            re.compile(str(pattern), re.IGNORECASE)
+        except re.error as exc:
+            raise ManifestError(
+                f"{where}: unusable derivation pattern '{name}': {exc}") from exc
+        patterns[str(name)] = str(pattern)
+
     return Manifest(
         kit=kit,
         version=int(raw.get("version") or 1),
@@ -316,6 +335,7 @@ def parse_manifest(raw: Any, where: str = "manifest") -> Manifest:
         state_providers=state_providers,
         staleness_triggers=staleness,
         scope_refusals=refusals,
+        derivation_patterns=patterns,
         interview_status=str(raw.get("interview_status") or "not run"),
         figures=dict(raw.get("figures") or {}),
     )
