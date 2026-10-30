@@ -59,10 +59,6 @@ jobs:
           if [ -n "$PUBLISHER" ]; then args+=(--publisher "$PUBLISHER"); fi
           python scripts/rotate_publisher_key.py "${args[@]}"
 
-      - name: Remove signing key
-        if: always()
-        run: rm -f "$KEY_FILE"
-
       - name: Refresh bundles of kits that mirror a re-signed block
         run: |
           # Which kits (if any) vendor a re-signed block.json is read from the
@@ -89,3 +85,8 @@ jobs:
           git commit -m "chore(store): re-sign block_registry (run ${GITHUB_RUN_ID})"
           git push origin "$branch"
           echo "pushed $branch; open a PR for grading"
+
+      # Last step: runs even when any earlier step (including the commit) fails.
+      - name: Remove signing key
+        if: always()
+        run: rm -f "$KEY_FILE"
