@@ -117,6 +117,18 @@ def test_file_input_rule_boundaries(tmp_path, item):
     assert _findings(reg, tmp_path) == []
 
 
+@pytest.mark.parametrize("description, expected", [
+    ("", [("alpha/description", "empty", "")]),
+    ("  \t", [("alpha/description", "empty", "")]),
+    ("TODO", [("alpha/description", "todo", "TODO")]),
+    ("lorem ipsum", [("alpha/description", "lorem", "lorem ipsum")]),
+    ("Scores a todolist", []),
+])
+def test_new_rules_reach_block_descriptions(tmp_path, description, expected):
+    reg = _project(tmp_path, {"alpha": {"description": description}})
+    assert _findings(reg, tmp_path) == expected
+
+
 def test_served_field_holding_an_object_is_walked(tmp_path):
     reg = _project(tmp_path, {"alpha": {"label": {"description": "on aws"}}})
     assert _findings(reg, tmp_path) == [("alpha/label/description", "provider", "aws")]

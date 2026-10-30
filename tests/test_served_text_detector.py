@@ -1,5 +1,8 @@
 """ST-7c: served-text detector — hosting-provider names (word-bounded on both
-sides) and <angle-bracket> placeholders in text a block serves."""
+sides) and <angle-bracket> placeholders in text a block serves.
+
+#26 extension: TODO markers (case-insensitive, whole word: "todolist" is not a
+hit), "lorem ipsum" filler (case-insensitive) and empty / whitespace-only text."""
 from __future__ import annotations
 
 import re
@@ -8,14 +11,22 @@ import pytest
 
 PROVIDER = re.compile(r"\b(aws|render|heroku|vercel|netlify|azure)\b", re.IGNORECASE)
 PLACEHOLDER = re.compile(r"<[a-z][a-z0-9-]*>")
+TODO = re.compile(r"\btodo\b", re.IGNORECASE)
+LOREM = re.compile(r"\blorem\s+ipsum\b", re.IGNORECASE)
 
 
 def served_text_hits(text: str) -> list:
-    """(line, kind, match) for provider names and <placeholder> tokens."""
+    """(line, kind, match) for provider names, <placeholder> tokens, TODO
+    markers and lorem ipsum filler; empty or whitespace-only text is one
+    (1, "empty", "") hit."""
+    if not text.strip():
+        return [(1, "empty", "")]
     hits = []
     for i, line in enumerate(text.splitlines(), 1):
         hits += [(i, "provider", m.group(0)) for m in PROVIDER.finditer(line)]
         hits += [(i, "placeholder", m.group(0)) for m in PLACEHOLDER.finditer(line)]
+        hits += [(i, "todo", m.group(0)) for m in TODO.finditer(line)]
+        hits += [(i, "lorem", m.group(0)) for m in LOREM.finditer(line)]
     return hits
 
 
@@ -65,4 +76,36 @@ def test_placeholder_negative_inputs(text):
      [(1, "provider", "vercel"), (1, "placeholder", "<repo-url>"), (1, "placeholder", "<branch>")]),
 ])
 def test_every_hit_on_one_line_reports(text, expected):
+    assert served_text_hits(text) == expected
+
+
+# ---- #26 extension (G6 #28 survivors): TODO, lorem ipsum, empty text ----
+@pytest.mark.parametrize("text, expected", [
+    ("TODO: describe this block\n", [(1, "todo", "TODO")]),
+    ("ok\nfill in later (todo)\n", [(2, "todo", "todo")]),
+    ("Returns a ToDo list\n", [(1, "todo", "ToDo")]),
+    ("Returns a todolist and its todos\n", []),  # whole word only
+    ("Returns a task list\n", []),
+])
+def test_todo_marker_is_flagged_as_a_word(text, expected):
+    assert served_text_hits(text) == expected
+
+
+@pytest.mark.parametrize("text, expected", [
+    ("Lorem ipsum dolor sit amet\n", [(1, "lorem", "Lorem ipsum")]),
+    ("x\nsee LOREM  IPSUM text\n", [(2, "lorem", "LOREM  IPSUM")]),
+    ("lorem alone, ipsum alone\n", []),
+    ("Scores a lease clause\n", []),
+])
+def test_lorem_ipsum_is_flagged(text, expected):
+    assert served_text_hits(text) == expected
+
+
+@pytest.mark.parametrize("text, expected", [
+    ("", [(1, "empty", "")]),
+    ("   ", [(1, "empty", "")]),
+    (" \n\t\n", [(1, "empty", "")]),
+    (" a\n", []),
+])
+def test_empty_or_whitespace_text_is_flagged(text, expected):
     assert served_text_hits(text) == expected
