@@ -103,6 +103,14 @@ jobs:
         if: ${{ !cancelled() }}
         run: pytest -q tests/blocks/test_rail_ac4_band_mode.py
 
+      - name: Served-text scan over block registry (ST-7d)
+        # Runs the #16 detector over every block's served text. Red by design
+        # until the owner rules on the 67 real hits; no baseline, no allowlist.
+        # tests/test_served_text_blocks.py fails if this step is renamed,
+        # dropped, made continue-on-error, or loses its !cancelled() guard.
+        if: ${{ !cancelled() }}
+        run: pytest -q tests/test_served_text_blocks.py tests/test_served_text_detector.py
+
       - name: Run typed-block tests
         if: ${{ !cancelled() }}
         run: pytest -q tests/test_typed_block.py

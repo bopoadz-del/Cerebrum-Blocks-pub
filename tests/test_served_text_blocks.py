@@ -140,3 +140,19 @@ def test_real_registry_is_discovered():
 def test_real_served_text_is_provider_neutral_and_placeholder_free():
     # No baseline, no allowlist: real hits are reported, not hidden.
     assert served_text_findings(_REGISTRY_ROOT, _REGISTRY_ROOT.parent) == []
+
+
+# ---- CI pin (G6 H2): this file must run in a blocking Backend step ----
+CI_STEP = "Served-text scan over block registry (ST-7d)"
+CI_FILES = {"tests/test_served_text_blocks.py", "tests/test_served_text_detector.py"}
+
+
+def test_ci_backend_runs_served_text_scan_in_blocking_step():
+    import yaml
+
+    from tests.test_ci_named_followup_steps import WORKFLOW, blocking_named_steps
+
+    steps = blocking_named_steps(yaml.safe_load(WORKFLOW.read_text(encoding="utf-8")), "backend")
+    assert CI_STEP in steps, f"no blocking, run-after-failure Backend step named {CI_STEP!r}"
+    missing = CI_FILES - steps[CI_STEP]
+    assert not missing, f"step {CI_STEP!r} does not run {sorted(missing)}"
