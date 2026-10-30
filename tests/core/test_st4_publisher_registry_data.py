@@ -176,3 +176,24 @@ def test_publisher_record_revocation_matrix(case, tier, revoked_at, revoked, tmp
     path = tmp_path / "publishers.json"
     path.write_text(json.dumps({"version": 1, "publishers": [rec.to_dict()]}))
     assert PublisherRegistry(path).is_trusted("x") is (not revoked), case
+
+
+@pytest.mark.parametrize(
+    "case,refused,accepted",
+    [
+        ("R2", dict(tier="revoked", revoked_at=None), dict(tier="certified", revoked_at=None)),
+        ("R9", dict(tier="certified", revoked_at=""), dict(tier="certified", revoked_at=None)),
+        ("R10", dict(tier="certified", revoked_at="2999-01-01T00:00:00+00:00"),
+         dict(tier="certified", revoked_at=None)),
+    ],
+)
+def test_revocation_pairs_give_different_results(case, refused, accepted, tmp_path):
+    results = []
+    for i, kw in enumerate((refused, accepted)):
+        path = tmp_path / f"p{i}.json"
+        rec = PublisherRecord(**_BASE, **kw)
+        path.write_text(json.dumps({"version": 1, "publishers": [rec.to_dict()]}))
+        results.append((rec.is_revoked, PublisherRegistry(path).is_trusted("x")))
+    assert results[0] == (True, False), (case, "refused input", results[0])
+    assert results[1] == (False, True), (case, "accepted input", results[1])
+    assert results[0] != results[1], case
