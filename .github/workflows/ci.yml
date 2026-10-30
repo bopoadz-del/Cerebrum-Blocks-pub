@@ -99,6 +99,10 @@ jobs:
           pytest -q tests/test_ci_named_followup_steps.py
           pytest -q tests/test_no_dangling_data_refs.py tests/test_st7_restored_data.py tests/core/test_domain_pack_loader_st7.py
 
+      - name: Rail AC4 qualifier band (kit_engine)
+        if: ${{ !cancelled() }}
+        run: pytest -q tests/blocks/test_rail_ac4_band_mode.py
+
       - name: Run typed-block tests
         if: ${{ !cancelled() }}
         run: pytest -q tests/test_typed_block.py

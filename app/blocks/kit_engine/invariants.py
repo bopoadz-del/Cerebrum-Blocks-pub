@@ -347,7 +347,19 @@ def parse_invariant(raw: Any, classes: Dict[str, Tuple[str, ...]], where: str) -
         )
     if kind == "currency" and not inv.window.get("provider"):
         raise InvariantError(f"{where}: {inv_id} must name a state provider in window")
-    if kind == "band" and inv.band.get("min") is None and inv.band.get("max") is None:
+    if kind == "band" and _qualifier_band(inv.band):
+        named = [inv.band.get(k) for k in QUALIFIER_BAND_KEYS]
+        if not all(isinstance(n, str) and n.strip() for n in named):
+            raise InvariantError(
+                f"{where}: {inv_id} is a qualifier band and must name all of "
+                f"{', '.join(QUALIFIER_BAND_KEYS)} as qualifier fields"
+            )
+        if inv.band.get("min") is not None or inv.band.get("max") is not None:
+            raise InvariantError(
+                f"{where}: {inv_id} mixes a fixed min/max with a qualifier band; a "
+                f"figure's band comes from its own qualifiers or from the kit, not both"
+            )
+    elif kind == "band" and inv.band.get("min") is None and inv.band.get("max") is None:
         raise InvariantError(f"{where}: {inv_id} declares no band min or max")
     if kind == "authority" and not inv.governing:
         raise InvariantError(f"{where}: {inv_id} must name the governing source class(es)")
@@ -915,6 +927,50 @@ def eval_derivation(
 
 # --------------------------------------------------------------------- band --
 
+#: A QUALIFIER band: the allowed range is not one fixed pair per kit but comes
+#: from the figure's OWN qualifiers (``min_from`` / ``max_from``), and the value
+#: checked against it is the ``subject`` field the question is about (read from
+#: ``figure.asked_about``, else ``figure.qualifiers``). Bounds are inclusive. A
+#: missing or non-numeric bound or subject is a refusal, never a pass.
+QUALIFIER_BAND_KEYS = ("min_from", "max_from", "subject")
+
+
+def _qualifier_band(band: Dict[str, Any]) -> bool:
+    return any(k in (band or {}) for k in QUALIFIER_BAND_KEYS)
+
+
+def eval_qualifier_band(inv: Invariant, figure: Figure) -> Optional[Finding]:
+    low_name, high_name, subject = (str(inv.band[k]) for k in QUALIFIER_BAND_KEYS)
+    raw = {
+        low_name: figure.qualifiers.get(low_name),
+        high_name: figure.qualifiers.get(high_name),
+        subject: figure.asked_about.get(subject, figure.qualifiers.get(subject)),
+    }
+    numbers = {name: _as_number(value) for name, value in raw.items()}
+    missing = [name for name, number in numbers.items() if number is None]
+    if missing:
+        return _finding(
+            inv, figure,
+            f"{figure.quantity} band cannot be checked without a numeric "
+            f"{', '.join(missing)} — an unchecked band is not a pass", missing,
+        )
+    low, high, at = numbers[low_name], numbers[high_name], numbers[subject]
+    if low > high:
+        return _finding(
+            inv, figure,
+            f"{figure.quantity} band is inverted: {low_name} {raw[low_name]} is above "
+            f"{high_name} {raw[high_name]}", [low_name, high_name],
+        )
+    if at < low or at > high:
+        return _finding(
+            inv, figure,
+            f"{subject} {raw[subject]} is outside this {figure.quantity}'s own band "
+            f"{raw[low_name]}-{raw[high_name]}; the figure does not apply there",
+            [subject],
+        )
+    return None
+
+
 def eval_band(inv: Invariant, figure: Figure, manifest: Manifest) -> Optional[Finding]:
     """Two meanings, both declared in the manifest and both real.
 
@@ -927,6 +983,8 @@ def eval_band(inv: Invariant, figure: Figure, manifest: Manifest) -> Optional[Fi
     not a conservative answer, it is an unusable one -- and ``same_source`` means
     both bounds come from ONE analysis, not one from each.
     """
+    if _qualifier_band(inv.band):
+        return eval_qualifier_band(inv, figure)
     low, high = inv.band.get("min"), inv.band.get("max")
 
     if str(low) == "present" or str(high) == "present":
