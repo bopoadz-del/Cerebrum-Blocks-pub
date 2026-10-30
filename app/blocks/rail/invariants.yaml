@@ -1,11 +1,12 @@
 # Railway & Metro Construction — invariant records for the shared kit_engine.
 #
-# Migrated from the five hand-enforced invariants in reasoning.py (INV-1..5),
+# Migrated from the five hand-enforced invariants in the former reasoning.py (INV-1..5),
 # the derivation guard's two carry checks, the two-source live-state gate, the
 # evidence standard (REJECT_AS_PROOF) and the per-quantity staleness branches.
-# The four derivation-guard entries that were host-side pattern checks in
-# reasoning.py are declared here as INV-RAIL-DERIVATION-GUARD, matched against
-# manifest.yaml derivation_patterns by the shared evaluator.
+# The four derivation-guard entries that were host-side pattern checks in the
+# former reasoning.py (deleted in K-S5) are declared here as
+# INV-RAIL-DERIVATION-GUARD, matched against manifest.yaml derivation_patterns
+# by the shared evaluator.
 #
 # Severity: `refuse` throughout for the five ACs the old gate enforced — this
 # is track safety, not a commercial estimate. The three `band` invariants are
@@ -99,7 +100,7 @@ invariants:
       per-figure dynamic range (the band varies per TBM schedule), which this
       engine's `band` kind cannot express — a `band` invariant's min/max is
       fixed per kit, not per figure. That half of INV-5 stays a host-side
-      range check in app/blocks/rail_reasoning.py; see the migration report."
+      range check in the former hand-written rail gate (deleted in K-S5); see the migration report."
 
   # ---- carry checks: category and asset (two of the six never-allowed --------
   # ---- inferences; the other four have no declarative home — see report) ----

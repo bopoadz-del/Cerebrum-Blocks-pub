@@ -1,1 +1,1 @@
-"""Oil & gas operations reasoning layer (see reasoning.py)."""
+"""Oil & gas operations reasoning layer (see manifest.yaml + invariants.yaml)."""

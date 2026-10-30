@@ -9,7 +9,7 @@
 # Systems. NO INTERVIEW HAS RUN. Every `value` below is null on purpose and
 # stays null until the interview fills it; see KNOWN_GAPS.md.
 #
-# A null value is legal. A MISSING QUALIFIER IS NOT: FireProtectionBasis
+# A null value is legal. A MISSING QUALIFIER IS NOT: the hand-written FireProtectionBasis (deleted in K-S5)
 # refuses any figure that does not carry every key in MANDATORY_QUALIFIERS, at
 # load time, naming the figure and the keys it lacks. A half-qualified figure
 # is how an unclassified density table ends up answering a classified

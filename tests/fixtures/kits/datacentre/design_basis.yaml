@@ -1,0 +1,67 @@
+# Data centre reasoning layer — facility design basis.
+# Source of truth: the completed domain encoding sheet for facility_01.
+# Every value carries unit + source + scope. Nothing here is invented;
+# gaps live in KNOWN_GAPS.md, not in this file.
+facility: facility_01
+source: "domain encoding sheet, facility_01"
+scope: "facility-specific — never carry to another site"
+design_basis:
+  it_load_design_mw:
+    value: 0.7
+    unit: MW
+  it_load_day_one_mw:
+    value: 0.175
+    unit: MW
+  rack_density_avg_kw:
+    value: 4
+    unit: kW/rack
+  total_facility_load_kw:
+    value: 980
+    unit: kW
+  pue_design:
+    value: 1.4
+    unit: null
+  pue_guaranteed:
+    value: null
+    unit: null
+  electrical_redundancy:
+    value: "N+1"
+    unit: null
+  mechanical_redundancy:
+    value: "N+1"
+    unit: null
+  ups_autonomy_min_at_full_load:
+    value: 30
+    unit: minutes
+  generator_fuel_autonomy_hours:
+    value: 120
+    unit: hours
+  supply_air_setpoint_c:
+    value: 22
+    unit: "degC"
+  supply_air_range_c:
+    value: [18, 27]
+    unit: "degC"
+  humidity_range_pct:
+    value: [40, 60]
+    unit: "% RH"
+  space_temp_limit_during_failure_c:
+    value: 28
+    unit: "degC"
+  concurrent_maintainability:
+    value: "not claimed"
+    unit: null
+  fault_tolerance:
+    value: "not claimed"
+    unit: null
+  transfer_sequence:
+    value:
+      - "UPS supports IT load immediately"
+      - "generator available at 10 seconds"
+      - "transfer complete at 12 seconds"
+    unit: null
+  known_shared_components_breaking_redundancy:
+    value:
+      - "single fuel line"
+      - "single BMS control panel"
+    unit: null

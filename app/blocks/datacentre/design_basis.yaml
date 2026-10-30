@@ -1,67 +1,66 @@
-# Data centre reasoning layer — facility design basis.
-# Source of truth: the completed domain encoding sheet for facility_01.
-# Every value carries unit + source + scope. Nothing here is invented;
-# gaps live in KNOWN_GAPS.md, not in this file.
-facility: facility_01
-source: "domain encoding sheet, facility_01"
-scope: "facility-specific — never carry to another site"
+# Data centre reasoning layer -- figure register (platform kit: NULL).
+#
+# The platform kit ships no facility's figures. Every value is null and stays
+# null until a facility's own interview fills it; the figure names and units
+# are the kit's vocabulary, not a facility's data. A filled register for one
+# facility is a test fixture (tests/fixtures/kits/datacentre/design_basis.yaml),
+# never platform content (ORDERS_29OCT_1750Z K-S5).
+facility: null
+source: null
+scope: "facility-specific -- never carry a figure to another site"
+interview_status: "not run -- every value is null (KNOWN_GAPS.md)"
 design_basis:
   it_load_design_mw:
-    value: 0.7
+    value: null
     unit: MW
   it_load_day_one_mw:
-    value: 0.175
+    value: null
     unit: MW
   rack_density_avg_kw:
-    value: 4
+    value: null
     unit: kW/rack
   total_facility_load_kw:
-    value: 980
+    value: null
     unit: kW
   pue_design:
-    value: 1.4
+    value: null
     unit: null
   pue_guaranteed:
     value: null
     unit: null
   electrical_redundancy:
-    value: "N+1"
+    value: null
     unit: null
   mechanical_redundancy:
-    value: "N+1"
+    value: null
     unit: null
   ups_autonomy_min_at_full_load:
-    value: 30
+    value: null
     unit: minutes
   generator_fuel_autonomy_hours:
-    value: 120
+    value: null
     unit: hours
   supply_air_setpoint_c:
-    value: 22
-    unit: "degC"
+    value: null
+    unit: degC
   supply_air_range_c:
-    value: [18, 27]
-    unit: "degC"
+    value: null
+    unit: degC
   humidity_range_pct:
-    value: [40, 60]
-    unit: "% RH"
+    value: null
+    unit: '% RH'
   space_temp_limit_during_failure_c:
-    value: 28
-    unit: "degC"
+    value: null
+    unit: degC
   concurrent_maintainability:
-    value: "not claimed"
+    value: null
     unit: null
   fault_tolerance:
-    value: "not claimed"
+    value: null
     unit: null
   transfer_sequence:
-    value:
-      - "UPS supports IT load immediately"
-      - "generator available at 10 seconds"
-      - "transfer complete at 12 seconds"
+    value: null
     unit: null
   known_shared_components_breaking_redundancy:
-    value:
-      - "single fuel line"
-      - "single BMS control panel"
+    value: null
     unit: null

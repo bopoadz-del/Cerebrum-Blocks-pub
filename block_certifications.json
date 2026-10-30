@@ -1243,39 +1243,6 @@
       "include_in_ci": true
     },
     {
-      "block": "offshore_marine_reasoning",
-      "module": "app.blocks.offshore_marine_reasoning",
-      "class": "OffshoreMarineReasoningBlock",
-      "method": "process",
-      "tests": [
-        "tests/blocks/test_offshore_marine_reasoning.py"
-      ],
-      "fixture": "app/blocks/offshore_marine/manifest.yaml - a real qualified manifest on disk, loaded by process() via InstallationBasis. The loader refuses a partially-qualified figure at load time and the test asserts the refusal names the figure and every missing qualifier; the gate's ten never-allowed derivations are each driven through process()'s reasoning path and asserted to name which inference was attempted.",
-      "include_in_ci": true
-    },
-    {
-      "block": "og_operations_reasoning",
-      "module": "app.blocks.og_operations_reasoning",
-      "class": "OgOperationsReasoningBlock",
-      "method": "process",
-      "tests": [
-        "tests/blocks/test_og_operations_reasoning.py"
-      ],
-      "fixture": "app/blocks/og_operations/manifest.yaml - a real qualified operating-basis manifest on disk, loaded by process() via OperatingBasis. The loader refuses a partially-qualified figure at load time and the test asserts the refusal names the figure and every missing qualifier; the five never-allowed derivations (including the cross-facility limit carry, checked by distinct-facility tokens plus a carry verb rather than a mention-counting regex) are each driven through process() and asserted to name which inference was attempted.",
-      "include_in_ci": true
-    },
-    {
-      "block": "water_treatment_reasoning",
-      "module": "app.blocks.water_treatment_reasoning",
-      "class": "WaterTreatmentReasoningBlock",
-      "method": "process",
-      "tests": [
-        "tests/blocks/test_water_treatment_reasoning.py"
-      ],
-      "fixture": "app/blocks/water_treatment/manifest.yaml - a real qualified manifest on disk (9 figures), loaded by process() via TreatmentBasis. The loader refuses a partially-qualified figure at load time and a test asserts the refusal names the figure and every missing qualifier; the never-allowed derivations (CT table interpolation, nameplate hypochlorite strength, design-document compliance, similar-plant carry, theoretical detention where T10 is required) are each driven through process() and asserted to name which inference was attempted.",
-      "include_in_ci": true
-    },
-    {
       "block": "aesthetic_kit",
       "module": "app.blocks.aesthetic_kit",
       "class": "AestheticKitBlock",
