@@ -151,3 +151,22 @@ def test_each_kit_declares_its_qualifiers_and_refuses_a_figure_missing_one(tmp_p
     (d / "design_basis.yaml").write_text(yaml.safe_dump(raw), encoding="utf-8")
     got = _load(d)
     assert got.startswith("refused:") and first in got and dropped in got, got
+
+
+@pytest.mark.parametrize("falsy", ["''", "{}", "false", "0"])
+def test_a_falsy_non_list_declaration_is_refused_not_read_as_none(tmp_path, falsy):  # S3
+    """A falsy declaration ('', {}, false, 0) is malformed, not 'nothing
+    declared': only an absent or null key means no qualifiers. Reading a
+    falsy value as none would silently drop the kit's qualifier check."""
+    d = _kit_dir(tmp_path, f"mandatory_qualifiers: {falsy}\n", HALF)
+    declared = _declared(d)
+    assert declared.startswith("refused:") and "mandatory_qualifiers" in declared, declared
+    loaded = _load(d)
+    assert loaded.startswith("refused:") and "mandatory_qualifiers" in loaded, loaded
+
+
+@pytest.mark.parametrize("absent", ["", "mandatory_qualifiers: null\n", "mandatory_qualifiers:\n"])
+def test_an_absent_or_null_declaration_still_declares_nothing(tmp_path, absent):    # S3 contrast
+    d = _kit_dir(tmp_path, "name: kx\n" + absent, HALF)
+    assert _declared(d) == "ok:"
+    assert _load(d) == "loaded:1"
