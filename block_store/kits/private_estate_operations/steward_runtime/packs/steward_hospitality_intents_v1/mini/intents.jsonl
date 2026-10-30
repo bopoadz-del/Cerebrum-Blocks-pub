@@ -1,0 +1,4 @@
+{"intent": "request_late_checkout", "utterance": "Synthetic test guest: could I keep the room until 2pm?", "language": "en"}
+{"intent": "request_extra_towels", "utterance": "Synthetic test guest: please send two more towels.", "language": "en"}
+{"intent": "ask_breakfast_hours", "utterance": "Synthetic test guest: what time is breakfast served?", "language": "en"}
+{"intent": "report_room_issue", "utterance": "Synthetic test guest: the room light is not working.", "language": "en"}

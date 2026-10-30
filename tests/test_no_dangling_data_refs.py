@@ -42,18 +42,6 @@ RUNTIME_GENERATED = (
 # shrink as gaps close. It exists so a known hole is stated, not hidden.
 OPEN_GAPS: Tuple[Tuple[str, str], ...] = (
     (
-        "block_store/kits/private_estate_operations/steward_runtime/packs/steward_hospitality_intents_v1/mini/intents.jsonl",
-        "never committed: absent from every commit of the pre-snapshot mirror (691fb177bd80); needs recovery from the owner's source or re-authoring (ST-7 ruling 1)",
-    ),
-    (
-        "block_store/kits/private_estate_operations/steward_runtime/packs/steward_facilities_open_v1/mini/assets.jsonl",
-        "never committed: absent from every commit of the pre-snapshot mirror (691fb177bd80); needs recovery from the owner's source or re-authoring (ST-7 ruling 1)",
-    ),
-    (
-        "block_store/kits/private_estate_operations/steward_runtime/packs/steward_fleet_open_v1/mini/vehicles.jsonl",
-        "never committed: absent from every commit of the pre-snapshot mirror (691fb177bd80); needs recovery from the owner's source or re-authoring (ST-7 ruling 1)",
-    ),
-    (
         "data/publishers.json",
         "platform publisher registry: held for ST-4 key rotation under the key-gap ruling; not shipped in ST-7",
     ),
