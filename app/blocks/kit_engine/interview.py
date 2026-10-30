@@ -249,6 +249,24 @@ class DesignBasis:
         }
 
 
+def mandatory_qualifiers(directory: pathlib.Path) -> Tuple[str, ...]:
+    """The keys every figure in the kit's register must carry, declared by the
+    kit's ``manifest.yaml`` under ``mandatory_qualifiers``. None declared: ()."""
+    path = pathlib.Path(directory) / "manifest.yaml"
+    if not path.is_file():
+        return ()
+    try:
+        raw = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    except (OSError, yaml.YAMLError) as exc:
+        raise InterviewError(f"{path}: unreadable: {exc}") from exc
+    declared = raw.get("mandatory_qualifiers") if isinstance(raw, dict) else None
+    if declared is None:
+        return ()
+    if not isinstance(declared, list) or not all(isinstance(k, str) and k for k in declared):
+        raise InterviewError(f"{path}: mandatory_qualifiers must be a list of field names")
+    return tuple(declared)
+
+
 def load_design_basis(directory: pathlib.Path) -> Optional[DesignBasis]:
     """The kit's own figure register, or None when it has no ``design_basis.yaml``."""
     directory = pathlib.Path(directory)
@@ -274,6 +292,21 @@ def load_design_basis(directory: pathlib.Path) -> Optional[DesignBasis]:
     figures = raw.get(block)
     if not isinstance(figures, dict):
         raise InterviewError(f"{path}: {block} must be a mapping of figure to spec")
+    required = mandatory_qualifiers(directory)
+    for name, entry in figures.items():
+        # A null VALUE is legal -- the interview has not run. A missing QUALIFIER
+        # is not: a half-qualified figure is how a figure taken under one
+        # condition answers a question about another.
+        if not isinstance(entry, dict):
+            if required:
+                raise InterviewError(
+                    f"{path}: figure '{name}' is not a mapping carrying "
+                    f"{', '.join(required)}")
+            continue
+        missing = [key for key in required if key not in entry]
+        if missing:
+            raise InterviewError(
+                f"{path}: figure '{name}' is half-qualified — missing {', '.join(missing)}")
     return DesignBasis(
         kit_dir=directory.name,
         block=block,

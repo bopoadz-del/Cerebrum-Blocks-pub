@@ -4,8 +4,8 @@
 # NO INTERVIEW HAS RUN. Every `value` below is null on purpose and stays null
 # until the interview fills it; see KNOWN_GAPS.md.
 #
-# A null value is legal. A MISSING QUALIFIER IS NOT: TrackBasis (reasoning.py)
-# refuses any figure that does not carry every key in MANDATORY_QUALIFIERS, at
+# A null value is legal. A MISSING QUALIFIER IS NOT: TrackBasis (reasoning.py) and kit_engine.load_design_basis (manifest.yaml mandatory_qualifiers)
+# refuse any figure that does not carry every key in MANDATORY_QUALIFIERS, at
 # load time, naming the figure and the keys it lacks. A half-qualified figure
 # is how a maintenance-tier limit ends up answering a safety-tier question.
 #
