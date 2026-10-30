@@ -503,6 +503,9 @@ def test_root_gitignore_on_concrete_runtime_and_source_paths(path, ignored):
         ("def f():\n    pack_id = 'alpha'\n    import os as pack_id\n", {}),
         ("def f():\n    pack_id = 'alpha'\n    from os import sep as pack_id\n", {}),
         ("def f():\n    global pack_id\n    pack_id = 'alpha'\n", {}),
+        ("def f():\n    pack_id = 'alpha'\n    def g():\n        nonlocal pack_id\n", {}),
+        ("def f():\n    pack_id = 'alpha'\n    import pack_id.sub\n", {}),
+        ("def f():\n    pack_id = 'alpha'\n    import other.pack_id\n", {"pack_id": ["alpha"]}),
     ],
 )
 def test_local_consts_constant_vs_rebound(src, expected):

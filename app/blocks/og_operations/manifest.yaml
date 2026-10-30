@@ -99,3 +99,7 @@ scope_refusals:
     authority: "inspection authority"
   - pattern: "is this vessel fit for service"
     authority: "integrity engineer"
+
+# Every figure in design_basis.yaml carries these keys (a null value is
+# legal, a missing key is not); kit_engine.load_design_basis refuses otherwise.
+mandatory_qualifiers: ["value", "unit", "asset", "tag", "pressure_kind", "gauge_or_absolute", "envelope_tier", "override_register_ref", "isolation_register_ref", "P&ID_rev", "MOC_ref", "source", "date"]

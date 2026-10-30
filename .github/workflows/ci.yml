@@ -91,6 +91,14 @@ jobs:
         if: ${{ !cancelled() }}
         run: pytest -q tests/test_deploy_aws_oidc.py
 
+      - name: ST-7 restored-data gates (ST-7)
+        # tests/test_ci_named_followup_steps.py fails if this step is
+        # renamed, dropped, made continue-on-error, or loses its !cancelled() guard.
+        if: ${{ !cancelled() }}
+        run: |
+          pytest -q tests/test_ci_named_followup_steps.py
+          pytest -q tests/test_no_dangling_data_refs.py tests/test_st7_restored_data.py tests/core/test_domain_pack_loader_st7.py
+
       - name: Run typed-block tests
         if: ${{ !cancelled() }}
         run: pytest -q tests/test_typed_block.py

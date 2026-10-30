@@ -193,3 +193,16 @@ scope_refusals:
   - label: enter the four-foot
     pattern: "can\\s+we\\s+go\\s+into\\s+the\\s+four[-\\s]?foot"
     authority: "the engineering supervisor, COSS/IWA or possession manager, under the safe system of work (SSOW)"
+
+# Every figure in design_basis.yaml carries these keys (a null value is
+# legal, a missing key is not); kit_engine.load_design_basis refuses otherwise.
+mandatory_qualifiers: ["value", "unit", "route", "line", "category", "tier", "SFT_verified_date", "method", "disturbed_since", "envelope_type", "line_speed", "source", "revision", "date"]
+
+# Never-allowed inferences the kit can see in the statement text. The
+# provenance record INV-RAIL-DERIVATION-GUARD forbids them by name; the shared
+# evaluator matches these patterns (kit_engine: manifest derivation_patterns).
+derivation_patterns:
+  sft_from_installation_temperature: "(?=.*(?:\\bSFT\\b|stress[-\\s]?free\\s+temperature))(?=.*installation\\s+temperature)(?=.*(?:infer|derive|calculate|assume|equals?|based\\s+on|from\\s+the))"
+  scale_clearance_off_drawing: "(?=.*clearance)(?=.*(?:scale|scaled|scaling))(?=.*drawing)"
+  carry_face_pressure_from_similar_drive: "(?=.*face\\s+pressure)(?=.*similar\\s+drive)(?=.*(?:apply|use|same|carry|equivalent))"
+  twist_without_base_length: "(?=.*\\btwist\\b)(?=.*\\bwithout\\b)(?=.*\\bbase\\s+length\\b)"
