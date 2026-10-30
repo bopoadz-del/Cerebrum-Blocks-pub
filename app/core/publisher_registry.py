@@ -98,6 +98,21 @@ class PublisherRecord:
     created_at: str = field(default_factory=_now_iso)
     revoked_at: Optional[str] = None
 
+    @property
+    def is_revoked(self) -> bool:
+        """True when the record is revoked by tier OR carries a revocation stamp.
+
+        ``revoke()`` sets both fields together; a record whose ``revoked_at``
+        is set is refused even if its tier was later hand-edited, so the
+        stamp can never be silently ignored (fail closed).
+        """
+        return self.tier == "revoked" or self.revoked_at is not None
+
+    @property
+    def effective_tier(self) -> str:
+        """The tier enforcement must use: ``revoked`` whenever revoked."""
+        return "revoked" if self.is_revoked else self.tier
+
     def to_dict(self) -> Dict[str, Any]:
         """Serialize to a JSON-friendly dict."""
         return asdict(self)
@@ -220,7 +235,7 @@ class PublisherRegistry:
         record = self.get(publisher_id)
         if record is None:
             return False
-        return record.tier != "revoked"
+        return not record.is_revoked
 
 
 class BlockSigner:
@@ -385,7 +400,7 @@ class BlockVerifier:
                 "publisher_id": publisher_id,
                 "reason": f"unknown publisher: {publisher_id}",
             }
-        if record.tier == "revoked":
+        if record.is_revoked:
             return {
                 "verified": False,
                 "publisher_id": publisher_id,
