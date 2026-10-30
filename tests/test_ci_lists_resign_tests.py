@@ -227,3 +227,102 @@ def test_resign_helpers_two_inputs_two_results():
     assert (key_rm_step(good) < push_step(good), key_rm_step(bad) < push_step(bad)) == (True, False)
     assert (sign_step(good) < key_rm_step(good), sign_step(bad) < key_rm_step(bad)) == (True, True)
     assert key_path_step([{"run": 'echo "KEY_FILE=$RUNNER_TEMP/k.pem" >> "$GITHUB_OUTPUT"'}]) == -1
+
+
+# --- ST-6d: actionlint.yml install is checksum-pinned and shellcheck stays on ---
+# (a) no step's run/args disables an integration (-shellcheck= / -pyflakes=);
+# (b) a run step pipes a pinned 64-hex sha256 into `sha256sum -c`, and that
+#     value is the published checksum of the pinned release asset;
+# (c) the file curl downloads is the file sha256sum checks and tar extracts,
+#     and the lint step runs that extracted binary. No curl|bash.
+
+ACTIONLINT = REPO / ".github" / "workflows" / "actionlint.yml"
+
+# From each release's actionlint_<v>_checksums.txt (linux_amd64 tarball).
+# Bumping the version means adding its published checksum here.
+ACTIONLINT_RELEASE_SHA256 = {
+    "1.7.12": "8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8",
+}
+
+_HEX64 = re.compile(r"[0-9a-f]{64}")
+
+
+def _expand(text: str, env: dict) -> str:
+    return re.sub(r"\$\{?(\w+)\}?", lambda m: str(env.get(m.group(1), m.group(0))), text)
+
+
+def disabled_integrations(steps: list[dict]) -> list[str]:
+    hits = []
+    for step in steps:
+        texts = [step.get("run")] + [v for v in (step.get("with") or {}).values()]
+        for t in texts:
+            if isinstance(t, str):
+                hits += re.findall(r"-(?:shellcheck|pyflakes)=", t)
+    return hits
+
+
+def checksum_install(steps: list[dict]) -> dict | None:
+    """Facts of the step that downloads, verifies and extracts actionlint, or None."""
+    for step in steps:
+        env = {k: str(v) for k, v in (step.get("env") or {}).items()}
+        lines = _run_lines(step)
+        local = {}
+        for ln in lines:
+            m = re.fullmatch(r"""(\w+)=["']?([^"'\s]+)["']?""", ln)
+            if m:
+                local[m.group(1)] = _expand(m.group(2), env)
+        scope = {**env, **local}
+        joined = _expand(" ".join(lines).replace("\\ ", " "), scope)
+        check = re.search(r"""echo\s+["']?(\S+)\s+(\S+?)["']?\s*\|\s*sha256sum\s+-c(?:\s+-)?(?:\s|$)""", joined)
+        if not check:
+            continue
+        dl = re.search(r"""curl\s[^|]*?-o\s+["']?(\S+?)["']?\s+["']?(https://\S+?)["']?(?:\s|$)""", joined)
+        tar = re.search(r"""tar\s+-x\w*\s+["']?(\S+?)["']?\s""", joined)
+        return {"sha": check.group(1), "checked": check.group(2),
+                "downloaded": dl.group(1) if dl else None, "url": dl.group(2) if dl else "",
+                "extracted": tar.group(1) if tar else None,
+                "version": env.get("ACTIONLINT_VERSION", ""), "joined": joined}
+    return None
+
+
+def _actionlint_steps() -> list[dict]:
+    return _steps(yaml.safe_load(ACTIONLINT.read_text(encoding="utf-8")), "actionlint")
+
+
+def test_actionlint_integrations_not_disabled():
+    assert disabled_integrations(_actionlint_steps()) == []
+
+
+def test_actionlint_no_pipe_to_shell():
+    for step in _actionlint_steps():
+        run = step.get("run") or ""
+        assert not re.search(r"\|\s*(ba)?sh\b|(ba)?sh\s+<\(", run), f"pipe-to-shell in: {run!r}"
+
+
+def test_actionlint_install_checksum_pinned_to_release():
+    facts = checksum_install(_actionlint_steps())
+    assert facts is not None, "no run step pipes a pinned sha256 into `sha256sum -c`"
+    assert _HEX64.fullmatch(facts["sha"]), f"not a 64-hex sha256: {facts['sha']!r}"
+    assert facts["version"] in ACTIONLINT_RELEASE_SHA256, f"unknown pinned version {facts['version']!r}"
+    assert facts["sha"] == ACTIONLINT_RELEASE_SHA256[facts["version"]]
+    assert f"/v{facts['version']}/actionlint_{facts['version']}_linux_amd64.tar.gz" in facts["url"]
+
+
+def test_actionlint_checked_file_is_the_downloaded_and_run_binary():
+    steps = _actionlint_steps()
+    facts = checksum_install(steps)
+    assert facts is not None, "no checksum step"
+    assert facts["downloaded"] and facts["downloaded"] == facts["checked"] == facts["extracted"], facts
+    lint = [s for s in steps if "actionlint" in (s.get("run") or "") and "curl" not in (s.get("run") or "")]
+    assert lint and all('"$RUNNER_TEMP/actionlint"' in s["run"] for s in lint), "lint must run the extracted binary"
+
+
+def test_actionlint_helpers_two_inputs_two_results():
+    good = {"env": {"V": "1"}, "run": 'f="a.tgz"\ncurl -sSfL -o "$RUNNER_TEMP/$f" \\\n  "https://x/v$V/$f"\n'
+            'echo "' + "a" * 64 + '  $RUNNER_TEMP/$f" | sha256sum -c -\ntar -xzf "$RUNNER_TEMP/$f" -C d actionlint'}
+    nocheck = {"run": good["run"].replace("sha256sum -c -", "sha256sum -")}
+    assert checksum_install([good])["sha"] == "a" * 64 and checksum_install([nocheck]) is None
+    assert checksum_install([good])["checked"] == checksum_install([good])["downloaded"]
+    assert (disabled_integrations([{"run": "actionlint -shellcheck="}]),
+            disabled_integrations([{"run": "actionlint"}])) == (["-shellcheck="], [])
+    assert disabled_integrations([{"uses": "x", "with": {"args": "-pyflakes="}}]) == ["-pyflakes="]
