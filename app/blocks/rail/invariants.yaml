@@ -98,9 +98,22 @@ invariants:
       runs. Before: quoted as a schedule. After: 20 refusals naming INV-5.
       NOTE: whether an asked chainage falls INSIDE a supplied band is a
       per-figure dynamic range (the band varies per TBM schedule), which this
-      engine's `band` kind cannot express — a `band` invariant's min/max is
-      fixed per kit, not per figure. That half of INV-5 stays a host-side
-      range check in the former hand-written rail gate (deleted in K-S5); see the migration report."
+      engine's fixed `band` cannot express; it is INV-RAIL-5-AC4-CHAINAGE-BAND
+      below, a qualifier band."
+
+  # ---- INV-5 / AC4 (range half): the asked chainage inside the schedule's ---
+  # ---- own band -----------------------------------------------------------
+  - id: INV-RAIL-5-AC4-CHAINAGE-BAND
+    kind: band
+    applies_to: {quantity: face_pressure}
+    band: {min_from: chainage_min_m, max_from: chainage_max_m, subject: chainage_m}
+    severity: refuse
+    message: "AC4: a face pressure applies only inside its own schedule's
+      chainage band. A schedule for one band is not a schedule for the next."
+    measurement: "Synthetic schedule band 100-200 m (tests/blocks/
+      test_rail_ac4_band_mode.py): asked at 250 m refused naming chainage_m;
+      asked at 150 m and at both inclusive ends passes; schedule with no band
+      refused naming the missing bound."
 
   # ---- carry checks: category and asset (two of the six never-allowed --------
   # ---- inferences; the other four have no declarative home — see report) ----

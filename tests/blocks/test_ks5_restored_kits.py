@@ -79,6 +79,13 @@ def _pair(kit, inv, now):
     if k == "currency":
         return Figure(**base), Figure(**base), {}, fresh
     if k == "band":
+        if inv.band.get("min_from"):
+            # A QUALIFIER band: the range comes from the figure's own qualifiers,
+            # the checked value from the subject it is asked about.
+            lo_f, hi_f, at_f = (inv.band[x] for x in ("min_from", "max_from", "subject"))
+            quals = dict(good_q, **{lo_f: 1, hi_f: 2})
+            return (Figure(**base, qualifiers=quals, asked_about={at_f: 3}),
+                    Figure(**base, qualifiers=quals, asked_about={at_f: 1.5}), fresh, fresh)
         low, high = inv.band.get("min"), inv.band.get("max")
         if str(low) == "present" or str(high) == "present":
             ok = {"min": 1, "max": 2, "source_id_min": "s", "source_id_max": "s"}
