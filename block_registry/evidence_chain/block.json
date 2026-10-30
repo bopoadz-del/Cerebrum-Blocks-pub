@@ -7,7 +7,7 @@
     }
   ],
   "author": "Cerebrum Team",
-  "description": "Tamper-evident SHA-256 evidence chain ported from <private-repo> audit/service.py with the missing full-walk verifier added: record, verify (walks every link), get_latest. Chain store is in-process.",
+  "description": "Tamper-evident SHA-256 evidence chain: record, verify (walks every link), get_latest. Chain store is in-process.",
   "digests": {
     "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
     "block.json": "3ed8e34cc5f90bc1c09a7b2eeaecdc6353895a01de6afaf50fa2864254be868f",

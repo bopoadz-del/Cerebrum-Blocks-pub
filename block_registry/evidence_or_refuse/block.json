@@ -7,7 +7,7 @@
     }
   ],
   "author": "Cerebrum Team",
-  "description": "Evidence-or-refuse gate ported from <private-repo>'s refusal pattern: every claim in an answer must carry evidence; a claim with no evidence is refused, and the answer is allowed only when all claims are evidenced.",
+  "description": "Evidence-or-refuse gate: every claim in an answer must carry evidence; a claim with no evidence is refused, and the answer is allowed only when all claims are evidenced.",
   "digests": {
     "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
     "block.json": "a54e984c66e414b1628aa263cd113e683d49471eb8ab3f50e88caa69f042da3e",

@@ -12,7 +12,7 @@
     }
   ],
   "author": "Cerebrum Team",
-  "description": "Rule-based intent router ported from <private-repo> src/commands/chat.ts + learning.ts + db.ts nl_logs (real): deterministic $TICKER / uppercase-word extraction, ticker-only detection, the ordered regex intent ladder (help, portfolio, watchlist, simulate, metrics, mimic, alert, watchlist add/remove, news, score, search, default score), pending-flow / expired mimic checks, and the fallback path (web search first, then log + correction keyboard with the donor correct_intent callback data). Command handlers are not executed - route() returns the donor command strings. Company search and DuckDuckGo fallback are injected (wire search/web_search); unwired, the router logs the fallback and refuses to invent an answer. Intent log is in-process. NEVER the backtest.",
+  "description": "Rule-based intent router (real): deterministic $TICKER / uppercase-word extraction, ticker-only detection, the ordered regex intent ladder (help, portfolio, watchlist, simulate, metrics, mimic, alert, watchlist add/remove, news, score, search, default score), pending-flow / expired mimic checks, and the fallback path (web search first, then log + correction keyboard with the donor correct_intent callback data). Command handlers are not executed - route() returns the donor command strings. Company search and DuckDuckGo fallback are injected (wire search/web_search); unwired, the router logs the fallback and refuses to invent an answer. Intent log is in-process. NEVER the backtest.",
   "digests": {
     "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
     "block.json": "593e246b559d990d81026d8368a6b90e6d079c384862b41fa919bfd544ce0ed1",

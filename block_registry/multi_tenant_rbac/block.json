@@ -1,6 +1,6 @@
 {
   "acceptance": [],
-  "description": "Fail-closed multi-tenant RBAC (<private-repo> port): permission checks with tenant and project visibility. No DB \u2014 in-process role store.",
+  "description": "Fail-closed multi-tenant RBAC: permission checks with tenant and project visibility. No DB \u2014 in-process role store.",
   "digests": {
     "block.json": "b8059bdaabe2ea65c22fb3357868df4730f606eca0083e3e648a24b11e178869",
     "block.py": "9ff7dfeb0c6738073531507bf904ec2cb5456c075cd7aa1fd203e9a75aa18d3d"

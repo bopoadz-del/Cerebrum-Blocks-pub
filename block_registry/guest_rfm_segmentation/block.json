@@ -12,7 +12,7 @@
     }
   ],
   "author": "Cerebrum Team",
-  "description": "RFM guest segmentation ported from <private-repo>-v2 guest_intelligence/segmentation.py (real): rfm_score() recency/frequency/monetary bucket ladder (<=30/90 days, >=5/2 stays, >=5000/1500 spend) with champions/loyal/promising/at_risk labels and advisory:true on every result. Deterministic analytics, no trained model; missing or non-numeric inputs are refused, never guessed.",
+  "description": "RFM guest segmentation (real): rfm_score() recency/frequency/monetary bucket ladder (<=30/90 days, >=5/2 stays, >=5000/1500 spend) with champions/loyal/promising/at_risk labels and advisory:true on every result. Deterministic analytics, no trained model; missing or non-numeric inputs are refused, never guessed.",
   "digests": {
     "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
     "block.json": "0de0edbd6e68381cc740cf6ef68cda77992cdd8d23ff2bcd6b225555a86b9b89",

@@ -1,6 +1,6 @@
 {
   "acceptance": [],
-  "description": "User authentication (<private-repo> port): bcrypt hashes, access token, refresh rotation (single-use), TOTP (RFC 6238). No backtest, no email.",
+  "description": "User authentication: bcrypt hashes, access token, refresh rotation (single-use), TOTP (RFC 6238). No backtest, no email.",
   "digests": {
     "block.json": "48f738d85017648af14f71bfc5a16cbf7c6802c7573a4f9bb6bebfd04938afd9",
     "block.py": "94152c6eb28a803f1210044ef8779825e1c96d54ecba2394de92e7b9b3ac85ce"

@@ -7,7 +7,7 @@
     }
   ],
   "author": "Cerebrum Team",
-  "description": "Fail-closed governance gate ported from <private-repo>: an action executes only when an approved request exists for (tenant, action_type, target_id); self-approval refused. Approval store is in-process.",
+  "description": "Fail-closed governance gate: an action executes only when an approved request exists for (tenant, action_type, target_id); self-approval refused. Approval store is in-process.",
   "digests": {
     "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
     "block.json": "251ce5f7c822ecc02c2f083cee2d4f31c0feb32fb533a4d4cd330486a64b57b7",

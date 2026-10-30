@@ -12,7 +12,7 @@
     }
   ],
   "author": "Cerebrum Team",
-  "description": "Fail-closed ASGI audit middleware + principal auth ported from <private-repo> api/audit_middleware.py + api/auth.py (real): actor attribution only from a verified bearer token (hmac.compare_digest), never from client x-actor/x-role headers; authenticated mutating responses are held until the audit row persists and a persist failure surfaces 503 instead of a silent 2xx. Audit ledger is in-process (the donor sqlite sessionmaker is not ported); unconfigured tokens refuse authentication.",
+  "description": "Fail-closed ASGI audit middleware + principal auth (real): actor attribution only from a verified bearer token (hmac.compare_digest), never from client x-actor/x-role headers; authenticated mutating responses are held until the audit row persists and a persist failure surfaces 503 instead of a silent 2xx. Audit ledger is in-process (the donor sqlite sessionmaker is not ported); unconfigured tokens refuse authentication.",
   "digests": {
     "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
     "block.json": "2cac73b7cbd25f7db8776b7b2b45871def883c7272543df3baf2f7e0a6e82bd7",

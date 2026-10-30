@@ -32,7 +32,7 @@
     }
   ],
   "author": "Cerebrum Team",
-  "description": "real \u2014 per-source HMAC webhook receivers ported from C:\\Users\\<owner>\\Cerebrum\\backend\\app\\core\\security\\webhook_security.py (WebhookSignature sign/verify with 5-minute replay window and constant-time compare, WebhookManager.verify_incoming_webhook), plus the documented vendor header schemes for GitHub (X-Hub-Signature-256), Slack (X-Slack-Signature v0), Procore (X-Procore-Signature); Maximo uses the ported donor v1 scheme. Missing signature, missing secret, malformed header, stale timestamp, or mismatched signature is refused.",
+  "description": "real \u2014 per-source HMAC webhook receivers (WebhookSignature sign/verify with 5-minute replay window and constant-time compare, WebhookManager.verify_incoming_webhook), plus the documented vendor header schemes for GitHub (X-Hub-Signature-256), Slack (X-Slack-Signature v0), Procore (X-Procore-Signature); Maximo uses the ported donor v1 scheme. Missing signature, missing secret, malformed header, stale timestamp, or mismatched signature is refused.",
   "digests": {
     "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
     "block.json": "fcf80ba2196063cb540328fa67a46e4e509286a8d9df574823dd39a1a63550f6",

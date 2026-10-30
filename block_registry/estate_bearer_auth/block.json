@@ -1,6 +1,6 @@
 {
   "acceptance": [],
-  "description": "Estate-scoped bearer auth (<private-repo> port): HMAC-SHA256 pepper-hashed tokens with an estate scope check. In-process token store; no DB, no demo bypass.",
+  "description": "Estate-scoped bearer auth: HMAC-SHA256 pepper-hashed tokens with an estate scope check. In-process token store; no DB, no demo bypass.",
   "digests": {
     "block.json": "ce918d4055f66f8c6cfd3eb48468a7ed7696ead8b427398f4b41354dec48dd1e",
     "block.py": "e377838a1035934977285e1360ae8f054a525df52d81ab0b08fd020f2c9f11eb"

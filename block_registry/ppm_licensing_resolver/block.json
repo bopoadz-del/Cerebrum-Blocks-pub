@@ -17,7 +17,7 @@
     }
   ],
   "author": "Cerebrum Team",
-  "description": "PPM + licensing compliance resolver ported from <private-repo> reasoning/ppm_resolver.py + licensing.py + market_router.py + guard.py (real): UAE + generic only (KSA refused), Aconex/Procore/BIM sources refused, authoritative generic frequency tables refused, unnamed operator SOP refused (frequencies are never estimated from the sheet), three-valued FAIL > UNPROVABLE > PASS fold over the prerequisite graph with a computed master pacer. Domain data vendored from donor domain_kit licensing/ppm JSON with Class B evidence metadata.",
+  "description": "PPM + licensing compliance resolver (real): UAE + generic only (KSA refused), Aconex/Procore/BIM sources refused, authoritative generic frequency tables refused, unnamed operator SOP refused (frequencies are never estimated from the sheet), three-valued FAIL > UNPROVABLE > PASS fold over the prerequisite graph with a computed master pacer. Domain data vendored from donor domain_kit licensing/ppm JSON with Class B evidence metadata.",
   "digests": {
     "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
     "block.json": "5678ebfedc34a47521bb71beb15e5f455f193080e7baca48b6e76113968dc399",

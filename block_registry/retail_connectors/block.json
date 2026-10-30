@@ -17,7 +17,7 @@
     }
   ],
   "author": "Cerebrum Team",
-  "description": "honest-stub: enterprise retail connector contract ported from <private-product> backend/app/retailops/integrations/base.py + connectors/*.py. Four mock-functional connectors (pos, inventory_wms, crm_loyalty, supplier_edi) produce deterministic fictional data or use a generic REST endpoint when configured; honest stubs (sap_erp, entra_id, power_bi, store_digital_twin) never fabricate vendor data and raise ConnectorError instead.",
+  "description": "honest-stub: enterprise retail connector contract. Four mock-functional connectors (pos, inventory_wms, crm_loyalty, supplier_edi) produce deterministic fictional data or use a generic REST endpoint when configured; honest stubs (sap_erp, entra_id, power_bi, store_digital_twin) never fabricate vendor data and raise ConnectorError instead.",
   "digests": {
     "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
     "block.json": "e330e4c8ecb606f33119728d0cefcccd5db9ec19d6d48be8482db0042bdde461",

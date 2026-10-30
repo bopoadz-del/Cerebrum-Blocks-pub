@@ -17,7 +17,7 @@
     }
   ],
   "author": "Cerebrum Team",
-  "description": "Hospitality enterprise connectors ported from <private-repo> connectors/base.py + connectors/{opera,micros,maximo,grms,gaming_cms,loyalty_lms}.py + hotelops/event_bus.py (real): connect->fetch->normalise->emit with automatic fixture-vs-live switching, typed HotelEvent topics on an in-process bus, maximo aconex/procore/bim out-of-scope refusal, donor GRMS room-map evidence branch. Live mode is httpx and fails closed when the base URL is unconfigured; fixtures vendored from the donor fixtures/ directory.",
+  "description": "Hospitality enterprise connectors (real): connect->fetch->normalise->emit with automatic fixture-vs-live switching, typed HotelEvent topics on an in-process bus, maximo aconex/procore/bim out-of-scope refusal, donor GRMS room-map evidence branch. Live mode is httpx and fails closed when the base URL is unconfigured; fixtures vendored from the donor fixtures/ directory.",
   "digests": {
     "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
     "block.json": "7ae6320a42cf1b8c78335dac8d8b63ab9d37a74709d21ef090378820927e1eec",

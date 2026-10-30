@@ -22,7 +22,7 @@
     }
   ],
   "author": "Cerebrum Team",
-  "description": "real (clone of <private-repo> app/rules/approval.py): extracted clearance-rule candidates are inert until a NAMED reviewer approves them one at a time by id - no approve_all, no approval by count; an anonymous approval is refused and every decision is a ledger row (who, when, against what text). approved_rules() only returns what a person individually approved, in the kit loader's shape. Ledger kept in-process; the donor's SQLAlchemy session is not ported.",
+  "description": "real: extracted clearance-rule candidates are inert until a NAMED reviewer approves them one at a time by id - no approve_all, no approval by count; an anonymous approval is refused and every decision is a ledger row (who, when, against what text). approved_rules() only returns what a person individually approved, in the kit loader's shape. Ledger kept in-process; the donor's SQLAlchemy session is not ported.",
   "digests": {
     "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
     "block.json": "28778f4427f1359aebdb8701a925ecd992b15e9bf27f5aba187538066383cba1",

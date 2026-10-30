@@ -17,7 +17,7 @@
     }
   ],
   "author": "Cerebrum Team",
-  "description": "real: MEP coordination zoning ported from <private-repo> app/agents/zoning.py (plan_zones / buffer_gids / neighbours_of) with zone_key ported from the vendored mep_coordination kit vendor/mep_coordination/ifc_loader.py. Deterministic adjacent-cell merging under an element ceiling, dedicated riser/shaft and corridor zones, bbox buffers and buffer-owner neighbour maps. Elements are JSON dicts.",
+  "description": "real: MEP coordination zoning. Deterministic adjacent-cell merging under an element ceiling, dedicated riser/shaft and corridor zones, bbox buffers and buffer-owner neighbour maps. Elements are JSON dicts.",
   "digests": {
     "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
     "block.json": "3bdd06dc72874a8ad72b4b564764614ea0cae889c001204cc2a6d4fd192cda51",

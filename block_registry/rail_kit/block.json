@@ -167,7 +167,7 @@
       "type": "array"
     },
     {
-      "description": "state records by provider name, each {as_of: <epoch>}; an absent provider yields UNKNOWN, never a design-basis fallback",
+      "description": "state records by provider name, each {as_of: Unix time in seconds}; a record with no as_of, or older than its provider's max_age, is reported stale; an absent provider yields UNKNOWN, never a design-basis fallback",
       "name": "state",
       "required": false,
       "type": "json"

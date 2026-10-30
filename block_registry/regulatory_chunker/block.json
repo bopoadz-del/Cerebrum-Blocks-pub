@@ -7,7 +7,7 @@
     }
   ],
   "author": "Cerebrum Team",
-  "description": "Dual-RAG chunking ported from <private-repo> rag/chunking.py: regulatory sections never split mid-section (TOC stubs skipped, appendix labels tracked), free-text 800-token windows with 15% overlap, atomic QA pairs.",
+  "description": "Dual-RAG chunking: regulatory sections never split mid-section (TOC stubs skipped, appendix labels tracked), free-text 800-token windows with 15% overlap, atomic QA pairs.",
   "digests": {
     "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
     "block.json": "7449af2eac9782a39fa5a22af32dd58a028503952002ccba5d3a8999b67042e3",

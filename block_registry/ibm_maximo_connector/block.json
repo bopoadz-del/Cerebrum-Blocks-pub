@@ -22,7 +22,7 @@
     }
   ],
   "author": "Cerebrum Team",
-  "description": "real \u2014 IBM Maximo CMMS connector ported from C:\\Users\\<owner>\\<private-repo>\\connectors\\maximo.py (normalise, out-of-scope source guard, /os/<resource> live URL, apikey header) and connectors/base.py (live-env gating + fetch_live). Unconfigured fetch and ingest fail closed with a structured refusal \u2014 this store ships no hotelops fixture pack. Assets from Aconex/Procore/BIM are refused.",
+  "description": "real \u2014 IBM Maximo CMMS connector (normalise, out-of-scope source guard, live URL {maximo_base_url}/os/{resource name}, apikey header; live-env gating + fetch_live). Unconfigured fetch and ingest fail closed with a structured refusal \u2014 this store ships no hotelops fixture pack. Assets from Aconex/Procore/BIM are refused.",
   "digests": {
     "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
     "block.json": "7375b596f6c3a71157e21c5ac7ed0eeafb7e633fa6a2f7e9fbf2c23a74502a1d",

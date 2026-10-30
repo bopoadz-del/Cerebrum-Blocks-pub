@@ -12,7 +12,7 @@
     }
   ],
   "author": "Cerebrum Team",
-  "description": "Self-evaluating signal-accuracy tracker ported from <private-repo> src/services/insights.ts (real): predictedDirection (>=70 up, <45 down, mid-band makes no call), time-ordered evaluateSeries over each ticker score/price rows, hitRate null when nothing is evaluable (never fabricated), score trends, top gainers/losers, most-alerted, and the model-ready context pack. Rows arrive as input; the donor SQLite db.ts layer is not ported. NEVER the backtest.",
+  "description": "Self-evaluating signal-accuracy tracker (real): predictedDirection (>=70 up, <45 down, mid-band makes no call), time-ordered evaluateSeries over each ticker score/price rows, hitRate null when nothing is evaluable (never fabricated), score trends, top gainers/losers, most-alerted, and the model-ready context pack. Rows arrive as input; the donor SQLite db.ts layer is not ported. NEVER the backtest.",
   "digests": {
     "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
     "block.json": "f96c1915cfafbc62827d49ff8edfea088a3cfe16f82619ad12db166e46f8a182",
