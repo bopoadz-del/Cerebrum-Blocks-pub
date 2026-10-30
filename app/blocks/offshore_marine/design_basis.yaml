@@ -14,7 +14,7 @@
 #   j_lay      deep, dynamically positioned
 #   reel_lay   flexible + cable, deep, DP
 #   heavy_lift live-asset modules
-# Nothing carries between them. See DERIVATION_GUARD in reasoning.py.
+# Nothing carries between them. See invariants.yaml (derivation).
 source: "domain encoding sheet, Offshore Oil & Gas Marine Operations"
 scope: "spread- and vessel-specific — never carry to another spread or sister vessel"
 interview_status: "not run — every value is null (KNOWN_GAPS.md)"

@@ -322,6 +322,13 @@ def _trigger(kit, inv, raw: Dict[str, Any], kind: str, quantity: str):
 
     if kind == "band":
         band = raw.get("band") or {}
+        # A QUALIFIER band takes its range from the figure's own qualifiers; the
+        # defect is the asked subject lying outside that figure's band.
+        if band.get("min_from"):
+            figure = _complete(kit, inv, quantity, raw_applies=(raw.get('applies_to') or {}))
+            figure.qualifiers.update({band["min_from"]: 1, band["max_from"]: 2})
+            figure.asked_about = {band["subject"]: 3}
+            return [figure], state, ()
         high, low = band.get("max"), band.get("min")
         # `{min: present, max: present}` is a TWO-SIDEDNESS band, not a numeric
         # range: it demands both bounds, from one analysis. One-sided is the defect.

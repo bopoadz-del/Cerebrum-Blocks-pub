@@ -99,6 +99,10 @@ jobs:
           pytest -q tests/test_ci_named_followup_steps.py
           pytest -q tests/test_no_dangling_data_refs.py tests/test_st7_restored_data.py tests/core/test_domain_pack_loader_st7.py
 
+      - name: Rail AC4 qualifier band (kit_engine)
+        if: ${{ !cancelled() }}
+        run: pytest -q tests/blocks/test_rail_ac4_band_mode.py
+
       - name: Run typed-block tests
         if: ${{ !cancelled() }}
         run: pytest -q tests/test_typed_block.py
@@ -209,6 +213,10 @@ jobs:
       - name: Run all-blocks tests
         if: ${{ !cancelled() }}
         run: pytest -q tests/test_all_blocks.py tests/blocks/test_document_engine_layout.py
+
+      - name: Declarative kits + client content out (K-S5)
+        if: ${{ !cancelled() }}
+        run: pytest -q tests/blocks/test_ks5_client_content_out.py tests/blocks/test_ks5_restored_kits.py tests/blocks/test_kit_engine.py tests/blocks/test_kit_interview.py tests/blocks/test_reasoning_kits.py
 
       - name: Run FinanceOps foundation tests
         if: ${{ !cancelled() }}
