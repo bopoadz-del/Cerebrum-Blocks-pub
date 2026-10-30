@@ -256,7 +256,7 @@ def mandatory_qualifiers(directory: pathlib.Path) -> Tuple[str, ...]:
     if not path.is_file():
         return ()
     try:
-        raw = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+        raw = yaml.safe_load(path.read_text(encoding="utf-8"))
     except (OSError, yaml.YAMLError) as exc:
         raise InterviewError(f"{path}: unreadable: {exc}") from exc
     declared = raw.get("mandatory_qualifiers") if isinstance(raw, dict) else None
