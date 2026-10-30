@@ -89,3 +89,7 @@ scope_refusals:
     authority: "asset operator + marine superintendent"
   - pattern: "should we (proceed|continue|push on)"
     authority: "master / OIM / construction manager"
+
+# Every figure in design_basis.yaml carries these keys (a null value is
+# legal, a missing key is not); kit_engine.load_design_basis refuses otherwise.
+mandatory_qualifiers: ["value", "unit", "spread_type", "water_depth_range_m", "pipe_or_cable_spec", "static_or_dynamic", "region", "source", "analysis_rev", "sea_state_assumed", "scope", "date_recorded", "valid_until"]

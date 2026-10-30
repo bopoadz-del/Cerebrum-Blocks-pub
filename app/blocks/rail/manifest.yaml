@@ -194,6 +194,10 @@ scope_refusals:
     pattern: "can\\s+we\\s+go\\s+into\\s+the\\s+four[-\\s]?foot"
     authority: "the engineering supervisor, COSS/IWA or possession manager, under the safe system of work (SSOW)"
 
+# Every figure in design_basis.yaml carries these keys (a null value is
+# legal, a missing key is not); kit_engine.load_design_basis refuses otherwise.
+mandatory_qualifiers: ["value", "unit", "route", "line", "category", "tier", "SFT_verified_date", "method", "disturbed_since", "envelope_type", "line_speed", "source", "revision", "date"]
+
 # Never-allowed inferences the kit can see in the statement text. The
 # provenance record INV-RAIL-DERIVATION-GUARD forbids them by name; the shared
 # evaluator matches these patterns (kit_engine: manifest derivation_patterns).
