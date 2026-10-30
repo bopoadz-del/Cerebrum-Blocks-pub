@@ -1,0 +1,24 @@
+name: actionlint
+
+# Parses and lints every workflow in .github/workflows (catches e.g. a context
+# used where it is not allowed, which GitHub rejects with HTTP 422).
+on:
+  pull_request:
+    paths: [".github/workflows/**"]
+  push:
+    branches: [main]
+    paths: [".github/workflows/**"]
+
+permissions:
+  contents: read
+
+jobs:
+  actionlint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download actionlint 1.7.12
+        run: bash <(curl -sSfL https://raw.githubusercontent.com/rhysd/actionlint/v1.7.12/scripts/download-actionlint.bash) 1.7.12
+      - name: Lint workflows
+        run: ./actionlint -color
