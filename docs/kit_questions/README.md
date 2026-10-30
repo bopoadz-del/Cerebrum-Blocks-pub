@@ -89,7 +89,7 @@ carry to another spread or sister vessel"*. `og_operations` calls its block
 
 | kit | register | state |
 |---|---|---|
-| **datacentre** | `design_basis` | **17 of 18 answered**, facility_01. Open: `pue_guaranteed` |
+| datacentre | `design_basis` | declared, 18 open (platform kit ships null; a filled register is a test fixture) |
 | fire_protection | `design_basis` | declared, 11 open |
 | offshore_marine | `design_basis` | declared, 11 open |
 | og_operations | `operating_basis` | declared, 12 open |

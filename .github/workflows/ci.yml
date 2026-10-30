@@ -202,6 +202,10 @@ jobs:
         if: ${{ !cancelled() }}
         run: pytest -q tests/test_all_blocks.py tests/blocks/test_document_engine_layout.py
 
+      - name: Declarative kits + client content out (K-S5)
+        if: ${{ !cancelled() }}
+        run: pytest -q tests/blocks/test_ks5_client_content_out.py tests/blocks/test_ks5_restored_kits.py tests/blocks/test_kit_engine.py tests/blocks/test_kit_interview.py tests/blocks/test_reasoning_kits.py
+
       - name: Run FinanceOps foundation tests
         if: ${{ !cancelled() }}
         run: pytest -q tests/finance_ops/

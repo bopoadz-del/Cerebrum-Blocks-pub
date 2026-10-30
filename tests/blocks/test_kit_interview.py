@@ -29,8 +29,8 @@ ROOT = pathlib.Path(__file__).resolve().parents[2]
 BLOCKS = ROOT / "app" / "blocks"
 SHEETS = ROOT / "docs" / "kit_questions"
 
-#: The two kits with no owner question sheet. Neither is un-interviewed: both have
-#: their OWN figure register (design_basis.yaml), and datacentre's is filled in.
+#: The kits with no owner question sheet. Each has its OWN figure register
+#: (design_basis.yaml); the platform registers ship null (K-S5).
 #: Named so that adding an eighteenth kit with neither fails here.
 WITHOUT_SHEET = {"datacentre", "offshore_marine", "stadium_venue"}
 
@@ -276,12 +276,10 @@ def test_a_bad_gate_value_is_refused_rather_than_read_as_false():
 # --------------------------------------------------------------------------
 
 @pytest.mark.asyncio
-async def test_the_one_kit_with_a_filled_register_reports_as_answered():
-    """datacentre has no question sheet and does not need one: its OWN figure
-    register, design_basis.yaml, is filled in from the completed encoding sheet for
-    facility_01. An earlier version reported it as `derived` with nothing answered,
-    which called the one answered domain in the Store an empty one -- while the
-    file sat in the same directory."""
+async def test_the_platform_datacentre_register_ships_null_and_says_so():
+    """K-S5: the platform kit carries no facility's figures. Its register is
+    declared (18 figures, every unit) and every value is null, so the kit says no
+    interview has run -- exactly like the other kits' templates."""
     from app.blocks.datacentre_kit import DatacentreKitBlock
     out = await DatacentreKitBlock().process(
         {"figures": [{"quantity": "pue", "value": 1.4}]}, {})
@@ -289,13 +287,24 @@ async def test_the_one_kit_with_a_filled_register_reports_as_answered():
     assert state["questions_source"] == "design_basis"
     assert state["sheet_supplied"] is False
     assert state["design_basis_supplied"] is True
-    assert state["interview_ran"] is True, "17 of 18 figures are answered"
+    assert state["interview_ran"] is False
     register = state["design_basis"]
-    assert register["answered"] == 17 and register["figures"] == 18
-    assert register["open_figures"] == ["pue_guaranteed"]
-    assert register["facility"] == "facility_01"
-    assert "facility_01" in state["note"]
-    assert "derived" not in state["note"]
+    assert register["answered"] == 0 and register["figures"] == 18
+    assert register["facility"] == ""
+    assert "no interview has run" in state["note"]
+
+
+def test_a_filled_register_reports_as_answered_from_its_own_file():
+    """The behaviour the filled register used to prove on the platform kit, now
+    proved on the fixture it moved to: a filled register is read as answered,
+    names its own facility, and lists exactly the figure it left open."""
+    from app.blocks.kit_engine.interview import load_design_basis
+    db = load_design_basis(ROOT / "tests" / "fixtures" / "kits" / "datacentre")
+    status = db.status()
+    assert status["answered"] == 17 and status["figures"] == 18
+    assert status["open_figures"] == ["pue_guaranteed"]
+    assert status["interview_ran"] is True and status["fully_answered"] is False
+    assert status["facility"] == "facility_01"
 
 
 @pytest.mark.asyncio
@@ -408,8 +417,15 @@ def test_every_register_loads_and_accounts_for_itself(kit):
     assert basis.scope, "a register must declare its own scope; these never carry"
 
 
-def test_datacentre_is_the_one_filled_register_and_reports_as_answered():
-    basis = load_kit(BLOCKS / "datacentre").design_basis
+def test_a_filled_register_loads_through_the_kit_and_reports_as_answered(tmp_path):
+    """K-S5: the filled register is a fixture now; loaded through load_kit beside
+    the platform kit's own manifest and invariants, it still reads as answered."""
+    src = BLOCKS / "datacentre"
+    for name in ("manifest.yaml", "invariants.yaml"):
+        (tmp_path / name).write_text((src / name).read_text(encoding="utf-8"), encoding="utf-8")
+    fixture = ROOT / "tests" / "fixtures" / "kits" / "datacentre" / "design_basis.yaml"
+    (tmp_path / "design_basis.yaml").write_text(fixture.read_text(encoding="utf-8"), encoding="utf-8")
+    basis = load_kit(tmp_path).design_basis
     assert basis.ran is True
     assert len(basis.answered) == 17 and basis.open == ("pue_guaranteed",)
     assert basis.facility == "facility_01"
@@ -417,8 +433,8 @@ def test_datacentre_is_the_one_filled_register_and_reports_as_answered():
     assert basis.value_of("pue_design") == 1.4
 
 
-@pytest.mark.parametrize("kit", sorted(WITH_REGISTER - {"datacentre"}))
-def test_the_other_registers_are_declared_and_empty_which_is_not_nothing_to_ask(kit):
+@pytest.mark.parametrize("kit", sorted(WITH_REGISTER))
+def test_the_platform_registers_are_declared_and_empty_which_is_not_nothing_to_ask(kit):
     basis = load_kit(BLOCKS / kit).design_basis
     assert basis.ran is False
     assert not basis.answered
