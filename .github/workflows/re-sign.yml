@@ -26,9 +26,13 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
-      KEY_FILE: ${{ runner.temp }}/publisher_signing_key.pem
       PUBLISHER: ${{ inputs.publisher }}
     steps:
+      # The runner context is not available at job level, so KEY_FILE is set
+      # from $RUNNER_TEMP here and exported to every later step.
+      - name: Set signing key path (outside the checkout)
+        run: echo "KEY_FILE=$RUNNER_TEMP/publisher_signing_key.pem" >> "$GITHUB_ENV"
+
       - uses: actions/checkout@v4
 
       - uses: actions/setup-python@v5
@@ -55,6 +59,8 @@ jobs:
           if [ -n "$PUBLISHER" ]; then args+=(--publisher "$PUBLISHER"); fi
           python scripts/rotate_publisher_key.py "${args[@]}"
 
+      # Right after signing, before anything else (and before commit/push);
+      # always() so a failed sign step still removes the key.
       - name: Remove signing key
         if: always()
         run: rm -f "$KEY_FILE"
