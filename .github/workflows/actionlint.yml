@@ -1,0 +1,34 @@
+name: actionlint
+
+# Parses and lints every workflow in .github/workflows (catches e.g. a context
+# used where it is not allowed, which GitHub rejects with HTTP 422).
+on:
+  pull_request:
+    paths: [".github/workflows/**"]
+  push:
+    branches: [main]
+    paths: [".github/workflows/**"]
+
+permissions:
+  contents: read
+
+jobs:
+  actionlint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download actionlint 1.7.12 (release asset, sha256-verified)
+        env:
+          ACTIONLINT_VERSION: "1.7.12"
+          # sha256 of actionlint_1.7.12_linux_amd64.tar.gz from the v1.7.12
+          # release's actionlint_1.7.12_checksums.txt. A mismatch fails the job.
+          ACTIONLINT_SHA256: "8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8"
+        run: |
+          tarball="actionlint_${ACTIONLINT_VERSION}_linux_amd64.tar.gz"
+          curl -sSfL -o "$RUNNER_TEMP/$tarball" \
+            "https://github.com/rhysd/actionlint/releases/download/v${ACTIONLINT_VERSION}/$tarball"
+          echo "$ACTIONLINT_SHA256  $RUNNER_TEMP/$tarball" | sha256sum -c -
+          tar -xzf "$RUNNER_TEMP/$tarball" -C "$RUNNER_TEMP" actionlint
+      - name: Lint workflows (shellcheck on; ubuntu-latest ships shellcheck)
+        run: '"$RUNNER_TEMP/actionlint" -color'
