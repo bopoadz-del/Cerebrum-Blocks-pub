@@ -84,23 +84,26 @@ jobs:
           psql "$DATABASE_URL" -f migrations/001_historical_benchmark.sql
           psql "$DATABASE_URL" -f migrations/002_vector_ingestion.sql
 
-      - name: Start sandbox runner (health-waited)
+      - name: Run integration tests (with sandbox runner)
         run: |
+          # A backgrounded process does not survive to a later step, so the
+          # runner is started AND the tests run in this one step.
           PORT=8001 BLOCK_REGISTRY_ROOT="$GITHUB_WORKSPACE/block_registry" \
             PYTHONPATH="$GITHUB_WORKSPACE" \
             python -m uvicorn server:app --app-dir sandbox-runner \
             --host 127.0.0.1 --port 8001 --no-access-log &
-          echo "SANDBOX_RUNNER_PID=$!" >> "$GITHUB_ENV"
+          RUNNER_PID=$!
           for i in $(seq 1 30); do
             if curl -sf http://localhost:8001/health >/dev/null; then
-              echo "sandbox runner healthy"; break
+              echo "sandbox runner healthy (pid $RUNNER_PID)"; break
             fi
             sleep 1
             if [ "$i" = "30" ]; then echo "sandbox runner failed health check"; exit 1; fi
           done
-
-      - name: Run integration tests
-        run: python -m pytest tests/integration/ -v
+          python -m pytest tests/integration/ -v
+          rc=$?
+          kill "$RUNNER_PID" 2>/dev/null || true
+          exit $rc
 
       - name: Deploy workflow OIDC pin (ST-AWS-OIDC)
         if: ${{ !cancelled() }}
