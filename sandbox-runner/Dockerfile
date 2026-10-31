@@ -17,6 +17,7 @@ USER sandbox
 # Copy the sandbox runner service and the block registry/adapters it needs to
 # execute arbitrary blocks out-of-process.
 COPY --chown=sandbox:sandbox sandbox-runner/server.py .
+COPY --chown=sandbox:sandbox sandbox-runner/run_adapter.py .
 COPY --chown=sandbox:sandbox block_registry ./block_registry
 COPY --chown=sandbox:sandbox app ./app
 
