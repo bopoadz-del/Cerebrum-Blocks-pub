@@ -63,6 +63,25 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Start sandbox runner (persistent, health-waited)
+        run: |
+          # setsid + nohup + </dev/null detach the runner from this step's
+          # process group so it survives to every later step (integration AND
+          # the core out-of-process-block tests), not just one step.
+          PORT=8001 BLOCK_REGISTRY_ROOT="$GITHUB_WORKSPACE/block_registry" \
+            PYTHONPATH="$GITHUB_WORKSPACE" \
+            setsid nohup python -m uvicorn server:app --app-dir sandbox-runner \
+            --host 127.0.0.1 --port 8001 --no-access-log \
+            < /dev/null > /tmp/sandbox-runner.log 2>&1 &
+          disown || true
+          for i in $(seq 1 30); do
+            if curl -sf http://localhost:8001/health >/dev/null; then
+              echo "sandbox runner healthy"; break
+            fi
+            sleep 1
+            if [ "$i" = "30" ]; then echo "runner failed health check"; cat /tmp/sandbox-runner.log; exit 1; fi
+          done
+
       - name: Stub audit (implement-or-register gate)
         run: python scripts/audit_stubs.py
 
@@ -85,25 +104,7 @@ jobs:
           psql "$DATABASE_URL" -f migrations/002_vector_ingestion.sql
 
       - name: Run integration tests
-        run: |
-          # A backgrounded process does not survive to a later step, so the
-          # runner is started AND the tests run in this one step.
-          PORT=8001 BLOCK_REGISTRY_ROOT="$GITHUB_WORKSPACE/block_registry" \
-            PYTHONPATH="$GITHUB_WORKSPACE" \
-            python -m uvicorn server:app --app-dir sandbox-runner \
-            --host 127.0.0.1 --port 8001 --no-access-log &
-          RUNNER_PID=$!
-          for i in $(seq 1 30); do
-            if curl -sf http://localhost:8001/health >/dev/null; then
-              echo "sandbox runner healthy (pid $RUNNER_PID)"; break
-            fi
-            sleep 1
-            if [ "$i" = "30" ]; then echo "sandbox runner failed health check"; exit 1; fi
-          done
-          python -m pytest tests/integration/ -v
-          rc=$?
-          kill "$RUNNER_PID" 2>/dev/null || true
-          exit $rc
+        run: python -m pytest tests/integration/ -v
 
       - name: Deploy workflow OIDC pin (ST-AWS-OIDC)
         if: ${{ !cancelled() }}
@@ -340,6 +341,25 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+
+      - name: Start sandbox runner (persistent, health-waited)
+        run: |
+          # setsid + nohup + </dev/null detach the runner from this step's
+          # process group so it survives to every later step (integration AND
+          # the core out-of-process-block tests), not just one step.
+          PORT=8001 BLOCK_REGISTRY_ROOT="$GITHUB_WORKSPACE/block_registry" \
+            PYTHONPATH="$GITHUB_WORKSPACE" \
+            setsid nohup python -m uvicorn server:app --app-dir sandbox-runner \
+            --host 127.0.0.1 --port 8001 --no-access-log \
+            < /dev/null > /tmp/sandbox-runner.log 2>&1 &
+          disown || true
+          for i in $(seq 1 30); do
+            if curl -sf http://localhost:8001/health >/dev/null; then
+              echo "sandbox runner healthy"; break
+            fi
+            sleep 1
+            if [ "$i" = "30" ]; then echo "runner failed health check"; cat /tmp/sandbox-runner.log; exit 1; fi
+          done
 
       - name: Apply database migrations
         run: |
