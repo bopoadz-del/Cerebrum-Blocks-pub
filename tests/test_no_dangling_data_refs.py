@@ -54,10 +54,6 @@ OPEN_GAPS: Tuple[Tuple[str, str], ...] = (
         "never committed: absent from every commit of the pre-snapshot mirror (691fb177bd80); needs recovery from the owner's source or re-authoring (ST-7 ruling 1)",
     ),
     (
-        "data/publishers.json",
-        "platform publisher registry: held for ST-4 key rotation under the key-gap ruling; not shipped in ST-7",
-    ),
-    (
         "block_store/data/demo/estate_fixtures.json",
         "estate_kit_router._fixtures reads it (404 when absent); never authored in this repo or the mirror",
     ),
