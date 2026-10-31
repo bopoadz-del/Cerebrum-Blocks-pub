@@ -92,7 +92,6 @@ jobs:
               setsid nohup python -m uvicorn server:app --app-dir sandbox-runner \
               --host 127.0.0.1 --port 8001 --no-access-log \
               < /dev/null > /tmp/runner-integ.log 2>&1 &
-            disown || true
             for _ in $(seq 1 30); do curl -sf http://localhost:8001/health >/dev/null && break; sleep 1; done
           }
           python -m pytest tests/integration/ -v
@@ -252,7 +251,6 @@ jobs:
               setsid nohup python -m uvicorn server:app --app-dir sandbox-runner \
               --host 127.0.0.1 --port 8001 --no-access-log \
               < /dev/null > /tmp/runner-regress.log 2>&1 &
-            disown || true
             for _ in $(seq 1 30); do curl -sf http://localhost:8001/health >/dev/null && break; sleep 1; done
           }
           pytest -q tests/test_regression_security.py \
@@ -439,7 +437,6 @@ jobs:
               setsid nohup python -m uvicorn server:app --app-dir sandbox-runner \
               --host 127.0.0.1 --port 8001 --no-access-log \
               < /dev/null > /tmp/runner-full.log 2>&1 &
-            disown || true
             for _ in $(seq 1 30); do curl -sf http://localhost:8001/health >/dev/null && break; sleep 1; done
           }
           pytest -v -rs tests/ --timeout=90 --timeout-method=thread             -o faulthandler_timeout=75 --tb=short
