@@ -34,7 +34,9 @@ app = FastAPI(title="Cerebrum Sandbox Runner", version="1.0.0", docs_url=None, r
 
 SCRATCH_ROOT = Path("/scratch")
 DEFAULT_TIMEOUT = 10
-MAX_TIMEOUT = 30
+# The /execute caller budgets 60s per block (httpx client 70s); the runner's
+# per-block execution cap must admit that, else it 422-rejects timeout_s=60.
+MAX_TIMEOUT = 60
 MAX_OUTPUT_BYTES = 256 * 1024  # 256 KB
 MAX_CODE_LEN = 64 * 1024       # 64 KB
 
