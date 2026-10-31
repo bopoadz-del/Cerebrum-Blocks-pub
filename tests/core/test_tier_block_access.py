@@ -24,12 +24,21 @@ class _EchoBlock:
         }
 
 
+class _InProcessCaps:
+    # The mock runs the block in-process (echo); force the capability so
+    # use_runner is False (else must_run_out_of_process routes to the sandbox
+    # runner and bypasses the mock). Tier enforcement stays the real code path.
+    must_run_out_of_process = False
+    publisher_tier = "community"
+
+
 def _patches(names):
     echo = _EchoBlock()
     return [
         patch("app.routers.execute.BLOCK_REGISTRY", {n: object for n in names}),
         patch("app.routers.execute.get_block_instance", lambda n: echo),
         patch("app.routers.execute.adapt_input", lambda d, b: d),
+        patch("app.routers.execute.get_block_capabilities", lambda n: _InProcessCaps()),
     ]
 
 
