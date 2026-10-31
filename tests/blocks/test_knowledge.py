@@ -1,7 +1,7 @@
 """Tests for RAG Knowledge Block v2."""
 
 import pytest
-from app.blocks import KnowledgeBlock
+from app.blocks.knowledge import KnowledgeBlock
 
 
 @pytest.fixture

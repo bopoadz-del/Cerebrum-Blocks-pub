@@ -6,7 +6,7 @@ import base64
 import pytest
 from PIL import Image, ImageDraw, ImageFont
 
-from app.blocks import CaptureBlock
+from app.blocks.capture import CaptureBlock
 
 
 @pytest.fixture
