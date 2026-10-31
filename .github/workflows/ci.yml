@@ -84,7 +84,7 @@ jobs:
           psql "$DATABASE_URL" -f migrations/001_historical_benchmark.sql
           psql "$DATABASE_URL" -f migrations/002_vector_ingestion.sql
 
-      - name: Run integration tests (with sandbox runner)
+      - name: Run integration tests
         run: |
           # A backgrounded process does not survive to a later step, so the
           # runner is started AND the tests run in this one step.

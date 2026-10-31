@@ -514,14 +514,14 @@ def _resolve_module_block(name: str):
     onedrive, android_drive) run via the sandbox adapter, whose get_block(name)
     must still return the block class. Leaves BLOCK_REGISTRY untouched."""
     import importlib
+    import importlib.util
     import inspect
 
     from app.core.universal_base import UniversalBlock
 
-    try:
-        module = importlib.import_module(f"app.blocks.{name}")
-    except ModuleNotFoundError:
+    if not name.isidentifier() or importlib.util.find_spec(f"app.blocks.{name}") is None:
         return None
+    module = importlib.import_module(f"app.blocks.{name}")
     for _, obj in inspect.getmembers(module, inspect.isclass):
         if issubclass(obj, UniversalBlock) and obj.__module__ == module.__name__:
             return obj
