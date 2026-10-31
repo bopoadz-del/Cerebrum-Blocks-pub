@@ -63,25 +63,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Start sandbox runner (persistent, health-waited)
-        run: |
-          # setsid + nohup + </dev/null detach the runner from this step's
-          # process group so it survives to every later step (integration AND
-          # the core out-of-process-block tests), not just one step.
-          PORT=8001 BLOCK_REGISTRY_ROOT="$GITHUB_WORKSPACE/block_registry" \
-            PYTHONPATH="$GITHUB_WORKSPACE" \
-            setsid nohup python -m uvicorn server:app --app-dir sandbox-runner \
-            --host 127.0.0.1 --port 8001 --no-access-log \
-            < /dev/null > /tmp/sandbox-runner.log 2>&1 &
-          disown || true
-          for i in $(seq 1 30); do
-            if curl -sf http://localhost:8001/health >/dev/null; then
-              echo "sandbox runner healthy"; break
-            fi
-            sleep 1
-            if [ "$i" = "30" ]; then echo "runner failed health check"; cat /tmp/sandbox-runner.log; exit 1; fi
-          done
-
       - name: Stub audit (implement-or-register gate)
         run: python scripts/audit_stubs.py
 
@@ -104,7 +85,17 @@ jobs:
           psql "$DATABASE_URL" -f migrations/002_vector_ingestion.sql
 
       - name: Run integration tests
-        run: python -m pytest tests/integration/ -v
+        run: |
+          curl -sf http://localhost:8001/health >/dev/null 2>&1 || {
+            PORT=8001 BLOCK_REGISTRY_ROOT="$GITHUB_WORKSPACE/block_registry" \
+              PYTHONPATH="$GITHUB_WORKSPACE" \
+              setsid nohup python -m uvicorn server:app --app-dir sandbox-runner \
+              --host 127.0.0.1 --port 8001 --no-access-log \
+              < /dev/null > /tmp/runner-integ.log 2>&1 &
+            disown || true
+            for _ in $(seq 1 30); do curl -sf http://localhost:8001/health >/dev/null && break; sleep 1; done
+          }
+          python -m pytest tests/integration/ -v
 
       - name: Deploy workflow OIDC pin (ST-AWS-OIDC)
         if: ${{ !cancelled() }}
@@ -262,7 +253,7 @@ jobs:
               --host 127.0.0.1 --port 8001 --no-access-log \
               < /dev/null > /tmp/runner-regress.log 2>&1 &
             disown || true
-            for i in $(seq 1 30); do curl -sf http://localhost:8001/health >/dev/null && break; sleep 1; done
+            for _ in $(seq 1 30); do curl -sf http://localhost:8001/health >/dev/null && break; sleep 1; done
           }
           pytest -q tests/test_regression_security.py \
                     tests/core/test_sentry_scrubbing.py \
@@ -353,25 +344,6 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-
-      - name: Start sandbox runner (persistent, health-waited)
-        run: |
-          # setsid + nohup + </dev/null detach the runner from this step's
-          # process group so it survives to every later step (integration AND
-          # the core out-of-process-block tests), not just one step.
-          PORT=8001 BLOCK_REGISTRY_ROOT="$GITHUB_WORKSPACE/block_registry" \
-            PYTHONPATH="$GITHUB_WORKSPACE" \
-            setsid nohup python -m uvicorn server:app --app-dir sandbox-runner \
-            --host 127.0.0.1 --port 8001 --no-access-log \
-            < /dev/null > /tmp/sandbox-runner.log 2>&1 &
-          disown || true
-          for i in $(seq 1 30); do
-            if curl -sf http://localhost:8001/health >/dev/null; then
-              echo "sandbox runner healthy"; break
-            fi
-            sleep 1
-            if [ "$i" = "30" ]; then echo "runner failed health check"; cat /tmp/sandbox-runner.log; exit 1; fi
-          done
 
       - name: Apply database migrations
         run: |
@@ -468,7 +440,7 @@ jobs:
               --host 127.0.0.1 --port 8001 --no-access-log \
               < /dev/null > /tmp/runner-full.log 2>&1 &
             disown || true
-            for i in $(seq 1 30); do curl -sf http://localhost:8001/health >/dev/null && break; sleep 1; done
+            for _ in $(seq 1 30); do curl -sf http://localhost:8001/health >/dev/null && break; sleep 1; done
           }
           pytest -v -rs tests/ --timeout=90 --timeout-method=thread             -o faulthandler_timeout=75 --tb=short
 
