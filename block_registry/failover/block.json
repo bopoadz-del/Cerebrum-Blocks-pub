@@ -76,7 +76,7 @@
     "config",
     "monitoring"
   ],
-  "signature": "LQPWwozQlHE1aO1jvBn3MLoXudx54YGH8YEAY9X8d9dZ1MzPaNDPbmPXTnGNycKHcEbO/Zmhr1S514rHDdjaCg==",
+  "signature": "Jjgu8bhHd4m0O0gQdvlweqNcpt7H+oUWP2+eCdO06ra7hxOztwFrwRbPZ3Z+N4A5DHmw/FYACnvjUFwKgWwpDQ==",
   "tags": [
     "resilience",
     "failover",
