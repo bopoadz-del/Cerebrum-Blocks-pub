@@ -1,7 +1,7 @@
 """Tests for Workflow Block."""
 
 import pytest
-from app.blocks import WorkflowBlock
+from app.blocks.workflow import WorkflowBlock
 
 
 @pytest.fixture

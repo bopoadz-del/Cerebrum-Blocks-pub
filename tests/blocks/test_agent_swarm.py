@@ -1,7 +1,7 @@
 """Tests for Agent Swarm Block."""
 
 import pytest
-from app.blocks import AgentSwarmBlock
+from app.blocks.agent_swarm import AgentSwarmBlock
 
 
 @pytest.fixture

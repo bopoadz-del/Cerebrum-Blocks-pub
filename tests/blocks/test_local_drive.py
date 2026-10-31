@@ -10,7 +10,7 @@ These tests verify the post-hardening surface.
 import pytest
 import os
 
-from app.blocks import LocalDriveBlock
+from app.blocks.local_drive import LocalDriveBlock
 
 
 @pytest.fixture
