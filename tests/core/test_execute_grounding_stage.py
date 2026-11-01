@@ -30,12 +30,21 @@ class _StubBlock:
         }
 
 
+class _InProcessCaps:
+    # Force in-process so the stub runs; else must_run_out_of_process routes the
+    # block to the sandbox runner and bypasses the mock, so the grounding stage
+    # never sees the stubbed answer.
+    must_run_out_of_process = False
+    publisher_tier = "community"
+
+
 def _patches(stub, name="chat"):
     return [
         patch("app.routers.execute.BLOCK_REGISTRY", {name: object}),
         patch("app.routers.execute.get_block_instance", lambda n: stub),
         patch("app.routers.execute.enforce_block_access", lambda n, a: None),
         patch("app.routers.execute.adapt_input", lambda d, b: d),
+        patch("app.routers.execute.get_block_capabilities", lambda n: _InProcessCaps()),
     ]
 
 
