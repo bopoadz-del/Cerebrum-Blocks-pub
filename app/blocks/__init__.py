@@ -502,7 +502,30 @@ BLOCK_REGISTRY = _LazyBlockRegistry()
 
 
 def get_block(name: str):
-    return BLOCK_REGISTRY.get(name)
+    block = BLOCK_REGISTRY.get(name)
+    if block is not None:
+        return block
+    return _resolve_module_block(name)
+
+
+def _resolve_module_block(name: str):
+    """Resolve a block whose class module exists but is not in the in-process
+    registry -- the out-of-process drive blocks (local_drive, google_drive,
+    onedrive, android_drive) run via the sandbox adapter, whose get_block(name)
+    must still return the block class. Leaves BLOCK_REGISTRY untouched."""
+    import importlib
+    import importlib.util
+    import inspect
+
+    from app.core.universal_base import UniversalBlock
+
+    if not name.isidentifier() or importlib.util.find_spec(f"app.blocks.{name}") is None:
+        return None
+    module = importlib.import_module(f"app.blocks.{name}")
+    for _, obj in inspect.getmembers(module, inspect.isclass):
+        if issubclass(obj, UniversalBlock) and obj.__module__ == module.__name__:
+            return obj
+    return None
 
 
 def get_all_blocks():

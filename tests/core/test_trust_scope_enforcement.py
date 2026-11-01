@@ -36,12 +36,20 @@ class _CaptureBlock:
 AUTH = {"id": "key-123", "email": "trial@example.com", "tier": "pro"}
 
 
+class _InProcessCaps:
+    # Force in-process so the capture mock runs; else must_run_out_of_process
+    # routes "capture" to the sandbox runner and bypasses the mock.
+    must_run_out_of_process = False
+    publisher_tier = "community"
+
+
 def _patched(capture):
     return [
         patch("app.routers.execute.BLOCK_REGISTRY", {"capture": object}),
         patch("app.routers.execute.get_block_instance", lambda name: capture),
         patch("app.routers.execute.enforce_block_access", lambda name, auth: None),
         patch("app.routers.execute.adapt_input", lambda data, block: data),
+        patch("app.routers.execute.get_block_capabilities", lambda n: _InProcessCaps()),
     ]
 
 
