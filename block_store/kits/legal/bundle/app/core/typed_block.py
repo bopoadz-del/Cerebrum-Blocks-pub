@@ -345,17 +345,46 @@ class TypedBlock(UniversalBlock):
             "data": data
         }
     
+    def _default_action(self) -> Optional[str]:
+        """This block's own default action, from its ui_schema 'action' param
+        (its declared default, else the first option). A block called with no
+        action falls back to this rather than passing None to process(), which
+        answers 'Unknown action: None'. Returns None when the block declares no
+        action param (nothing to default)."""
+        ui = getattr(self, "ui_schema", None)
+        params = ui.get("params") if isinstance(ui, dict) else None
+        if isinstance(params, list):
+            for p in params:
+                if isinstance(p, dict) and p.get("name") == "action":
+                    default = p.get("default")
+                    if isinstance(default, str) and default.strip():
+                        return default.strip()
+                    for opt in p.get("options") or ():
+                        if isinstance(opt, str) and opt.strip():
+                            return opt.strip()
+        return None
+
     async def execute(self, input_data: Any, params: Dict = None) -> Dict:
         """
         Execute with input validation and output validation.
-        
+
         Overrides UniversalBlock.execute to add schema validation while
         maintaining full backward compatibility.
         """
         start = time.time()
         request_id = str(uuid.uuid4())[:12]
         params = params or {}
-        
+
+        # A block called with no action anywhere falls back to its OWN declared
+        # default (not None). A workflow step that omits the child's action, or
+        # any caller, then dispatches a valid action instead of raising
+        # "Unknown action: None". Only fills a gap; never overrides a given one.
+        _in_action = input_data.get("action") if isinstance(input_data, dict) else None
+        if not params.get("action") and not _in_action:
+            _da = self._default_action()
+            if _da:
+                params = {**params, "action": _da}
+
         # Merge params into input_data when input is null/empty (backward compat)
         if input_data is None and params:
             input_data = params
