@@ -301,7 +301,7 @@ class DrawingQTOBlock(UniversalBlock):
             # Run the legacy geometry extractor for backward compat
             # (measurements, areas, estimated_volumes), then layer the new
             # text-based structured drawing fields on top.
-            geom = self._extract_from_pdf(file_path, params)
+            geom = await self._extract_from_pdf(file_path, params)
             text_result = self._extract_drawing_text(file_path)
             # Merge: legacy keys first, new fields supplement.
             merged = dict(geom) if isinstance(geom, dict) else {}
@@ -399,7 +399,7 @@ class DrawingQTOBlock(UniversalBlock):
             response["hatch_hole_handling"] = "may include holes as positive area"
         return response
 
-    def _extract_from_pdf(self, file_path: str, params: dict) -> dict:
+    async def _extract_from_pdf(self, file_path: str, params: dict) -> dict:
         """Extract vector geometry from a PDF drawing via PyMuPDF.
 
         PDF drawings carry their geometry as ``page.get_drawings()`` items —
