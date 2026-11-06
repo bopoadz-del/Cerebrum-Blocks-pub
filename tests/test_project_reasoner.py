@@ -464,21 +464,24 @@ def test_platform_excerpts_ground_the_planner_prompt(monkeypatch):
     import json as _json
 
     from app.blocks.project_reasoner import ProjectReasonerBlock
-    from app.schemas.project_session import ProjectSession
 
     captured = {}
 
     async def fake_llm(prompt):
-        captured["prompt"] = prompt
+        # The PLAN call is the first call of the turn; the DELIVER call
+        # comes after execution and must not be confused with it.
+        if "prompt" not in captured:
+            captured["prompt"] = prompt
         return _json.dumps(
             {"understanding": "grounded planning", "steps": [{"type": "compute_cpm"}]}
         )
 
     block = ProjectReasonerBlock()
     monkeypatch.setattr(block, "_call_llm", fake_llm)
-    session = ProjectSession.new("sess-1")
-    result = asyncio.run(
-        block.process(
+
+    async def _run():
+        session = await _session_with_activities()
+        return await block.process(
             {
                 "request": "what is the critical path",
                 "session": session,
@@ -493,7 +496,8 @@ def test_platform_excerpts_ground_the_planner_prompt(monkeypatch):
                 ],
             }
         )
-    )
-    assert result.get("status") == "ok"
+
+    result = asyncio.run(_run())
+    assert result.get("status") == "success"
     assert "RELEVANT DOCUMENT EXCERPTS" in captured["prompt"]
     assert "DD-2022-175.pdf" in captured["prompt"]
