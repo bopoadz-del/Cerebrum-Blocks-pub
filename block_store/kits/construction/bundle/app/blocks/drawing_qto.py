@@ -17,7 +17,7 @@ import logging
 import math
 import os
 import re
-from typing import Any
+from typing import Any, Mapping
 
 from app.core.subprocess_env import scrubbed_env
 from app.core.universal_base import UniversalBlock
@@ -244,7 +244,7 @@ class DrawingQTOBlock(UniversalBlock):
     description = "Extract measurements, areas, and volumes from DXF/DWG construction drawings"
     layer = 3
     tags = ["domain", "construction", "drawing", "qto", "dxf", "quantities"]
-    requires = []
+    requires = ["ocr_v2"]
 
     default_config = {
         "unit_scale": 1.0,       # multiplier if drawing units ≠ mm
@@ -462,8 +462,28 @@ class DrawingQTOBlock(UniversalBlock):
                         and len(page_text.strip()) < _OCR_TEXT_THRESHOLD
                     ):
                         pages_ocr_attempted += 1
-                        from app.core.doc_index import _ocr_pdf_page
-                        ocr_text = _ocr_pdf_page(page)
+                        ocr_text = ""
+                        ocr_block = self.get_dep("ocr_v2")
+                        if ocr_block is not None:
+                            import tempfile as _tempfile
+
+                            pix = page.get_pixmap(dpi=200)
+                            rendered = _tempfile.NamedTemporaryFile(
+                                suffix=".png", delete=False
+                            )
+                            pix.save(rendered.name)
+                            rendered.close()
+                            try:
+                                ocr_result = await ocr_block.execute(
+                                    {"input": rendered.name}
+                                )
+                                if isinstance(ocr_result, Mapping):
+                                    ocr_text = str(ocr_result.get("text") or "")
+                            finally:
+                                try:
+                                    os.unlink(rendered.name)
+                                except OSError:
+                                    pass
                         if ocr_text:
                             page_rooms = self._extract_rooms(ocr_text)
                             if page_rooms:

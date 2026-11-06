@@ -67,7 +67,9 @@
     }
   ],
   "permissions": {
-    "blocks": [],
+    "blocks": [
+      "ocr_v2"
+    ],
     "filesystem": false,
     "imports": [],
     "network": false
@@ -83,7 +85,9 @@
       "scope": "runtime"
     }
   ],
-  "requires": [],
+  "requires": [
+    "ocr_v2"
+  ],
   "signature": "CZ2Jj8QiMM/Prgp2QhljeHd9HgQE6N92PwgJzlVZIdUH1v8MBWhmcT+txINYRZqvstQTZxwclUv8EfCJzaqRBw==",
   "tags": [
     "domain",

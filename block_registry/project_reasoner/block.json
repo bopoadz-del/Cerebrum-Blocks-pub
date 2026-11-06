@@ -12,6 +12,12 @@
       "name": "input",
       "required": true,
       "type": "json"
+    },
+    {
+      "name": "document_excerpts",
+      "type": "array",
+      "required": false,
+      "description": "Platform-supplied retrieved excerpts ({document_id, filename, snippet, score}); the planner grounds its steps in them when present"
     }
   ],
   "layer": 3,

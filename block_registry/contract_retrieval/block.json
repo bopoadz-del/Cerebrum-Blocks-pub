@@ -41,6 +41,18 @@
       ],
       "required": false,
       "type": "string"
+    },
+    {
+      "name": "excerpts",
+      "type": "array",
+      "required": false,
+      "description": "Platform-supplied retrieved excerpts ({document_id, filename, snippet, score}) for the coverage action"
+    },
+    {
+      "name": "project_document_total",
+      "type": "number",
+      "required": false,
+      "description": "The platform's own project document count, stated beside excerpts for the coverage action"
     }
   ],
   "layer": 3,
