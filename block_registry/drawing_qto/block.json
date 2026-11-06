@@ -4,7 +4,7 @@
   "description": "Extract measurements, areas, and volumes from DXF/DWG construction drawings",
   "digests": {
     "Dockerfile": "905bd5e509638c2df98d8f1039fba18adde147d0d7ffbf70778ca87888cd0da1",
-    "block.json": "74574c7bd0d86002d83d0c0d730da2b9880e45832855c4a1a3ab879e1db8b0c4",
+    "block.json": "08f9df1ad0eca982ad963235a71b3c95cbb10f78f3ef7658d1167acaa87a1f46",
     "block.py": "7bd43f91dff3d083c3105f4f5d14f578e7f1580bd43fc32d0453ac75492d98c1"
   },
   "execution": {
@@ -67,7 +67,9 @@
     }
   ],
   "permissions": {
-    "blocks": [],
+    "blocks": [
+      "ocr_v2"
+    ],
     "filesystem": false,
     "imports": [],
     "network": false
@@ -83,8 +85,10 @@
       "scope": "runtime"
     }
   ],
-  "requires": [],
-  "signature": "CZ2Jj8QiMM/Prgp2QhljeHd9HgQE6N92PwgJzlVZIdUH1v8MBWhmcT+txINYRZqvstQTZxwclUv8EfCJzaqRBw==",
+  "requires": [
+    "ocr_v2"
+  ],
+  "signature": "xnnAb3m/RLrNJaDGOo0LRlVeyWtXpJAKdTcBdqzi+BnE8AjMO3rw3wjTw4up6K7XaTwtsftVMG86/UWGU7N0AQ==",
   "tags": [
     "domain",
     "construction",

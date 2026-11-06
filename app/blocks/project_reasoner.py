@@ -219,20 +219,14 @@ class ProjectReasonerBlock(UniversalBlock):
 
         session.add_message("user", request)
 
-        # Look up top-k relevant snippets from this project's indexed
-        # documents so the planner can ground its steps in the actual
-        # uploaded files. Silent no-op when no project_id is given or the
-        # project has nothing indexed yet — the reasoner falls back to
-        # session-state-only planning, matching the old behavior.
-        excerpts: list = []
-        if project_id:
-            try:
-                from app.core.doc_index import search_project_documents
-                excerpts = await search_project_documents(
-                    project_id, request, top_k=5
-                )
-            except Exception:
-                excerpts = []
+        # The platform supplies the retrieved excerpts (the shape the
+        # reasoner prompt documents: {document_id, filename, snippet,
+        # score}); a block has no corpus of its own. Absent -> the planner
+        # falls back to session-state-only planning, the real alternative
+        # branch matching the old behavior.
+        excerpts = list(
+            data.get("document_excerpts") or params.get("document_excerpts") or []
+        )
 
         # ── UNDERSTAND + PLAN ────────────────────────────────────────────
         try:

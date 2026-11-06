@@ -25,7 +25,135 @@ from __future__ import annotations
 import logging
 import os
 import re
-from typing import Any, Dict, Iterable, List, Optional, Set, Tuple
+from typing import Any, Dict, Iterable, List, Mapping, Optional, Set, Tuple
+
+# --- donor The_Fork app/lib/construction_formulas_commercial.py (owned) ---
+# The chunk-ACA classifiers are this block's own retrieval-side logic:
+# chunk-text heuristics, not kernel arithmetic, so formula_executor's
+# {formula_key, input_values} contract cannot express them. Owned here
+# with the donor file noted; no import crosses the Store boundary.
+_ACA_DD_ASK_RE = re.compile(r"(?i)(?:delay|liquidated)\s+damages")
+_ACA_LABEL_RE = re.compile(
+    r"(?i)\b(?:accepted\s+contract\s+amount|contract\s+price)\b",
+)
+_ACA_EXCL_VAT_RE = re.compile(
+    r"(?i)\bexclud(?:ing|es|ed)\b.{0,12}\bvat\b|"
+    r"\bexcl\.?\s*vat\b|\bexclusive\s+of\s+vat\b",
+)
+_ACA_INCL_VAT_RE = re.compile(
+    r"(?i)\binclud(?:ing|es|ed)\b.{0,12}\bvat\b|"
+    r"\bincl\.?\s*vat\b|\binclusive\s+of\s+vat\b",
+)
+_ACA_MONEY_RE = re.compile(
+    r"(?i)\b(SAR|AED|USD|EUR|GBP|QAR|BHD|KWD|OMR)\s*"
+    r"(\d{1,3}(?:,\d{3})+(?:\.\d+)?|\d+\.\d{2})",
+)
+_ACA_TOY_AMOUNT = 10_000_000.0
+_ACA_TOY_DAILY_AMOUNT = 10_000.0
+_ACA_CLAUSE_111_RE = re.compile(r"(?i)\b1\.1\.1\b")
+_ACA_TOY_CUE_RE = re.compile(
+    r"(?i)\b(?:for\s+example|worked\s+example|daily\s+amount|"
+    r"if\s+the\s+accepted\s+contract\s+amount)\b",
+)
+
+
+def _aca_toy_rejection_enabled() -> bool:
+    """ON by default; ``COMPOSE_REJECT_E1_TOY_ACA=0`` is the kill-switch."""
+    raw = (os.getenv("COMPOSE_REJECT_E1_TOY_ACA", "1") or "1").strip().lower()
+    return raw not in ("0", "false", "no", "off")
+
+
+def _aca_amount_is_toy(amount: float, ctx: str = "") -> bool:
+    """True for a FIDIC worked-example / placeholder ACA, not a filled row.
+
+    Live E1: unlabeled ``SAR 10,000,000`` in an 8.8 window and its
+    0.1% daily product ``SAR 10,000``. A filled 1.1.1 excluding-VAT
+    particular of exactly 10M is not a toy. Non-10M/10k figures are
+    never the worked example.
+    """
+    if not _aca_toy_rejection_enabled():
+        return False
+    amt = float(amount)
+    is_10m = abs(amt - _ACA_TOY_AMOUNT) <= 0.005
+    is_10k = abs(amt - _ACA_TOY_DAILY_AMOUNT) <= 0.005
+    if not (is_10m or is_10k):
+        return False
+    ctx = ctx or ""
+    if is_10m and _ACA_CLAUSE_111_RE.search(ctx) and _ACA_EXCL_VAT_RE.search(ctx):
+        # A neighboring filled 1.1.1 row must not un-toy the 8.8
+        # worked example when excerpts are concatenated.
+        if _ACA_TOY_CUE_RE.search(ctx):
+            return True
+        return False
+    return True
+
+
+def _collapse_aca_ws(text: str) -> str:
+    return re.sub(r"\s+", " ", text or "").strip()
+
+
+def _iter_aca_candidates(text: str) -> List[tuple]:
+    """``(amount, currency, vat_kind, is_toy)`` ACA figures in ``text``.
+
+    ``vat_kind`` is ``excl``, ``neutral``, or ``incl``. Filled particulars
+    rows first, then a 160-char scanned window. Does not invent a figure.
+    """
+    t = text or ""
+    if not t:
+        return []
+    out: List[tuple] = []
+
+    def _bucket(amount: float, currency: str, ctx: str) -> None:
+        if amount < 1000:
+            return
+        # A delay-damages *rate* sentence names Contract Price / ACA as
+        # the percentage base and is not itself the money row. Do not
+        # stain a real ACA figure just because the 0.1%-per-day row sits
+        # in the same window.
+        if _ACA_DD_ASK_RE.search(ctx) and "%" in ctx:
+            if not re.search(r"(?i)accepted\s+contract\s+amount", ctx):
+                return
+        if not _ACA_LABEL_RE.search(ctx):
+            return
+        if _ACA_EXCL_VAT_RE.search(ctx):
+            kind = "excl"
+        elif _ACA_INCL_VAT_RE.search(ctx):
+            kind = "incl"
+        else:
+            kind = "neutral"
+        out.append((amount, currency, kind, _aca_amount_is_toy(amount, ctx)))
+
+    # The donor's filled-particulars first tier is not ported (its parser
+    # module is not part of the Store); the scanned window below is the
+    # real implementation and finds every labelled money figure.
+    blob = _collapse_aca_ws(t)
+    for m in _ACA_MONEY_RE.finditer(blob):
+        amount = float(m.group(2).replace(",", ""))
+        start = max(0, m.start() - 160)
+        ctx = blob[start:m.end() + 24]
+        _bucket(amount, m.group(1).upper(), ctx)
+
+    return out
+
+
+def chunk_has_real_accepted_contract_amount(text: str) -> bool:
+    """True when ``text`` states a non-toy ACA money figure."""
+    return any(not toy for _amt, _cur, _kind, toy in _iter_aca_candidates(text))
+
+
+def chunk_accepted_contract_amount_is_only_toy(text: str) -> bool:
+    """True when every ACA money figure in ``text`` is a toy/example."""
+    cands = _iter_aca_candidates(text)
+    return bool(cands) and all(toy for _amt, _cur, _kind, toy in cands)
+
+
+# --- donor The_Fork app/core/doc_index.py (owned) ---
+#: The BOQ-document-name test, owned so the retrieval side cannot drift
+#: from the indexer's test without crossing the Store boundary.
+_BOQ_FILENAME_RE = re.compile(
+    r"\bbo[q]\b|bill[\s_-]*of[\s_-]*quantit|schedule[\s_-]*of[\s_-]*quantit|priced",
+    re.IGNORECASE,
+)
 
 # --- donor app/core/contract_data_chunks.py:L19-L21 (_CONTRACT_DATA_LABEL)
 _CONTRACT_DATA_LABEL = (
@@ -1034,25 +1162,15 @@ def chunk_states_accepted_contract_amount(text: str) -> bool:
             # window that also carries the filled excl-VAT ACA still
             # is — do not drop it just because 8.8 shares the chunk.
             try:
-                from app.lib.construction_formulas_commercial import (
-                    chunk_has_real_accepted_contract_amount,
-                )
                 if not chunk_has_real_accepted_contract_amount(t):
                     return False
             except Exception:  # noqa: BLE001 — rate-only window is not ACA
                 logger.debug("real-ACA test unavailable; treating as non-ACA", exc_info=True)
                 return False
-    try:
-        from app.lib.construction_formulas_commercial import (
-            chunk_accepted_contract_amount_is_only_toy,
-            chunk_has_real_accepted_contract_amount,
-        )
-        if chunk_has_real_accepted_contract_amount(t):
-            return True
-        if chunk_accepted_contract_amount_is_only_toy(t):
-            return False
-    except Exception:  # noqa: BLE001 — never break a turn over an import
-        logger.debug("toy-ACA test unavailable; treating money as ACA", exc_info=True)
+    if chunk_has_real_accepted_contract_amount(t):
+        return True
+    if chunk_accepted_contract_amount_is_only_toy(t):
+        return False
     return True
 
 # --- donor app/core/rag/retriever.py:L3560-L3586 (chunk_states_aca_including_vat)
@@ -1510,21 +1628,15 @@ def query_asks_for_boq_scope(query: str) -> bool:
 def document_is_a_bill_of_quantities(filename: str) -> bool:
     """True when the DOCUMENT NAME says it is a bill of quantities.
 
-    Consumes ``doc_index.BOQ_FILENAME_RE`` rather than restating it, so the
-    retrieval-side test cannot drift from the one the indexer already uses to
-    pick a chunker and an OCR budget. The import is deferred because
-    ``doc_index`` imports this module; it is reached only for a BOQ-shaped
-    ask, and ``sys.modules`` caches it after the first.
+    Owns the same regex the indexer uses to pick a chunker and an OCR
+    budget, so the retrieval-side test cannot drift from the indexer's
+    (donor: The_Fork doc_index.BOQ_FILENAME_RE; the import no longer
+    crosses the Store boundary).
     """
     name = filename or ""
     if not name:
         return False
-    try:
-        from app.core.doc_index import BOQ_FILENAME_RE
-    except Exception as exc:  # noqa: BLE001 — never break a turn over this
-        logger.warning("BOQ filename test unavailable: %s", exc)
-        return False
-    return bool(BOQ_FILENAME_RE.search(name))
+    return bool(_BOQ_FILENAME_RE.search(name))
 
 # --- donor app/core/rag/retriever.py:L6241-L6254 (query_needs_a_monetary_base)
 def query_needs_a_monetary_base(query: str) -> bool:
@@ -2066,28 +2178,30 @@ def ensure_coverage_line(text: str, indexed: int, total: int) -> str:
     return body + line + "\n"
 
 
-def live_coverage(project_id: str) -> Optional[tuple[int, int]]:
-    """Indexed-doc count and project-doc count. None when we cannot tell.
+def live_coverage(project_id: str, excerpts: Any = None, project_document_total: Any = None) -> Optional[tuple]:
+    """Coverage from the platform's declared inputs, never from a corpus
+    the block does not own.
 
-    N = documents that have at least one RAG chunk (``count_by_doc``).
-    M = ``count_documents`` for the same project. Read-only; does not
-    write the ingest path.
+    ``excerpts`` is the platform-supplied retrieved set (the shape the
+    reasoner prompt documents: {document_id, filename, snippet, score});
+    indexed = documents with at least one excerpt. ``project_document_total``
+    is the platform's own project-doc count when it knows one. None when
+    neither input can tell -- an honest unknown, never a fabricated count.
     """
     if not (project_id or "").strip():
         return None
-    try:
-        from app.core.projects import count_documents
-        from app.core.rag.vector_store import get_store
-
-        total = int(count_documents(project_id) or 0)
-        by_doc = get_store().count_by_doc(project_id) or {}
-        indexed = sum(1 for n in by_doc.values() if int(n or 0) > 0)
-        return indexed, total
-    except Exception:  # honesty must not break an answer
-        logger.warning(
-            "live coverage lookup failed for project_id=%r", project_id, exc_info=True
-        )
+    if not excerpts:
         return None
+    sources = {
+        e.get("document_id") or e.get("filename")
+        for e in excerpts
+        if isinstance(e, Mapping)
+    }
+    indexed = sum(1 for s in sources if s)
+    if indexed <= 0:
+        return None
+    total = int(project_document_total) if project_document_total is not None else None
+    return indexed, total
 
 
 def apply_coverage_honesty(
@@ -2247,19 +2361,38 @@ class ContractRetrievalBlock(UniversalBlock):
     def _coverage(self, payload):
         text = str(payload.get("text") or "")
         coverage = payload.get("coverage")
-        if not isinstance(coverage, (list, tuple)) or len(coverage) != 2:
-            return _envelope(
-                "refused",
-                error="coverage needs an explicit [indexed, total] pair; live "
-                "counts require the donor's project/vector-store stack, which "
-                "is not ported",
+        excerpts = payload.get("excerpts")
+        if coverage is not None:
+            if not isinstance(coverage, (list, tuple)) or len(coverage) != 2:
+                return _envelope(
+                    "refused",
+                    error="coverage needs an explicit [indexed, total] pair",
+                )
+            counts = (int(coverage[0]), int(coverage[1]))
+        else:
+            # The platform supplies the retrieved excerpts; the block has no
+            # corpus of its own. Absent -> the block's normal validation
+            # error, the same path every block uses for a missing input.
+            if not excerpts:
+                return _envelope("error", error="missing required field: excerpts")
+            total = payload.get("project_document_total")
+            if total is None:
+                return _envelope(
+                    "error",
+                    error="missing required field: project_document_total "
+                    "(excerpts state the indexed side; the platform states the total)",
+                )
+            counts = live_coverage(
+                str(payload.get("project_id") or "coverage"), excerpts, total
             )
-        out = apply_coverage_honesty(text, coverage=(int(coverage[0]), int(coverage[1])))
+            if counts is None:
+                return _envelope("error", error="excerpts carried no source documents")
+        out = apply_coverage_honesty(text, coverage=counts)
         return _envelope(
             "ok",
             {
                 "text": out,
-                "partial": is_partial(int(coverage[0]), int(coverage[1])),
+                "partial": is_partial(int(counts[0]), int(counts[1])),
             },
         )
 

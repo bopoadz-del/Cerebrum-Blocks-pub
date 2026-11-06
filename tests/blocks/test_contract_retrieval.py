@@ -12,7 +12,11 @@ import os
 os.environ.setdefault("ENV", "test")
 
 from app.blocks import contract_retrieval as m
-from app.blocks.contract_retrieval import ContractRetrievalBlock
+from app.blocks.contract_retrieval import (
+    ContractRetrievalBlock,
+    chunk_accepted_contract_amount_is_only_toy,
+    chunk_has_real_accepted_contract_amount,
+)
 
 DD23_NAME = (
     "DD-2023-118_the client project II Infrastructure Package 1_"
@@ -253,11 +257,43 @@ def test_fence_keeps_only_the_named_contract():
     assert DD22_NAME in str(r["result"]["kept"][0]["filename"])
 
 
-def test_coverage_without_counts_is_refused_not_invented():
+def test_coverage_without_excerpts_is_a_named_validation_error():
     b = ContractRetrievalBlock()
     r = _run(b.process({"action": "coverage", "text": "does not exist"}))
-    assert r["status"] == "refused"
-    assert "indexed" in r["error"]
+    assert r["status"] == "error"
+    assert r["error"] == "missing required field: excerpts"
+
+
+def test_coverage_from_platform_excerpts_and_total():
+    b = ContractRetrievalBlock()
+    excerpts = [
+        {"document_id": "d-1", "filename": "a.pdf", "snippet": "x", "score": 0.9},
+        {"document_id": "d-2", "filename": "b.pdf", "snippet": "y", "score": 0.8},
+    ]
+    r = _run(b.process({
+        "action": "coverage",
+        "text": "does not exist",
+        "excerpts": excerpts,
+        "project_document_total": 5,
+        "project_id": "p-1",
+    }))
+    assert r["status"] == "ok"
+    assert r["result"]["partial"] is True
+    assert "2 of 5 project documents indexed" in r["result"]["text"]
+
+
+def test_owned_aca_classifiers_agree_on_real_and_toy_chunks():
+    real = (
+        "Accepted Contract Amount (excluding VAT): SAR 1,754,504.46 "
+        "Sub-Clause 1.1.1 filled row"
+    )
+    toy = (
+        "Sub-Clause 8.8: if the Accepted Contract Amount is "
+        "SAR 10,000,000 (for example), the daily amount is SAR 10,000"
+    )
+    assert chunk_has_real_accepted_contract_amount(real) is True
+    assert chunk_accepted_contract_amount_is_only_toy(toy) is True
+    assert chunk_has_real_accepted_contract_amount(toy) is False
 
 
 def test_unknown_action_is_error():

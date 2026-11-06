@@ -453,3 +453,51 @@ async def test_step_result_carries_output():
 #       CEREBRUM_DOMAIN_KITS was set. Registration is already covered for
 #       this repo by tests/core/test_kit_block_validation.py.
 # ==========================================================================
+
+# ==========================================================================
+# Bucket 2 (Prompt 2): the platform supplies document_excerpts; the block no
+# longer imports a corpus it does not own. Added after the closure fix.
+# ==========================================================================
+
+def test_platform_excerpts_ground_the_planner_prompt(monkeypatch):
+    import asyncio
+    import json as _json
+
+    from app.blocks.project_reasoner import ProjectReasonerBlock
+
+    captured = {}
+
+    async def fake_llm(prompt):
+        # The PLAN call is the first call of the turn; the DELIVER call
+        # comes after execution and must not be confused with it.
+        if "prompt" not in captured:
+            captured["prompt"] = prompt
+        return _json.dumps(
+            {"understanding": "grounded planning", "steps": [{"type": "compute_cpm"}]}
+        )
+
+    block = ProjectReasonerBlock()
+    monkeypatch.setattr(block, "_call_llm", fake_llm)
+
+    async def _run():
+        session = await _session_with_activities()
+        return await block.process(
+            {
+                "request": "what is the critical path",
+                "session": session,
+                "project_id": "p-1",
+                "document_excerpts": [
+                    {
+                        "document_id": "d-1",
+                        "filename": "DD-2022-175.pdf",
+                        "snippet": "Sub-Clause 8.8 delay damages 0.1% per day",
+                        "score": 0.9,
+                    }
+                ],
+            }
+        )
+
+    result = asyncio.run(_run())
+    assert result.get("status") == "success"
+    assert "RELEVANT DOCUMENT EXCERPTS" in captured["prompt"]
+    assert "DD-2022-175.pdf" in captured["prompt"]

@@ -530,3 +530,22 @@ async def test_drawing_title_not_cross_ref_callout(primary_result):
             f"drawing_title is a cross-ref callout matching {pat!r}: "
             f"title={drawing.get('drawing_title')!r}"
         )
+
+# ==========================================================================
+# Bucket 3 (Prompt 2): page OCR is ocr_v2's capability; the block declares
+# the registry dependency and no longer imports a module the Store does not
+# ship. Added after the closure fix.
+# ==========================================================================
+
+def test_ocr_fallback_is_a_declared_registry_dependency():
+    import json
+    import pathlib
+
+    from app.blocks.drawing_qto import DrawingQTOBlock
+
+    assert "ocr_v2" in DrawingQTOBlock.requires
+    manifest = json.loads(
+        pathlib.Path("block_registry/drawing_qto/block.json").read_text(encoding="utf-8")
+    )
+    assert "ocr_v2" in manifest["requires"]
+    assert "ocr_v2" in manifest["permissions"]["blocks"]
