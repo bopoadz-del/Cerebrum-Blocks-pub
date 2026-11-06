@@ -25,7 +25,7 @@
   "description": "real (clone of The_Fork app/core/rag/retriever.py + app/core/rag/coverage_honesty.py + app/core/contract_data_chunks.py): named-contract fencing (extract_contract_doc_ids / filename_matches_named_contracts, fail closed to empty) and the answer-bearing-contract election (elect_answer_bearing_contract with its full rescue-predicate closure), plus the coverage-honesty rule: on a partial index the model may not say 'does not exist', only 'not found in the N indexed'. Retrieval corpus/embedder not ported.",
   "digests": {
     "Dockerfile": "f726e1716e53cfca226f3034515f400b072823aa06e7899efea7bc46c3b571a6",
-    "block.json": "8e3bdf5167676f289fc9665a4eba2ebcad5371873be88ba0c9e3784da69ce615",
+    "block.json": "29bfbc067fdd867901d67cf082430cbf46995ba226e6bc6827864c8749d02db1",
     "block.py": "e83fc74dc5a9802ad4f336d885503e642b5ad9e416c0602fcd44cff13dde8054"
   },
   "id": "contract_retrieval",
@@ -43,16 +43,16 @@
       "type": "string"
     },
     {
+      "description": "Platform-supplied retrieved excerpts ({document_id, filename, snippet, score}) for the coverage action",
       "name": "excerpts",
-      "type": "array",
       "required": false,
-      "description": "Platform-supplied retrieved excerpts ({document_id, filename, snippet, score}) for the coverage action"
+      "type": "array"
     },
     {
+      "description": "The platform's own project document count, stated beside excerpts for the coverage action",
       "name": "project_document_total",
-      "type": "number",
       "required": false,
-      "description": "The platform's own project document count, stated beside excerpts for the coverage action"
+      "type": "number"
     }
   ],
   "layer": 3,
@@ -79,7 +79,7 @@
     }
   ],
   "requires": [],
-  "signature": "VdpqlxHfNndcmzw/HzsXU/f7vb+d8nkpWVIO3LHRsXnDBHM6DNvjMZE9b/TFSER6ac0brBYpOwSGk7Gzw9rtDw==",
+  "signature": "RCJ7UDX6uINS5adXrlf/6nWQPISEOk2UPmDnAL2ASKoRRlaD6JJBjiNqKBJHGDBeHYNHCMWo/tzC2XX4qhfACw==",
   "tags": [
     "rag",
     "retrieval",

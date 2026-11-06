@@ -2,7 +2,7 @@
   "acceptance": [],
   "description": "LLM agent for project planning and reasoning. The LLM drafts plans and answers; deterministic gates stay in the caller. Missing provider credentials raise by name (tests/blocks/test_project_reasoner_fail_loud.py).",
   "digests": {
-    "block.json": "d42c47661b245a12d83a3e9eb22bdf19eb7649fac149b8c04b6655042035d032",
+    "block.json": "bc8270cea6e7d8a5d0343889da76d926277a932f04fc9bc3745e960cadd27d79",
     "block.py": "b2685028a2fcefadc85fa8f47a812ce3f8d7f0399f9c85a9a1bfb64e8c073212"
   },
   "id": "project_reasoner",
@@ -14,10 +14,10 @@
       "type": "json"
     },
     {
+      "description": "Platform-supplied retrieved excerpts ({document_id, filename, snippet, score}); the planner grounds its steps in them when present",
       "name": "document_excerpts",
-      "type": "array",
       "required": false,
-      "description": "Platform-supplied retrieved excerpts ({document_id, filename, snippet, score}); the planner grounds its steps in them when present"
+      "type": "array"
     }
   ],
   "layer": 3,
@@ -58,7 +58,7 @@
     }
   ],
   "requires": [],
-  "signature": "sPMq1SGYhSuLIj9LEx0zFy1BdYd7sznapsLVJ+nSJLG++gF0yPQ/WW6Kou0jUWgofihhOBafF5ema3LfvcCTDw==",
+  "signature": "aYaymXev5jAZ44h0EGI7mekBuA1b2xW7uCBPUxiZOgRRW6ohUFIryKKkAIBnzngrt5mSoCUB2stMoC60JJt6Bg==",
   "tags": [
     "domain",
     "construction",
