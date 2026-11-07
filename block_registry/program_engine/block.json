@@ -1,6 +1,10 @@
 {
   "acceptance": [],
-  "description": "Runs any structured program: tracks, terms, weeks, sessions, rubric grading, calendar, faculty prompts. Pure engine — all track content comes from the caller's track.v1 document.",
+  "description": "Runs any structured program: tracks, terms, weeks, sessions, rubric grading, calendar, faculty prompts. Pure engine \u2014 all track content comes from the caller's track.v1 document.",
+  "digests": {
+    "block.json": "19a723f410e7cc7af2671d8bb4cf476484688c9da46b63d5698bd4d8ae026919",
+    "block.py": "204f96ceca5457f49b92e7641c1822c4fd3cc08da054e9e4c2dd8d2cafbdec49"
+  },
   "id": "program_engine",
   "inputs": [
     {
@@ -36,6 +40,7 @@
     }
   ],
   "requires": [],
+  "signature": "7DqJMLc6nxH9CFpflsc/uNq7tWh1+4gjWaXJ+fd0tt9yuNKJnSfZh45cQ91TcfNPwInsmjqTEBeQyA3yqD0UAg==",
   "tags": [
     "domain",
     "program",
