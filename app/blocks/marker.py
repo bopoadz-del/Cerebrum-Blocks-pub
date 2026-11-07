@@ -260,6 +260,22 @@ class MarkerBlock(TypedBlock):
         if isinstance(input_data, str):
             return input_data
         if isinstance(input_data, dict):
+            # Contract (F-10c-a / F4): the Factory sends content (base64) +
+            # filename, never an EFS path the Store task cannot mount.
+            content = input_data.get("content")
+            if isinstance(content, str) and content:
+                import base64
+
+                try:
+                    raw = base64.b64decode(content)
+                except Exception:  # noqa: BLE001 -- not base64, fall through
+                    raw = None
+                if raw:
+                    filename = str(input_data.get("filename") or "")
+                    suffix = os.path.splitext(filename)[1] or ".pdf"
+                    with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as f:
+                        f.write(raw)
+                        return f.name
             file_bytes = input_data.get("file") or input_data.get("pdf_bytes") or input_data.get("bytes")
             if isinstance(file_bytes, bytes):
                 with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as f:

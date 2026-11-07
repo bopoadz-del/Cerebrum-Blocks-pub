@@ -153,6 +153,20 @@ async def test_bytes_input_is_accepted(marker_block, engine):
 
 
 @pytest.mark.asyncio
+async def test_base64_content_input_is_accepted(marker_block, engine):
+    """F4: the Factory sends content (base64) + filename, never an EFS path."""
+    import base64
+
+    payload = {
+        "content": base64.b64encode(_pdf(["From base64 content"])).decode("ascii"),
+        "filename": "sample.pdf",
+    }
+    result = await marker_block.execute(payload, {})
+    assert result["status"] == "success"
+    assert "From base64 content" in result["result"]["text"]
+
+
+@pytest.mark.asyncio
 async def test_image_only_page_is_reported_not_silent(marker_block, write_pdf, engine):
     path = write_pdf(["Typed page", None])
     result = await marker_block.execute({"file_path": path}, {})
