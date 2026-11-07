@@ -1,0 +1,55 @@
+{
+  "acceptance": [],
+  "description": "Runs any structured program: tracks, terms, weeks, sessions, rubric grading, calendar, faculty prompts. Pure engine — all track content comes from the caller's track.v1 document.",
+  "id": "program_engine",
+  "inputs": [
+    {
+      "description": "Engine operation payload (operation + arguments)",
+      "name": "input",
+      "required": true,
+      "type": "json"
+    }
+  ],
+  "layer": 3,
+  "name": "Program Engine",
+  "never": [],
+  "permissions": {
+    "blocks": [],
+    "filesystem": true,
+    "imports": [
+      "json",
+      "yaml",
+      "dataclasses",
+      "datetime",
+      "enum",
+      "typing",
+      "pathlib",
+      "pydantic"
+    ],
+    "network": false
+  },
+  "publisher_id": "cerebrum_platform",
+  "reads": [
+    {
+      "kind": "caller",
+      "scope": "input"
+    }
+  ],
+  "requires": [],
+  "tags": [
+    "domain",
+    "program",
+    "kernel",
+    "calendar",
+    "rubric",
+    "prompts"
+  ],
+  "trust_tier": "platform",
+  "version": "1.0.0",
+  "writes": [
+    {
+      "kind": "caller",
+      "scope": "output"
+    }
+  ]
+}
