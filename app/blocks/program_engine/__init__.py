@@ -60,36 +60,3 @@ __all__ = [
     "backup",
     "restore",
 ]
-
-
-class ProgramEngineBlock:
-    """Runs any structured program: tracks, terms, weeks, sessions, rubric
-    grading, calendar, faculty prompts. All track content arrives in the
-    caller's track.v1 document — nothing is hardwired here."""
-
-    def run(self, **kwargs):
-        input_data = kwargs.get("input", kwargs)
-        if not isinstance(input_data, dict):
-            return {"status": "error", "result": "input must be an object with 'operation'"}
-        op = input_data.get("operation")
-        try:
-            if op == "load_track":
-                return {
-                    "status": "success",
-                    "result": load_track(input_data["path"]).model_dump(mode="json"),
-                }
-            if op == "session_prompt":
-                track = Track.model_validate(input_data["track"])
-                sess = Session(**input_data["session"])
-                return {"status": "success", "result": session_prompt(track, input_data["week"], sess)}
-            if op == "defense_prompt":
-                return {"status": "success", "result": defense_prompt(Track.model_validate(input_data["track"]), input_data["week"])}
-            if op == "jury_prompt":
-                return {"status": "success", "result": jury_prompt(Track.model_validate(input_data["track"]))}
-            if op == "markdown":
-                return {"status": "success", "result": markdown(Track.model_validate(input_data["track"]), State.model_validate(input_data["state"]))}
-            if op == "restore":
-                return {"status": "success", "result": restore(input_data["text"]).model_dump()}
-        except Exception as exc:  # noqa: BLE001 — the envelope carries the reason
-            return {"status": "error", "result": str(exc)}
-        return {"status": "error", "result": f"unknown operation: {op!r}"}
