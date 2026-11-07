@@ -41,6 +41,7 @@ SPECIAL_ENTRYPOINTS: dict[str, tuple[str, str]] = {
     "insurance": ("app.containers.insurance", "InsuranceContainer"),
     "finance_ops": ("app.containers.finance_ops", "FinanceOpsContainer"),
     "document_engine": ("app.blocks.document_engine", "DocumentEngineBlock"),
+    "program_engine": ("app.blocks.program_engine.block", "ProgramEngineBlock"),
 }
 
 
