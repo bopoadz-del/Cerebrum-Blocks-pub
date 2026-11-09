@@ -216,6 +216,7 @@ _EXTENDED_BLOCK_DEFS: Dict[str, Tuple[str, str]] = {
     "legal_v2": ("app.blocks.legal_v2", "LegalBlockV2"),
     "producer_record": ("app.blocks.producer_record", "ProducerRecordBlock"),
     "project_reasoner": ("app.blocks.project_reasoner", "ProjectReasonerBlock"),
+    "program_engine": ("app.blocks.program_engine.block", "ProgramEngineBlock"),
     # Factory cloner parses this mapping. posture_model is the Store wrapper
     # around <private-repo>@4e167a7 sample_posture; it does not retrieve.
     "posture_model": ("app.blocks.posture_model", "PostureModelBlock"),
