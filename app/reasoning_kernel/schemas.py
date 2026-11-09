@@ -44,8 +44,11 @@ class FormulaSpec(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     formula_id: str = Field(..., min_length=1)
+    id: str = ""
     name: str = Field(..., min_length=1)
     domain: str
+    domain_id: str = ""
+    serves_verticals: List[str] = Field(default_factory=list)
     version: str = Field(..., pattern=r"^\d+\.\d+\.\d+$")
     description: str = ""
     expression: Optional[str] = None
@@ -60,6 +63,7 @@ class FormulaSpec(BaseModel):
     edge_cases: List[str] = Field(default_factory=list)
     unsupported_conditions: List[str] = Field(default_factory=list)
     authority_source: str = ""
+    source: str = ""
     effective_date: Optional[date] = None
     review_date: Optional[date] = None
     implementation: str = ""
