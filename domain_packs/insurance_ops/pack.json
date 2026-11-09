@@ -45,8 +45,11 @@
   "formulas": [
     {
       "formula_id": "ins.commission_amount",
+      "id": "ins.commission_amount",
       "name": "Commission amount",
       "domain": "insurance_ops",
+      "domain_id": "insurance_ops",
+      "serves_verticals": ["insurance_ops"],
       "version": "0.1.0",
       "description": "commission = premium * rate, rate resolved from the effective-dated schedule by level, bounded by the schedule's min/max. Decimal money (0.0001 quant), HKD.",
       "expression": "premium * rate",
@@ -57,6 +60,7 @@
       "rounding": "half_up",
       "preconditions": ["premium ge 0", "rate ge 0"],
       "authority_source": "insops.schedule",
+      "source": "insops.schedule — https://github.com/bopoadz-del/<private-repo>@6c27cba",
       "implementation": "tests.core.test_reasoning_kernel_packs._commission_impl",
       "verification_oracle": "tests.core.test_reasoning_kernel_packs._commission_oracle",
       "certification": "candidate",

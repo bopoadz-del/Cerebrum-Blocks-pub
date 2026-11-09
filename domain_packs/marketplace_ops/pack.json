@@ -55,8 +55,12 @@
   "formulas": [
     {
       "formula_id": "mp.escrow_fee",
+      "id": "mp.escrow_fee",
       "name": "Platform fee on held amount",
       "domain": "marketplace_ops",
+      "domain_id": "marketplace_ops",
+      "serves_verticals": ["marketplace_ops"],
+      "source": "marketplace_ops pack (domain_approved)",
       "version": "0.1.0",
       "description": "fee = amount * rate + fixed, ROUND_HALF_UP, frozen at hold time",
       "expression": "amount * rate + fixed",
@@ -67,8 +71,12 @@
     },
     {
       "formula_id": "mp.surge_fare",
+      "id": "mp.surge_fare",
       "name": "Surged fare total",
       "domain": "marketplace_ops",
+      "domain_id": "marketplace_ops",
+      "serves_verticals": ["marketplace_ops"],
+      "source": "marketplace_ops pack (domain_approved)",
       "version": "0.1.0",
       "description": "total = (base + per_km * km + per_min * min) * multiplier, capped",
       "expression": "(base + per_km * km + per_min * min) * multiplier",

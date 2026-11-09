@@ -53,8 +53,11 @@
   "formulas": [
     {
       "formula_id": "fin.variance_exceeds_tolerance",
+      "id": "fin.variance_exceeds_tolerance",
       "name": "Variance exceeds tolerance",
       "domain": "finance_ops",
+      "domain_id": "finance_ops",
+      "serves_verticals": ["finance_ops"],
       "version": "0.1.0",
       "description": "actual vs plan with the donor's tolerance chain: explicit tolerance amount, else percentage of plan, else the default 0.01. Decimal throughout.",
       "expression": "abs(actual - plan) > max(explicit, plan*pct/100, default)",
@@ -65,6 +68,7 @@
       "rounding": "half_even",
       "preconditions": ["plan ge 0"],
       "authority_source": "finops.tolerance",
+      "source": "finops.tolerance — https://github.com/bopoadz-del/<private-repo>@2367463",
       "implementation": "tests.core.test_reasoning_kernel_packs._variance_impl",
       "verification_oracle": "tests.core.test_reasoning_kernel_packs._variance_oracle",
       "certification": "candidate",
