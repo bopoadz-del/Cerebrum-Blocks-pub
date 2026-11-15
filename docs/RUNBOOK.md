@@ -7,24 +7,24 @@ not a standalone customer product.
 
 ## The live service (what actually runs)
 
-- Render web service **`cerebrum-blocks`** (srv-d8rrorvavr4c73evhvi0),
-  https://cerebrum-blocks.onrender.com — **Docker runtime** (`./Dockerfile`
-  → `entrypoint.sh`), branch `main`, auto-deploy on push.
+- AWS ECS service **`cerebrum-blocks`** (us-west-2, cluster `cerebrum`), deployed
+  by `.github/workflows/deploy-aws.yml` on every push to `main` (image built from
+  `./Dockerfile` → `entrypoint.sh`, pushed to ECR, service rolled).
 - Health check: `GET /ready` (503-capable: DATA_DIR writable + registry
   non-empty). `GET /health` is liveness-only and always 200 — never point
   monitoring at it.
 - Persistent disk: 1 GB at `/app/data` (`DATA_DIR`) — API keys, rate-limit
   DB, uploads, backups. Losing it loses tenant keys.
 - **`render.yaml` does NOT manage this service.** It describes the suspended
-  `cerebrum-platform-api`. Env/config changes happen in the dashboard.
+  `cerebrum-platform-api`. Env/config changes happen in the ECS task definition.
 - Intentional absences on the store: `DATABASE_URL` unset (vector store /
   RAG off — RAG blocks are inventory shipped to platforms, not a store
   runtime feature); sandbox-runner pserv suspended (see below).
 
 ## When /ready returns 503
 
-1. `data_dir` failing → disk full or unmounted: check the disk on the
-   dashboard, `df` via SSH (`srv-…@ssh.oregon.render.com`).
+1. `data_dir` failing → disk full or unmounted: check the volume
+   attached to the ECS task (ECS Exec for `df`).
 2. `block_registry` failing → boot-time validation excluded everything:
    check boot logs for `app.blocks` validation warnings (signature or
    manifest failures — a bad manifest commit is the usual cause).
@@ -33,14 +33,14 @@ not a standalone customer product.
 
 ## Rollback
 
-Render dashboard → the service → Deploys → previous successful deploy →
-"Rollback". No migrations run on the store boot path, so rolling back the
+Re-run `deploy-aws.yml` (workflow dispatch) on the prior good commit, or point the
+`cerebrum-blocks` ECS service at the previous task-definition revision. No migrations run on the store boot path, so rolling back the
 image is complete. (The two SQL files in `migrations/` are CI-only.)
 
 ## Key rotation
 
 - **Tenant API keys**: env vars `CEREBRUM_API_KEY_<NAME>` on the live
-  service; add/remove in the dashboard, picked up within ~60 s. Revoke =
+  service; add/remove in the ECS task definition, picked up within ~60 s. Revoke =
   delete the env var.
 - **Master key** (`CEREBRUM_MASTER_KEY`): secrets block fails hard without
   it. Rotating it re-keys the secrets vault — coordinate with any stored
@@ -50,7 +50,7 @@ image is complete. (The two SQL files in `migrations/` are CI-only.)
   writes the new private key OUTSIDE the repo. Commit the updated
   `data/publishers.json` + manifests, keep the private key in the
   operator's secrets manager.
-- `KIMI_API_KEY`: dashboard env var; the only LLM credential.
+- `KIMI_API_KEY`: task-definition env var; the primary LLM credential (`MOONSHOT_API_KEY` is accepted as an alias, `app/core/llm_config.py`).
 
 ## Backups / restore
 
