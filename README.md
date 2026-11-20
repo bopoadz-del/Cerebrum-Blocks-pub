@@ -35,9 +35,9 @@ products, clients, and domain kits.
 | Category | Examples (real block names) |
 |---|---|
 | **Reasoning / chat** | chat, agent_swarm, smart_orchestrator, adaptive_router |
-| **Retrieval** | vector_search, knowledge, zvec |
+| **Retrieval** | vector_search, knowledge |
 | **Formulas** | formula_executor, formula_executor_v2, construction_advisor (cited construction KB) |
-| **Documents** | pdf, ocr, xlsx_schedule, spec_analyzer, bim_extractor |
+| **Documents** | pdf, ocr, spec_analyzer, bim_extractor |
 | **Domain analysis** | construction_v2, aviation_v2, finance_v2, medical_v2, … (domain verticals) |
 | **Workbench** | workbench (bounded coding-agent CLI editing with diff + safety gates) |
 
@@ -56,7 +56,7 @@ and promote, not certified inventory:
 
 Newly registered in the close-out: estate blocks, `retail_v2`,
 `safety_world_detector`, `mcp_adapter`, `inbound_webhook`, `workbench`.
-Block signing is parked until the publisher registry ships (see
+Block signing is operating (publisher registry `data/publishers.json`; see
 Security below and [PARKED_BLOCKERS.md](PARKED_BLOCKERS.md)); the
 manifest-contract gates run in CI.
 
@@ -78,7 +78,7 @@ pip install -r requirements.txt
 
 # Required env (see .env.example):
 export CEREBRUM_MASTER_KEY="$(python -c 'import secrets;print(secrets.token_urlsafe(32))')"  # secrets block fails hard without it
-export KIMI_API_KEY="<moonshot key>"   # the platform's only LLM provider (chat/RAG/enhancer); omit and those paths return an honest offline/skip result
+export KIMI_API_KEY="<moonshot key>"   # the platform's LLM provider (chat/RAG/enhancer; MOONSHOT_API_KEY is accepted as an alias); omit and those paths return an honest offline/skip result
 
 python -m pytest tests/integration -q   # verify
 uvicorn app.main:app --reload           # serve on :8000  (GET /health -> {"status":"ok"})
@@ -104,13 +104,13 @@ uvicorn app.main:app --reload           # serve on :8000  (GET /health -> {"stat
 - Kit installs verify a `provenance.json` (sha256 digests + root hash)
   when present; kits without one are labeled `absent — unverified` in the
   install response.
-- Ed25519 block signing is parked until the publisher registry ships.
+- Ed25519 block signing is operating: the publisher registry (`data/publishers.json`) ships and registry blocks are verified at load.
   What the tree has today: the signing and verification code
   (`app/core/publisher_registry.py`, `scripts/verify_block.py`, the
   runtime admission gate in `app/core/block_validation.py`) and the
   rotate/re-sign script (`scripts/rotate_publisher_key.py`, which writes
   the private key outside the repo). The publisher registry
-  (`data/publishers.json`) is NOT shipped, so a registry block whose
+  (`data/publishers.json`) is shipped; a registry block whose
   publisher is unknown is excluded at load.
 - A restricted primitive (`database`/`code`/`sandbox`/`secrets`/…) is
   additionally gated to unlimited-tier at block resolution, failing closed on
@@ -123,7 +123,7 @@ uvicorn app.main:app --reload           # serve on :8000  (GET /health -> {"stat
 - [REPO_STATUS.md](REPO_STATUS.md) — current inventory and status
 - [SKILLS_BLOCK_LOGIC.md](SKILLS_BLOCK_LOGIC.md) — block logic notes
 - [docs/decisions/phase1-dead-controls.md](docs/decisions/phase1-dead-controls.md) — control dispositions (wired vs deleted)
-- [PARKED_BLOCKERS.md](PARKED_BLOCKERS.md) — honestly parked work (block signing is parked until the publisher registry ships)
+- [PARKED_BLOCKERS.md](PARKED_BLOCKERS.md) — honestly parked work (block signing is resolved; see the file)
 
 ## Inventory — verified, honest
 
@@ -134,9 +134,8 @@ against the files themselves, not memory. The short version:
 
 - **Registry blocks** — all manifested, verified by pattern sweep against
   the files themselves. The vertical `*_v2` domain blocks are registered.
-  Each `block.json` carries a `signature` field, but nothing in this tree
-  can verify it: the publisher registry (`data/publishers.json`) is not
-  shipped, so no block counts as signed until it does (see Security).
+  Each `block.json` carries a `signature` field, verified at load against
+  the publisher registry (`data/publishers.json`, see Security).
 - **Kit directories** — the domain kits plus `universal_kernel` and
   `_template`, each with real domain blocks beyond the generic core
   (`pdf, ocr, chat, image, formula_executor(_v2)`).

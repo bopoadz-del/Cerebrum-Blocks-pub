@@ -38,11 +38,8 @@ advanced/secondary extractors below are deferred and must NOT return faked data.
 - app/containers/construction/__init__.py :: _extract_training_needs  — training needs extraction; roadmap.
 
 ## Domain kit extractors (roadmap; kits ship with the primary path only)
-- app/blocks/finance_v2.py :: _extract_cash_flows  — advanced cash-flow extraction; roadmap.
-- app/blocks/finance_v2.py :: _extract_returns  — advanced returns extraction; roadmap.
 - app/blocks/medical_v2.py :: _phi_context  — PHI-context helper; roadmap.
 - app/blocks/migration.py :: _restore_backup  — migration restore helper (backup/restore path uses core/backup.py); roadmap.
-- app/blocks/document_engine/parsers/pdf_parser.py :: _blocks_to_tables  — PDF block→table reconstruction; primary text path works, table reconstruction is roadmap.
 
 ## universal_kernel neutral-kit templates (off every demo flow B1-B6)
 The universal_kernel kit ships neutral provider templates; the `hash` embedding

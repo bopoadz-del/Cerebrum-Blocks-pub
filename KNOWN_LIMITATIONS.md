@@ -27,7 +27,7 @@ honest measure of coverage: 47 entries do not cover a domain. Reproduce with
 
 ## Signing and provenance
 
-- **Block signing is OPERATING as of Phase 5.** All 105 `block_registry`
+- **Block signing is OPERATING as of Phase 5.** All 230 `block_registry`
   entries carry verifying Ed25519 signatures, enforced by the load-time
   validation gate; the private key lives in the owner's secrets manager and
   is rotated with `scripts/rotate_publisher_key.py` (which refuses to write
@@ -50,8 +50,8 @@ honest measure of coverage: 47 entries do not cover a domain. Reproduce with
 
 ## Execution environment
 
-- The Kimi workbench block requires an external Kimi CLI binary; `/health`
-  reports `cli_ok: false` where none is installed (most deployments today).
+- The Kimi workbench block requires an external Kimi CLI binary; `cli_ok: false`
+  is reported by the authenticated `/v1/system/diagnostics` (not `/health`, which returns only `{"status":"ok"}`) where none is installed (most deployments today).
 - Blocks with elevated capabilities need the out-of-process sandbox runner
   service; without it they return 503 rather than running unsafely.
 
